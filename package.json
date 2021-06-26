@@ -1,4 +1,5 @@
 {
+  "license": "MIT",
   "scripts": {
     "start": "snowpack dev",
     "build": "snowpack build",
@@ -8,7 +9,8 @@
   "dependencies": {
     "@slippi/slippi-js": "../slippi-js",
     "lit": "^2.0.0-rc.2",
-    "safe-buffer": "^5.2.1"
+    "safe-buffer": "^5.2.1",
+    "slippi-visualiser": "../slippi-visualiser"
   },
   "devDependencies": {
     "@snowpack/plugin-typescript": "^1.2.1",

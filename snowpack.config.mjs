@@ -7,6 +7,7 @@ export default {
   mount: {
     public: { url: '/', static: true },
     src: { url: '/dist' },
+    "../slippi-visualiser": {url: '/slippi-visualiser', static: true },
   },
   plugins: [
     [
