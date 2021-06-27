@@ -4,6 +4,7 @@ import { classMap } from 'lit/directives/class-map.js';
 import './replay-select';
 import './replay-player';
 import type { Replay, ReplaySelectedEvent } from './replay-select';
+
 @customElement('app-root')
 export class AppRoot extends LitElement {
   static get styles() {
@@ -14,9 +15,10 @@ export class AppRoot extends LitElement {
         align-items: center;
         flex-direction: column;
         height: 100vh;
-        background-color: lightgreen;
+        background-color: black;
       }
       .player {
+        padding: 10px;
         align-self: stretch;
         flex-grow: 1;
       }
@@ -28,29 +30,21 @@ export class AppRoot extends LitElement {
   }
 
   @state()
-  private playing = false;
-
-  @state()
   private replay?: Replay;
 
-  private async replaySelected(event: ReplaySelectedEvent): Promise<void> {
-    this.playing = true;
+  private async replaySelected(event: ReplaySelectedEvent) {
     this.replay = event.detail;
   }
 
   render() {
-    const playerClasses = { hidden: !this.playing, player: true };
-    const selectClasses = { hidden: this.playing };
+    const playerClasses = { hidden: !this.replay, player: true };
     return html`
       <div class="wrapper">
         <replay-player
-          .replay="${this.replay}"
+          .replay=${this.replay}
           class=${classMap(playerClasses)}
         ></replay-player>
-        <replay-select
-          class=${classMap(selectClasses)}
-          @replay-selected="${this.replaySelected}"
-        ></replay-select>
+        <replay-select @replay-selected=${this.replaySelected}></replay-select>
       </div>
     `;
   }
