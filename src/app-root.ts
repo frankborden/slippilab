@@ -3,7 +3,8 @@ import { customElement, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import './replay-select';
 import './replay-player';
-import type { Replay, ReplaySelectedEvent } from './replay-select';
+import type { ReplaySelectedEvent } from './replay-select';
+import type { SlippiGame } from '@slippi/slippi-js';
 
 @customElement('app-root')
 export class AppRoot extends LitElement {
@@ -15,7 +16,7 @@ export class AppRoot extends LitElement {
         align-items: center;
         flex-direction: column;
         height: 100vh;
-        background-color: black;
+        background-color: white;
       }
       .player {
         padding: 10px;
@@ -30,7 +31,7 @@ export class AppRoot extends LitElement {
   }
 
   @state()
-  private replay?: Replay;
+  private replay?: SlippiGame;
 
   private async replaySelected(event: ReplaySelectedEvent) {
     this.replay = event.detail;
@@ -40,10 +41,12 @@ export class AppRoot extends LitElement {
     const playerClasses = { hidden: !this.replay, player: true };
     return html`
       <div class="wrapper">
-        <replay-player
-          .replay=${this.replay}
-          class=${classMap(playerClasses)}
-        ></replay-player>
+        ${this.replay
+          ? html` <new-replay-player
+              .replay=${this.replay}
+              class=${classMap(playerClasses)}
+            ></new-replay-player>`
+          : ''}
         <replay-select @replay-selected=${this.replaySelected}></replay-select>
       </div>
     `;
