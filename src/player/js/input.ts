@@ -1,4 +1,4 @@
-import type { PreFrameUpdateType } from '../../lib/slippi-js/dist';
+import type { PreFrameUpdateType } from '@slippi/slippi-js';
 import { Vec2D } from '../utils/Vec2D';
 
 const Button = {

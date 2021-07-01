@@ -6,7 +6,7 @@ import { lostStockQueue } from '../draw/draw_ui';
 import type {
   PostFrameUpdateType,
   PreFrameUpdateType,
-} from '../../lib/slippi-js/dist';
+} from '@slippi/slippi-js';
 
 class PhysState {
   pos: Vec2D;

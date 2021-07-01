@@ -1,8 +1,4 @@
-import type {
-  FrameEntryType,
-  PlayerType,
-  SlippiGame,
-} from '../lib/slippi-js/dist';
+import type { FrameEntryType, PlayerType, SlippiGame } from '@slippi/slippi-js';
 import {
   characters,
   characterDataById,
@@ -61,17 +57,7 @@ class Player {
     this.character = characterDataById[this.settings.characterId];
   }
 
-  public render(
-    frame: DeepRequired<FrameEntryType>,
-    renderer: CanvasRenderingContext2D,
-    stage: Stage,
-  ): void {
-    this.renderCharacter(frame, renderer, stage);
-    this.renderShield(frame, renderer, stage);
-    this.renderUi(frame, renderer);
-  }
-
-  private renderUi(
+  public renderUi(
     frame: DeepRequired<FrameEntryType>,
     renderer: CanvasRenderingContext2D,
   ): void {
@@ -129,7 +115,7 @@ class Player {
     renderer.restore();
   }
 
-  private renderCharacter(
+  public renderCharacter(
     frame: DeepRequired<FrameEntryType>,
     renderer: CanvasRenderingContext2D,
     stage: Stage,
@@ -207,7 +193,7 @@ class Player {
     renderer.restore();
   }
 
-  private renderShield(
+  public renderShield(
     frame: DeepRequired<FrameEntryType>,
     renderer: CanvasRenderingContext2D,
     stage: Stage,
@@ -275,9 +261,13 @@ export class Game {
     const frame = this.replay.getFrames()[this.currentFrameNumber];
     this.renderer.clearRect(0, 0, 1200, -750);
     for (const player of this.players) {
-      player.render(frame, this.renderer, this.stage);
+      player.renderCharacter(frame, this.renderer, this.stage);
+      player.renderShield(frame, this.renderer, this.stage);
     }
     this.renderStage();
+    for (const player of this.players) {
+      player.renderUi(frame, this.renderer);
+    }
     this.currentFrameNumber++;
   }
 

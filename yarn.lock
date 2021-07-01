@@ -73,7 +73,7 @@
   resolved "https://registry.yarnpkg.com/@shelacek/ubjson/-/ubjson-1.1.0.tgz#4db7bd1b35f3a6f2a80e5635607624f136b67d3b"
   integrity sha512-9H8pPtkpienzs7cLpT46GVSFjT6KxcacFutImSJeynZMZJRktFDuMglQJtSeNgGo/lwk1WBKmSnzKXNUcr1bfw==
 
-"@slippi/slippi-js@../slippi-js":
+"@slippi/slippi-js@../slippi-js/":
   version "6.1.1"
   dependencies:
     "@shelacek/ubjson" "^1.0.1"
