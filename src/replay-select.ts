@@ -24,7 +24,7 @@ export class ReplaySelect extends LitElement {
   static get styles() {
     return css`
       h1 {
-        font-size: 4rem;
+        font-size: 1rem;
       }
       input {
         display: none;
@@ -32,6 +32,9 @@ export class ReplaySelect extends LitElement {
       .label {
         display: inline-block;
         cursor: pointer;
+      }
+      wired-button {
+        background-color: #7fd17f;
       }
     `;
   }
@@ -57,7 +60,9 @@ export class ReplaySelect extends LitElement {
   render() {
     return html`
       <label for="replay-input">
-        <wired-button class="label" disabled>Load</wired-button>
+        <wired-button class="label" elevation="2" disabled
+          ><h1>Load .slp</h1></wired-button
+        >
       </label>
       <input
         id="replay-input"

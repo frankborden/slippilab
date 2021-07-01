@@ -9,10 +9,16 @@ import type { WiredSlider } from 'wired-elements';
 export class ReplayPlayer extends LitElement {
   static get styles() {
     return css`
+      .wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+      }
       canvas {
         background-color: black;
-        /* width: 100%;
-        height: 100%; */
+        width: 75%;
+        height: 75%;
       }
       wired-slider {
         width: 1200px;
@@ -33,17 +39,20 @@ export class ReplayPlayer extends LitElement {
   constructor() {
     super();
     window.addEventListener('keydown', (e: KeyboardEvent) => {
+      console.log(e.key);
       switch (e.key) {
         case ' ':
         case 'k':
           this.game?.togglePause();
           break;
         case 'j':
-          this.game?.setFrame(Math.max(-123, this.currentFrame - 300));
+        case 'ArrowLeft':
+          this.game?.setFrame(Math.max(-123, this.currentFrame - 120));
           break;
         case 'l':
+        case 'ArrowRight':
           this.game?.setFrame(
-            Math.min(this.highestFrame, this.currentFrame + 300),
+            Math.min(this.highestFrame, this.currentFrame + 120),
           );
           break;
         case '.':
@@ -91,12 +100,16 @@ export class ReplayPlayer extends LitElement {
   }
 
   render() {
-    return html` <canvas width="1200" height="750"></canvas>
-      <wired-slider
-        min="-123"
-        max=${this.highestFrame}
-        .value=${this.currentFrame}
-        @change=${this.clicked}
-      ></wired-slider>`;
+    return html`
+      <div class="wrapper">
+        <canvas width="1200" height="750"></canvas>
+        <wired-slider
+          min="-123"
+          max=${this.highestFrame}
+          .value=${this.currentFrame}
+          @change=${this.clicked}
+        ></wired-slider>
+      </div>
+    `;
   }
 }

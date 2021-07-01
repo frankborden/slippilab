@@ -16,12 +16,10 @@ export class AppRoot extends LitElement {
         align-items: center;
         flex-direction: column;
         height: 100vh;
-        background-color: white;
+        background-color: lightgreen;
       }
       .player {
-        padding: 10px;
-        align-self: stretch;
-        flex-grow: 1;
+        align-self: center;
       }
       .hidden {
         position: absolute;
@@ -39,15 +37,19 @@ export class AppRoot extends LitElement {
 
   render() {
     const playerClasses = { hidden: !this.replay, player: true };
+    const selectClasses = { hidden: Boolean(this.replay) };
     return html`
       <div class="wrapper">
+        <replay-select
+          class=${classMap(selectClasses)}
+          @replay-selected=${this.replaySelected}
+        ></replay-select>
         ${this.replay
           ? html` <new-replay-player
               .replay=${this.replay}
               class=${classMap(playerClasses)}
             ></new-replay-player>`
           : ''}
-        <replay-select @replay-selected=${this.replaySelected}></replay-select>
       </div>
     `;
   }

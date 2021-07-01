@@ -7,15 +7,11 @@
 - Shield tilting
 - Projectiles
 - spawn invulnerability effect
-- Show game timer
 - Customziation (custom colors/colorblind colors, UI info, invincibility overlay?)
-- KB controls (pauseplay, frame advance, +/- 3 seconds, fullscreen?)
-- Slippi code/name below %
-- Name tags
+- Fullscreen
 - Fox/Falco Up B rotation
-- End of game
 - Backgrounds
-- Zoom/Camera
+- Camera tracking players
 - Facing issues with turnaround moves? (eg. Marth bair, reverse upbs)
 - Add characters, peach sheik at least. turnip throw animations... :'(
 - Actionstate/frame below %

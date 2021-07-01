@@ -8,18 +8,23 @@ const importAnimation = async (
 ): Promise<RawCharacterAnimations> => {
   switch (characters[charId]) {
     case 'Captain Falcon': {
+      // @ts-ignore
       return (await import('./falcon')).default;
     }
     case 'Fox': {
+      // @ts-ignore
       return (await import('./fox')).default;
     }
     case 'Marth': {
+      // @ts-ignore
       return (await import('./marth')).default;
     }
     case 'Jigglypuff': {
+      // @ts-ignore
       return (await import('./puff')).default;
     }
     case 'Falco': {
+      // @ts-ignore
       return (await import('./falco')).default;
     }
     default: {
@@ -28,7 +33,7 @@ const importAnimation = async (
   }
 };
 
-type RawCharacterAnimations = { [actionName: string]: number[][][] };
+export type RawCharacterAnimations = { [actionName: string]: number[][][] };
 export type CharacterAnimations = { [actionName: string]: Int16Array[][] };
 
 export const fetchAnimation = async (

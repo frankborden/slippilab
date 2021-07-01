@@ -10,8 +10,6 @@
     /* Add decorator support for Lit */
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    /* Animations are JSONs */
-    "resolveJsonModule": true,
     "strict": true,
     "skipLibCheck": true,
     "types": ["snowpack-env"],

@@ -71,6 +71,7 @@ class Player {
     renderer.translate(playerUiX, playerUiY);
     this.renderStocks(frame, renderer);
     this.renderPercent(frame, renderer);
+    this.renderPlayerDetails(frame, renderer);
     renderer.restore();
   }
 
@@ -115,6 +116,29 @@ class Player {
     renderer.scale(1, -1); // flip text back right-side after global flip
     renderer.fillText(`${Math.floor(percent)}%`, 0, 0);
     renderer.strokeText(`${Math.floor(percent)}%`, 0, 0);
+    renderer.restore();
+  }
+
+  private renderPlayerDetails(
+    frame: DeepRequired<FrameEntryType>,
+    renderer: CanvasRenderingContext2D,
+  ): void {
+    const playerFrame = frame.players[this.settings.playerIndex].post;
+    const percent = playerFrame.percent;
+    renderer.save();
+    renderer.font = '900 24px Arial';
+    renderer.textAlign = 'center';
+    renderer.fillStyle = 'white';
+    renderer.strokeStyle = this.isDoubles
+      ? teamColors[this.settings.teamId]
+      : colors[playerFrame.playerIndex];
+    const x = 0;
+    const y = -100;
+    renderer.translate(x, y);
+    renderer.scale(1, -1); // flip text back right-side after global flip
+    const name = `${this.settings.displayName}`;
+    renderer.fillText(name, 0, 0);
+    renderer.strokeText(name, 0, 0);
     renderer.restore();
   }
 
