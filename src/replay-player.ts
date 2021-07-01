@@ -8,7 +8,7 @@ export class ReplayPlayer extends LitElement {
   static get styles() {
     return css`
       canvas {
-        background-color: darkblue;
+        background-color: black;
         /* width: 100%;
         height: 100%; */
       }
@@ -23,13 +23,12 @@ export class ReplayPlayer extends LitElement {
     this.setup();
   }
 
-  private setup() {
-    const canvas = this.renderRoot.querySelector('canvas');
-    if (!canvas) {
+  private async setup() {
+    const context = this.renderRoot.querySelector('canvas')?.getContext('2d');
+    if (!context || !this.replay) {
       return;
     }
-    this.game = new Game(this.replay!, canvas);
-    this.game.start();
+    this.game = await Game.create(this.replay, context);
   }
 
   render() {

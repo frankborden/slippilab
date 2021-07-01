@@ -1,5 +1,6 @@
 // from this directory, run:
 // deno run --allow-read=. --unstable check.ts
+// @ts-ignore
 import { existsSync } from 'https://deno.land/std@0.100.0/fs/mod.ts';
 
 export const actions: { [actionId: number]: string } = {

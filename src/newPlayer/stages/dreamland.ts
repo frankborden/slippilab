@@ -17,7 +17,7 @@ export const dreamland: Stage = {
     // wallR
     [new Vector(77.25, 0), new Vector(76.5, -11)],
     [new Vector(76.5, -11), new Vector(65.75, -36)],
-],
+  ],
   scale: 3.5,
-  offset: new Vector(600, 500),
+  offset: new Vector(600, -500),
 };

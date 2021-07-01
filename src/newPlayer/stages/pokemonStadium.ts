@@ -28,5 +28,5 @@ export const pokemonStadium: Stage = {
     [new Vector(15, -60), new Vector(15, -112)],
   ],
   scale: 4.2,
-  offset: new Vector(600, 500),
+  offset: new Vector(600, -500),
 };

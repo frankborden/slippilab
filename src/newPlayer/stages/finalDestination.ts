@@ -24,5 +24,5 @@ export const finalDestination: Stage = {
     [new Vector(60, -47), new Vector(50, -55)],
   ],
   scale: 4.5,
-  offset: new Vector(600, 400),
+  offset: new Vector(600, -400),
 };

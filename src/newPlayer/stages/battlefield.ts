@@ -31,5 +31,5 @@ export const battlefield: Stage = {
     [new Vector(-10, -30), new Vector(-10, -40)],
   ],
   scale: 4.5,
-  offset: new Vector(600, 480),
+  offset: new Vector(600, -480),
 };

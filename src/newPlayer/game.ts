@@ -1,229 +1,92 @@
-import type {
-  FrameEntryType,
-  PostFrameUpdateType,
-  SlippiGame,
-} from '@slippi/slippi-js';
-import { characters, characterDataById } from './characters/character';
+import type { FrameEntryType, PlayerType, SlippiGame } from '@slippi/slippi-js';
+import {
+  characters,
+  characterDataById,
+  CharacterData,
+} from './characters/character';
 import { CharacterAnimations, fetchAnimation } from './animations';
 import { actions, specials } from './animations/actions';
 import { stagesById, Stage } from './stages/stage';
 
-interface CanvasLayers {
-  stage: HTMLCanvasElement;
-  characters: HTMLCanvasElement;
-  ui: HTMLCanvasElement;
-  base: HTMLCanvasElement;
-}
-interface CanvasRenderers {
-  stage: CanvasRenderingContext2D;
-  characters: CanvasRenderingContext2D;
-  ui: CanvasRenderingContext2D;
-  base: CanvasRenderingContext2D;
-}
-
-const colors = ['red', 'lightblue', 'yellow', 'green'];
-
-export class Game {
-  private static createCanvas(baseCanvas: HTMLCanvasElement) {
-    const canvas = document.createElement('canvas');
-    canvas.width = 1200;
-    canvas.height = 750;
-    return canvas;
-  }
-
-  private currentFrameNumber = -123;
-  private canvasLayers: CanvasLayers;
-  private canvasRenderers: CanvasRenderers;
-  private stage: Stage;
-  private animationsByPlayer: { [playerIndex: number]: CharacterAnimations } =
-    [];
-  private characterIdByPlayer: { [playerIndex: number]: number } = [];
-
-  constructor(private replay: SlippiGame, baseCanvas: HTMLCanvasElement) {
-    this.canvasLayers = {
-      stage: Game.createCanvas(baseCanvas),
-      characters: Game.createCanvas(baseCanvas),
-      ui: Game.createCanvas(baseCanvas),
-      base: baseCanvas,
-    };
-    this.canvasRenderers = {
-      stage: this.canvasLayers.stage.getContext('2d')!,
-      characters: this.canvasLayers.characters.getContext('2d')!,
-      ui: this.canvasLayers.ui.getContext('2d')!,
-      base: baseCanvas.getContext('2d')!,
-    };
-
-    this.stage = stagesById[this.replay.getSettings()!.stageId!];
-  }
-
-  async start() {
-    const players = this.replay.getSettings()?.players;
-    if (!players) {
-      return;
+// modified from ts-essentials, also made all functions return nonnullables
+type Primitive = string | number | boolean | bigint | symbol | undefined | null;
+type Builtin = Primitive | Function | Date | Error | RegExp;
+type DeepRequired<T> = T extends (...args: any) => any
+  ? (...args: Parameters<T>) => DeepRequired<ReturnType<T>>
+  : T extends Builtin
+  ? NonNullable<T>
+  : T extends Map<infer K, infer V>
+  ? Map<DeepRequired<K>, DeepRequired<V>>
+  : T extends ReadonlyMap<infer K, infer V>
+  ? ReadonlyMap<DeepRequired<K>, DeepRequired<V>>
+  : T extends WeakMap<infer K, infer V>
+  ? WeakMap<DeepRequired<K>, DeepRequired<V>>
+  : T extends Set<infer U>
+  ? Set<DeepRequired<U>>
+  : T extends ReadonlySet<infer U>
+  ? ReadonlySet<DeepRequired<U>>
+  : T extends WeakSet<infer U>
+  ? WeakSet<DeepRequired<U>>
+  : T extends Promise<infer U>
+  ? Promise<DeepRequired<U>>
+  : T extends {}
+  ? {
+      [K in keyof T]-?: DeepRequired<T[K]>;
     }
-    for (const player of players) {
-      this.animationsByPlayer[player.playerIndex] = await fetchAnimation(
-        player.characterId!,
-      );
-      this.characterIdByPlayer[player.playerIndex] = player.characterId!;
-    }
+  : NonNullable<T>;
 
-    setInterval(() => this.tick(), 1000 / 60);
+const colors = ['red', 'blue', 'yellow', 'green'];
+
+class Player {
+  public static async create(
+    settings: DeepRequired<PlayerType>,
+  ): Promise<Player> {
+    const animations = await fetchAnimation(settings.characterId);
+    return new Player(settings, animations);
   }
 
-  private tick() {
-    const frame = this.replay.getFrames()[this.currentFrameNumber];
-    this.clearDynamicCanvases();
-    this.renderStage();
-    this.renderCharacters(frame);
-    this.renderUi(frame);
-    this.drawCanvas();
-    this.currentFrameNumber++;
+  private character: CharacterData;
+
+  private constructor(
+    private settings: DeepRequired<PlayerType>,
+    private animations: CharacterAnimations,
+  ) {
+    this.character = characterDataById[this.settings.characterId];
   }
 
-  private clearDynamicCanvases() {
-    this.canvasRenderers.stage.clearRect(0, 0, 1200, 750);
-    this.canvasRenderers.characters.clearRect(0, 0, 1200, 750);
-    this.canvasRenderers.ui.clearRect(0, 0, 1200, 750);
-    this.canvasRenderers.base.clearRect(0, 0, 1200, 750);
+  public render(
+    frame: DeepRequired<FrameEntryType>,
+    renderer: CanvasRenderingContext2D,
+    stage: Stage,
+  ): void {
+    this.renderUi(frame, renderer);
+    this.renderCharacter(frame, renderer, stage);
   }
 
-  private drawCanvas() {
-    this.canvasRenderers.base.drawImage(this.canvasLayers.stage, 0, 0);
-    this.canvasRenderers.base.drawImage(this.canvasLayers.characters, 0, 0);
-    this.canvasRenderers.base.drawImage(this.canvasLayers.ui, 0, 0);
-  }
-
-  private renderStage() {
-    const renderer = this.canvasRenderers.stage;
+  private renderUi(
+    frame: DeepRequired<FrameEntryType>,
+    renderer: CanvasRenderingContext2D,
+  ): void {
     renderer.save();
-    this.stage.lines.forEach((line) => {
-      renderer.strokeStyle = 'white';
-      renderer.beginPath();
-      renderer.moveTo(
-        line[0].x * this.stage.scale + this.stage.offset.x,
-        line[0].y * -this.stage.scale + this.stage.offset.y,
-      );
-      renderer.lineTo(
-        line[1].x * this.stage.scale + this.stage.offset.x,
-        line[1].y * -this.stage.scale + this.stage.offset.y,
-      );
-      renderer.closePath();
-      renderer.stroke();
-    });
+    const playerUiX = 1200 * 0.2 * (this.settings.playerIndex + 1);
+    const playerUiY = -600;
+    renderer.translate(playerUiX, playerUiY);
+    this.renderStocks(frame, renderer);
+    this.renderPercent(frame, renderer);
     renderer.restore();
   }
 
-  private renderCharacters(frame: FrameEntryType) {
-    this.canvasRenderers.characters;
-    for (let playerIndex = 0; playerIndex < 4; playerIndex++) {
-      const player = frame.players[playerIndex];
-      if (!player) {
-        continue;
-      }
-      this.renderPlayerCharacter(player.post);
-    }
-  }
-
-  private renderPlayerCharacter(player: PostFrameUpdateType) {
-    const port = player.playerIndex;
-    if (port === null) {
-      return;
-    }
-    const characterId = this.characterIdByPlayer[port];
-    const character = characterDataById[characterId];
-    var baseX = player.positionX! * this.stage.scale + this.stage.offset.x;
-    var baseY = player.positionY! * -this.stage.scale + this.stage.offset.y;
-    const renderer = this.canvasRenderers.characters;
+  private renderStocks(
+    frame: DeepRequired<FrameEntryType>,
+    renderer: CanvasRenderingContext2D,
+  ): void {
+    const stockCount =
+      frame.players[this.settings.playerIndex].post.stocksRemaining;
     renderer.save();
-    // renderer.translate(x, y);
-    renderer.fillStyle = colors[port];
-    renderer.lineWidth = 3;
-    renderer.strokeStyle = colors[port];
-    const animations = this.animationsByPlayer[port];
-    if (player.actionStateId === null || player.actionStateCounter === null) {
-      renderer.restore();
-      return;
-    }
-    const animationName =
-      actions[player.actionStateId] ??
-      specials[characters[characterId]][player.actionStateId];
-    if (animationName.match('DEAD')) {
-      renderer.restore();
-      return;
-    }
-    const animationData =
-      animations[animationName] ??
-      animations[
-        animationName.substr(0, 6) + 'FOX' + animationName.substr(6, 10)
-      ];
-    if (animationData === undefined) {
-      console.log(player.actionStateCounter, animationData, animationName);
-    }
-    const animationFrameIndex =
-      Math.max(0, Math.floor(player.actionStateCounter) - 1) %
-      animationData.length;
-    const animationFrameLine = animationData[animationFrameIndex][0];
-    renderer.beginPath();
-    const startX =
-      animationFrameLine[0] *
-        player.facingDirection! *
-        character.scale *
-        (this.stage.scale / 4.5) +
-      baseX;
-    const startY =
-      animationFrameLine[1] * character.scale * (this.stage.scale / 4.5) +
-      baseY;
-    renderer.moveTo(startX, startY);
-    // starting from index 2, each set of 6 numbers are bezier curve coords
-    for (var k = 2; k < animationFrameLine.length; k += 6) {
-      renderer.lineTo(
-        animationFrameLine[k] *
-          player.facingDirection! *
-          character.scale *
-          (this.stage.scale / 4.5) +
-          baseX,
-        animationFrameLine[k + 1] * character.scale * (this.stage.scale / 4.5) +
-          baseY,
-      );
-    }
-    renderer.closePath();
-    renderer.stroke();
-    renderer.restore();
-  }
-
-  private renderUi(frame: FrameEntryType) {
-    this.renderAllStocks(frame);
-    this.renderAllPercents(frame);
-    this.canvasRenderers.ui;
-  }
-
-  private renderAllStocks(frame: FrameEntryType) {
-    for (let playerIndex = 0; playerIndex < 4; playerIndex++) {
-      const player = frame.players[playerIndex];
-      if (!player) {
-        continue;
-      }
-      this.renderPlayerStocks(player.post);
-    }
-  }
-
-  private renderPlayerStocks(player: PostFrameUpdateType) {
-    const port = player.playerIndex;
-    if (port === null) {
-      return;
-    }
-    const stockCount = player.stocksRemaining;
-    if (stockCount === null) {
-      return;
-    }
-    const renderer = this.canvasRenderers.ui;
-    renderer.save();
-    renderer.lineWidth = 2;
-    renderer.fillStyle = colors[port];
+    renderer.fillStyle = colors[this.settings.playerIndex];
     for (let stockIndex = 0; stockIndex < stockCount; stockIndex++) {
-      const x = 337 + port * 145 + stockIndex * 30;
-      const y = 600;
+      const x = (stockIndex - 2) * 30;
+      const y = 0;
       const radius = 12;
       renderer.beginPath();
       renderer.arc(x, y, radius, 0, 2 * Math.PI);
@@ -233,36 +96,141 @@ export class Game {
     renderer.restore();
   }
 
-  private renderAllPercents(frame: FrameEntryType) {
-    for (let playerIndex = 0; playerIndex < 4; playerIndex++) {
-      const player = frame.players[playerIndex];
-      if (!player) {
-        continue;
-      }
-      this.renderPlayerPercent(player.post);
-    }
-  }
-
-  private renderPlayerPercent(player: PostFrameUpdateType) {
-    const port = player.playerIndex;
-    if (port === null) {
-      return;
-    }
-    const percent = player.percent;
-    if (percent === null) {
-      return;
-    }
-    const renderer = this.canvasRenderers.ui;
+  private renderPercent(
+    frame: DeepRequired<FrameEntryType>,
+    renderer: CanvasRenderingContext2D,
+  ): void {
+    const playerFrame = frame.players[this.settings.playerIndex].post;
+    const percent = playerFrame.percent;
     renderer.save();
     renderer.font = '900 53px Arial';
-    renderer.textAlign = 'end';
+    renderer.textAlign = 'center';
     renderer.fillStyle = 'white';
-    renderer.strokeStyle = colors[port];
+    renderer.strokeStyle = colors[this.settings.playerIndex];
     renderer.scale(0.8, 1);
-    const x = (450 + port * 145) * 1.25;
-    const y = 670;
-    renderer.fillText(`${Math.floor(percent)}%`, x, y);
-    renderer.strokeText(`${Math.floor(percent)}%`, x, y);
+    const x = 0;
+    const y = -70;
+    renderer.translate(x, y);
+    renderer.scale(1, -1); // flip text back right-side after global flip
+    renderer.fillText(`${Math.floor(percent)}%`, 0, 0);
+    renderer.strokeText(`${Math.floor(percent)}%`, 0, 0);
+    renderer.restore();
+  }
+
+  private renderCharacter(
+    frame: DeepRequired<FrameEntryType>,
+    renderer: CanvasRenderingContext2D,
+    stage: Stage,
+  ): void {
+    const playerFrame = frame.players[this.settings.playerIndex].post;
+    renderer.save();
+    renderer.lineWidth = 2;
+    renderer.strokeStyle = colors[playerFrame.playerIndex];
+    renderer.translate(stage.offset.x, stage.offset.y);
+    renderer.scale(stage.scale, stage.scale);
+    renderer.lineWidth /= stage.scale;
+    renderer.translate(playerFrame.positionX, playerFrame.positionY);
+    // 4.5 is magic, -y is because the data seems to be flipped relative to
+    // the stage data..
+    renderer.scale(this.character.scale / 4.5, -this.character.scale / 4.5);
+    renderer.lineWidth /= this.character.scale / 4.5;
+    renderer.scale(playerFrame.facingDirection, 1);
+
+    const animationName =
+      actions[playerFrame.actionStateId] ??
+      specials[characters[this.settings.characterId]][
+        playerFrame.actionStateId
+      ];
+    if (animationName.match('DEAD')) {
+      renderer.restore();
+      return;
+    }
+    const animationData =
+      this.animations[animationName] ??
+      this.animations[
+        animationName.substr(0, 6) + 'FOX' + animationName.substr(6, 10)
+      ];
+    if (animationData === undefined) {
+      console.log(playerFrame.actionStateCounter, animationData, animationName);
+    }
+    const animationFrameIndex =
+      Math.max(0, Math.floor(playerFrame.actionStateCounter) - 1) %
+      animationData.length;
+    const animationFrameLine = animationData[animationFrameIndex][0];
+    renderer.beginPath();
+    renderer.moveTo(animationFrameLine[0], animationFrameLine[1]);
+    // starting from index 2, each set of 6 numbers are bezier curve coords
+    for (var k = 2; k < animationFrameLine.length; k += 6) {
+      const a = animationFrameLine;
+      renderer.bezierCurveTo(
+        a[k],
+        a[k + 1],
+        a[k + 2],
+        a[k + 3],
+        a[k + 4],
+        a[k + 5],
+      );
+      // renderer.lineTo(animationFrameLine[k + 4], animationFrameLine[k + 5]);
+    }
+    renderer.closePath();
+    renderer.fill();
+    renderer.stroke();
+    renderer.restore();
+  }
+}
+
+export class Game {
+  private currentFrameNumber = -123;
+  private stage: Stage;
+
+  public static async create(
+    replay: SlippiGame,
+    baseCanvas: CanvasRenderingContext2D,
+  ): Promise<Game> {
+    const requiredReplay = replay as DeepRequired<SlippiGame>;
+    const players = await Promise.all(
+      requiredReplay
+        .getSettings()
+        .players.map((playerType) => Player.create(playerType)),
+    );
+    return new Game(requiredReplay, baseCanvas, players);
+  }
+
+  constructor(
+    private replay: DeepRequired<SlippiGame>,
+    private renderer: CanvasRenderingContext2D,
+    private players: Player[],
+  ) {
+    renderer.scale(1, -1);
+    this.stage = stagesById[replay.getSettings().stageId];
+    setInterval(() => this.tick(), 1000 / 60);
+  }
+
+  private tick(): void {
+    const frame = this.replay.getFrames()[this.currentFrameNumber];
+    this.renderer.clearRect(0, 0, 1200, -750);
+    this.renderStage();
+    for (const player of this.players) {
+      player.render(frame, this.renderer, this.stage);
+    }
+    this.currentFrameNumber++;
+  }
+
+  private renderStage(): void {
+    const renderer = this.renderer;
+    renderer.save();
+    renderer.lineWidth = 2;
+    renderer.strokeStyle = 'white';
+    renderer.translate(this.stage.offset.x, this.stage.offset.y);
+    renderer.scale(this.stage.scale, this.stage.scale);
+    renderer.lineWidth /= this.stage.scale;
+    this.stage.lines.forEach((line) => {
+      renderer.beginPath();
+      renderer.moveTo(line[0].x, line[0].y);
+      renderer.lineTo(line[1].x, line[1].y);
+      renderer.closePath();
+      renderer.stroke();
+    });
     renderer.restore();
   }
 }

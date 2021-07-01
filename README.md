@@ -9,6 +9,7 @@
 - Shines
 - Single canvas?
 - Show game timer
+- Doubles colors
 - Customziation (colors, UI info)
 - Slider to seek within replay
 - KB controls (pauseplay, frame advance, +/- 3 seconds, fullscreen?)
@@ -23,7 +24,6 @@
 - Add characters, peach sheik at least.
 - Actionstate below %
 - Resizeable
-- Verify Doubles works
 - Randall
 - Fountain platforms
 - Separate project
@@ -31,6 +31,7 @@
 ### App
 
 - YT logo but with smash logo lines
+- Remove old viewer
 - Get domain + publish
 - Render to gif
 - Upload to gfycat

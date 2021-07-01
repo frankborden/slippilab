@@ -42,5 +42,5 @@ export const fountain: Stage = {
     [new Vector(8.8, -72), new Vector(8.8, -150)],
   ],
   scale: 5,
-  offset: new Vector(600, 450),
+  offset: new Vector(600, -450),
 };

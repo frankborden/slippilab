@@ -39,5 +39,5 @@ export const yoshisStory: Stage = {
     [new Vector(54, -47), new Vector(54, -100)],
   ],
   scale: 5,
-  offset: new Vector(600, 430),
+  offset: new Vector(600, -430),
 };
