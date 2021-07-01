@@ -36,7 +36,12 @@ type DeepRequired<T> = T extends (...args: any) => any
   : NonNullable<T>;
 
 const colors = ['red', 'blue', 'yellow', 'green'];
-
+const shieldColors = [
+  'rgba(255, 0, 0, 0.75)',
+  'rgba(0, 0, 255, 0.75)',
+  'rgba(255, 255, 0, 0.75)',
+  'rgba(0, 255, 0, 0.75)',
+];
 class Player {
   public static async create(
     settings: DeepRequired<PlayerType>,
@@ -61,6 +66,7 @@ class Player {
   ): void {
     this.renderUi(frame, renderer);
     this.renderCharacter(frame, renderer, stage);
+    this.renderShield(frame, renderer, stage);
   }
 
   private renderUi(
@@ -141,6 +147,14 @@ class Player {
       specials[characters[this.settings.characterId]][
         playerFrame.actionStateId
       ];
+    if (animationName === undefined) {
+      console.log(
+        'characterId',
+        this.settings.characterId,
+        'actionStateId',
+        playerFrame.actionStateId,
+      );
+    }
     if (animationName.match('DEAD')) {
       renderer.restore();
       return;
@@ -151,7 +165,14 @@ class Player {
         animationName.substr(0, 6) + 'FOX' + animationName.substr(6, 10)
       ];
     if (animationData === undefined) {
-      console.log(playerFrame.actionStateCounter, animationData, animationName);
+      console.log(
+        'actionStateCounter',
+        playerFrame.actionStateCounter,
+        'animationData',
+        animationData,
+        'animationName',
+        animationName,
+      );
     }
     const animationFrameIndex =
       Math.max(0, Math.floor(playerFrame.actionStateCounter) - 1) %
@@ -175,6 +196,37 @@ class Player {
     renderer.closePath();
     renderer.fill();
     renderer.stroke();
+    renderer.restore();
+  }
+
+  private renderShield(
+    frame: DeepRequired<FrameEntryType>,
+    renderer: CanvasRenderingContext2D,
+    stage: Stage,
+  ): void {
+    const playerFrame = frame.players[this.settings.playerIndex].post;
+    if (
+      playerFrame.actionStateId < 0x0b2 ||
+      playerFrame.actionStateId > 0x0b6
+    ) {
+      return;
+    }
+    renderer.save();
+    renderer.fillStyle = shieldColors[this.settings.playerIndex];
+    const shieldPercent = playerFrame.shieldSize / 60;
+    const shieldScale = 7.7696875;
+    renderer.translate(stage.offset.x, stage.offset.y);
+    renderer.translate(
+      this.character.shieldOffset.x,
+      this.character.shieldOffset.y,
+    );
+    renderer.scale(stage.scale, stage.scale);
+    renderer.translate(playerFrame.positionX, playerFrame.positionY);
+    // 4.5 is magic, -y is because the data seems to be flipped relative to
+    // the stage data..
+    renderer.scale(shieldScale, shieldScale);
+    renderer.arc(0, 0, shieldPercent, 0, 2 * Math.PI);
+    renderer.fill();
     renderer.restore();
   }
 }

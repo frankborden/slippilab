@@ -4,7 +4,8 @@
 
 ### Replay Viewer
 
-- Shields
+- Shield colors
+- Shield tilting
 - Projectiles
 - Shines
 - Single canvas?
