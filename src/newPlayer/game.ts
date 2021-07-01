@@ -1,4 +1,8 @@
-import type { FrameEntryType, PlayerType, SlippiGame } from '@slippi/slippi-js';
+import type {
+  FrameEntryType,
+  PlayerType,
+  SlippiGame,
+} from '../lib/slippi-js/dist';
 import {
   characters,
   characterDataById,
@@ -36,18 +40,15 @@ type DeepRequired<T> = T extends (...args: any) => any
   : NonNullable<T>;
 
 const colors = ['red', 'blue', 'yellow', 'green'];
-const shieldColors = [
-  'rgba(255, 0, 0, 0.75)',
-  'rgba(0, 0, 255, 0.75)',
-  'rgba(255, 255, 0, 0.75)',
-  'rgba(0, 255, 0, 0.75)',
-];
+const teamColors = ['red', 'blue', 'green'];
+
 class Player {
   public static async create(
     settings: DeepRequired<PlayerType>,
+    isDoubles: boolean,
   ): Promise<Player> {
     const animations = await fetchAnimation(settings.characterId);
-    return new Player(settings, animations);
+    return new Player(settings, animations, isDoubles);
   }
 
   private character: CharacterData;
@@ -55,6 +56,7 @@ class Player {
   private constructor(
     private settings: DeepRequired<PlayerType>,
     private animations: CharacterAnimations,
+    private isDoubles: boolean,
   ) {
     this.character = characterDataById[this.settings.characterId];
   }
@@ -64,9 +66,9 @@ class Player {
     renderer: CanvasRenderingContext2D,
     stage: Stage,
   ): void {
-    this.renderUi(frame, renderer);
     this.renderCharacter(frame, renderer, stage);
     this.renderShield(frame, renderer, stage);
+    this.renderUi(frame, renderer);
   }
 
   private renderUi(
@@ -86,10 +88,12 @@ class Player {
     frame: DeepRequired<FrameEntryType>,
     renderer: CanvasRenderingContext2D,
   ): void {
-    const stockCount =
-      frame.players[this.settings.playerIndex].post.stocksRemaining;
+    const playerFrame = frame.players[this.settings.playerIndex].post;
+    const stockCount = playerFrame.stocksRemaining;
     renderer.save();
-    renderer.fillStyle = colors[this.settings.playerIndex];
+    renderer.fillStyle = this.isDoubles
+      ? teamColors[this.settings.teamId]
+      : colors[playerFrame.playerIndex];
     for (let stockIndex = 0; stockIndex < stockCount; stockIndex++) {
       const x = (stockIndex - 2) * 30;
       const y = 0;
@@ -112,7 +116,9 @@ class Player {
     renderer.font = '900 53px Arial';
     renderer.textAlign = 'center';
     renderer.fillStyle = 'white';
-    renderer.strokeStyle = colors[this.settings.playerIndex];
+    renderer.strokeStyle = this.isDoubles
+      ? teamColors[this.settings.teamId]
+      : colors[playerFrame.playerIndex];
     renderer.scale(0.8, 1);
     const x = 0;
     const y = -70;
@@ -131,7 +137,9 @@ class Player {
     const playerFrame = frame.players[this.settings.playerIndex].post;
     renderer.save();
     renderer.lineWidth = 2;
-    renderer.strokeStyle = colors[playerFrame.playerIndex];
+    renderer.strokeStyle = this.isDoubles
+      ? teamColors[this.settings.teamId]
+      : colors[playerFrame.playerIndex];
     renderer.translate(stage.offset.x, stage.offset.y);
     renderer.scale(stage.scale, stage.scale);
     renderer.lineWidth /= stage.scale;
@@ -212,7 +220,10 @@ class Player {
       return;
     }
     renderer.save();
-    renderer.fillStyle = shieldColors[this.settings.playerIndex];
+    renderer.globalAlpha = 0.75;
+    renderer.fillStyle = this.isDoubles
+      ? teamColors[this.settings.teamId]
+      : colors[playerFrame.playerIndex];
     const shieldPercent = playerFrame.shieldSize / 60;
     const shieldScale = 7.7696875;
     renderer.translate(stage.offset.x, stage.offset.y);
@@ -222,9 +233,9 @@ class Player {
     );
     renderer.scale(stage.scale, stage.scale);
     renderer.translate(playerFrame.positionX, playerFrame.positionY);
-    // 4.5 is magic, -y is because the data seems to be flipped relative to
-    // the stage data..
     renderer.scale(shieldScale, shieldScale);
+    // fixes weird left-facing shield stuff for some reason
+    renderer.scale(-playerFrame.facingDirection, 1);
     renderer.arc(0, 0, shieldPercent, 0, 2 * Math.PI);
     renderer.fill();
     renderer.restore();
@@ -243,7 +254,9 @@ export class Game {
     const players = await Promise.all(
       requiredReplay
         .getSettings()
-        .players.map((playerType) => Player.create(playerType)),
+        .players.map((playerType) =>
+          Player.create(playerType, requiredReplay.getSettings().isTeams),
+        ),
     );
     return new Game(requiredReplay, baseCanvas, players);
   }
@@ -261,10 +274,10 @@ export class Game {
   private tick(): void {
     const frame = this.replay.getFrames()[this.currentFrameNumber];
     this.renderer.clearRect(0, 0, 1200, -750);
-    this.renderStage();
     for (const player of this.players) {
       player.render(frame, this.renderer, this.stage);
     }
+    this.renderStage();
     this.currentFrameNumber++;
   }
 

@@ -1,4 +1,4 @@
-import type { SlippiGame } from '@slippi/slippi-js';
+import type { SlippiGame } from './lib/slippi-js/dist';
 import { css, html, LitElement, PropertyValues } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { Game } from './newPlayer/game';

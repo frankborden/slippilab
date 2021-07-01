@@ -4,7 +4,7 @@ import { classMap } from 'lit/directives/class-map.js';
 import './replay-select';
 import './replay-player';
 import type { ReplaySelectedEvent } from './replay-select';
-import type { SlippiGame } from '@slippi/slippi-js';
+import type { SlippiGame } from './lib/slippi-js/dist';
 
 @customElement('app-root')
 export class AppRoot extends LitElement {

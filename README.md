@@ -4,14 +4,12 @@
 
 ### Replay Viewer
 
-- Shield colors
 - Shield tilting
 - Projectiles
-- Shines
-- Single canvas?
+- Shine effect
+- spawn invulnerability effect
 - Show game timer
-- Doubles colors
-- Customziation (colors, UI info)
+- Customziation (custom colors/colorblind colors, UI info, invincibility overlay?)
 - Slider to seek within replay
 - KB controls (pauseplay, frame advance, +/- 3 seconds, fullscreen?)
 - Slippi code/name below %
@@ -21,9 +19,9 @@
 - Draw blastzone
 - Backgrounds
 - Zoom/Camera
-- Facing issues? (eg. Marth bair)
-- Add characters, peach sheik at least.
-- Actionstate below %
+- Facing issues? (eg. Marth bair, turnaround upbs?)
+- Add characters, peach sheik at least. turnips =P
+- Actionstate/frame below %
 - Resizeable
 - Randall
 - Fountain platforms
@@ -32,7 +30,7 @@
 ### App
 
 - YT logo but with smash logo lines
-- Remove old viewer
+- Remove old viewer after reaching feature parity
 - Get domain + publish
 - Render to gif
 - Upload to gfycat

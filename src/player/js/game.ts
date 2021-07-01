@@ -14,7 +14,7 @@ import { drawDebug } from '../draw/debug';
 import { displayDebug } from './main';
 import type { Replay } from '../../replay-select';
 import type { Stage } from '../stages/stage';
-import type { FrameEntryType } from '@slippi/slippi-js';
+import type { FrameEntryType } from '../../lib/slippi-js/dist';
 
 export class Game {
   playback = new Playback(this);

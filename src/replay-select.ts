@@ -6,7 +6,7 @@ import {
   GameStartType,
   MetadataType,
   SlippiGame,
-} from '@slippi/slippi-js';
+} from './lib/slippi-js/dist';
 import 'wired-elements';
 
 // expected by player library
