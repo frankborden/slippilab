@@ -10,6 +10,8 @@ export interface Stage {
   lines: Line[];
   scale: number;
   offset: Vector;
+  topRightBlastzone: Vector;
+  bottomLeftBlastzone: Vector;
 }
 
 export const stagesById: { [stageId: number]: Stage } = {

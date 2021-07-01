@@ -40,4 +40,6 @@ export const yoshisStory: Stage = {
   ],
   scale: 5,
   offset: new Vector(600, -430),
+  topRightBlastzone: new Vector(173.6, 169),
+  bottomLeftBlastzone: new Vector(-175.7, -91),
 };

@@ -43,4 +43,6 @@ export const fountain: Stage = {
   ],
   scale: 5,
   offset: new Vector(600, -450),
+  topRightBlastzone: new Vector(198.75, 202.5),
+  bottomLeftBlastzone: new Vector(-198.75, -146.25),
 };

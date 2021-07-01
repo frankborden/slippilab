@@ -6,7 +6,6 @@
 
 - Shield tilting
 - Projectiles
-- Shine effect
 - spawn invulnerability effect
 - Show game timer
 - Customziation (custom colors/colorblind colors, UI info, invincibility overlay?)

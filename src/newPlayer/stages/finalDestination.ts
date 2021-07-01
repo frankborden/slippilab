@@ -25,4 +25,6 @@ export const finalDestination: Stage = {
   ],
   scale: 4.5,
   offset: new Vector(600, -400),
+  topRightBlastzone: new Vector(246, 188),
+  bottomLeftBlastzone: new Vector(-246, -140),
 };

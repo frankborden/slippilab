@@ -20,4 +20,6 @@ export const dreamland: Stage = {
   ],
   scale: 3.5,
   offset: new Vector(600, -500),
+  topRightBlastzone: new Vector(255, 250),
+  bottomLeftBlastzone: new Vector(-255, -123),
 };

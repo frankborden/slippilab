@@ -105,7 +105,7 @@ class Player {
     renderer.strokeStyle = this.isDoubles
       ? teamColors[this.settings.teamId]
       : colors[playerFrame.playerIndex];
-    renderer.scale(0.8, 1);
+    // renderer.scale(0.8, 1);
     const x = 0;
     const y = -70;
     renderer.translate(x, y);
@@ -213,17 +213,71 @@ class Player {
     const shieldPercent = playerFrame.shieldSize / 60;
     const shieldScale = 7.7696875;
     renderer.translate(stage.offset.x, stage.offset.y);
-    renderer.translate(
-      this.character.shieldOffset.x,
-      this.character.shieldOffset.y,
-    );
     renderer.scale(stage.scale, stage.scale);
     renderer.translate(playerFrame.positionX, playerFrame.positionY);
+    renderer.translate(
+      this.character.shieldOffset.x / 4.5,
+      this.character.shieldOffset.y / 4.5,
+    );
     renderer.scale(shieldScale, shieldScale);
     // fixes weird left-facing shield stuff for some reason
     renderer.scale(-playerFrame.facingDirection, 1);
     renderer.arc(0, 0, shieldPercent, 0, 2 * Math.PI);
     renderer.fill();
+    renderer.restore();
+  }
+
+  public renderShine(
+    frame: DeepRequired<FrameEntryType>,
+    renderer: CanvasRenderingContext2D,
+    stage: Stage,
+  ) {
+    const playerFrame = frame.players[this.settings.playerIndex].post;
+    const character = characters[this.settings.characterId];
+    if (
+      (character !== 'Fox' && character !== 'Falco') ||
+      playerFrame.actionStateId < 360 ||
+      playerFrame.actionStateId > 369
+    ) {
+      return;
+    }
+    renderer.save();
+    renderer.fillStyle = '#00FFFF';
+    renderer.strokeStyle = '#00FFFF';
+    renderer.lineWidth = 5;
+    const shieldScale = 7.7696875;
+    renderer.translate(stage.offset.x, stage.offset.y);
+    renderer.scale(stage.scale, stage.scale);
+    renderer.lineWidth /= stage.scale;
+    renderer.translate(playerFrame.positionX, playerFrame.positionY);
+    renderer.translate(
+      this.character.shieldOffset.x / 4.5,
+      this.character.shieldOffset.y / 4.5,
+    );
+    renderer.scale(shieldScale, shieldScale);
+    renderer.lineWidth /= shieldScale;
+    // fixes weird left-facing shield stuff for some reason
+    renderer.scale(-playerFrame.facingDirection, 1);
+    renderer.beginPath();
+    renderer.scale(0.9, 0.9); // not as big as shield because we have linewidth
+    const sixths = (2 * Math.PI) / 6;
+    renderer.moveTo(0, 1);
+    for (var hexPart = 0; hexPart < 6; hexPart++) {
+      renderer.lineTo(
+        1 * Math.sin(sixths * hexPart + 1),
+        1 * Math.cos(sixths * hexPart + 1),
+      );
+    }
+    renderer.moveTo(0, 0.5);
+    for (var hexPart = 0; hexPart < 6; hexPart++) {
+      renderer.lineTo(
+        0.5 * Math.sin(sixths * hexPart + 1),
+        0.5 * Math.cos(sixths * hexPart + 1),
+      );
+    }
+
+    renderer.closePath();
+    renderer.stroke();
     renderer.restore();
   }
 }
@@ -263,8 +317,10 @@ export class Game {
     for (const player of this.players) {
       player.renderCharacter(frame, this.renderer, this.stage);
       player.renderShield(frame, this.renderer, this.stage);
+      player.renderShine(frame, this.renderer, this.stage);
     }
     this.renderStage();
+    this.renderBlastzones();
     for (const player of this.players) {
       player.renderUi(frame, this.renderer);
     }
@@ -272,20 +328,35 @@ export class Game {
   }
 
   private renderStage(): void {
-    const renderer = this.renderer;
-    renderer.save();
-    renderer.lineWidth = 2;
-    renderer.strokeStyle = 'white';
-    renderer.translate(this.stage.offset.x, this.stage.offset.y);
-    renderer.scale(this.stage.scale, this.stage.scale);
-    renderer.lineWidth /= this.stage.scale;
+    this.renderer.save();
+    this.renderer.lineWidth = 2;
+    this.renderer.strokeStyle = 'white';
+    this.renderer.translate(this.stage.offset.x, this.stage.offset.y);
+    this.renderer.scale(this.stage.scale, this.stage.scale);
+    this.renderer.lineWidth /= this.stage.scale;
     this.stage.lines.forEach((line) => {
-      renderer.beginPath();
-      renderer.moveTo(line[0].x, line[0].y);
-      renderer.lineTo(line[1].x, line[1].y);
-      renderer.closePath();
-      renderer.stroke();
+      this.renderer.beginPath();
+      this.renderer.moveTo(line[0].x, line[0].y);
+      this.renderer.lineTo(line[1].x, line[1].y);
+      this.renderer.closePath();
+      this.renderer.stroke();
     });
-    renderer.restore();
+    this.renderer.restore();
+  }
+
+  private renderBlastzones(): void {
+    this.renderer.save();
+    this.renderer.lineWidth = 2;
+    this.renderer.strokeStyle = 'white';
+    this.renderer.translate(this.stage.offset.x, this.stage.offset.y);
+    this.renderer.scale(this.stage.scale, this.stage.scale);
+    this.renderer.lineWidth /= this.stage.scale;
+    this.renderer.strokeRect(
+      this.stage.bottomLeftBlastzone.x,
+      this.stage.bottomLeftBlastzone.y,
+      this.stage.topRightBlastzone.x - this.stage.bottomLeftBlastzone.x,
+      this.stage.topRightBlastzone.y - this.stage.bottomLeftBlastzone.y,
+    );
+    this.renderer.restore();
   }
 }
