@@ -57,6 +57,10 @@ class Player {
     this.character = characterDataById[this.settings.characterId];
   }
 
+  public isInFrame(frame: DeepRequired<FrameEntryType>): boolean {
+    return Boolean(frame.players[this.settings.playerIndex]);
+  }
+
   public renderUi(
     frame: DeepRequired<FrameEntryType>,
     renderer: CanvasRenderingContext2D,
@@ -105,7 +109,6 @@ class Player {
     renderer.strokeStyle = this.isDoubles
       ? teamColors[this.settings.teamId]
       : colors[playerFrame.playerIndex];
-    // renderer.scale(0.8, 1);
     const x = 0;
     const y = -70;
     renderer.translate(x, y);
@@ -127,15 +130,15 @@ class Player {
       ? teamColors[this.settings.teamId]
       : colors[playerFrame.playerIndex];
     renderer.translate(stage.offset.x, stage.offset.y);
-    renderer.scale(stage.scale, stage.scale);
+    renderer.scale(stage.scale, stage.scale); // screen coords -> world coords
     renderer.lineWidth /= stage.scale;
     renderer.translate(playerFrame.positionX, playerFrame.positionY);
     // 4.5 is magic, -y is because the data seems to be flipped relative to
     // the stage data..
+    // world coords -> animation data coords
     renderer.scale(this.character.scale / 4.5, -this.character.scale / 4.5);
     renderer.lineWidth /= this.character.scale / 4.5;
-    renderer.scale(playerFrame.facingDirection, 1);
-
+    renderer.scale(playerFrame.facingDirection, 1); // flip if facing left
     const animationName =
       actions[playerFrame.actionStateId] ??
       specials[characters[this.settings.characterId]][
@@ -213,12 +216,13 @@ class Player {
     const shieldPercent = playerFrame.shieldSize / 60;
     const shieldScale = 7.7696875;
     renderer.translate(stage.offset.x, stage.offset.y);
-    renderer.scale(stage.scale, stage.scale);
+    renderer.scale(stage.scale, stage.scale); // screen coords -> world coords
     renderer.translate(playerFrame.positionX, playerFrame.positionY);
     renderer.translate(
       this.character.shieldOffset.x / 4.5,
       this.character.shieldOffset.y / 4.5,
     );
+    // world coords -> shield coords (unit render distance === max shield size)
     renderer.scale(shieldScale, shieldScale);
     // fixes weird left-facing shield stuff for some reason
     renderer.scale(-playerFrame.facingDirection, 1);
@@ -247,14 +251,14 @@ class Player {
     renderer.lineWidth = 5;
     const shieldScale = 7.7696875;
     renderer.translate(stage.offset.x, stage.offset.y);
-    renderer.scale(stage.scale, stage.scale);
+    renderer.scale(stage.scale, stage.scale); // screen coords -> world coords
     renderer.lineWidth /= stage.scale;
     renderer.translate(playerFrame.positionX, playerFrame.positionY);
     renderer.translate(
       this.character.shieldOffset.x / 4.5,
       this.character.shieldOffset.y / 4.5,
     );
-    renderer.scale(shieldScale, shieldScale);
+    renderer.scale(shieldScale, shieldScale); // world coords -> shield coords
     renderer.lineWidth /= shieldScale;
     // fixes weird left-facing shield stuff for some reason
     renderer.scale(-playerFrame.facingDirection, 1);
@@ -283,8 +287,10 @@ class Player {
 }
 
 export class Game {
-  private currentFrameNumber = -123;
+  public currentFrameNumber = -123;
   private stage: Stage;
+  private intervalId: number;
+  private tickHandler?: (currentFrameNumber: number) => any;
 
   public static async create(
     replay: SlippiGame,
@@ -306,24 +312,43 @@ export class Game {
     private renderer: CanvasRenderingContext2D,
     private players: Player[],
   ) {
-    renderer.scale(1, -1);
+    renderer.scale(1, -1); // make origin at bottom left corner
     this.stage = stagesById[replay.getSettings().stageId];
-    setInterval(() => this.tick(), 1000 / 60);
+    this.intervalId = window.setInterval(() => this.tick(), 1000 / 60);
+  }
+
+  public onTick(tickHandler: (currentFrameNumber: number) => any) {
+    this.tickHandler = tickHandler;
+  }
+
+  public setFrame(newFrameNumber: number): void {
+    window.clearInterval(this.intervalId);
+    this.currentFrameNumber = newFrameNumber;
+    this.intervalId = window.setInterval(() => this.tick(), 1000 / 60);
   }
 
   private tick(): void {
     const frame = this.replay.getFrames()[this.currentFrameNumber];
-    this.renderer.clearRect(0, 0, 1200, -750);
-    for (const player of this.players) {
-      player.renderCharacter(frame, this.renderer, this.stage);
-      player.renderShield(frame, this.renderer, this.stage);
-      player.renderShine(frame, this.renderer, this.stage);
+    if (!frame) {
+      window.clearInterval(this.intervalId);
+      return;
     }
+    this.tickHandler?.(this.currentFrameNumber);
+    this.renderer.clearRect(0, 0, 1200, -750);
+    this.players
+      .filter((player) => player.isInFrame(frame))
+      .forEach((player) => {
+        player.renderCharacter(frame, this.renderer, this.stage);
+        player.renderShield(frame, this.renderer, this.stage);
+        player.renderShine(frame, this.renderer, this.stage);
+      });
     this.renderStage();
     this.renderBlastzones();
-    for (const player of this.players) {
-      player.renderUi(frame, this.renderer);
-    }
+    this.players
+      .filter((player) => player.isInFrame(frame))
+      .forEach((player) => {
+        player.renderUi(frame, this.renderer);
+      });
     this.currentFrameNumber++;
   }
 
@@ -332,6 +357,7 @@ export class Game {
     this.renderer.lineWidth = 2;
     this.renderer.strokeStyle = 'white';
     this.renderer.translate(this.stage.offset.x, this.stage.offset.y);
+    // screen coords -> world coords
     this.renderer.scale(this.stage.scale, this.stage.scale);
     this.renderer.lineWidth /= this.stage.scale;
     this.stage.lines.forEach((line) => {
@@ -349,6 +375,7 @@ export class Game {
     this.renderer.lineWidth = 2;
     this.renderer.strokeStyle = 'white';
     this.renderer.translate(this.stage.offset.x, this.stage.offset.y);
+    // screen coords -> world coords
     this.renderer.scale(this.stage.scale, this.stage.scale);
     this.renderer.lineWidth /= this.stage.scale;
     this.renderer.strokeRect(

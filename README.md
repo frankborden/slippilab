@@ -9,17 +9,15 @@
 - spawn invulnerability effect
 - Show game timer
 - Customziation (custom colors/colorblind colors, UI info, invincibility overlay?)
-- Slider to seek within replay
 - KB controls (pauseplay, frame advance, +/- 3 seconds, fullscreen?)
 - Slippi code/name below %
 - Name tags
-- Fox Up B rotation
+- Fox/Falco Up B rotation
 - End of game
-- Draw blastzone
 - Backgrounds
 - Zoom/Camera
-- Facing issues? (eg. Marth bair, turnaround upbs?)
-- Add characters, peach sheik at least. turnips =P
+- Facing issues with turnaround moves? (eg. Marth bair, reverse upbs)
+- Add characters, peach sheik at least. turnip throw animations... :'(
 - Actionstate/frame below %
 - Resizeable
 - Randall
