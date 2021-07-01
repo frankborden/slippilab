@@ -30,6 +30,42 @@ export class ReplayPlayer extends LitElement {
 
   private game?: Game;
 
+  constructor() {
+    super();
+    window.addEventListener('keydown', (e: KeyboardEvent) => {
+      switch (e.key) {
+        case ' ':
+        case 'k':
+          this.game?.togglePause();
+          break;
+        case 'j':
+          this.game?.setFrame(Math.max(-123, this.currentFrame - 300));
+          break;
+        case 'l':
+          this.game?.setFrame(
+            Math.min(this.highestFrame, this.currentFrame + 300),
+          );
+          break;
+        case '.':
+          this.game?.setFrame(
+            Math.min(this.highestFrame, this.currentFrame + 1),
+          );
+          break;
+        case ',':
+          this.game?.setFrame(Math.max(-123, this.currentFrame - 1));
+          break;
+        case '+':
+        case '=':
+          this.game?.zoomIn();
+          break;
+        case '-':
+        case '_':
+          this.game?.zoomOut();
+          break;
+      }
+    });
+  }
+
   updated(oldValues: PropertyValues<ReplayPlayer>) {
     if (oldValues.has('replay')) {
       this.setup();

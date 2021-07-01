@@ -291,6 +291,7 @@ export class Game {
   private stage: Stage;
   private intervalId: number;
   private tickHandler?: (currentFrameNumber: number) => any;
+  private isPaused = false;
 
   public static async create(
     replay: SlippiGame,
@@ -314,17 +315,37 @@ export class Game {
   ) {
     renderer.scale(1, -1); // make origin at bottom left corner
     this.stage = stagesById[replay.getSettings().stageId];
-    this.intervalId = window.setInterval(() => this.tick(), 1000 / 60);
+    this.intervalId = window.setInterval(() => this.maybeTick(), 1000 / 60);
   }
 
   public onTick(tickHandler: (currentFrameNumber: number) => any) {
     this.tickHandler = tickHandler;
   }
 
+  public togglePause(): void {
+    this.isPaused = !this.isPaused;
+  }
+
+  public zoomIn(): void {
+    this.stage.scale *= 1.2;
+  }
+
+  public zoomOut(): void {
+    this.stage.scale /= 1.2;
+  }
+
   public setFrame(newFrameNumber: number): void {
     window.clearInterval(this.intervalId);
     this.currentFrameNumber = newFrameNumber;
-    this.intervalId = window.setInterval(() => this.tick(), 1000 / 60);
+    this.tick();
+    this.intervalId = window.setInterval(() => this.maybeTick(), 1000 / 60);
+  }
+
+  private maybeTick(): void {
+    if (this.isPaused) {
+      return;
+    }
+    this.tick();
   }
 
   private tick(): void {
