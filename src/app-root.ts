@@ -27,9 +27,6 @@ export class AppRoot extends LitElement {
         height: 100vh;
         background-color: lightgreen;
       }
-      .player {
-        align-self: center;
-      }
       .hidden {
         position: absolute;
         left: -5000px;
@@ -53,13 +50,13 @@ export class AppRoot extends LitElement {
           class=${classMap(selectClasses)}
           @replay-selected=${this.replaySelected}
         ></replay-select>
-        ${this.replay
-          ? html` <new-replay-player
-              .replay=${this.replay}
-              class=${classMap(playerClasses)}
-            ></new-replay-player>`
-          : ''}
       </div>
+      ${this.replay
+        ? html` <new-replay-player
+            .replay=${this.replay}
+            class=${classMap(playerClasses)}
+          ></new-replay-player>`
+        : ''}
     `;
   }
 }

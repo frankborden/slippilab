@@ -9,17 +9,20 @@ import type { WiredSlider } from 'wired-elements';
 export class ReplayPlayer extends LitElement {
   static get styles() {
     return css`
-      .wrapper {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-      }
       canvas {
-        background-color: black;
+        position: absolute;
+        top: 0;
+        left: calc((100vw - 160vh) / 2);
+        width: 160vh;
+        height: 100vh;
+        background-color: lightgreen;
       }
       wired-slider {
-        width: 1200px;
+        position: absolute;
+        bottom: 10px;
+        left: 25%;
+        align-self: center;
+        width: 50%;
         --wired-slider-knob-color: green;
         --wired-slider-bar-color: green;
       }
@@ -100,16 +103,14 @@ export class ReplayPlayer extends LitElement {
 
   render() {
     return html`
-      <div class="wrapper">
-        <canvas width="1200" height="750"></canvas>
-        <wired-slider
-          min="-123"
-          knobradius="100"
-          max=${this.highestFrame}
-          .value=${this.currentFrame}
-          @change=${this.clicked}
-        ></wired-slider>
-      </div>
+      <canvas width="1200" height="750"></canvas>
+      <wired-slider
+        min="-123"
+        knobradius="100"
+        max=${this.highestFrame}
+        .value=${this.currentFrame}
+        @change=${this.clicked}
+      ></wired-slider>
     `;
   }
 }

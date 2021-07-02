@@ -5,19 +5,16 @@
 ### Replay Viewer
 
 - Shield tilting
-- Projectiles
-- spawn invulnerability effect
+- Projectiles (how long are lasers?)
+- Spawn invulnerability effect
 - Customziation (custom colors/colorblind colors, UI info, invincibility overlay?)
-- Fullscreen
 - Fox/Falco Up B rotation
-- Backgrounds
 - Camera tracking players
 - Facing issues with turnaround moves? (eg. Marth bair, reverse upbs)
 - Add characters, peach sheik at least. turnip throw animations... :'(
-- Actionstate/frame below %
+- Actionstate/frame below % as option
 - Error messages
-- Help text (kb controls, what's supported)
-- Resizeable
+- Help/Settings (kb controls, what's supported)
 - Randall
 - Fountain platforms
 - Separate project

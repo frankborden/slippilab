@@ -25,7 +25,7 @@ export class StageRenderer implements Renderer {
     const renderer = this.worldSpaceRenderingContext;
     renderer.save();
     renderer.lineWidth *= 2;
-    renderer.strokeStyle = 'white';
+    renderer.strokeStyle = 'black';
     this.stage.lines.forEach((line) => {
       renderer.beginPath();
       renderer.moveTo(line[0].x, line[0].y);
@@ -40,7 +40,7 @@ export class StageRenderer implements Renderer {
     const renderer = this.worldSpaceRenderingContext;
     renderer.save();
     renderer.lineWidth *= 2;
-    renderer.strokeStyle = 'white';
+    renderer.strokeStyle = 'black';
     renderer.strokeRect(
       this.stage.bottomLeftBlastzone.x,
       this.stage.bottomLeftBlastzone.y,

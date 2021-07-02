@@ -94,8 +94,8 @@ export class PlayerRenderer implements Renderer {
     renderer.save();
     renderer.font = '900 53px Arial';
     renderer.textAlign = 'center';
-    renderer.fillStyle = 'white';
-    renderer.strokeStyle = this.isDoubles
+    renderer.strokeStyle = 'black';
+    renderer.fillStyle = this.isDoubles
       ? teamColors[this.settings.teamId]
       : colors[playerFrame.playerIndex];
     const x = 0;
@@ -114,8 +114,8 @@ export class PlayerRenderer implements Renderer {
     renderer.save();
     renderer.font = '900 24px Arial';
     renderer.textAlign = 'center';
-    renderer.fillStyle = 'white';
-    renderer.strokeStyle = this.isDoubles
+    renderer.strokeStyle = 'black';
+    renderer.fillStyle = this.isDoubles
       ? teamColors[this.settings.teamId]
       : colors[playerFrame.playerIndex];
     const x = 0;
@@ -134,7 +134,8 @@ export class PlayerRenderer implements Renderer {
     const playerFrame = frame.players[this.settings.playerIndex].post;
     renderer.save();
     renderer.lineWidth *= 2;
-    renderer.strokeStyle = this.isDoubles
+    renderer.strokeStyle = 'black';
+    renderer.fillStyle = this.isDoubles
       ? teamColors[this.settings.teamId]
       : colors[playerFrame.playerIndex];
     renderer.translate(playerFrame.positionX, playerFrame.positionY);
@@ -196,6 +197,7 @@ export class PlayerRenderer implements Renderer {
       // renderer.lineTo(animationFrameLine[k + 4], animationFrameLine[k + 5]);
     }
     renderer.closePath();
+    renderer.fill();
     renderer.stroke();
     renderer.restore();
   }
@@ -214,6 +216,7 @@ export class PlayerRenderer implements Renderer {
     renderer.fillStyle = this.isDoubles
       ? teamColors[this.settings.teamId]
       : colors[playerFrame.playerIndex];
+    renderer.strokeStyle = 'white';
     const shieldPercent = playerFrame.shieldSize / 60;
     const shieldScale = 7.7696875;
     renderer.translate(playerFrame.positionX, playerFrame.positionY);
@@ -223,10 +226,12 @@ export class PlayerRenderer implements Renderer {
     );
     // world space -> shield space (unit render distance === max shield size)
     renderer.scale(shieldScale, shieldScale);
+    renderer.lineWidth /= shieldScale;
     renderer.beginPath();
     renderer.arc(0, 0, shieldPercent, 0, 2 * Math.PI);
     renderer.closePath();
     renderer.fill();
+    renderer.stroke();
     renderer.restore();
   }
 
