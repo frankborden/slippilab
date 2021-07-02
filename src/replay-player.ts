@@ -1,7 +1,7 @@
 import type { SlippiGame } from '@slippi/slippi-js';
 import { css, html, LitElement, PropertyValues } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { Game } from './newPlayer/game';
+import { GameRenderer } from './newPlayer/gameRenderer';
 import 'wired-elements';
 import type { WiredSlider } from 'wired-elements';
 
@@ -17,11 +17,11 @@ export class ReplayPlayer extends LitElement {
       }
       canvas {
         background-color: black;
-        width: 75%;
-        height: 75%;
       }
       wired-slider {
         width: 1200px;
+        --wired-slider-knob-color: green;
+        --wired-slider-bar-color: green;
       }
     `;
   }
@@ -34,12 +34,11 @@ export class ReplayPlayer extends LitElement {
   @state()
   private highestFrame = 400;
 
-  private game?: Game;
+  private game?: GameRenderer;
 
   constructor() {
     super();
     window.addEventListener('keydown', (e: KeyboardEvent) => {
-      console.log(e.key);
       switch (e.key) {
         case ' ':
         case 'k':
@@ -88,7 +87,7 @@ export class ReplayPlayer extends LitElement {
       return;
     }
     this.highestFrame = highestFrame;
-    this.game = await Game.create(this.replay, context);
+    this.game = await GameRenderer.create(this.replay, context);
     this.game.onTick(
       (currentFrameNumber: number) => (this.currentFrame = currentFrameNumber),
     );
@@ -105,6 +104,7 @@ export class ReplayPlayer extends LitElement {
         <canvas width="1200" height="750"></canvas>
         <wired-slider
           min="-123"
+          knobradius="100"
           max=${this.highestFrame}
           .value=${this.currentFrame}
           @change=${this.clicked}

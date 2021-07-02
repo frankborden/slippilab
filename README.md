@@ -15,6 +15,8 @@
 - Facing issues with turnaround moves? (eg. Marth bair, reverse upbs)
 - Add characters, peach sheik at least. turnip throw animations... :'(
 - Actionstate/frame below %
+- Error messages
+- Help text (kb controls, what's supported)
 - Resizeable
 - Randall
 - Fountain platforms

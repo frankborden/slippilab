@@ -5,9 +5,18 @@ import './replay-select';
 import './replay-player';
 import type { ReplaySelectedEvent } from './replay-select';
 import type { SlippiGame } from '@slippi/slippi-js';
+import { fetchAnimation } from './newPlayer/animations';
+import { characterDataById } from './newPlayer/characters/character';
 
 @customElement('app-root')
 export class AppRoot extends LitElement {
+  constructor() {
+    super();
+    Object.keys(characterDataById).forEach((characterId) =>
+      fetchAnimation(Number(characterId)),
+    );
+  }
+
   static get styles() {
     return css`
       .wrapper {
