@@ -5,9 +5,6 @@
 ### Replay Viewer
 
 - Shield tilting
-- Projectiles (how long are lasers?)
-- Shy guys
-- Wispy
 - Spawn invulnerability effect
 - Customziation (custom colors/colorblind colors, UI info, invincibility overlay?)
 - Camera tracking players
@@ -16,7 +13,8 @@
 - Actionstate/frame below % as option
 - Error messages
 - Help/Settings (kb controls, what's not supported)
-- Fountain platforms
+- Fountain platforms (infeasible until it's added to .slp spec)
+- Wispy (seems infeasible until it's added to .slp spec)
 - Separate project
 
 ### App

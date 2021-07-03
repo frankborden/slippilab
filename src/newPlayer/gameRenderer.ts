@@ -1,5 +1,6 @@
 import type { FrameEntryType, SlippiGame } from '@slippi/slippi-js';
 import type { DeepRequired } from './common';
+import { ItemRenderer } from './itemRenderer';
 import { PlayerRenderer } from './playerRenderer';
 import { StageRenderer } from './stageRenderer';
 import { Stage, stagesById } from './stages/stage';
@@ -42,6 +43,7 @@ export class GameRenderer {
       stage,
       worldSpaceRenderingContext,
     );
+    const itemRenderer = ItemRenderer.create(worldSpaceRenderingContext);
     const playerRenderers = await Promise.all(
       requiredReplay
         .getSettings()
@@ -61,7 +63,7 @@ export class GameRenderer {
       screenSpaceCanvas,
       worldSpaceRenderingContext,
       worldSpaceCanvas,
-      (playerRenderers as Renderer[]).concat(stageRenderer),
+      (playerRenderers as Renderer[]).concat(itemRenderer, stageRenderer),
     );
   }
 
