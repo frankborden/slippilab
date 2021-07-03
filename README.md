@@ -14,7 +14,7 @@
 - Add characters, peach sheik at least. turnip throw animations... :'(
 - Actionstate/frame below % as option
 - Error messages
-- Help/Settings (kb controls, what's supported)
+- Help/Settings (kb controls, what's not supported)
 - Randall
 - Fountain platforms
 - Separate project

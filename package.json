@@ -7,10 +7,9 @@
     "lint": "prettier --check \"src/**/*.ts\""
   },
   "dependencies": {
-    "@slippi/slippi-js": "../slippi-js/",
+    "@slippi/slippi-js": "file:lib/slippi-js/",
     "lit": "^2.0.0-rc.2",
     "safe-buffer": "^5.2.1",
-    "slippi-visualiser": "../slippi-visualiser",
     "wired-elements": "^3.0.0-rc.6"
   },
   "devDependencies": {
