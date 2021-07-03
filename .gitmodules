@@ -1,0 +1,3 @@
+[submodule "lib/slippi-js"]
+	path = lib/slippi-js
+	url = https://github.com/frankborden/slippi-js.git
