@@ -20,9 +20,8 @@
 
 ### App
 
-- YT logo but with smash logo lines
 - Remove old viewer after reaching feature parity
-- Find domain
+- Find a domain
 - Render clip to gif
 - Upload clip to some host
 - adjust start/end clip
