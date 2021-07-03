@@ -132,6 +132,7 @@ export class PlayerRenderer implements Renderer {
   private renderCharacter(frame: DeepRequired<FrameEntryType>): void {
     const renderer = this.worldSpaceRenderingContext;
     const playerFrame = frame.players[this.settings.playerIndex].post;
+    const character = characters[this.settings.characterId];
     renderer.save();
     renderer.lineWidth *= 2;
     renderer.strokeStyle = 'black';
@@ -144,7 +145,6 @@ export class PlayerRenderer implements Renderer {
     // world space -> animation data space
     renderer.scale(this.character.scale / 4.5, -this.character.scale / 4.5);
     renderer.lineWidth /= this.character.scale / 4.5;
-    renderer.scale(playerFrame.facingDirection, 1); // flip if facing left
     const animationName =
       actions[playerFrame.actionStateId] ??
       specials[characters[this.settings.characterId]][
@@ -181,6 +181,28 @@ export class PlayerRenderer implements Renderer {
       Math.max(0, Math.floor(playerFrame.actionStateCounter) - 1) %
       animationData.length;
     const animationFrameLine = animationData[animationFrameIndex][0];
+    const isSpacieUpBLaunchAction =
+      playerFrame.actionStateId === 355 || playerFrame.actionStateId === 356;
+    const isSpacieUpBMovementFrame =
+      (character === 'Fox' && animationFrameIndex < 31) ||
+      (character === 'Falco' && animationFrameIndex < 23);
+
+    if (isSpacieUpBLaunchAction && isSpacieUpBMovementFrame) {
+      // just an estimate, especially with 2 different characters...
+      const rotationYOffset = -125;
+      const rawAngle = Math.atan2(
+        playerFrame.selfInducedSpeeds.y + playerFrame.selfInducedSpeeds.attackY,
+        playerFrame.selfInducedSpeeds.airX +
+          playerFrame.selfInducedSpeeds.attackX +
+          playerFrame.selfInducedSpeeds.groundX,
+      );
+      const angleFromUp = rawAngle - Math.PI / 2;
+      renderer.translate(0, rotationYOffset);
+      renderer.rotate(-angleFromUp);
+      renderer.translate(0, -rotationYOffset);
+    }
+
+    renderer.scale(playerFrame.facingDirection, 1); // flip if facing left
     renderer.beginPath();
     renderer.moveTo(animationFrameLine[0], animationFrameLine[1]);
     // starting from index 2, each set of 6 numbers are bezier curve coords
