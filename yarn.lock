@@ -67,7 +67,7 @@
 
 "@slippi/slippi-js@frankborden/slippi-js":
   version "6.1.1"
-  resolved "https://codeload.github.com/frankborden/slippi-js/tar.gz/c9d936abaddeaa798558b95b6fda3213a1285004"
+  resolved "https://codeload.github.com/frankborden/slippi-js/tar.gz/b30d420258e8d4ba16b3d81f84ee3c91252c1578"
   dependencies:
     "@shelacek/ubjson" "^1.0.1"
     enet "^0.2.9"
@@ -1531,6 +1531,11 @@ wrappy@1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/wrappy/-/wrappy-1.0.2.tgz#b5243d8f3ec1aa35f1364605bc0d1036e30ab69f"
   integrity sha1-tSQ9jz7BqjXxNkYFvA0QNuMKtp8=
+
+ws@^7.5.1:
+  version "7.5.1"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-7.5.1.tgz#44fc000d87edb1d9c53e51fbc69a0ac1f6871d66"
+  integrity sha512-2c6faOUH/nhoQN6abwMloF7Iyl0ZS2E9HGtsiLrWn0zOOMWlhtDmdf/uihDt6jnuCxgtwGBNy6Onsoy2s2O2Ow==
 
 yallist@^4.0.0:
   version "4.0.0"

@@ -10,7 +10,8 @@
     "@slippi/slippi-js": "frankborden/slippi-js",
     "lit": "^2.0.0-rc.2",
     "safe-buffer": "^5.2.1",
-    "wired-elements": "^3.0.0-rc.6"
+    "wired-elements": "^3.0.0-rc.6",
+    "ws": "^7.5.1"
   },
   "devDependencies": {
     "@snowpack/plugin-typescript": "^1.2.1",
