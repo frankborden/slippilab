@@ -12,6 +12,7 @@ export interface Stage {
   offset: Vector;
   topRightBlastzone: Vector;
   bottomLeftBlastzone: Vector;
+  getMovingPlatforms?: (frame: number) => Line[];
 }
 
 export const stagesById: { [stageId: number]: Stage } = {

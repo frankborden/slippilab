@@ -17,16 +17,23 @@ export class StageRenderer implements Renderer {
   ) {}
 
   public render(frame: DeepRequired<FrameEntryType>): void {
-    this.renderStageLines();
+    this.renderStageLines(frame);
     this.renderBlastzones();
   }
 
-  private renderStageLines(): void {
+  private renderStageLines(frame: DeepRequired<FrameEntryType>): void {
     const renderer = this.worldSpaceRenderingContext;
     renderer.save();
     renderer.lineWidth *= 2;
     renderer.strokeStyle = 'black';
     this.stage.lines.forEach((line) => {
+      renderer.beginPath();
+      renderer.moveTo(line[0].x, line[0].y);
+      renderer.lineTo(line[1].x, line[1].y);
+      renderer.closePath();
+      renderer.stroke();
+    });
+    this.stage.getMovingPlatforms?.(frame.frame)?.forEach((line) => {
       renderer.beginPath();
       renderer.moveTo(line[0].x, line[0].y);
       renderer.lineTo(line[1].x, line[1].y);

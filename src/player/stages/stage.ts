@@ -26,14 +26,14 @@ export interface Stage {
   movingPlatforms?: () => void;
   randall?: {
     path: Vec2D[];
-    start: Vec2D;
+    // start: Vec2D;
     width: number; //5.95 * 2
     speed: number;
     // -0.354859
-    left_edge: number;
-    right_edge: number;
-    top_edge: number;
-    bottom_edge: number;
+    // left_edge: number;
+    // right_edge: number;
+    // top_edge: number;
+    // bottom_edge: number;
 
     path_offset: number;
 

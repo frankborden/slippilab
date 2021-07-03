@@ -144,14 +144,14 @@ export const yoshis: Stage = {
     +1.61, 0
     +0.58, -0.56
     -1.575*/
-    start: new Vec2D(-95.9, -33.25),
+    // start: new Vec2D(-95.9, -33.25),
     width: 11.9, //5.95 * 2
     speed: 0.354843,
     // -0.354859
-    left_edge: -97.65,
-    right_edge: 97.3,
-    top_edge: -13.65,
-    bottom_edge: -33.25,
+    // left_edge: -97.65,
+    // right_edge: 97.3,
+    // top_edge: -13.65,
+    // bottom_edge: -33.25,
 
     path_offset: -5.13,
 

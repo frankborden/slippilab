@@ -6,6 +6,8 @@
 
 - Shield tilting
 - Projectiles (how long are lasers?)
+- Shy guys
+- Wispy
 - Spawn invulnerability effect
 - Customziation (custom colors/colorblind colors, UI info, invincibility overlay?)
 - Camera tracking players
@@ -14,7 +16,6 @@
 - Actionstate/frame below % as option
 - Error messages
 - Help/Settings (kb controls, what's not supported)
-- Randall
 - Fountain platforms
 - Separate project
 

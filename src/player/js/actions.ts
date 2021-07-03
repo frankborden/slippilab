@@ -541,7 +541,7 @@ export const specials: {
     358: 'DOWNSPECIALGROUNDENDGROUND', //SPECIALLWEND   (grounded falcon kick that ends on the ground)
     359: 'DOWNSPECIALAIR', //SPECIALAIRLW
     360: 'DOWNSPECIALAIRENDGROUND', //SPECIALAIRLWEND  (air falcon kick that ends on the ground)
-    361: 'DOWNSPECIALAIRENDEND', //SPECIALAIRLWENDAIR  (air fakcon kick that ends in the air)
+    361: 'DOWNSPECIALAIRENDAIR', //SPECIALAIRLWENDAIR  (air fakcon kick that ends in the air)
     362: 'DOWNSPECIALGROUNDENDAIR', //SPECIALLWENDAIR   (grounded falcon kick that ends in the air)
     363: 'UPSPECIALTHROW', //SPECIALHITHROW  (falcon kick into wall)
   },
