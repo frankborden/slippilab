@@ -1,13 +1,15 @@
 import { css, html, LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import {
-  FrameEntryType,
   FramesType,
   GameStartType,
   MetadataType,
   SlippiGame,
 } from '@slippi/slippi-js';
 import 'wired-elements';
+import { supportedCharacters } from './newPlayer/animations';
+import { characters } from './newPlayer/characters/character';
+import { stagesById } from './newPlayer/stages/stage';
 
 // expected by player library
 export interface Replay {
@@ -17,14 +19,14 @@ export interface Replay {
   frames: FramesType;
   // };
 }
-export type ReplaySelectedEvent = CustomEvent<SlippiGame>;
+export type ReplaysSelectedEvent = CustomEvent<SlippiGame[]>;
 
 @customElement('replay-select')
 export class ReplaySelect extends LitElement {
   static get styles() {
     return css`
-      h1 {
-        font-size: 1rem;
+      h2 {
+        width: 100%;
       }
       input {
         display: none;
@@ -34,20 +36,42 @@ export class ReplaySelect extends LitElement {
         cursor: pointer;
       }
       wired-button {
+        width: 100%;
         background-color: #7fd17f;
       }
     `;
   }
 
   private async filesSelected() {
-    const file = this.renderRoot.querySelector('input')?.files?.[0];
-    if (!file) {
+    const files = this.renderRoot.querySelector('input')?.files;
+    if (!files || files.length === 0) {
       return;
     }
-    const replay = await this.createReplay(file);
-    const replaySelectedEvent = new CustomEvent<SlippiGame>('replay-selected', {
-      detail: replay,
-    });
+
+    const replays = (
+      await Promise.all(
+        Array.from(files).map((file) => this.createReplay(file)),
+      )
+    )
+      .filter(
+        (replay): replay is SlippiGame =>
+          replay
+            ?.getSettings()
+            ?.players.every((player) =>
+              supportedCharacters.includes(characters[player.characterId!]),
+            ) ?? false,
+      )
+      .filter((replay) =>
+        Object.keys(stagesById).includes(
+          replay.getSettings()?.stageId?.toString()!,
+        ),
+      );
+    const replaySelectedEvent = new CustomEvent<SlippiGame[]>(
+      'replays-selected',
+      {
+        detail: replays,
+      },
+    );
     this.dispatchEvent(replaySelectedEvent);
   }
 
@@ -60,15 +84,16 @@ export class ReplaySelect extends LitElement {
   render() {
     return html`
       <label for="replay-input">
-        <wired-button class="label" elevation="2" disabled
-          ><h1>Load .slp</h1></wired-button
-        >
+        <wired-button class="label" elevation="2" disabled>
+          <h2>Load Replay Files</h2>
+        </wired-button>
       </label>
       <input
         id="replay-input"
         name="replay-input"
         type="file"
         accept=".slp"
+        multiple
         webkitdirectory
         @change=${this.filesSelected}
       />

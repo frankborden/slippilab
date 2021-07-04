@@ -12,7 +12,7 @@ export class ReplayPlayer extends LitElement {
       canvas {
         position: absolute;
         top: 0;
-        left: calc((100vw - 160vh) / 2);
+        right: 0;
         width: 160vh;
         height: 100vh;
         background-color: white;
@@ -20,11 +20,11 @@ export class ReplayPlayer extends LitElement {
       wired-slider {
         position: absolute;
         bottom: 10px;
-        left: 25%;
+        right: calc(160vh * 0.25);
+        width: calc(160vh / 2);
         align-self: center;
-        width: 50%;
-        --wired-slider-knob-color: green;
-        --wired-slider-bar-color: green;
+        --wired-slider-knob-color: black;
+        /* --wired-slider-bar-color: green; */
       }
     `;
   }
@@ -79,6 +79,9 @@ export class ReplayPlayer extends LitElement {
 
   updated(oldValues: PropertyValues<ReplayPlayer>) {
     if (oldValues.has('replay')) {
+      if (oldValues.get('replay')) {
+        this.game?.stop();
+      }
       this.setup();
     }
   }

@@ -4,12 +4,14 @@
 
 ### Replay Viewer
 
+- Something wrong with facing dir sometimes (marth bair at least)
+- Something wrong with 1-indexed animations (aerials at least)
 - Shield tilting
 - Spacie UpB rotation is not right (ex: straight up)
 - Spacie throw lasers should be angled
 - Spawn invulnerability effect
 - Customziation (custom colors/colorblind colors, UI info, invincibility overlay?)
-- Facing issues with turnaround moves? (eg: spacie bthrow)
+- Fractional animations (Lcancel done, throws not done, any others?)
 - Add characters, peach sheik at least. turnip throw animations... :'(
   - WebGL renderer with models??
 - Actionstate/frame below % as option
@@ -31,6 +33,5 @@
 - Upload clip to some host
 - adjust start/end clip
 - Find clips within files
-- Search multiple files / directories
 - Show results simultaneously? (ex: all 20 times you upthrew marth)
 - Webworkers

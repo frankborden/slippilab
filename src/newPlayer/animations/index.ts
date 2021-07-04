@@ -1,7 +1,15 @@
-import { characters } from '../characters/character';
+import { Character, characters } from '../characters/character';
 
 // Store all the imported animations here
 const animationMap = new Map<number, any>();
+
+export const supportedCharacters: Character[] = [
+  'Captain Falcon',
+  'Fox',
+  'Falco',
+  'Marth',
+  'Jigglypuff',
+];
 
 const importAnimation = async (
   charId: number,

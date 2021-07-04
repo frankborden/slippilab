@@ -91,6 +91,11 @@ export class GameRenderer {
     this.intervalId = window.setInterval(() => this.maybeTick(), 1000 / 60);
   }
 
+  public stop() {
+    window.clearInterval(this.intervalId);
+    this.baseRenderingContext.resetTransform();
+  }
+
   public onTick(tickHandler: (currentFrameNumber: number) => any) {
     this.tickHandler = tickHandler;
   }

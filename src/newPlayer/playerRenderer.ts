@@ -8,6 +8,7 @@ import { CharacterAnimations, fetchAnimation } from './animations';
 import { actions, specials } from './animations/actions';
 import { isOneIndexed } from './animations/oneIndexed';
 import {
+  Character,
   CharacterData,
   characterDataById,
   characters,
@@ -84,6 +85,7 @@ export class PlayerRenderer implements Renderer {
     renderer.fillStyle = this.isDoubles
       ? teamColors[this.settings.teamId]
       : colors[playerFrame.playerIndex];
+    renderer.strokeStyle = 'black';
     for (let stockIndex = 0; stockIndex < stockCount; stockIndex++) {
       const x = (stockIndex - 2) * 30;
       const y = 0;
@@ -92,6 +94,7 @@ export class PlayerRenderer implements Renderer {
       renderer.arc(x, y, radius, 0, 2 * Math.PI);
       renderer.closePath();
       renderer.fill();
+      renderer.stroke();
     }
     renderer.restore();
   }
@@ -219,14 +222,13 @@ export class PlayerRenderer implements Renderer {
       renderer.translate(0, -rotationYOffset);
     }
 
-    const facingDirection =
-      (animationName === 'ATTACKAIRB' &&
-        character === 'Marth' &&
-        animationFrameIndex > 30) ||
-      animationName === 'SMASHTURN'
-        ? -playerFrame.facingDirection
-        : playerFrame.facingDirection;
-    renderer.scale(facingDirection, 1); // flip if facing left
+    const facingDirection = this.getFacingDirection(
+      playerFrame.facingDirection,
+      animationName,
+      character,
+      animationFrameIndex,
+    );
+    renderer.scale(facingDirection, 1);
     renderer.beginPath();
     renderer.moveTo(animationFrameLine[0], animationFrameLine[1]);
     // starting from index 2, each set of 6 numbers are bezier curve coords
@@ -331,11 +333,12 @@ export class PlayerRenderer implements Renderer {
     playerFrame: DeepRequired<PostFrameUpdateType>,
     frames: DeepRequired<FramesType>,
   ): number {
-    const firstIndex =
-      playerFrame.actionStateCounter < 0 ||
-      isOneIndexed(this.settings.characterId, playerFrame.actionStateId)
-        ? 1
-        : 0;
+    const firstIndex = 0;
+    // I think the fractional animation counter messed up the table.
+    // isOneIndexed(this.settings.characterId, playerFrame.actionStateId)
+    //   ? 1
+    //   : 0;
+
     let framesInAnimation = 0;
     let frameIndex = playerFrame.frame - 1;
     let frame = frames[frameIndex]?.players?.[playerFrame.playerIndex]?.post;
@@ -344,8 +347,34 @@ export class PlayerRenderer implements Renderer {
       frameIndex--;
       frame = frames[frameIndex]?.players?.[playerFrame.playerIndex]?.post;
     }
+    if (playerFrame.playerIndex === 3) {
+      console.log(
+        firstIndex +
+          framesInAnimation * (playerFrame.lCancelStatus === 1 ? 2 : 1),
+      );
+    }
     return (
       firstIndex + framesInAnimation * (playerFrame.lCancelStatus === 1 ? 2 : 1)
     );
+  }
+
+  private getFacingDirection(
+    frameFacing: number,
+    animationName: string,
+    character: Character,
+    animationFrameIndex: number,
+  ): number {
+    const isMarthBairTurnaround =
+      animationName === 'ATTACKAIRB' &&
+      character === 'Marth' &&
+      animationFrameIndex > 30;
+    const isSmashTurn = animationName === 'SMASHTURN';
+    const isSpacieBthrowTurnaround =
+      animationName === 'THROWBACK' &&
+      (character === 'Falco' || character === 'Fox') &&
+      animationFrameIndex > 8;
+    return isMarthBairTurnaround || isSmashTurn || isSpacieBthrowTurnaround
+      ? -frameFacing
+      : frameFacing;
   }
 }
