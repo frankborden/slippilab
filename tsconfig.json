@@ -9,7 +9,7 @@
     "noEmit": true,
     /* Add decorator support for Lit */
     "experimentalDecorators": true,
-    "resolveJsonModule": true,
+    // "resolveJsonModule": true,
     "emitDecoratorMetadata": true,
     "strict": true,
     "skipLibCheck": true,

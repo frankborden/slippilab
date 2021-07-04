@@ -9,7 +9,6 @@ export default {
     public: { url: '/', static: true },
     src: { url: '/dist' },
   },
-  plugins: ['@snowpack/plugin-typescript'],
   packageOptions: {
     polyfillNode: true,
   },
