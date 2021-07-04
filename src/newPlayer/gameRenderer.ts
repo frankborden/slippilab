@@ -1,4 +1,4 @@
-import type { FrameEntryType, SlippiGame } from '@slippi/slippi-js';
+import type { FrameEntryType, FramesType, SlippiGame } from '@slippi/slippi-js';
 import type { DeepRequired } from './common';
 import { Vector } from './common';
 import { ItemRenderer } from './itemRenderer';
@@ -7,7 +7,10 @@ import { StageRenderer } from './stageRenderer';
 import { Stage, stagesById } from './stages/stage';
 
 export interface Renderer {
-  render(frame: DeepRequired<FrameEntryType>): void;
+  render(
+    frame: DeepRequired<FrameEntryType>,
+    frames: DeepRequired<FramesType>,
+  ): void;
 }
 
 interface Camera {
@@ -40,18 +43,13 @@ export class GameRenderer {
     // move origin to bottom left corner
     worldSpaceRenderingContext.translate(0, 750);
     worldSpaceRenderingContext.scale(1, -1);
+    // move origin to center of screen
     worldSpaceRenderingContext.translate(600, 375);
-    // move origin to center of stage
-    // worldSpaceRenderingContext.translate(stage.offset.x, stage.offset.y);
-    // worldSpaceRenderingContext.scale(stage.scale, stage.scale);
-    // worldSpaceRenderingContext.lineWidth = 1 / stage.scale;
-
     const screenSpaceCanvas = document.createElement('canvas');
     screenSpaceCanvas.width = 1200;
     screenSpaceCanvas.height = 750;
     const screenSpaceRenderingContext = screenSpaceCanvas.getContext('2d')!;
     screenSpaceRenderingContext.scale(1, -1); // make origin at bottom left corner
-
     const stageRenderer = StageRenderer.create(
       stage,
       worldSpaceRenderingContext,
@@ -104,19 +102,21 @@ export class GameRenderer {
   public zoomIn(): void {
     this.worldSpaceRenderingContext.scale(1.1, 1.1);
     this.currentFrameNumber--;
-    this.tick();
+    this.tick(true);
   }
 
   public zoomOut(): void {
     this.worldSpaceRenderingContext.scale(1 / 1.1, 1 / 1.1);
     this.currentFrameNumber--;
-    this.tick();
+    this.tick(true);
   }
 
   public setFrame(newFrameNumber: number): void {
     window.clearInterval(this.intervalId);
+    const lastPlayedFrame = this.currentFrameNumber - 1;
+    const isSingleFrameChange = Math.abs(lastPlayedFrame - newFrameNumber) <= 1;
     this.currentFrameNumber = newFrameNumber;
-    this.tick();
+    this.tick(!isSingleFrameChange);
     this.intervalId = window.setInterval(() => this.maybeTick(), 1000 / 60);
   }
 
@@ -127,8 +127,9 @@ export class GameRenderer {
     this.tick();
   }
 
-  private tick(): void {
-    const frame = this.replay.getFrames()[this.currentFrameNumber];
+  private tick(instantFocus?: boolean): void {
+    const frames = this.replay.getFrames();
+    const frame = frames[this.currentFrameNumber];
     if (!frame) {
       window.clearInterval(this.intervalId);
       return;
@@ -140,16 +141,16 @@ export class GameRenderer {
     this.worldSpaceRenderingContext.resetTransform();
     this.worldSpaceRenderingContext.clearRect(0, 0, 1200, 750);
     this.worldSpaceRenderingContext.restore();
-    this.updateCamera(frame);
+    this.updateCamera(frame, instantFocus || frame.frame === -123);
     this.renderers.forEach((renderer) => {
-      renderer.render(frame);
+      renderer.render(frame, frames);
     });
     this.baseRenderingContext.drawImage(this.worldSpaceCanvas, 0, 0);
     this.baseRenderingContext.drawImage(this.screenSpaceCanvas, 0, 0);
     this.currentFrameNumber++;
   }
 
-  private focus(subjects: Vector[]) {
+  private focus(subjects: Vector[], instantFocus?: boolean) {
     const padding = 60;
     let bottomLeftBound = new Vector(Infinity, Infinity);
     let topRightBound = new Vector(-Infinity, -Infinity);
@@ -161,19 +162,20 @@ export class GameRenderer {
     const targetCenter = unadjustedCenter.plus(
       bottomLeftBound.average(topRightBound),
     );
-    const newOffset = targetCenter
-      .minus(this.camera.offset)
-      .scale(1 / 100)
-      .plus(this.camera.offset);
-
+    const newOffset = instantFocus
+      ? targetCenter
+      : targetCenter
+          .minus(this.camera.offset)
+          .scale(1 / 100)
+          .plus(this.camera.offset);
     const unadjustedScale = new Vector(1200, 750);
     const totalSubjectDifference = topRightBound.minus(bottomLeftBound);
     const targetScale = unadjustedScale
       .scale(totalSubjectDifference.inverse())
       .getMin();
-    const newScale =
-      (targetScale - this.camera.scale) / 100 + this.camera.scale;
-
+    const newScale = instantFocus
+      ? targetScale
+      : (targetScale - this.camera.scale) / 100 + this.camera.scale;
     // Return to scale = 1, stage(0,0) in center of screen
     this.worldSpaceRenderingContext.translate(
       this.camera.offset.x,
@@ -184,17 +186,18 @@ export class GameRenderer {
       1 / this.camera.scale,
     );
     this.worldSpaceRenderingContext.lineWidth *= this.camera.scale;
-
     // apply new scale and new offset
     this.worldSpaceRenderingContext.scale(newScale, newScale);
     this.worldSpaceRenderingContext.lineWidth /= newScale;
     this.worldSpaceRenderingContext.translate(-newOffset.x, -newOffset.y);
-
     this.camera.offset = newOffset;
     this.camera.scale = newScale;
   }
 
-  private updateCamera(frame: DeepRequired<FrameEntryType>): void {
+  private updateCamera(
+    frame: DeepRequired<FrameEntryType>,
+    instantFocus?: boolean,
+  ): void {
     const subjects: Vector[] = [];
     for (let playerIndex = 0; playerIndex < 4; playerIndex++) {
       const playerFrame = frame.players[playerIndex]?.post;
@@ -209,6 +212,6 @@ export class GameRenderer {
         this.stage.topRightBlastzone,
       );
     }
-    this.focus(subjects);
+    this.focus(subjects, instantFocus);
   }
 }

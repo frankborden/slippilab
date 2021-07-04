@@ -1,6 +1,12 @@
-import type { FrameEntryType, PlayerType } from '@slippi/slippi-js';
+import type {
+  FrameEntryType,
+  FramesType,
+  PlayerType,
+  PostFrameUpdateType,
+} from '@slippi/slippi-js';
 import { CharacterAnimations, fetchAnimation } from './animations';
 import { actions, specials } from './animations/actions';
+import { isOneIndexed } from './animations/oneIndexed';
 import {
   CharacterData,
   characterDataById,
@@ -9,8 +15,8 @@ import {
 import type { DeepRequired } from './common';
 import type { Renderer } from './gameRenderer';
 
-const colors = ['red', 'blue', 'yellow', 'green'];
-const teamColors = ['red', 'blue', 'green'];
+const colors = ['pink', 'lightblue', 'yellow', 'lightgreen'];
+const teamColors = ['pink', 'lightblue', 'lightgreen'];
 
 export class PlayerRenderer implements Renderer {
   public static async create(
@@ -45,12 +51,15 @@ export class PlayerRenderer implements Renderer {
     return Boolean(frame.players[this.settings.playerIndex]);
   }
 
-  public render(frame: DeepRequired<FrameEntryType>): void {
+  public render(
+    frame: DeepRequired<FrameEntryType>,
+    frames: DeepRequired<FramesType>,
+  ): void {
     if (!this.isInFrame(frame)) {
       return;
     }
     this.renderUi(frame);
-    this.renderCharacter(frame);
+    this.renderCharacter(frame, frames);
     this.renderShield(frame);
     this.renderShine(frame);
   }
@@ -110,9 +119,8 @@ export class PlayerRenderer implements Renderer {
   private renderPlayerDetails(frame: DeepRequired<FrameEntryType>): void {
     const renderer = this.screenSpaceRenderingContext;
     const playerFrame = frame.players[this.settings.playerIndex].post;
-    const percent = playerFrame.percent;
     renderer.save();
-    renderer.font = '900 24px Arial';
+    renderer.font = '900 24px Verdana';
     renderer.textAlign = 'center';
     renderer.strokeStyle = 'black';
     renderer.fillStyle = this.isDoubles
@@ -123,13 +131,18 @@ export class PlayerRenderer implements Renderer {
     renderer.translate(x, y);
     // flip text back right-side after global flip
     renderer.scale(1, -1);
-    const name = `${this.settings.displayName}`;
+    const name = this.settings.displayName?.length
+      ? this.settings.displayName
+      : this.settings.nametag;
     renderer.fillText(name, 0, 0);
     renderer.strokeText(name, 0, 0);
     renderer.restore();
   }
 
-  private renderCharacter(frame: DeepRequired<FrameEntryType>): void {
+  private renderCharacter(
+    frame: DeepRequired<FrameEntryType>,
+    frames: DeepRequired<FramesType>,
+  ): void {
     const renderer = this.worldSpaceRenderingContext;
     const playerFrame = frame.players[this.settings.playerIndex].post;
     const character = characters[this.settings.characterId];
@@ -150,14 +163,13 @@ export class PlayerRenderer implements Renderer {
       specials[characters[this.settings.characterId]][
         playerFrame.actionStateId
       ];
-    if (animationName === undefined) {
-      console.log(
-        'characterId',
-        this.settings.characterId,
-        'actionStateId',
-        playerFrame.actionStateId,
-      );
-    }
+    console.assert(
+      animationName !== undefined,
+      'characterId',
+      this.settings.characterId,
+      'actionStateId',
+      playerFrame.actionStateId,
+    );
     if (animationName.match('DEAD')) {
       renderer.restore();
       return;
@@ -167,19 +179,24 @@ export class PlayerRenderer implements Renderer {
       this.animations[
         animationName.substr(0, 6) + 'FOX' + animationName.substr(6, 10)
       ];
-    if (animationData === undefined) {
-      console.log(
-        'actionStateCounter',
-        playerFrame.actionStateCounter,
-        'animationData',
-        animationData,
-        'animationName',
-        animationName,
-      );
-    }
-    const animationFrameIndex =
-      Math.max(0, Math.floor(playerFrame.actionStateCounter) - 1) %
-      animationData.length;
+    console.assert(
+      animationData !== undefined,
+      'actionStateCounter',
+      playerFrame.actionStateCounter,
+      'animationData',
+      animationData,
+      'animationName',
+      animationName,
+    );
+    const firstIndex =
+      playerFrame.actionStateCounter < 0 ||
+      isOneIndexed(this.settings.characterId, playerFrame.actionStateId)
+        ? 1
+        : 0;
+    const animationFrameIndex = animationName.startsWith('LANDINGATTACKAIR')
+      ? this.getLandingAttackAirFrameIndex(playerFrame, frames)
+      : (firstIndex + Math.floor(playerFrame.actionStateCounter)) %
+        animationData.length;
     const animationFrameLine = animationData[animationFrameIndex][0];
     const isSpacieUpBLaunchAction =
       playerFrame.actionStateId === 355 || playerFrame.actionStateId === 356;
@@ -202,7 +219,14 @@ export class PlayerRenderer implements Renderer {
       renderer.translate(0, -rotationYOffset);
     }
 
-    renderer.scale(playerFrame.facingDirection, 1); // flip if facing left
+    const facingDirection =
+      (animationName === 'ATTACKAIRB' &&
+        character === 'Marth' &&
+        animationFrameIndex > 30) ||
+      animationName === 'SMASHTURN'
+        ? -playerFrame.facingDirection
+        : playerFrame.facingDirection;
+    renderer.scale(facingDirection, 1); // flip if facing left
     renderer.beginPath();
     renderer.moveTo(animationFrameLine[0], animationFrameLine[1]);
     // starting from index 2, each set of 6 numbers are bezier curve coords
@@ -301,5 +325,27 @@ export class PlayerRenderer implements Renderer {
     renderer.closePath();
     renderer.stroke();
     renderer.restore();
+  }
+
+  private getLandingAttackAirFrameIndex(
+    playerFrame: DeepRequired<PostFrameUpdateType>,
+    frames: DeepRequired<FramesType>,
+  ): number {
+    const firstIndex =
+      playerFrame.actionStateCounter < 0 ||
+      isOneIndexed(this.settings.characterId, playerFrame.actionStateId)
+        ? 1
+        : 0;
+    let framesInAnimation = 0;
+    let frameIndex = playerFrame.frame - 1;
+    let frame = frames[frameIndex]?.players?.[playerFrame.playerIndex]?.post;
+    while (frame && frame.actionStateId === playerFrame.actionStateId) {
+      framesInAnimation++;
+      frameIndex--;
+      frame = frames[frameIndex]?.players?.[playerFrame.playerIndex]?.post;
+    }
+    return (
+      firstIndex + framesInAnimation * (playerFrame.lCancelStatus === 1 ? 2 : 1)
+    );
   }
 }

@@ -5,11 +5,13 @@
 ### Replay Viewer
 
 - Shield tilting
-- Animation frame numbers for L-canceled aerials are not right
+- Spacie UpB rotation is not right (ex: straight up)
+- Spacie throw lasers should be angled
 - Spawn invulnerability effect
 - Customziation (custom colors/colorblind colors, UI info, invincibility overlay?)
-- Facing issues with turnaround moves? (eg. Marth bair, reverse upbs)
+- Facing issues with turnaround moves? (eg: spacie bthrow)
 - Add characters, peach sheik at least. turnip throw animations... :'(
+  - WebGL renderer with models??
 - Actionstate/frame below % as option
 - Error messages
 - Help/Settings (kb controls, what's not supported)
@@ -17,7 +19,6 @@
 - Wispy (seems infeasible until it's added to .slp spec)
 - Separate project
 - Tests?
-- WebGL renderer with models??
 
 ### App
 

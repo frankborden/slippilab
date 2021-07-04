@@ -15,7 +15,7 @@ export class ReplayPlayer extends LitElement {
         left: calc((100vw - 160vh) / 2);
         width: 160vh;
         height: 100vh;
-        background-color: lightgreen;
+        background-color: white;
       }
       wired-slider {
         position: absolute;

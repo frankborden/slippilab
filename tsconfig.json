@@ -4,12 +4,10 @@
     "module": "esnext",
     "target": "esnext",
     "moduleResolution": "node",
-    // "baseUrl": "./",
     /* noEmit - Snowpack builds (emits) files, not tsc. */
     "noEmit": true,
     /* Add decorator support for Lit */
     "experimentalDecorators": true,
-    // "resolveJsonModule": true,
     "emitDecoratorMetadata": true,
     "strict": true,
     "skipLibCheck": true,

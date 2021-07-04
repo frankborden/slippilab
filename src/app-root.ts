@@ -25,7 +25,7 @@ export class AppRoot extends LitElement {
         align-items: center;
         flex-direction: column;
         height: 100vh;
-        background-color: lightgreen;
+        background-color: darkslateblue;
       }
       .hidden {
         position: absolute;
