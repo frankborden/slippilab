@@ -107,13 +107,13 @@ export class GameRenderer {
   public zoomIn(): void {
     this.worldSpaceRenderingContext.scale(1.1, 1.1);
     this.currentFrameNumber--;
-    this.tick(true);
+    this.tick();
   }
 
   public zoomOut(): void {
     this.worldSpaceRenderingContext.scale(1 / 1.1, 1 / 1.1);
     this.currentFrameNumber--;
-    this.tick(true);
+    this.tick();
   }
 
   public setFrame(newFrameNumber: number): void {
