@@ -19,15 +19,12 @@ export interface Replay {
   frames: FramesType;
   // };
 }
-export type ReplaysSelectedEvent = CustomEvent<SlippiGame[]>;
+export type ReplaysSelectedEvent = CustomEvent<Map<string, SlippiGame>>;
 
 @customElement('replay-select')
 export class ReplaySelect extends LitElement {
   static get styles() {
     return css`
-      h2 {
-        width: 100%;
-      }
       input {
         display: none;
       }
@@ -35,41 +32,49 @@ export class ReplaySelect extends LitElement {
         display: inline-block;
         cursor: pointer;
       }
-      wired-button {
-        width: 100%;
-        background-color: #7fd17f;
-      }
     `;
   }
 
   private async filesSelected() {
-    const files = this.renderRoot.querySelector('input')?.files;
+    const inputs = Array.from(this.renderRoot.querySelectorAll('input'));
+    const files = inputs
+      .map((input) => input.files)
+      .filter((fileList): fileList is FileList => fileList !== null)
+      .flatMap((fileList) => Array.from(fileList));
     if (!files || files.length === 0) {
       return;
     }
-
-    const replays = (
-      await Promise.all(
-        Array.from(files).map((file) => this.createReplay(file)),
+    inputs.forEach((input) => (input.value = ''));
+    console.log(files);
+    const replaysMap = new Map(
+      (
+        await Promise.all(
+          files.map((file) =>
+            this.createReplay(file).then((replay): [string, SlippiGame] => [
+              file.name,
+              replay!,
+            ]),
+          ),
+        )
       )
-    )
-      .filter(
-        (replay): replay is SlippiGame =>
-          replay
-            ?.getSettings()
-            ?.players.every((player) =>
-              supportedCharacters.includes(characters[player.characterId!]),
-            ) ?? false,
-      )
-      .filter((replay) =>
-        Object.keys(stagesById).includes(
-          replay.getSettings()?.stageId?.toString()!,
+        .filter(
+          ([_fileName, replay]) =>
+            replay
+              ?.getSettings()
+              ?.players.every((player) =>
+                supportedCharacters.includes(characters[player.characterId!]),
+              ) ?? false,
+        )
+        .filter(([_fileName, replay]) =>
+          Object.keys(stagesById).includes(
+            replay.getSettings()?.stageId?.toString()!,
+          ),
         ),
-      );
-    const replaySelectedEvent = new CustomEvent<SlippiGame[]>(
+    );
+    const replaySelectedEvent = new CustomEvent<Map<string, SlippiGame>>(
       'replays-selected',
       {
-        detail: replays,
+        detail: replaysMap,
       },
     );
     this.dispatchEvent(replaySelectedEvent);
@@ -83,17 +88,28 @@ export class ReplaySelect extends LitElement {
 
   render() {
     return html`
-      <label for="replay-input">
+      <label for="replay-input-files">
         <wired-button class="label" elevation="2" disabled>
-          <h2>Load Replay Files</h2>
+          Open File
         </wired-button>
       </label>
       <input
-        id="replay-input"
-        name="replay-input"
+        id="replay-input-files"
+        name="replay-input-files"
         type="file"
         accept=".slp"
         multiple
+        @change=${this.filesSelected}
+      />
+      <label for="replay-input-dir">
+        <wired-button class="label" elevation="2" disabled>
+          Open Folder
+        </wired-button>
+      </label>
+      <input
+        id="replay-input-dir"
+        name="replay-input-dir"
+        type="file"
         webkitdirectory
         @change=${this.filesSelected}
       />

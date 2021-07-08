@@ -9,22 +9,23 @@ import type { WiredSlider } from 'wired-elements';
 export class ReplayPlayer extends LitElement {
   static get styles() {
     return css`
+      .container {
+        width: 100%;
+        height: 100%;
+        position: relative;
+      }
       canvas {
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: 160vh;
-        height: 100vh;
         background-color: white;
+        width: 100%;
+        height: 100%;
       }
       wired-slider {
         position: absolute;
         bottom: 10px;
-        right: calc(160vh * 0.25);
-        width: calc(160vh / 2);
+        left: 25%;
+        width: 50%;
         align-self: center;
         --wired-slider-knob-color: black;
-        /* --wired-slider-bar-color: green; */
       }
     `;
   }
@@ -58,11 +59,13 @@ export class ReplayPlayer extends LitElement {
           );
           break;
         case '.':
+          this.game?.setPause();
           this.game?.setFrame(
             Math.min(this.highestFrame, this.currentFrame + 1),
           );
           break;
         case ',':
+          this.game?.setPause();
           this.game?.setFrame(Math.max(-123, this.currentFrame - 1));
           break;
         case '+':
@@ -77,6 +80,38 @@ export class ReplayPlayer extends LitElement {
     });
   }
 
+  firstUpdated() {
+    const canvas = this.renderRoot.querySelector('canvas');
+    const slider: WiredSlider | null =
+      this.renderRoot.querySelector('wired-slider');
+    if (!canvas || !slider) {
+      return;
+    }
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (let entry of entries) {
+        let newWidth: number, newHeight: number;
+        if (entry.contentBoxSize) {
+          // Firefox implements `contentBoxSize` as a single content rect,
+          // rather than an array.
+          const contentBoxSize: ResizeObserverSize = Array.isArray(
+            entry.contentBoxSize,
+          )
+            ? entry.contentBoxSize[0]
+            : entry.contentBoxSize;
+          newWidth = contentBoxSize.inlineSize;
+          newHeight = contentBoxSize.blockSize;
+        } else {
+          newWidth = entry.contentRect.width;
+          newHeight = entry.contentRect.height;
+        }
+        this.game?.resize(newWidth, newHeight);
+        slider.requestUpdate();
+      }
+    });
+
+    resizeObserver.observe(canvas);
+  }
+
   updated(oldValues: PropertyValues<ReplayPlayer>) {
     if (oldValues.has('replay')) {
       if (oldValues.get('replay')) {
@@ -87,13 +122,14 @@ export class ReplayPlayer extends LitElement {
   }
 
   private async setup() {
+    const canvas = this.renderRoot.querySelector('canvas');
     const context = this.renderRoot.querySelector('canvas')?.getContext('2d');
     const highestFrame = this.replay?.getLatestFrame()?.frame;
-    if (!context || !this.replay || highestFrame === undefined) {
+    if (!canvas || !context || !this.replay || highestFrame === undefined) {
       return;
     }
     this.highestFrame = highestFrame;
-    this.game = await GameRenderer.create(this.replay, context);
+    this.game = await GameRenderer.create(this.replay, canvas);
     this.game.onTick(
       (currentFrameNumber: number) => (this.currentFrame = currentFrameNumber),
     );
@@ -106,14 +142,16 @@ export class ReplayPlayer extends LitElement {
 
   render() {
     return html`
-      <canvas width="1200" height="750"></canvas>
-      <wired-slider
-        min="-123"
-        knobradius="100"
-        max=${this.highestFrame}
-        .value=${this.currentFrame}
-        @change=${this.clicked}
-      ></wired-slider>
+      <div class="container">
+        <canvas @click=${() => this.game?.togglePause()}></canvas>
+        <wired-slider
+          min="-123"
+          knobradius="100"
+          max=${this.highestFrame}
+          .value=${this.currentFrame}
+          @change=${this.clicked}
+        ></wired-slider>
+      </div>
     `;
   }
 }
