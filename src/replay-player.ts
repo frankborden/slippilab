@@ -21,12 +21,15 @@ export class ReplayPlayer extends LitElement {
         width: 100%;
         height: 100%;
       }
-      wired-slider {
+      .controls {
         position: absolute;
         bottom: 10px;
         left: 25%;
         width: 50%;
         align-self: center;
+      }
+      wired-slider {
+        width: 100%;
         --wired-slider-knob-color: black;
       }
     `;
@@ -179,13 +182,16 @@ export class ReplayPlayer extends LitElement {
     return html`
       <div class="container">
         <canvas @click=${() => this.game?.togglePause()}></canvas>
-        <wired-slider
-          min="-123"
-          knobradius="100"
-          max=${this.highestFrame}
-          .value=${this.currentFrame}
-          @change=${this.clicked}
-        ></wired-slider>
+        <div class="controls">
+          <wired-slider
+            min="-123"
+            knobradius="100"
+            max=${this.highestFrame}
+            .value=${this.currentFrame}
+            @change=${this.clicked}
+          ></wired-slider>
+          <div class="progress">${this.currentFrame}/${this.highestFrame}</div>
+        </div>
       </div>
     `;
   }

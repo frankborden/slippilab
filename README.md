@@ -23,9 +23,8 @@
 - Electricity
 - Game timer
 - Death animation
-- Frame count
 - Stock icons that look like the character
-- More state-dependent colors? (hitstun, active)
+- Optional state-dependent colors? (hitstun, active)
 - Fire for firefox, falcon specials
 - Input display?
 - Tests
