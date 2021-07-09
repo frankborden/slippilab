@@ -127,7 +127,8 @@ export class AppRoot extends LitElement {
           Zoom In: + or =<br />
           Zoom Out: - or _<br />
           Frame Forward: .<br />
-          Frame Backwards: ,
+          Frame Backwards: ,<br />
+          Capture next 10s as GIF: g<br />
         </div>
         ${this.currentReplay
           ? html` <new-replay-player

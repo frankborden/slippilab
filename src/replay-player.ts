@@ -1,9 +1,11 @@
 import type { SlippiGame } from '@slippi/slippi-js';
+import GIF from 'gif.js';
 import { css, html, LitElement, PropertyValues } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { GameRenderer } from './newPlayer/gameRenderer';
 import 'wired-elements';
 import type { WiredSlider } from 'wired-elements';
+
+import { GameRenderer } from './newPlayer/gameRenderer';
 
 @customElement('new-replay-player')
 export class ReplayPlayer extends LitElement {
@@ -76,6 +78,9 @@ export class ReplayPlayer extends LitElement {
         case '_':
           this.game?.zoomOut();
           break;
+        case 'g':
+          this.captureGif();
+          break;
       }
     });
   }
@@ -138,6 +143,36 @@ export class ReplayPlayer extends LitElement {
   private clicked() {
     const slider = this.renderRoot.querySelector('wired-slider') as WiredSlider;
     this.game?.setFrame(slider.value);
+  }
+
+  private captureGif() {
+    const canvas = this.renderRoot.querySelector('canvas');
+    const context = canvas?.getContext('2d');
+    if (!context || !canvas || !this.game) {
+      return;
+    }
+    this.game.setPause();
+    this.game.resize(960, 720);
+    const gif = new GIF({
+      workers: 4,
+      quality: 10,
+      width: canvas.width,
+      height: canvas.height,
+      background: '#fff',
+    });
+    gif.on('finished', (blob: Blob, _data: Uint8Array) => {
+      window.open(URL.createObjectURL(blob));
+    });
+
+    for (let i = 0; i < 600; i = i + 3) {
+      // TODO: this is 20fps because the gif spec only stores framerate in
+      // centiseconds, which doesn't line up with 60/30 fps... =[
+      gif.addFrame(context, { copy: true, delay: 1000 / 20 });
+      this.game.tick();
+      this.game.tick();
+      this.game.tick();
+    }
+    gif.render();
   }
 
   render() {

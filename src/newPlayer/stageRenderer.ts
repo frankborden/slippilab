@@ -4,7 +4,7 @@ import type { Render } from './gameRenderer';
 import type { Layers } from './layer';
 import type { Stage } from './stages/stage';
 
-function renderStageLines(
+const renderStageLines = function (
   worldContext: CanvasRenderingContext2D,
   frame: DeepRequired<FrameEntryType>,
   stage: Stage,
@@ -27,9 +27,9 @@ function renderStageLines(
     worldContext.stroke();
   });
   worldContext.restore();
-}
+};
 
-function renderBlastzones(
+const renderBlastzones = function (
   worldContext: CanvasRenderingContext2D,
   frame: DeepRequired<FrameEntryType>,
   stage: Stage,
@@ -45,7 +45,7 @@ function renderBlastzones(
     stage.topRightBlastzone.y - stage.bottomLeftBlastzone.y,
   );
   renderer.restore();
-}
+};
 
 export const createStageRender = function (stage: Stage): Render {
   return (

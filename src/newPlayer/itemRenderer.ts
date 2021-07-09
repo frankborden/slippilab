@@ -3,6 +3,7 @@ import type {
   FramesType,
   ItemUpdateType,
 } from '@slippi/slippi-js';
+
 import type { DeepRequired } from './common';
 import type { Render } from './gameRenderer';
 import type { Layers } from './layer';

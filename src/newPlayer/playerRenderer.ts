@@ -4,6 +4,7 @@ import type {
   PlayerType,
   PostFrameUpdateType,
 } from '@slippi/slippi-js';
+
 import { CharacterAnimations, fetchAnimation } from './animations';
 import { actions, specials } from './animations/actions';
 import { isOneIndexed } from './animations/oneIndexed';

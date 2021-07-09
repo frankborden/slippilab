@@ -35,6 +35,17 @@ export function clearLayers(layers: Layers): void {
   clearLayer(layers.base);
   clearLayer(layers.worldSpace);
   clearLayer(layers.screenSpace);
+  // workaround for GIF background not working
+  layers.base.context.save();
+  layers.base.context.resetTransform();
+  layers.base.context.fillStyle = 'white';
+  layers.base.context.fillRect(
+    0,
+    0,
+    layers.base.canvas.width,
+    layers.base.canvas.height,
+  );
+  layers.base.context.restore();
 }
 
 function createSubLayer(baseCanvas: HTMLCanvasElement): Layer {

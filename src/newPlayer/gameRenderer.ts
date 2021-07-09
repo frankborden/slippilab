@@ -1,4 +1,5 @@
 import type { FrameEntryType, FramesType, SlippiGame } from '@slippi/slippi-js';
+
 import type { DeepRequired } from './common';
 import { Vector } from './common';
 import { createItemRender } from './itemRenderer';
@@ -12,13 +13,6 @@ export type Render = (
   frame: DeepRequired<FrameEntryType>,
   frames: DeepRequired<FramesType>,
 ) => void;
-
-export interface Renderer {
-  render(
-    frame: DeepRequired<FrameEntryType>,
-    frames: DeepRequired<FramesType>,
-  ): void;
-}
 
 interface Camera {
   scale: number;
@@ -68,7 +62,7 @@ export class GameRenderer {
     this.layers.base.canvas.width = newWidth;
     this.layers.base.canvas.height = newHeight;
     this.layers = setupLayers(this.layers.base.canvas);
-    // TODO: maintain zoomed amount somehow
+    // TODO: maintain zoomed amount somehow?
     this.camera = {
       scale: 1,
       offset: new Vector(0, 0),
@@ -118,7 +112,7 @@ export class GameRenderer {
     this.tick();
   }
 
-  private tick(): void {
+  public tick(): void {
     const frames = this.replay.getFrames();
     const frame = frames[this.currentFrameNumber];
     if (!frame) {
