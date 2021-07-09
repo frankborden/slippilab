@@ -8,7 +8,7 @@
 - Something wrong with 1-indexed animations (aerials at least)
 - Something wrong with laser shooting animations (air and ground)
 - Something wrong with Spacie UpB rotation (ex: straight up)
-- Show Shield tilting
+- Show Shield tilting (original code reads inputs and checks for stun)
 - Spacie throw lasers and deflected/countered lasers should be angled
 - Customziation (custom colors/colorblind colors, UI info)
 - Actionstate/frame below % as option (stun/lag remaining too)
@@ -24,9 +24,8 @@
 - Game timer
 - Death animation
 - Frame count
-- Stock icons that look like character
-- Missed L cancels?
-- State dependent colors? (Invincible, hitstun, active)
+- Stock icons that look like the character
+- More state-dependent colors? (hitstun, active)
 - Fire for firefox, falcon specials
 - Input display?
 - Tests
@@ -49,5 +48,4 @@
 - Upload clip to some host
 - adjust start/end clip
 - Find clips within files
-- Show results simultaneously? (ex: all 20 times you upthrew marth)
 - Webworkers

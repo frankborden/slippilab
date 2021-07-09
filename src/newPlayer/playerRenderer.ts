@@ -110,22 +110,24 @@ const getLandingAttackAirFrameIndex = function (
   frames: DeepRequired<FramesType>,
 ): number {
   const firstIndex = 0;
+  // MAYBE it's not messed up. Looks like lCancelStatus is only set for
+  // the first frame of landing lag instead of all of them..
   // I think the fractional animation counter messed up the table.
   // isOneIndexed(this.settings.characterId, playerFrame.actionStateId)
   //   ? 1
   //   : 0;
 
   let framesInAnimation = 0;
+  let lCancelStatus = 0;
   let frameIndex = playerFrame.frame - 1;
   let frame = frames[frameIndex]?.players?.[playerFrame.playerIndex]?.post;
   while (frame && frame.actionStateId === playerFrame.actionStateId) {
+    lCancelStatus = frame.lCancelStatus;
     framesInAnimation++;
     frameIndex--;
     frame = frames[frameIndex]?.players?.[playerFrame.playerIndex]?.post;
   }
-  return (
-    firstIndex + framesInAnimation * (playerFrame.lCancelStatus === 1 ? 2 : 1)
-  );
+  return firstIndex + framesInAnimation * (lCancelStatus === 1 ? 2 : 1);
 };
 
 const getFacingDirection = function (
@@ -161,7 +163,24 @@ const renderCharacter = function (
   const characterData = characterDataById[player.characterId];
   worldContext.save();
   worldContext.lineWidth *= 2;
-  worldContext.strokeStyle = 'black';
+
+  // TODO: move to func, lCancelStatus is set at the first frame of landing only
+  // so we need to look back.
+  let lCancelStatus = 0;
+  let frameIndex = playerFrame.frame - 1;
+  let pastFrame = frames[frameIndex]?.players?.[playerFrame.playerIndex]?.post;
+  while (pastFrame && pastFrame.actionStateId === playerFrame.actionStateId) {
+    lCancelStatus = pastFrame.lCancelStatus;
+    frameIndex--;
+    pastFrame = frames[frameIndex]?.players?.[playerFrame.playerIndex]?.post;
+  }
+
+  worldContext.strokeStyle =
+    playerFrame.hurtboxCollisionState > 0
+      ? 'blue'
+      : lCancelStatus === 2
+      ? 'red'
+      : 'black'; // invinc
   worldContext.fillStyle = isDoubles
     ? teamColors[player.teamId]
     : colors[playerFrame.playerIndex];
