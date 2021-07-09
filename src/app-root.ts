@@ -23,7 +23,7 @@ export class AppRoot extends LitElement {
         display: grid;
       }
       .topbar,
-      .controls {
+      .explanation {
         z-index: 1;
       }
       .hidden {
@@ -81,7 +81,9 @@ export class AppRoot extends LitElement {
     const fileName = Array.from(this.replays.entries()).filter(
       ([_fileName, replay]) => replay === this.currentReplay,
     )[0][0];
-    return `Playing ${fileName}`;
+    const index = Array.from(this.replays.values()).indexOf(this.currentReplay);
+    const fraction = `${index + (1 % this.replays.size)}/${this.replays.size}`;
+    return `Playing ${fraction} ${fileName}`;
   }
 
   render() {
@@ -115,7 +117,10 @@ export class AppRoot extends LitElement {
             ? html` <span>${this.getIndexText()}</span> `
             : ''}
         </div>
-        <div class="controls">
+        <div class="explanation">
+          <b>Supported Characters: Fox, Falco, Falcon, Marth, Puff</b><br />
+          <b>Supported Stages: FD, BF, DL, YS, FoD (static), PS (static)</b
+          ><br />
           Pause: Space or K or click<br />
           Rewind -2s: Left or J<br />
           Skip Ahead +2s: Right or L<br />
