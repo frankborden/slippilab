@@ -5,7 +5,7 @@ import { customElement, property, state } from 'lit/decorators.js';
 import 'wired-elements';
 import type { WiredSlider } from 'wired-elements';
 
-import { GameRenderer } from './newPlayer/gameRenderer';
+import { GameRenderer } from './player/gameRenderer';
 
 @customElement('new-replay-player')
 export class ReplayPlayer extends LitElement {
@@ -181,7 +181,11 @@ export class ReplayPlayer extends LitElement {
   render() {
     return html`
       <div class="container">
-        <canvas @click=${() => this.game?.togglePause()}></canvas>
+        <canvas
+          width="1000"
+          height="1000"
+          @click=${() => this.game?.togglePause()}
+        ></canvas>
         <div class="controls">
           <wired-slider
             min="-123"

@@ -24,8 +24,8 @@
 - Game timer
 - Death animation
 - Stock icons that look like the character
-- Optional state-dependent colors? (hitstun, active)
-- Fire for firefox, falcon specials
+- Optional state-dependent colors? (hitstun, actionable)
+- Fire effect for firefox, falcon specials
 - Input display?
 - Tests
 
@@ -33,18 +33,17 @@
 - Add characters, peach sheik at least. turnip throw animations... :'(
   - WebGL renderer with raw models + animations?
   - HSDraw export model + animations, then generate SVG?
-- Color by costume instead of port (first attempt was ugly)
+- Color by costume instead of port (first attempt = ugly)
 - Fountain platforms (infeasible until it's added to .slp spec)
 - Wispy (seems infeasible until it's added to .slp spec)
 
 ### App
 
-- Remove old viewer after reaching feature parity
-- Lazily parse file blobs to increase load times and quantity limit(?)
+- Lazily parse file blobs to increase load times and quantity limit(will this help?)
 - Tests
 - Fix VSCode complaining about json modules (resolveJsonModule=true makes
   tsc crash a lot due to json sizes)
-- Upload clip to some host
+- Upload gif to some host (example project with imgur: https://github.com/eirikb/gifie)
 - adjust start/end clip
 - Find clips within files
 - Webworkers

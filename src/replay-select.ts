@@ -7,9 +7,9 @@ import {
   SlippiGame,
 } from '@slippi/slippi-js';
 import 'wired-elements';
-import { supportedCharacters } from './newPlayer/animations';
-import { characters } from './newPlayer/characters/character';
-import { stagesById } from './newPlayer/stages/stage';
+import { supportedCharacters } from './player/animations';
+import { characters } from './player/characters/character';
+import { stagesById } from './player/stages/stage';
 
 // expected by player library
 export interface Replay {
@@ -45,7 +45,6 @@ export class ReplaySelect extends LitElement {
       return;
     }
     inputs.forEach((input) => (input.value = ''));
-    console.log(files);
     const replaysMap = new Map(
       (
         await Promise.all(
