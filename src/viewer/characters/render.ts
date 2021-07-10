@@ -13,7 +13,12 @@ import {
   specials,
 } from '../animations';
 import { supportedCharactersById } from '../characters';
-import { CharacterName, characterNamesById, DeepRequired } from '../common';
+import {
+  CharacterName,
+  characterNamesById,
+  characterNamesByInternalId,
+  DeepRequired,
+} from '../common';
 import type { Render } from '../game';
 import type { Layer, Layers } from '../layer';
 
@@ -148,6 +153,43 @@ const getFacingDirection = (
     : frameFacing;
 };
 
+const getThrowerName = (
+  player: DeepRequired<PlayerType>,
+  animationName: string,
+  frames: DeepRequired<FrameEntryType>,
+): string => {
+  const throwerAnimationName = `THROW${animationName.substr(6)}`;
+  for (let i = 0; i < 4; i++) {
+    if (i === player.playerIndex) {
+      continue;
+    }
+    const otherPlayerFrame = frames.players[i];
+    if (!otherPlayerFrame) {
+      continue;
+    }
+    // this could be wrong if there's multiple of the same throw happening. I
+    // don't know if replay data can connect thrower to throwee for doubles.
+    if (actions[otherPlayerFrame.post.actionStateId] === throwerAnimationName) {
+      const throwerName =
+        characterNamesByInternalId[otherPlayerFrame.post.internalCharacterId];
+      switch (throwerName) {
+        case 'Fox':
+          return 'FOX';
+        case 'Captain Falcon':
+          return 'FALCON';
+        case 'Falco':
+          return 'FALCO';
+        case 'Jigglypuff':
+          return 'PUFF';
+        case 'Marth':
+          return 'MARTH';
+      }
+    }
+  }
+  console.log('Failed to find thrower', player.playerIndex, animationName);
+  return 'FOX';
+};
+
 const renderCharacter = (
   worldContext: CanvasRenderingContext2D,
   frame: DeepRequired<FrameEntryType>,
@@ -204,7 +246,9 @@ const renderCharacter = (
   const animationData =
     animations[animationName] ??
     animations[
-      animationName.substr(0, 6) + 'FOX' + animationName.substr(6, 10)
+      animationName.substr(0, 6) +
+        getThrowerName(player, animationName, frame) +
+        animationName.substr(6)
     ];
   console.assert(
     animationData !== undefined,

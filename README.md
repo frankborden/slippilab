@@ -5,7 +5,6 @@
 ### Replay Viewer
 
 - Something wrong with laser shooting animations (air and ground)
-- Something wrong with Spacie UpB rotation (ex: straight up)
 - Something wrong with position when getting thrown (ex: dthrown by falcon)
 - Keep part of stage in focus?
   - Weird when characters are high above stage and stage goes out of view
