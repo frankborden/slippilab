@@ -8,6 +8,7 @@
 - Something wrong with 1-indexed animations (aerials at least)
 - Something wrong with laser shooting animations (air and ground)
 - Something wrong with Spacie UpB rotation (ex: straight up)
+- Something wrong with ledge grab animations
 - Show Shield tilting (original code reads inputs and checks for stun)
 - Spacie throw lasers and deflected/countered lasers should be angled
 - Customziation (custom colors/colorblind colors, UI info)
@@ -18,7 +19,7 @@
 - Audio?
 - debug canvas for viewing individual animations
 - indicate CPUs
-- Play/Pause button, other click controls..
+- Play/Pause button, other GUI controls..
 - Electricity
 - Game timer
 - Death animation

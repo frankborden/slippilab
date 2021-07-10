@@ -12,6 +12,16 @@ import { stagesById } from './player/stages/stage';
 export class AppRoot extends LitElement {
   constructor() {
     super();
+    window.addEventListener('keydown', (e: KeyboardEvent) => {
+      switch (e.key) {
+        case '[':
+          this.playPrevReplay();
+          break;
+        case ']':
+          this.playNextReplay();
+          break;
+      }
+    });
     Object.keys(characterDataById).forEach((characterId) =>
       fetchAnimation(Number(characterId)),
     );
@@ -154,13 +164,15 @@ export class AppRoot extends LitElement {
           <b>Supported Characters: Fox, Falco, Falcon, Marth, Puff</b><br />
           <b>Supported Stages: FD, BF, DL, YS, FoD (static), PS (static)</b
           ><br />
+          Previous Replay: [<br />
+          Next Replay: ]<br />
           Pause: Space or K or click<br />
           Rewind -2s: Left or J<br />
           Skip Ahead +2s: Right or L<br />
           Zoom In: + or =<br />
           Zoom Out: - or _<br />
           Speed Up: hold Up<br />
-          Slow down: hold Down<br />
+          Slow Down: hold Down<br />
           Frame Forward: .<br />
           Frame Backwards: ,<br />
           Capture next 10s as GIF: g<br />
