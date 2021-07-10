@@ -26,8 +26,12 @@ const renderItem = function (
   worldContext.scale(-item.facingDirection, 1);
   switch (item.typeId) {
     case 54:
+      // Fox laser
       // TODO: if throw or deflected by shield, need to angle lasers
-      const foxLaserOwner = frame.players[item.owner].post;
+      const foxLaserOwner = frame.players[item.owner]?.post;
+      if (!foxLaserOwner) {
+        return;
+      }
       const foxLaserLength = Math.min(
         25,
         Math.abs(foxLaserOwner.positionX - item.positionX),
@@ -35,8 +39,12 @@ const renderItem = function (
       worldContext.fillRect(0, 0, foxLaserLength, 1);
       break;
     case 55:
+      // Falco laser
       // TODO: if throw or deflected by shield, need to angle lasers
-      const falcoLaserOwner = frame.players[item.owner].post;
+      const falcoLaserOwner = frame.players[item.owner]?.post;
+      if (!falcoLaserOwner) {
+        return;
+      }
       const falcoLaserLength = Math.min(
         50,
         Math.abs(falcoLaserOwner.positionX - item.positionX),
@@ -44,6 +52,7 @@ const renderItem = function (
       worldContext.fillRect(0, 0, falcoLaserLength, 1);
       break;
     case 210:
+      // Fly guy
       // estimated size/shape
       worldContext.scale(0.6, 1);
       worldContext.beginPath();

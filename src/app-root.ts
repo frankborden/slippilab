@@ -4,9 +4,10 @@ import { classMap } from 'lit/directives/class-map.js';
 import './replay-select';
 import './replay-player';
 import type { ReplaysSelectedEvent } from './replay-select';
-import type { SlippiGame } from '@slippi/slippi-js';
-import { fetchAnimation } from './player/animations';
-import { characterDataById } from './player/characters/character';
+import { SlippiGame } from '@slippi/slippi-js';
+import { fetchAnimation, supportedCharacters } from './player/animations';
+import { characterDataById, characters } from './player/characters/character';
+import { stagesById } from './player/stages/stage';
 
 @customElement('app-root')
 export class AppRoot extends LitElement {
@@ -41,49 +42,88 @@ export class AppRoot extends LitElement {
   }
 
   @state()
-  private replays?: Map<string, SlippiGame>;
+  private replays?: File[];
 
   @state()
   private currentReplay?: SlippiGame;
+  private currentIndex = 0;
 
-  private playPrevReplay(): void {
+  private async playPrevReplay(): Promise<void> {
     if (!this.replays || !this.currentReplay) {
       return;
     }
-    const replays = Array.from(this.replays.values());
-    const currentIndex = replays.indexOf(this.currentReplay);
-    // add length because -1 % 5 === -1 in javascript.
-    const prevIndex = (currentIndex - 1 + replays.length) % replays.length;
-    this.currentReplay = replays[prevIndex];
+    const oldIndex = this.currentIndex;
+    let replay;
+    this.currentIndex =
+      (this.currentIndex - 1 + this.replays.length) % this.replays.length;
+    replay = await this.parseGame(this.replays[this.currentIndex]);
+    while (!replay && this.currentIndex !== oldIndex) {
+      this.currentIndex =
+        (this.currentIndex - 1 + this.replays.length) % this.replays.length;
+      replay = await this.parseGame(this.replays[this.currentIndex]);
+    }
+    this.currentReplay = replay;
   }
 
-  private playNextReplay(): void {
-    if (!this.replays || !this.currentReplay) {
+  private async playNextReplay(): Promise<void> {
+    if (!this.replays) {
       return;
     }
-    const replays = Array.from(this.replays.values());
-    const currentIndex = replays.indexOf(this.currentReplay);
-    const nextIndex = (currentIndex + 1) % replays.length;
-    this.currentReplay = replays[nextIndex];
+
+    const oldIndex = this.currentIndex;
+    let replay;
+    this.currentIndex = (this.currentIndex + 1) % this.replays.length;
+    replay = await this.parseGame(this.replays[this.currentIndex]);
+    while (!replay && this.currentIndex !== oldIndex) {
+      this.currentIndex = (this.currentIndex + 1) % this.replays.length;
+      replay = await this.parseGame(this.replays[this.currentIndex]);
+    }
+    this.currentReplay = replay;
+
+    //const replays = Array.from(this.replays.values());
+    //const currentIndex = replays.indexOf(this.currentReplay);
+    // const nextIndex = (currentIndex + 1) % this.replays.length;
+    // this.currentReplay = replays[nextIndex];
   }
 
-  private async replaySelected(event: ReplaysSelectedEvent): Promise<void> {
+  private async replaySelected(event: CustomEvent<File[]>): Promise<void> {
     this.replays = event.detail;
-    if (this.replays.size > 0) {
-      this.currentReplay = Array.from(this.replays.values())[0];
+    if (this.replays.length > 0) {
+      this.currentIndex = -1;
+      let replay;
+      while (!replay && this.currentIndex < this.replays.length) {
+        this.currentIndex++;
+        replay = await this.parseGame(this.replays[this.currentIndex]);
+      }
+      this.currentReplay = replay;
+      //Array.from(this.replays.values())[0];
     }
+  }
+
+  private async parseGame(file: File): Promise<SlippiGame | undefined> {
+    const buffer = await file.arrayBuffer();
+    const game = new SlippiGame(buffer);
+    const valid =
+      game
+        .getSettings()
+        ?.players.every((player) =>
+          supportedCharacters.includes(characters[player.characterId!]),
+        ) &&
+      Object.keys(stagesById).includes(
+        game.getSettings()?.stageId?.toString()!,
+      );
+
+    return valid ? game : undefined;
   }
 
   private getIndexText(): string {
     if (!this.currentReplay || !this.replays) {
       return '';
     }
-    const fileName = Array.from(this.replays.entries()).filter(
-      ([_fileName, replay]) => replay === this.currentReplay,
-    )[0][0];
-    const index = Array.from(this.replays.values()).indexOf(this.currentReplay);
-    const fraction = `${index + (1 % this.replays.size)}/${this.replays.size}`;
-    return `Playing ${fraction} ${fileName}`;
+    const fraction = `${this.currentIndex + 1}/${this.replays.length}`;
+    return `Playing file (${fraction}): ${
+      this.replays[this.currentIndex].name
+    }`;
   }
 
   render() {
@@ -94,7 +134,7 @@ export class AppRoot extends LitElement {
           <replay-select
             @replays-selected=${this.replaySelected}
           ></replay-select>
-          ${this.replays && this.replays.size > 1
+          ${this.replays && this.replays.length > 1
             ? html`
                 <wired-button
                   class="label"
@@ -113,7 +153,7 @@ export class AppRoot extends LitElement {
                 </wired-button>
               `
             : ``}
-          ${this.replays && this.replays.size > 0
+          ${this.replays && this.replays.length > 0
             ? html` <span>${this.getIndexText()}</span> `
             : ''}
         </div>
