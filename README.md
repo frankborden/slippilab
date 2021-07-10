@@ -23,9 +23,9 @@
 - Stock icons that look like the character
 - Optional state-dependent colors? (hitstun, shieldstun, actionable)
 - Electric effect for knee/shine
-- Fire effect for firefox, falcon specials
+- Fire effect for spacie upB, falcon specials
 - Sword trails
-- Background visuals / Stage coloring
+- Background visuals / color stages
 - Input display?
 - Tests
 

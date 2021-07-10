@@ -111,7 +111,27 @@ const renderPlayerDetails = (
   screenLayer.context.restore();
 };
 
-const getLandingAttackAirFrameIndex = (
+const getFirstFrameOfAnimation = (
+  playerFrame: DeepRequired<PostFrameUpdateType>,
+  frames: DeepRequired<FramesType>,
+): DeepRequired<PostFrameUpdateType> => {
+  let frameIndex = playerFrame.frame - 1;
+  let pastConfirmedFrame = playerFrame;
+  let pastFrameToCheck =
+    frames[frameIndex]?.players?.[playerFrame.playerIndex]?.post;
+  while (
+    pastFrameToCheck &&
+    pastFrameToCheck.actionStateId === playerFrame.actionStateId
+  ) {
+    pastConfirmedFrame = pastFrameToCheck;
+    frameIndex--;
+    pastFrameToCheck =
+      frames[frameIndex]?.players?.[playerFrame.playerIndex]?.post;
+  }
+  return pastConfirmedFrame;
+};
+
+const getFrameIndexFromDuration = (
   playerFrame: DeepRequired<PostFrameUpdateType>,
   frames: DeepRequired<FramesType>,
   player: DeepRequired<PlayerType>,
@@ -119,18 +139,11 @@ const getLandingAttackAirFrameIndex = (
   const firstIndex = isOneIndexed(player.characterId, playerFrame.actionStateId)
     ? 1
     : 0;
-
-  let framesInAnimation = 0;
-  let lCancelStatus = 0;
-  let frameIndex = playerFrame.frame - 1;
-  let frame = frames[frameIndex]?.players?.[playerFrame.playerIndex]?.post;
-  while (frame && frame.actionStateId === playerFrame.actionStateId) {
-    lCancelStatus = frame.lCancelStatus;
-    framesInAnimation++;
-    frameIndex--;
-    frame = frames[frameIndex]?.players?.[playerFrame.playerIndex]?.post;
-  }
-  return framesInAnimation * (lCancelStatus === 1 ? 2 : 1) - firstIndex;
+  const firstFrame = getFirstFrameOfAnimation(playerFrame, frames);
+  const framesInAnimation = playerFrame.frame - firstFrame.frame;
+  return (
+    framesInAnimation * (firstFrame.lCancelStatus === 1 ? 2 : 1) - firstIndex
+  );
 };
 
 const getFacingDirection = (
@@ -204,17 +217,10 @@ const renderCharacter = (
   worldContext.save();
   worldContext.lineWidth *= 2;
 
-  // TODO: move to func, lCancelStatus is set at the first frame of landing only
-  // so we need to look back.
-  let lCancelStatus = 0;
-  let frameIndex = playerFrame.frame - 1;
-  let pastFrame = frames[frameIndex]?.players?.[playerFrame.playerIndex]?.post;
-  while (pastFrame && pastFrame.actionStateId === playerFrame.actionStateId) {
-    lCancelStatus = pastFrame.lCancelStatus;
-    frameIndex--;
-    pastFrame = frames[frameIndex]?.players?.[playerFrame.playerIndex]?.post;
-  }
-
+  const lCancelStatus = getFirstFrameOfAnimation(
+    playerFrame,
+    frames,
+  ).lCancelStatus;
   worldContext.strokeStyle =
     playerFrame.hurtboxCollisionState > 0
       ? 'blue' // invinc / invuln
@@ -264,10 +270,18 @@ const renderCharacter = (
     isOneIndexed(player.characterId, playerFrame.actionStateId)
       ? 1
       : 0;
-  const animationFrameIndex = animationName.startsWith('LANDINGATTACKAIR')
-    ? getLandingAttackAirFrameIndex(playerFrame, frames, player)
-    : Math.max(0, Math.floor(playerFrame.actionStateCounter) - firstIndex) %
-      animationData.length;
+
+  const animationFrameIndex =
+    animationName.startsWith('LANDINGATTACKAIR') ||
+    animationName.startsWith('THROWN')
+      ? Math.min(
+          getFrameIndexFromDuration(playerFrame, frames, player),
+          animationData.length - 1,
+        )
+      : // ENTRANCE has some negative actionStateCounters for some reason...
+        // TODO: switch ENTRANCE to IndexFromDuration
+        Math.max(0, Math.floor(playerFrame.actionStateCounter) - firstIndex) %
+        animationData.length;
   const animationFrameLine = animationData[animationFrameIndex][0];
   const isSpacieUpBLaunchAction =
     playerFrame.actionStateId === 355 || playerFrame.actionStateId === 356;
@@ -276,7 +290,7 @@ const renderCharacter = (
     (character === 'Falco' && animationFrameIndex < 23);
 
   if (isSpacieUpBLaunchAction && isSpacieUpBMovementFrame) {
-    // just an estimate, especially with 2 different characters...
+    // just a guess, especially with 2 different characters...
     const rotationYOffset = -125;
     const rawAngle = Math.atan2(
       playerFrame.selfInducedSpeeds.y + playerFrame.selfInducedSpeeds.attackY,
