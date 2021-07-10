@@ -159,6 +159,8 @@ export class AppRoot extends LitElement {
           Skip Ahead +2s: Right or L<br />
           Zoom In: + or =<br />
           Zoom Out: - or _<br />
+          Speed Up: hold Up<br />
+          Slow down: hold Down<br />
           Frame Forward: .<br />
           Frame Backwards: ,<br />
           Capture next 10s as GIF: g<br />
