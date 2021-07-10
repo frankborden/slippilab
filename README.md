@@ -29,8 +29,8 @@
 - Input display?
 - Tests
 
-- Fractional animations (Lcancel done, throws not done, any others?)
-- Add characters, peach sheik at least. turnip throw animations... :'(
+- Add characters, peach sheik at least.
+  - Needs zelda and everybody's turnip animations?
   - WebGL renderer with raw models + animations?
   - HSDraw export model + animations, then generate SVG?
 - Color by costume instead of port (first attempt = ugly)
