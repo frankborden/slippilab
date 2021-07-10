@@ -169,6 +169,7 @@ export class AppRoot extends LitElement {
           Pause: Space or K or click<br />
           Rewind -2s: Left or J<br />
           Skip Ahead +2s: Right or L<br />
+          Jump to %: 0-9 digits<br />
           Zoom In: + or =<br />
           Zoom Out: - or _<br />
           Speed Up: hold Up<br />

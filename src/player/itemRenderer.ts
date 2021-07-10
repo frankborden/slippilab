@@ -32,8 +32,10 @@ const renderItem = function (
       if (!foxLaserOwner) {
         return;
       }
+      // TODO: currently follows owner even if they're moving, instead it
+      // should look back to owner's position when it was spawned.
       const foxLaserLength = Math.min(
-        25,
+        25, // guess
         Math.abs(foxLaserOwner.positionX - item.positionX),
       );
       worldContext.fillRect(0, 0, foxLaserLength, 1);
@@ -45,8 +47,10 @@ const renderItem = function (
       if (!falcoLaserOwner) {
         return;
       }
+      // TODO: currently follows owner even if they're moving, instead it
+      // should look back to owner's position when it was spawned.
       const falcoLaserLength = Math.min(
-        50,
+        30, // guess
         Math.abs(falcoLaserOwner.positionX - item.positionX),
       );
       worldContext.fillRect(0, 0, falcoLaserLength, 1);

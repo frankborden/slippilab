@@ -98,6 +98,23 @@ export class ReplayPlayer extends LitElement {
         case 'g':
           this.captureGif();
           break;
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+          const num = Number(e.key);
+          if (!isNaN(num)) {
+            const percent = (num * 10) / 100;
+            const frame = Math.round((this.highestFrame + 123) * percent) - 123;
+            this.game?.setFrame(frame);
+          }
+          break;
       }
     });
   }
