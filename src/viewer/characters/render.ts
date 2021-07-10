@@ -100,6 +100,7 @@ const renderPlayerDetails = (
   // flip text back right-side after global flip
   screenLayer.context.scale(1, -1);
   const name = player.displayName?.length ? player.displayName : player.nametag;
+  // const name = `${playerFrame.actionStateId},${playerFrame.actionStateCounter}`;
   screenLayer.context.fillText(name, 0, 0);
   screenLayer.context.strokeText(name, 0, 0);
   screenLayer.context.restore();
@@ -124,7 +125,7 @@ const getLandingAttackAirFrameIndex = (
     frameIndex--;
     frame = frames[frameIndex]?.players?.[playerFrame.playerIndex]?.post;
   }
-  return firstIndex + framesInAnimation * (lCancelStatus === 1 ? 2 : 1);
+  return framesInAnimation * (lCancelStatus === 1 ? 2 : 1) - firstIndex;
 };
 
 const getFacingDirection = (
@@ -136,7 +137,7 @@ const getFacingDirection = (
   const isMarthBairTurnaround =
     animationName === 'ATTACKAIRB' &&
     character === 'Marth' &&
-    animationFrameIndex > 32;
+    animationFrameIndex > 30;
   const isSmashTurn = animationName === 'SMASHTURN';
   const isSpacieBthrowTurnaround =
     animationName === 'THROWBACK' &&
@@ -221,7 +222,7 @@ const renderCharacter = (
       : 0;
   const animationFrameIndex = animationName.startsWith('LANDINGATTACKAIR')
     ? getLandingAttackAirFrameIndex(playerFrame, frames, player)
-    : (firstIndex + Math.floor(playerFrame.actionStateCounter)) %
+    : Math.max(0, Math.floor(playerFrame.actionStateCounter) - firstIndex) %
       animationData.length;
   const animationFrameLine = animationData[animationFrameIndex][0];
   const isSpacieUpBLaunchAction =

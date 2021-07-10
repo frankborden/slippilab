@@ -4,11 +4,9 @@
 
 ### Replay Viewer
 
-- Something wrong with facing dir sometimes (marth bair at least)
-- Something wrong with the end of many animations (fox jab, marth air stuff...)
 - Something wrong with laser shooting animations (air and ground)
 - Something wrong with Spacie UpB rotation (ex: straight up)
-- Something wrong with ledge grab animations
+- Something wrong with position when getting thrown (ex: dthrown by falcon)
 - Keep part of stage in focus?
   - Weird when characters are high above stage and stage goes out of view
 - Show Shield tilting (original visualiser reads inputs and checks for stun)
