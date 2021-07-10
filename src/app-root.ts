@@ -3,7 +3,6 @@ import { customElement, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import './replay-select';
 import './replay-player';
-import type { ReplaysSelectedEvent } from './replay-select';
 import { SlippiGame } from '@slippi/slippi-js';
 import { fetchAnimation, supportedCharacters } from './player/animations';
 import { characterDataById, characters } from './player/characters/character';
@@ -79,11 +78,6 @@ export class AppRoot extends LitElement {
       replay = await this.parseGame(this.replays[this.currentIndex]);
     }
     this.currentReplay = replay;
-
-    //const replays = Array.from(this.replays.values());
-    //const currentIndex = replays.indexOf(this.currentReplay);
-    // const nextIndex = (currentIndex + 1) % this.replays.length;
-    // this.currentReplay = replays[nextIndex];
   }
 
   private async replaySelected(event: CustomEvent<File[]>): Promise<void> {
@@ -96,7 +90,6 @@ export class AppRoot extends LitElement {
         replay = await this.parseGame(this.replays[this.currentIndex]);
       }
       this.currentReplay = replay;
-      //Array.from(this.replays.values())[0];
     }
   }
 

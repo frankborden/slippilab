@@ -47,6 +47,14 @@ export class ReplayPlayer extends LitElement {
 
   constructor() {
     super();
+    window.addEventListener('keyup', (e: KeyboardEvent) => {
+      switch (e.key) {
+        case 'ArrowUp':
+        case 'ArrowDown':
+          this.game?.normalSpeed();
+          break;
+      }
+    });
     window.addEventListener('keydown', (e: KeyboardEvent) => {
       switch (e.key) {
         case ' ':
@@ -62,6 +70,12 @@ export class ReplayPlayer extends LitElement {
           this.game?.setFrame(
             Math.min(this.highestFrame, this.currentFrame + 120),
           );
+          break;
+        case 'ArrowUp':
+          this.game?.speedUp();
+          break;
+        case 'ArrowDown':
+          this.game?.slowDown();
           break;
         case '.':
           this.game?.setPause();

@@ -19,7 +19,6 @@
 - debug canvas for viewing individual animations
 - indicate CPUs
 - Play/Pause button, other click controls..
-- Speed up / slowmo (UP/DOWN arrows?)
 - Electricity
 - Game timer
 - Death animation
@@ -39,7 +38,6 @@
 
 ### App
 
-- Lazily parse file blobs to increase load times and quantity limit(will this help?)
 - Tests
 - Fix VSCode complaining about json modules (resolveJsonModule=true makes
   tsc crash a lot due to json sizes)

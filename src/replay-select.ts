@@ -1,25 +1,6 @@
 import { css, html, LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
-import {
-  FramesType,
-  GameStartType,
-  MetadataType,
-  SlippiGame,
-} from '@slippi/slippi-js';
 import 'wired-elements';
-import { supportedCharacters } from './player/animations';
-import { characters } from './player/characters/character';
-import { stagesById } from './player/stages/stage';
-
-// expected by player library
-export interface Replay {
-  // data: {
-  settings: GameStartType;
-  metadata: MetadataType;
-  frames: FramesType;
-  // };
-}
-export type ReplaysSelectedEvent = CustomEvent<Map<string, SlippiGame>>;
 
 @customElement('replay-select')
 export class ReplaySelect extends LitElement {
@@ -44,42 +25,10 @@ export class ReplaySelect extends LitElement {
     if (!files || files.length === 0) {
       return;
     }
-    // inputs.forEach((input) => (input.value = ''));
-    // const replaysMap = new Map(
-    //   (
-    //     await Promise.all(
-    //       files.map((file) =>
-    //         this.createReplay(file).then((replay): [string, SlippiGame] => [
-    //           file.name,
-    //           replay!,
-    //         ]),
-    //       ),
-    //     )
-    //   )
-    //     .filter(
-    //       ([_fileName, replay]) =>
-    //         replay
-    //           ?.getSettings()
-    //           ?.players.every((player) =>
-    //             supportedCharacters.includes(characters[player.characterId!]),
-    //           ) ?? false,
-    //     )
-    //     .filter(([_fileName, replay]) =>
-    //       Object.keys(stagesById).includes(
-    //         replay.getSettings()?.stageId?.toString()!,
-    //       ),
-    //     ),
-    // );
     const replaySelectedEvent = new CustomEvent<File[]>('replays-selected', {
       detail: files,
     });
     this.dispatchEvent(replaySelectedEvent);
-  }
-
-  private async createReplay(file: File): Promise<SlippiGame | undefined> {
-    const buffer = await file.arrayBuffer();
-    const game = new SlippiGame(buffer);
-    return game;
   }
 
   render() {

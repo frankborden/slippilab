@@ -98,6 +98,31 @@ export class GameRenderer {
     this.tick();
   }
 
+  public speedUp(): void {
+    window.clearInterval(this.intervalId);
+    const normalFrameTime = 1000 / 60;
+    const speedFactor = 3;
+    this.intervalId = window.setInterval(
+      () => this.maybeTick(),
+      normalFrameTime / speedFactor,
+    );
+  }
+
+  public slowDown(): void {
+    window.clearInterval(this.intervalId);
+    const normalFrameTime = 1000 / 60;
+    const speedFactor = 1 / 4;
+    this.intervalId = window.setInterval(
+      () => this.maybeTick(),
+      normalFrameTime / speedFactor,
+    );
+  }
+
+  public normalSpeed(): void {
+    window.clearInterval(this.intervalId);
+    this.intervalId = window.setInterval(() => this.maybeTick(), 1000 / 60);
+  }
+
   public setFrame(newFrameNumber: number): void {
     window.clearInterval(this.intervalId);
     this.currentFrameNumber = newFrameNumber;
