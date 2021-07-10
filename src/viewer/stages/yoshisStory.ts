@@ -1,5 +1,4 @@
-import { Vector } from '../common';
-import type { Stage } from './stage';
+import { Stage, Vector } from '../common';
 
 const _RANDALL_CORNER_POSITIONS: {
   [frameCount: number]: [y: number, xLeft: number];
@@ -73,8 +72,6 @@ export const yoshisStory: Stage = {
     [new Vector(53, -46), new Vector(54, -47)],
     [new Vector(54, -47), new Vector(54, -100)],
   ],
-  scale: 5,
-  offset: new Vector(600, -430),
   topRightBlastzone: new Vector(173.6, 169),
   bottomLeftBlastzone: new Vector(-175.7, -91),
   getMovingPlatforms: (frame: number) => {

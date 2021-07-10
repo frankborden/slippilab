@@ -89,3 +89,46 @@ export type DeepRequired<T> = T extends (...args: any) => any
       [K in keyof T]-?: DeepRequired<T[K]>;
     }
   : NonNullable<T>;
+
+export interface Stage {
+  lines: Line[];
+  topRightBlastzone: Vector;
+  bottomLeftBlastzone: Vector;
+  getMovingPlatforms?: (frame: number) => Line[];
+}
+
+export interface Character {
+  scale: number;
+  shieldOffset: Vector;
+}
+
+export type CharacterName = typeof characterNamesById[number];
+// external ID
+export const characterNamesById = [
+  'Captain Falcon',
+  'Donkey Kong',
+  'Fox',
+  'Mr. Game & Watch',
+  'Kirby',
+  'Bowser',
+  'Link',
+  'Luigi',
+  'Mario',
+  'Marth',
+  'Mewtwo',
+  'Ness',
+  'Peach',
+  'Pikachu',
+  'Ice Climbers',
+  'Jigglypuff',
+  'Samus',
+  'Yoshi',
+  'Zelda',
+  'Sheik',
+  'Falco',
+  'Young Link',
+  'Dr. Mario',
+  'Roy',
+  'Pichu',
+  'Ganondorf',
+] as const;

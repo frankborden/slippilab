@@ -1,38 +1,28 @@
-import { Character, characters } from '../characters/character';
+import { characterNamesById } from '../common';
+export { isOneIndexed } from './oneIndexed';
+export { actions, specials } from './actions';
+// Adapted directly from https://github.com/vinceau/react-slp-viewer
 
 // Store all the imported animations here
 const animationMap = new Map<number, any>();
 
-export const supportedCharacters: Character[] = [
-  'Captain Falcon',
-  'Fox',
-  'Falco',
-  'Marth',
-  'Jigglypuff',
-];
-
 const importAnimation = async (
   charId: number,
 ): Promise<RawCharacterAnimations> => {
-  switch (characters[charId]) {
+  switch (characterNamesById[charId]) {
     case 'Captain Falcon': {
-      // @ts-ignore
       return (await import('./falcon')).default;
     }
     case 'Fox': {
-      // @ts-ignore
       return (await import('./fox')).default;
     }
     case 'Marth': {
-      // @ts-ignore
       return (await import('./marth')).default;
     }
     case 'Jigglypuff': {
-      // @ts-ignore
       return (await import('./puff')).default;
     }
     case 'Falco': {
-      // @ts-ignore
       return (await import('./falco')).default;
     }
     default: {

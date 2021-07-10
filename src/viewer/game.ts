@@ -1,11 +1,9 @@
 import type { FrameEntryType, FramesType, SlippiGame } from '@slippi/slippi-js';
 
-import type { DeepRequired } from './common';
-import { Vector } from './common';
+import { Vector, DeepRequired, Stage } from './common';
 import { createItemRender } from './itemRenderer';
-import { createPlayerRender } from './playerRenderer';
-import { createStageRender } from './stageRenderer';
-import { Stage, stagesById } from './stages/stage';
+import { createPlayerRender } from './characters';
+import { supportedStagesById, createStageRender } from './stages';
 import { clearLayers, drawToBase, Layers, setupLayers } from './layer';
 
 export type Render = (
@@ -19,7 +17,7 @@ interface Camera {
   offset: Vector;
 }
 
-export class GameRenderer {
+export class Game {
   public currentFrameNumber = -123;
 
   private camera: Camera = {
@@ -34,10 +32,10 @@ export class GameRenderer {
   public static async create(
     baseReplay: SlippiGame,
     baseCanvas: HTMLCanvasElement,
-  ): Promise<GameRenderer> {
+  ): Promise<Game> {
     const replay = baseReplay as DeepRequired<SlippiGame>;
-    return new GameRenderer(replay, setupLayers(baseCanvas), [
-      createStageRender(stagesById[replay.getSettings().stageId]),
+    return new Game(replay, setupLayers(baseCanvas), [
+      createStageRender(supportedStagesById[replay.getSettings().stageId]),
       ...(await Promise.all(
         replay
           .getSettings()
@@ -54,7 +52,7 @@ export class GameRenderer {
     private layers: Layers,
     private renders: Render[],
   ) {
-    this.stage = stagesById[replay.getSettings().stageId];
+    this.stage = supportedStagesById[replay.getSettings().stageId];
     this.intervalId = window.setInterval(() => this.maybeTick(), 1000 / 60);
   }
 

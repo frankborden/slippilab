@@ -1,5 +1,4 @@
-import { Vector } from '../common';
-import type { Stage } from './stage';
+import { Stage, Vector } from '../common';
 
 export const battlefield: Stage = {
   lines: [
@@ -30,8 +29,6 @@ export const battlefield: Stage = {
     [new Vector(30, -29), new Vector(29, -35)],
     [new Vector(-10, -30), new Vector(-10, -40)],
   ],
-  scale: 4.5,
-  offset: new Vector(600, -480),
   topRightBlastzone: new Vector(224, 200),
   bottomLeftBlastzone: new Vector(-224, -108.8),
 };

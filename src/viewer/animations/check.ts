@@ -3,7 +3,7 @@
 // @ts-ignore
 import { existsSync } from 'https://deno.land/std@0.100.0/fs/mod.ts';
 
-export const actions: { [actionId: number]: string } = {
+const actions: { [actionId: number]: string } = {
   0x000: 'DEADDOWN', //DeadDown
   0x001: 'DEADLEFT', //DeadLeft    Standard leftward death
   0x002: 'DEADRIGHT', //DeadRight    Standard rightward death

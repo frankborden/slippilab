@@ -5,34 +5,34 @@ import type {
   PostFrameUpdateType,
 } from '@slippi/slippi-js';
 
-import { CharacterAnimations, fetchAnimation } from './animations';
-import { actions, specials } from './animations/actions';
-import { isOneIndexed } from './animations/oneIndexed';
 import {
-  Character,
-  characterDataById,
-  characters,
-} from './characters/character';
-import type { DeepRequired } from './common';
-import type { Render } from './gameRenderer';
-import type { Layer, Layers } from './layer';
+  CharacterAnimations,
+  fetchAnimation,
+  isOneIndexed,
+  actions,
+  specials,
+} from '../animations';
+import { supportedCharactersById } from '../characters';
+import { CharacterName, characterNamesById, DeepRequired } from '../common';
+import type { Render } from '../game';
+import type { Layer, Layers } from '../layer';
 
 const colors = ['pink', 'lightblue', 'yellow', 'lightgreen'];
 const teamColors = ['pink', 'lightblue', 'lightgreen'];
 
-const isInFrame = function (
+const isInFrame = (
   frame: DeepRequired<FrameEntryType>,
   player: DeepRequired<PlayerType>,
-): boolean {
+): boolean => {
   return Boolean(frame.players[player.playerIndex]);
 };
 
-const renderStocks = function (
+const renderStocks = (
   screenLayer: Layer,
   frame: DeepRequired<FrameEntryType>,
   player: DeepRequired<PlayerType>,
   isDoubles: boolean,
-): void {
+): void => {
   const playerFrame = frame.players[player.playerIndex].post;
   const stockCount = playerFrame.stocksRemaining;
   screenLayer.context.save();
@@ -53,12 +53,12 @@ const renderStocks = function (
   screenLayer.context.restore();
 };
 
-const renderPercent = function (
+const renderPercent = (
   screenLayer: Layer,
   frame: DeepRequired<FrameEntryType>,
   player: DeepRequired<PlayerType>,
   isDoubles: boolean,
-): void {
+): void => {
   const playerFrame = frame.players[player.playerIndex].post;
   const percent = playerFrame.percent;
   screenLayer.context.save();
@@ -79,12 +79,12 @@ const renderPercent = function (
   screenLayer.context.restore();
 };
 
-const renderPlayerDetails = function (
+const renderPlayerDetails = (
   screenLayer: Layer,
   frame: DeepRequired<FrameEntryType>,
   player: DeepRequired<PlayerType>,
   isDoubles: boolean,
-): void {
+): void => {
   const playerFrame = frame.players[player.playerIndex].post;
   screenLayer.context.save();
   const fontSize = screenLayer.canvas.height / 30;
@@ -105,17 +105,14 @@ const renderPlayerDetails = function (
   screenLayer.context.restore();
 };
 
-const getLandingAttackAirFrameIndex = function (
+const getLandingAttackAirFrameIndex = (
   playerFrame: DeepRequired<PostFrameUpdateType>,
   frames: DeepRequired<FramesType>,
-): number {
-  const firstIndex = 0;
-  // MAYBE it's not messed up. Looks like lCancelStatus is only set for
-  // the first frame of landing lag instead of all of them..
-  // I think the fractional animation counter messed up the table.
-  // isOneIndexed(this.settings.characterId, playerFrame.actionStateId)
-  //   ? 1
-  //   : 0;
+  player: DeepRequired<PlayerType>,
+): number => {
+  const firstIndex = isOneIndexed(player.characterId, playerFrame.actionStateId)
+    ? 1
+    : 0;
 
   let framesInAnimation = 0;
   let lCancelStatus = 0;
@@ -130,16 +127,16 @@ const getLandingAttackAirFrameIndex = function (
   return firstIndex + framesInAnimation * (lCancelStatus === 1 ? 2 : 1);
 };
 
-const getFacingDirection = function (
+const getFacingDirection = (
   frameFacing: number,
   animationName: string,
-  character: Character,
+  character: CharacterName,
   animationFrameIndex: number,
-): number {
+): number => {
   const isMarthBairTurnaround =
     animationName === 'ATTACKAIRB' &&
     character === 'Marth' &&
-    animationFrameIndex > 30;
+    animationFrameIndex > 32;
   const isSmashTurn = animationName === 'SMASHTURN';
   const isSpacieBthrowTurnaround =
     animationName === 'THROWBACK' &&
@@ -150,17 +147,17 @@ const getFacingDirection = function (
     : frameFacing;
 };
 
-const renderCharacter = function (
+const renderCharacter = (
   worldContext: CanvasRenderingContext2D,
   frame: DeepRequired<FrameEntryType>,
   frames: DeepRequired<FramesType>,
   player: DeepRequired<PlayerType>,
   isDoubles: boolean,
   animations: CharacterAnimations,
-): void {
+): void => {
   const playerFrame = frame.players[player.playerIndex].post;
-  const character = characters[player.characterId];
-  const characterData = characterDataById[player.characterId];
+  const character = characterNamesById[player.characterId];
+  const characterData = supportedCharactersById[player.characterId];
   worldContext.save();
   worldContext.lineWidth *= 2;
 
@@ -177,22 +174,21 @@ const renderCharacter = function (
 
   worldContext.strokeStyle =
     playerFrame.hurtboxCollisionState > 0
-      ? 'blue'
+      ? 'blue' // invinc / invuln
       : lCancelStatus === 2
-      ? 'red'
-      : 'black'; // invinc
+      ? 'red' // missed lcanc
+      : 'black';
   worldContext.fillStyle = isDoubles
     ? teamColors[player.teamId]
     : colors[playerFrame.playerIndex];
   worldContext.translate(playerFrame.positionX, playerFrame.positionY);
-  // 4.5 is magic, -y is because the data seems to be flipped relative to
-  // the stage data..
-  // world space -> animation data space
-  worldContext.scale(characterData.scale / 4.5, -characterData.scale / 4.5);
-  worldContext.lineWidth /= characterData.scale / 4.5;
+  // world space -> animation data space, -y is because the data seems to be
+  // flipped relative to the stage data..
+  worldContext.scale(characterData.scale, -characterData.scale);
+  worldContext.lineWidth /= characterData.scale;
   const animationName =
     actions[playerFrame.actionStateId] ??
-    specials[characters[player.characterId]][playerFrame.actionStateId];
+    specials[characterNamesById[player.characterId]][playerFrame.actionStateId];
   console.assert(
     animationName !== undefined,
     'characterId',
@@ -224,7 +220,7 @@ const renderCharacter = function (
       ? 1
       : 0;
   const animationFrameIndex = animationName.startsWith('LANDINGATTACKAIR')
-    ? getLandingAttackAirFrameIndex(playerFrame, frames)
+    ? getLandingAttackAirFrameIndex(playerFrame, frames, player)
     : (firstIndex + Math.floor(playerFrame.actionStateCounter)) %
       animationData.length;
   const animationFrameLine = animationData[animationFrameIndex][0];
@@ -277,14 +273,14 @@ const renderCharacter = function (
   worldContext.restore();
 };
 
-const renderShield = function (
+const renderShield = (
   worldContext: CanvasRenderingContext2D,
   frame: DeepRequired<FrameEntryType>,
   player: DeepRequired<PlayerType>,
   isDoubles: boolean,
-): void {
+): void => {
   const playerFrame = frame.players[player.playerIndex].post;
-  const characterData = characterDataById[player.characterId];
+  const characterData = supportedCharactersById[player.characterId];
   if (playerFrame.actionStateId < 0x0b2 || playerFrame.actionStateId > 0x0b6) {
     return;
   }
@@ -295,15 +291,15 @@ const renderShield = function (
     : colors[playerFrame.playerIndex];
   worldContext.strokeStyle = 'white';
   const shieldPercent = playerFrame.shieldSize / 60;
-  const shieldScale = 7.7696875;
   worldContext.translate(playerFrame.positionX, playerFrame.positionY);
   worldContext.translate(
-    characterData.shieldOffset.x / 4.5,
-    characterData.shieldOffset.y / 4.5,
+    characterData.shieldOffset.x,
+    characterData.shieldOffset.y,
   );
   // world space -> shield space (unit render distance === max shield size)
-  worldContext.scale(shieldScale, shieldScale);
-  worldContext.lineWidth /= shieldScale;
+  const magic = 7.7696875;
+  worldContext.scale(magic, magic);
+  worldContext.lineWidth /= magic;
   worldContext.beginPath();
   worldContext.arc(0, 0, shieldPercent, 0, 2 * Math.PI);
   worldContext.closePath();
@@ -312,14 +308,14 @@ const renderShield = function (
   worldContext.restore();
 };
 
-const renderShine = function (
+const renderShine = (
   worldContext: CanvasRenderingContext2D,
   frame: DeepRequired<FrameEntryType>,
   player: DeepRequired<PlayerType>,
-) {
+): void => {
   const playerFrame = frame.players[player.playerIndex].post;
-  const character = characters[player.characterId];
-  const characterData = characterDataById[player.characterId];
+  const character = characterNamesById[player.characterId];
+  const characterData = supportedCharactersById[player.characterId];
   if (
     (character !== 'Fox' && character !== 'Falco') ||
     playerFrame.actionStateId < 360 ||
@@ -328,32 +324,36 @@ const renderShine = function (
     return;
   }
   worldContext.save();
-  worldContext.fillStyle = '#00FFFF';
-  worldContext.strokeStyle = '#00FFFF';
+  worldContext.strokeStyle = 'aqua';
   worldContext.lineWidth *= 5;
-  const shieldScale = 7.7696875;
+
   worldContext.translate(playerFrame.positionX, playerFrame.positionY);
   worldContext.translate(
-    characterData.shieldOffset.x / 4.5,
-    characterData.shieldOffset.y / 4.5,
+    characterData.shieldOffset.x,
+    characterData.shieldOffset.y,
   );
-  worldContext.scale(shieldScale, shieldScale); // world space -> shield space
-  worldContext.lineWidth /= shieldScale;
+  const magic = 7.7696875; // "shield scale"
+  worldContext.scale(magic, magic); // world space -> shield space
+  worldContext.lineWidth /= magic;
   worldContext.beginPath();
-  worldContext.scale(0.9, 0.9); // not as big as shield because we have linewidth
+  // TODO: spacies have different sized shines
+  // not as big as shield because we have linewidth
+  worldContext.scale(0.9, 0.9);
   const sixths = (2 * Math.PI) / 6;
-  worldContext.moveTo(0, 1);
+  let radius = 1;
+  worldContext.moveTo(0, radius);
   for (var hexPart = 0; hexPart < 6; hexPart++) {
     worldContext.lineTo(
-      1 * Math.sin(sixths * hexPart + 1),
-      1 * Math.cos(sixths * hexPart + 1),
+      radius * Math.sin(sixths * (hexPart + 1)),
+      radius * Math.cos(sixths * (hexPart + 1)),
     );
   }
-  worldContext.moveTo(0, 0.5);
+  radius = 0.5;
+  worldContext.moveTo(0, radius);
   for (var hexPart = 0; hexPart < 6; hexPart++) {
     worldContext.lineTo(
-      0.5 * Math.sin(sixths * hexPart + 1),
-      0.5 * Math.cos(sixths * hexPart + 1),
+      radius * Math.sin(sixths * (hexPart + 1)),
+      radius * Math.cos(sixths * (hexPart + 1)),
     );
   }
 
@@ -362,12 +362,12 @@ const renderShine = function (
   worldContext.restore();
 };
 
-const renderUi = function (
+const renderUi = (
   screenLayer: Layer,
   frame: DeepRequired<FrameEntryType>,
   player: DeepRequired<PlayerType>,
   isDoubles: boolean,
-): void {
+): void => {
   screenLayer.context.save();
   const playerUiX = screenLayer.canvas.width * 0.2 * (player.playerIndex + 1);
   const playerUiY = screenLayer.canvas.height / 5;
@@ -378,10 +378,10 @@ const renderUi = function (
   screenLayer.context.restore();
 };
 
-export const createPlayerRender = async function (
+export const createPlayerRender = async (
   player: DeepRequired<PlayerType>,
   isDoubles: boolean,
-): Promise<Render> {
+): Promise<Render> => {
   const animations = await fetchAnimation(player.characterId);
   return (
     layers: Layers,

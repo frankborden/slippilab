@@ -1,12 +1,13 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
-import './replay-select';
-import './replay-player';
 import { SlippiGame } from '@slippi/slippi-js';
-import { fetchAnimation, supportedCharacters } from './player/animations';
-import { characterDataById, characters } from './player/characters/character';
-import { stagesById } from './player/stages/stage';
+
+import './replay-select';
+import './replay-viewer';
+import { fetchAnimation } from './viewer/animations';
+import { supportedCharactersById } from './viewer/characters';
+import { supportedStagesById } from './viewer/stages';
 
 @customElement('app-root')
 export class AppRoot extends LitElement {
@@ -22,7 +23,7 @@ export class AppRoot extends LitElement {
           break;
       }
     });
-    Object.keys(characterDataById).forEach((characterId) =>
+    Object.keys(supportedCharactersById).forEach((characterId) =>
       fetchAnimation(Number(characterId)),
     );
   }
@@ -40,7 +41,7 @@ export class AppRoot extends LitElement {
         position: absolute;
         left: -5000px;
       }
-      new-replay-player {
+      replay-viewer {
         position: absolute;
         top: 0;
         left: 0;
@@ -110,9 +111,11 @@ export class AppRoot extends LitElement {
       game
         .getSettings()
         ?.players.every((player) =>
-          supportedCharacters.includes(characters[player.characterId!]),
+          Object.keys(supportedCharactersById).includes(
+            player.characterId!.toString(),
+          ),
         ) &&
-      Object.keys(stagesById).includes(
+      Object.keys(supportedStagesById).includes(
         game.getSettings()?.stageId?.toString()!,
       );
 
@@ -130,7 +133,7 @@ export class AppRoot extends LitElement {
   }
 
   render() {
-    const playerClasses = { hidden: !this.currentReplay, player: true };
+    const viewerClasses = { hidden: !this.currentReplay };
     return html`
       <div class="grid">
         <div class="topbar">
@@ -179,10 +182,10 @@ export class AppRoot extends LitElement {
           Capture next 10s as GIF: g<br />
         </div>
         ${this.currentReplay
-          ? html` <new-replay-player
+          ? html` <replay-viewer
               .replay=${this.currentReplay}
-              class=${classMap(playerClasses)}
-            ></new-replay-player>`
+              class=${classMap(viewerClasses)}
+            ></replay-viewer>`
           : ''}
       </div>
     `;

@@ -1,5 +1,4 @@
-import { Vector } from '../common';
-import type { Stage } from './stage';
+import { Stage, Vector } from '../common';
 
 export const dreamland: Stage = {
   lines: [
@@ -18,8 +17,6 @@ export const dreamland: Stage = {
     [new Vector(77.25, 0), new Vector(76.5, -11)],
     [new Vector(76.5, -11), new Vector(65.75, -36)],
   ],
-  scale: 3.5,
-  offset: new Vector(600, -500),
   topRightBlastzone: new Vector(255, 250),
   bottomLeftBlastzone: new Vector(-255, -123),
 };

@@ -1,5 +1,4 @@
-import { Vector } from '../common';
-import type { Stage } from './stage';
+import { Stage, Vector } from '../common';
 
 export const finalDestination: Stage = {
   lines: [
@@ -23,8 +22,6 @@ export const finalDestination: Stage = {
     [new Vector(65, -30), new Vector(60, -47)],
     [new Vector(60, -47), new Vector(50, -55)],
   ],
-  scale: 4.5,
-  offset: new Vector(600, -400),
   topRightBlastzone: new Vector(246, 188),
   bottomLeftBlastzone: new Vector(-246, -140),
 };

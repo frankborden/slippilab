@@ -1,5 +1,4 @@
-import { Vector } from '../common';
-import type { Stage } from './stage';
+import { Stage, Vector } from '../common';
 
 export const pokemonStadium: Stage = {
   lines: [
@@ -27,8 +26,6 @@ export const pokemonStadium: Stage = {
     [new Vector(60, -17.75), new Vector(60, -38)],
     [new Vector(15, -60), new Vector(15, -112)],
   ],
-  scale: 4.2,
-  offset: new Vector(600, -500),
   topRightBlastzone: new Vector(230, 180),
   bottomLeftBlastzone: new Vector(-230, -111),
 };

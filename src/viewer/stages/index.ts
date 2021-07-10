@@ -1,21 +1,13 @@
 import { battlefield } from './battlefield';
 import { finalDestination } from './finalDestination';
-import type { Line, Vector } from '../common';
 import { dreamland } from './dreamland';
 import { yoshisStory } from './yoshisStory';
 import { pokemonStadium } from './pokemonStadium';
 import { fountain } from './fountain';
+import type { Stage } from '../common';
 
-export interface Stage {
-  lines: Line[];
-  scale: number;
-  offset: Vector;
-  topRightBlastzone: Vector;
-  bottomLeftBlastzone: Vector;
-  getMovingPlatforms?: (frame: number) => Line[];
-}
-
-export const stagesById: { [stageId: number]: Stage } = {
+export { createStageRender } from './render';
+export const supportedStagesById: { [stageId: number]: Stage } = {
   2: fountain,
   3: pokemonStadium,
   8: yoshisStory,

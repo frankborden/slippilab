@@ -5,7 +5,7 @@ import type {
 } from '@slippi/slippi-js';
 
 import type { DeepRequired } from './common';
-import type { Render } from './gameRenderer';
+import type { Render } from './game';
 import type { Layers } from './layer';
 
 const supportedItems = [
@@ -14,11 +14,11 @@ const supportedItems = [
   210, // Fly guy
 ];
 
-const renderItem = function (
+const renderItem = (
   worldContext: CanvasRenderingContext2D,
   item: DeepRequired<ItemUpdateType>,
   frame: DeepRequired<FrameEntryType>,
-) {
+): void => {
   worldContext.save();
   worldContext.strokeStyle = 'red';
   worldContext.fillStyle = 'red';
@@ -68,7 +68,7 @@ const renderItem = function (
   worldContext.restore();
 };
 
-export const createItemRender = function (): Render {
+export const createItemRender = (): Render => {
   return (
     layers: Layers,
     frame: DeepRequired<FrameEntryType>,

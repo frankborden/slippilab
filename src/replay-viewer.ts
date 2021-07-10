@@ -5,10 +5,10 @@ import { customElement, property, state } from 'lit/decorators.js';
 import 'wired-elements';
 import type { WiredSlider } from 'wired-elements';
 
-import { GameRenderer } from './player/gameRenderer';
+import { Game } from './viewer/game';
 
-@customElement('new-replay-player')
-export class ReplayPlayer extends LitElement {
+@customElement('replay-viewer')
+export class ReplayViewer extends LitElement {
   static get styles() {
     return css`
       .container {
@@ -43,7 +43,7 @@ export class ReplayPlayer extends LitElement {
   @state()
   private highestFrame = 400;
 
-  private game?: GameRenderer;
+  private game?: Game;
 
   constructor() {
     super();
@@ -151,7 +151,7 @@ export class ReplayPlayer extends LitElement {
     resizeObserver.observe(canvas);
   }
 
-  updated(oldValues: PropertyValues<ReplayPlayer>) {
+  updated(oldValues: PropertyValues<ReplayViewer>) {
     if (oldValues.has('replay')) {
       if (oldValues.get('replay')) {
         this.game?.stop();
@@ -168,7 +168,7 @@ export class ReplayPlayer extends LitElement {
       return;
     }
     this.highestFrame = highestFrame;
-    this.game = await GameRenderer.create(this.replay, canvas);
+    this.game = await Game.create(this.replay, canvas);
     this.game.onTick(
       (currentFrameNumber: number) => (this.currentFrame = currentFrameNumber),
     );

@@ -1,5 +1,4 @@
-import { Vector } from '../common';
-import type { Stage } from './stage';
+import { Stage, Vector } from '../common';
 
 export const fountain: Stage = {
   lines: [
@@ -41,8 +40,6 @@ export const fountain: Stage = {
     [new Vector(10, -62), new Vector(8.8, -72)],
     [new Vector(8.8, -72), new Vector(8.8, -150)],
   ],
-  scale: 5,
-  offset: new Vector(600, -450),
   topRightBlastzone: new Vector(198.75, 202.5),
   bottomLeftBlastzone: new Vector(-198.75, -146.25),
 };

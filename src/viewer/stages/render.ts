@@ -1,25 +1,24 @@
 import type { FrameEntryType, FramesType } from '@slippi/slippi-js';
-import type { DeepRequired } from './common';
-import type { Render } from './gameRenderer';
-import type { Layers } from './layer';
-import type { Stage } from './stages/stage';
+import type { Line, DeepRequired, Stage } from '../common';
+import type { Render } from '../game';
+import type { Layers } from '../layer';
 
-const renderStageLines = function (
+const renderStageLines = (
   worldContext: CanvasRenderingContext2D,
   frame: DeepRequired<FrameEntryType>,
   stage: Stage,
-): void {
+): void => {
   worldContext.save();
   worldContext.lineWidth *= 2;
   worldContext.strokeStyle = 'black';
-  stage.lines.forEach((line) => {
+  stage.lines.forEach((line: Line) => {
     worldContext.beginPath();
     worldContext.moveTo(line[0].x, line[0].y);
     worldContext.lineTo(line[1].x, line[1].y);
     worldContext.closePath();
     worldContext.stroke();
   });
-  stage.getMovingPlatforms?.(frame.frame)?.forEach((line) => {
+  stage.getMovingPlatforms?.(frame.frame)?.forEach((line: Line) => {
     worldContext.beginPath();
     worldContext.moveTo(line[0].x, line[0].y);
     worldContext.lineTo(line[1].x, line[1].y);
@@ -29,11 +28,11 @@ const renderStageLines = function (
   worldContext.restore();
 };
 
-const renderBlastzones = function (
+const renderBlastzones = (
   worldContext: CanvasRenderingContext2D,
   frame: DeepRequired<FrameEntryType>,
   stage: Stage,
-): void {
+): void => {
   const renderer = worldContext;
   renderer.save();
   renderer.lineWidth *= 2;
@@ -47,7 +46,7 @@ const renderBlastzones = function (
   renderer.restore();
 };
 
-export const createStageRender = function (stage: Stage): Render {
+export const createStageRender = (stage: Stage): Render => {
   return (
     layers: Layers,
     frame: DeepRequired<FrameEntryType>,
