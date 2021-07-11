@@ -23,42 +23,36 @@ const renderItem = (
   worldContext.strokeStyle = 'red';
   worldContext.fillStyle = 'red';
   worldContext.translate(item.positionX, item.positionY);
-  worldContext.scale(-item.facingDirection, 1);
   switch (item.typeId) {
     case 54:
-      // Fox laser
-      // TODO: if throw or deflected by shield, need to angle lasers
-      const foxLaserOwner = frame.players[item.owner]?.post;
-      if (!foxLaserOwner) {
-        return;
-      }
-      // TODO: currently follows owner even if they're moving, instead it
-      // should look back to owner's position when it was spawned.
-      const foxLaserLength = Math.min(
-        25, // guess
-        Math.abs(foxLaserOwner.positionX - item.positionX),
-      );
-      worldContext.fillRect(0, 0, foxLaserLength, 1);
-      break;
     case 55:
-      // Falco laser
-      // TODO: if throw or deflected by shield, need to angle lasers
-      const falcoLaserOwner = frame.players[item.owner]?.post;
-      if (!falcoLaserOwner) {
+      // Laser
+      const owner = frame.players[item.owner]?.post;
+      if (!owner) {
         return;
       }
-      // TODO: currently follows owner even if they're moving, instead it
-      // should look back to owner's position when it was spawned.
-      const falcoLaserLength = Math.min(
-        30, // guess
-        Math.abs(falcoLaserOwner.positionX - item.positionX),
+      // TODO: currently length is based on current owner position, rather than
+      // owner position when item spawned.
+      const angle = Math.atan2(item.velocityY, item.velocityX);
+      const distToOwner = Math.max(
+        0,
+        Math.sqrt(
+          Math.pow(item.positionX - owner.positionX, 2) +
+            Math.pow(item.positionY - owner.positionY, 2),
+        ) - 10, // 10 = guess to account for edge of char to center of char
       );
-      worldContext.fillRect(0, 0, falcoLaserLength, 1);
+      const length = Math.min(
+        item.typeId === 54 ? 25 : 30, // guesses
+        Math.abs(distToOwner),
+      );
+      worldContext.rotate(angle);
+      // leading edge is at positionX,positionY, draw the rest trailing behind
+      worldContext.fillRect(-length, 0, length, 1);
       break;
     case 210:
       // Fly guy
       // estimated size/shape
-      worldContext.scale(0.6, 1);
+      worldContext.scale(0.8, 1);
       worldContext.beginPath();
       worldContext.arc(0, 0, 5, 0, Math.PI * 2);
       worldContext.closePath();
