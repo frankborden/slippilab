@@ -9,7 +9,6 @@
 - Keep part of stage in focus?
   - Weird when characters are high above stage and stage goes out of view
 - Show Shield tilting (original visualiser reads inputs and checks for stun)
-- Spacie throw lasers and deflected/countered lasers should be angled
 - Customziation (custom colors/colorblind colors, UI info)
 - Actionstate/frame below % as option (stun/lag remaining too)
 - Separate project
