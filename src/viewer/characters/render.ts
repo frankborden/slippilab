@@ -22,6 +22,33 @@ import {
 import type { Render } from '../game';
 import type { Layer, Layers } from '../layer';
 
+export const createPlayerRender = async (
+  player: DeepRequired<PlayerType>,
+  isDoubles: boolean,
+): Promise<Render> => {
+  const animations = await fetchAnimation(player.characterId);
+  return (
+    layers: Layers,
+    frame: DeepRequired<FrameEntryType>,
+    frames: DeepRequired<FramesType>,
+  ) => {
+    if (!isInFrame(frame, player)) {
+      return;
+    }
+    renderUi(layers.screenSpace, frame, player, isDoubles);
+    renderCharacter(
+      layers.worldSpace.context,
+      frame,
+      frames,
+      player,
+      isDoubles,
+      animations,
+    );
+    renderShield(layers.worldSpace.context, frame, player, isDoubles);
+    renderShine(layers.worldSpace.context, frame, player);
+  };
+};
+
 const colors = ['pink', 'lightblue', 'yellow', 'lightgreen'];
 const teamColors = ['pink', 'lightblue', 'lightgreen'];
 
@@ -435,31 +462,4 @@ const renderUi = (
   renderPercent(screenLayer, frame, player, isDoubles);
   renderPlayerDetails(screenLayer, frame, player, isDoubles);
   screenLayer.context.restore();
-};
-
-export const createPlayerRender = async (
-  player: DeepRequired<PlayerType>,
-  isDoubles: boolean,
-): Promise<Render> => {
-  const animations = await fetchAnimation(player.characterId);
-  return (
-    layers: Layers,
-    frame: DeepRequired<FrameEntryType>,
-    frames: DeepRequired<FramesType>,
-  ) => {
-    if (!isInFrame(frame, player)) {
-      return;
-    }
-    renderUi(layers.screenSpace, frame, player, isDoubles);
-    renderCharacter(
-      layers.worldSpace.context,
-      frame,
-      frames,
-      player,
-      isDoubles,
-      animations,
-    );
-    renderShield(layers.worldSpace.context, frame, player, isDoubles);
-    renderShine(layers.worldSpace.context, frame, player);
-  };
 };

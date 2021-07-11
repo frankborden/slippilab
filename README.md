@@ -17,8 +17,11 @@
 - indicate CPUs
 - Play/Pause button, other GUI controls..
 - Game timer
+  - Seems present in .slp spec but not exposed in slippi-js?
+- Bubble view when off camera / near blastzone?
 - Powershield animation
 - Death animation
+- Hit effect
 - Stock icons that look like the character
 - Optional state-dependent colors? (hitstun, shieldstun, actionable)
 - Electric effect for knee/shine
@@ -29,12 +32,12 @@
 - Tests
 
 - Add characters, peach sheik at least.
-  - Needs zelda and everybody's turnip animations?
+  - Needs zelda and everybody's turnip animations
   - WebGL renderer with raw models + animations?
   - HSDraw export model + animations, then generate SVG?
 - Color by costume instead of port (first attempt = ugly)
 - Fountain platforms (infeasible until it's added to .slp spec)
-- Wispy (seems infeasible until it's added to .slp spec)
+- Wispy (infeasible until it's added to .slp spec)
 
 ### App
 

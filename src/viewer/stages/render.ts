@@ -3,6 +3,17 @@ import type { Line, DeepRequired, Stage } from '../common';
 import type { Render } from '../game';
 import type { Layers } from '../layer';
 
+export const createStageRender = (stage: Stage): Render => {
+  return (
+    layers: Layers,
+    frame: DeepRequired<FrameEntryType>,
+    frames: DeepRequired<FramesType>,
+  ) => {
+    renderStageLines(layers.worldSpace.context, frame, stage);
+    renderBlastzones(layers.worldSpace.context, frame, stage);
+  };
+};
+
 const renderStageLines = (
   worldContext: CanvasRenderingContext2D,
   frame: DeepRequired<FrameEntryType>,
@@ -44,15 +55,4 @@ const renderBlastzones = (
     stage.topRightBlastzone.y - stage.bottomLeftBlastzone.y,
   );
   renderer.restore();
-};
-
-export const createStageRender = (stage: Stage): Render => {
-  return (
-    layers: Layers,
-    frame: DeepRequired<FrameEntryType>,
-    frames: DeepRequired<FramesType>,
-  ) => {
-    renderStageLines(layers.worldSpace.context, frame, stage);
-    renderBlastzones(layers.worldSpace.context, frame, stage);
-  };
 };
