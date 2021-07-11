@@ -18,8 +18,10 @@
   - Seems present in .slp spec but not exposed in slippi-js?
 - Bubble view when off camera / near blastzone?
 - Powershield animation
+- Lightshield
 - Death animation
 - Hit effect
+- Higher % = darker text
 - Stock icons that look like the character
 - Optional state-dependent colors? (hitstun, shieldstun, actionable)
 - Electric effect for knee/shine
