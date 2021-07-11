@@ -177,11 +177,6 @@ export class Game {
         }
         subjects.push(new Vector(playerFrame.positionX, playerFrame.positionY));
       }
-      // for (const line of this.stage.lines) {
-      //   for (const point of line) {
-      //     subjects.push(point);
-      //   }
-      // }
     }
     if (subjects.length === 0) {
       subjects.push(
@@ -193,7 +188,7 @@ export class Game {
   }
 
   private focus(subjects: Vector[]) {
-    const padding = 60;
+    const padding = 60; // world space
     const followSpeed = 30;
     let bottomLeftBound = new Vector(Infinity, Infinity);
     let topRightBound = new Vector(-Infinity, -Infinity);
@@ -219,7 +214,7 @@ export class Game {
       .getMin();
     const newScale =
       (targetScale - this.camera.scale) / followSpeed + this.camera.scale;
-    // Return to scale = 1, stage(0,0) in center of screen
+    // Return to scale = 1 (excluding zoom), stage(0,0) in center of screen
     this.layers.worldSpace.context.translate(
       this.camera.offset.x,
       this.camera.offset.y,
