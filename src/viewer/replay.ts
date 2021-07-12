@@ -110,6 +110,14 @@ export const getThrowerName = (
   return 'FOX';
 };
 
-export const getShade = (): number => {
-  return 0;
+export const getShade = (
+  playerIndex: number,
+  players: DeepRequired<PlayerType[]>,
+): number => {
+  return players.filter(
+    (player) =>
+      player.playerIndex < playerIndex &&
+      player.characterId === players[playerIndex].characterId &&
+      player.teamId === players[playerIndex].teamId,
+  ).length;
 };

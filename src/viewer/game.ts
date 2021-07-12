@@ -46,7 +46,11 @@ export class Game {
           replay
             .getSettings()
             .players.map((player) =>
-              createPlayerRender(player, replay.getSettings().isTeams),
+              createPlayerRender(
+                player,
+                replay.getSettings().players,
+                replay.getSettings().isTeams,
+              ),
             ),
         )),
         createItemRender(),

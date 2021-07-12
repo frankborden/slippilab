@@ -27,6 +27,7 @@ import {
 
 export const createPlayerRender = async (
   player: DeepRequired<PlayerType>,
+  players: DeepRequired<PlayerType[]>,
   isDoubles: boolean,
 ): Promise<Render> => {
   const animations = await fetchAnimation(player.characterId);
@@ -39,12 +40,13 @@ export const createPlayerRender = async (
     if (!isInFrame(frame, player)) {
       return;
     }
-    renderUi(layers.screenSpace, frame, player, isDoubles, isDarkMode);
+    renderUi(layers.screenSpace, frame, player, players, isDoubles, isDarkMode);
     renderCharacter(
       layers.worldSpace.context,
       frame,
       frames,
       player,
+      players,
       isDoubles,
       isDarkMode,
       animations,
@@ -53,6 +55,7 @@ export const createPlayerRender = async (
       layers.worldSpace.context,
       frame,
       player,
+      players,
       isDoubles,
       isDarkMode,
     );
@@ -63,24 +66,25 @@ export const createPlayerRender = async (
 const colors = ['pink', 'lightblue', 'yellow', 'lightgreen'];
 const darkColors = ['red', 'blue', 'gold', 'green'];
 const teamColors = [
-  ['pink', 'pink', 'pink'],
-  ['lightblue', 'lightblue', 'lightblue'],
-  ['lightgreen', 'lightgreen', 'lightgreen'],
+  ['#FFA0A0', '#FFC0CB', 'red'],
+  ['lightblue', 'lightcyan', 'blue'],
+  ['limegreen', 'lightgreen', 'green'],
 ];
 const darkTeamColors = [
-  ['red', 'red', 'red'],
-  ['blue', 'blue', 'blue'],
-  ['green', 'green', 'green'],
+  ['red', '#FF5050', 'darkred'],
+  ['dodgerblue', 'deepskyblue', 'darkblue'],
+  ['#00BB00', 'springgreen', 'darkgreen'],
 ];
 
 const getPrimaryColor = (
   player: DeepRequired<PlayerType>,
+  players: DeepRequired<PlayerType[]>,
   isDarkMode: boolean,
   isDoubles: boolean,
 ): string => {
   if (isDoubles) {
     return (isDarkMode ? darkTeamColors : teamColors)[player.teamId][
-      getShade()
+      getShade(player.playerIndex, players)
     ];
   } else {
     return (isDarkMode ? darkColors : colors)[player.playerIndex];
@@ -102,6 +106,7 @@ const renderStocks = (
   screenLayer: Layer,
   frame: DeepRequired<FrameEntryType>,
   player: DeepRequired<PlayerType>,
+  players: DeepRequired<PlayerType[]>,
   isDoubles: boolean,
   isDarkMode: boolean,
 ): void => {
@@ -110,6 +115,7 @@ const renderStocks = (
   screenLayer.context.save();
   screenLayer.context.fillStyle = getPrimaryColor(
     player,
+    players,
     isDarkMode,
     isDoubles,
   );
@@ -131,6 +137,7 @@ const renderPercent = (
   screenLayer: Layer,
   frame: DeepRequired<FrameEntryType>,
   player: DeepRequired<PlayerType>,
+  players: DeepRequired<PlayerType[]>,
   isDoubles: boolean,
   isDarkMode: boolean,
 ): void => {
@@ -143,6 +150,7 @@ const renderPercent = (
   screenLayer.context.strokeStyle = isDarkMode ? 'white' : 'black';
   screenLayer.context.fillStyle = getPrimaryColor(
     player,
+    players,
     isDarkMode,
     isDoubles,
   );
@@ -160,6 +168,7 @@ const renderPlayerDetails = (
   screenLayer: Layer,
   frame: DeepRequired<FrameEntryType>,
   player: DeepRequired<PlayerType>,
+  players: DeepRequired<PlayerType[]>,
   isDoubles: boolean,
   isDarkMode: boolean,
 ): void => {
@@ -171,6 +180,7 @@ const renderPlayerDetails = (
   screenLayer.context.strokeStyle = isDarkMode ? 'white' : 'black';
   screenLayer.context.fillStyle = getPrimaryColor(
     player,
+    players,
     isDarkMode,
     isDoubles,
   );
@@ -191,6 +201,7 @@ const renderCharacter = (
   frame: DeepRequired<FrameEntryType>,
   frames: DeepRequired<FramesType>,
   player: DeepRequired<PlayerType>,
+  players: DeepRequired<PlayerType[]>,
   isDoubles: boolean,
   isDarkMode: boolean,
   animations: CharacterAnimations,
@@ -205,7 +216,7 @@ const renderCharacter = (
     playerFrame,
     frames,
   ).lCancelStatus;
-  const primaryColor = getPrimaryColor(player, isDarkMode, isDoubles);
+  const primaryColor = getPrimaryColor(player, players, isDarkMode, isDoubles);
   const secondaryColor = getSecondaryColor(playerFrame, lCancelStatus);
   worldContext.strokeStyle = isDarkMode ? primaryColor : secondaryColor;
   worldContext.fillStyle = isDarkMode ? secondaryColor : primaryColor;
@@ -315,6 +326,7 @@ const renderShield = (
   worldContext: CanvasRenderingContext2D,
   frame: DeepRequired<FrameEntryType>,
   player: DeepRequired<PlayerType>,
+  players: DeepRequired<PlayerType[]>,
   isDoubles: boolean,
   isDarkMode: boolean,
 ): void => {
@@ -325,7 +337,12 @@ const renderShield = (
   }
   worldContext.save();
   worldContext.globalAlpha = 0.75;
-  worldContext.fillStyle = getPrimaryColor(player, isDarkMode, isDoubles);
+  worldContext.fillStyle = getPrimaryColor(
+    player,
+    players,
+    isDarkMode,
+    isDoubles,
+  );
   worldContext.strokeStyle = isDarkMode ? 'white' : 'black';
   const shieldPercent = playerFrame.shieldSize / 60;
   worldContext.translate(playerFrame.positionX, playerFrame.positionY);
@@ -403,6 +420,7 @@ const renderUi = (
   screenLayer: Layer,
   frame: DeepRequired<FrameEntryType>,
   player: DeepRequired<PlayerType>,
+  players: DeepRequired<PlayerType[]>,
   isDoubles: boolean,
   isDarkMode: boolean,
 ): void => {
@@ -410,8 +428,15 @@ const renderUi = (
   const playerUiX = screenLayer.canvas.width * 0.2 * (player.playerIndex + 1);
   const playerUiY = screenLayer.canvas.height / 5;
   screenLayer.context.translate(playerUiX, playerUiY);
-  renderStocks(screenLayer, frame, player, isDoubles, isDarkMode);
-  renderPercent(screenLayer, frame, player, isDoubles, isDarkMode);
-  renderPlayerDetails(screenLayer, frame, player, isDoubles, isDarkMode);
+  renderStocks(screenLayer, frame, player, players, isDoubles, isDarkMode);
+  renderPercent(screenLayer, frame, player, players, isDoubles, isDarkMode);
+  renderPlayerDetails(
+    screenLayer,
+    frame,
+    player,
+    players,
+    isDoubles,
+    isDarkMode,
+  );
   screenLayer.context.restore();
 };
