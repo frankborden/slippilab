@@ -16,6 +16,12 @@ export class AppRoot extends LitElement {
     super();
     window.addEventListener('keydown', (e: KeyboardEvent) => {
       switch (e.key) {
+        case 'd':
+          this.toggleDarkMode();
+          break;
+        case 'e':
+          this.toggleExplanation();
+          break;
         case '[':
           this.playPrevReplay();
           break;
@@ -44,9 +50,14 @@ export class AppRoot extends LitElement {
       .grid {
         display: grid;
       }
+      label {
+        position: relative;
+      }
       .topbar,
+      wired-toggle,
+      label,
       .explanation {
-        z-index: 1;
+        z-index: 1000;
       }
       .hidden {
         position: absolute;
@@ -149,13 +160,13 @@ export class AppRoot extends LitElement {
     }`;
   }
 
-  private toggleDarkMode(e: CustomEvent<{ checked: boolean }>): void {
-    this.darkMode = e.detail.checked;
+  private toggleDarkMode(): void {
+    this.darkMode = !this.darkMode;
     document.body.style.backgroundColor = this.darkMode ? 'black' : 'white';
   }
 
-  private toggleExplanation(e: CustomEvent<{ checked: boolean }>): void {
-    this.showExplanation = e.detail.checked;
+  private toggleExplanation(): void {
+    this.showExplanation = !this.showExplanation;
   }
 
   render() {
@@ -169,6 +180,7 @@ export class AppRoot extends LitElement {
           <wired-toggle
             id="darkToggle"
             @change=${this.toggleDarkMode}
+            ?checked=${this.darkMode}
           ></wired-toggle>
         </div>
         <div>
@@ -187,19 +199,11 @@ export class AppRoot extends LitElement {
           ></replay-select>
           ${this.replays && this.replays.length > 1
             ? html`
-                <wired-button
-                  class="label"
-                  @click=${this.playPrevReplay}
-                  elevation="2"
-                >
+                <wired-button @click=${this.playPrevReplay} elevation="2">
                   Start Prev Replay
                 </wired-button>
 
-                <wired-button
-                  class="label"
-                  @click=${this.playNextReplay}
-                  elevation="2"
-                >
+                <wired-button @click=${this.playNextReplay} elevation="2">
                   Start Next Replay
                 </wired-button>
               `
@@ -207,24 +211,26 @@ export class AppRoot extends LitElement {
           ${this.replays && this.replays.length > 0
             ? html` <span>${this.getIndexText()}</span> `
             : ''}
-        </div>
-        <div class="explanation" ?hidden=${!this.showExplanation}>
-          <b>Supported Characters: Fox, Falco, Falcon, Marth, Puff</b><br />
-          <b>Supported Stages: FD, BF, DL, YS, FoD (static), PS (static)</b
-          ><br />
-          Previous Replay: [<br />
-          Next Replay: ]<br />
-          Pause: Space or K or click<br />
-          Rewind -2s: Left or J<br />
-          Skip Ahead +2s: Right or L<br />
-          Jump to %: 0-9 digits<br />
-          Zoom In: + or =<br />
-          Zoom Out: - or _<br />
-          Speed Up: hold Up<br />
-          Slow Down: hold Down<br />
-          Frame Forward: .<br />
-          Frame Backwards: ,<br />
-          Capture next 10s as GIF (allow popup): g<br />
+          <div class="explanation" ?hidden=${!this.showExplanation}>
+            <b>Supported Characters: Fox, Falco, Falcon, Marth, Puff</b><br />
+            <b>Supported Stages: FD, BF, DL, YS, FoD (static), PS (static)</b
+            ><br />
+            Previous Replay: [<br />
+            Next Replay: ]<br />
+            Pause: Space or K or click<br />
+            Rewind -2s: Left or J<br />
+            Skip Ahead +2s: Right or L<br />
+            Jump to %: 0-9 digits<br />
+            Zoom In: + or =<br />
+            Zoom Out: - or _<br />
+            Speed Up: hold Up<br />
+            Slow Down: hold Down<br />
+            Frame Forward: .<br />
+            Frame Backwards: ,<br />
+            Capture next 10s as GIF (allow popup): g<br />
+            Toggle this text: e<br />
+            Toggle dark mode: d<br />
+          </div>
         </div>
         ${this.currentReplay
           ? html` <replay-viewer

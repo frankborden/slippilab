@@ -1,10 +1,11 @@
 import type { FrameEntryType, FramesType, SlippiGame } from '@slippi/slippi-js';
 
-import { Vector, DeepRequired, Stage } from './common';
+import type { DeepRequired, Stage } from './common';
 import { createItemRender } from './itemRenderer';
 import { createPlayerRender } from './characters';
 import { supportedStagesById, createStageRender } from './stages';
 import { clearLayers, drawToBase, Layers, setupLayers } from './layer';
+import { Vector } from './vector';
 
 export type Render = (
   layers: Layers,

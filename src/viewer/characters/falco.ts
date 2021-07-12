@@ -1,4 +1,5 @@
-import { Character, Vector } from '../common';
+import type { Character } from '../common';
+import { Vector } from '../vector';
 
 export const falco: Character = {
   scale: 0.47 / 4.5,

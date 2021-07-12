@@ -13,14 +13,17 @@ import {
   specials,
 } from '../animations';
 import { supportedCharactersById } from '../characters';
-import {
-  CharacterName,
-  characterNamesById,
-  characterNamesByInternalId,
-  DeepRequired,
-} from '../common';
+import { characterNamesById, DeepRequired } from '../common';
 import type { Render } from '../game';
 import type { Layer, Layers } from '../layer';
+import {
+  isInFrame,
+  getFacingDirection,
+  getFirstFrameOfAnimation,
+  getFrameIndexFromDuration,
+  getThrowerName,
+  getShade,
+} from '../replay';
 
 export const createPlayerRender = async (
   player: DeepRequired<PlayerType>,
@@ -59,14 +62,40 @@ export const createPlayerRender = async (
 
 const colors = ['pink', 'lightblue', 'yellow', 'lightgreen'];
 const darkColors = ['red', 'blue', 'gold', 'green'];
-const teamColors = ['pink', 'lightblue', 'lightgreen'];
-const darkTeamColors = ['red', 'blue', 'green'];
+const teamColors = [
+  ['pink', 'pink', 'pink'],
+  ['lightblue', 'lightblue', 'lightblue'],
+  ['lightgreen', 'lightgreen', 'lightgreen'],
+];
+const darkTeamColors = [
+  ['red', 'red', 'red'],
+  ['blue', 'blue', 'blue'],
+  ['green', 'green', 'green'],
+];
 
-const isInFrame = (
-  frame: DeepRequired<FrameEntryType>,
+const getPrimaryColor = (
   player: DeepRequired<PlayerType>,
-): boolean => {
-  return Boolean(frame.players[player.playerIndex]);
+  isDarkMode: boolean,
+  isDoubles: boolean,
+): string => {
+  if (isDoubles) {
+    return (isDarkMode ? darkTeamColors : teamColors)[player.teamId][
+      getShade()
+    ];
+  } else {
+    return (isDarkMode ? darkColors : colors)[player.playerIndex];
+  }
+};
+
+const getSecondaryColor = (
+  playerFrame: DeepRequired<PostFrameUpdateType>,
+  lCancelStatus: number,
+): string => {
+  return playerFrame.hurtboxCollisionState > 0
+    ? 'blue' // invinc / invuln
+    : lCancelStatus === 2
+    ? 'red' // missed lcanc
+    : 'black';
 };
 
 const renderStocks = (
@@ -79,13 +108,11 @@ const renderStocks = (
   const playerFrame = frame.players[player.playerIndex].post;
   const stockCount = playerFrame.stocksRemaining;
   screenLayer.context.save();
-  screenLayer.context.fillStyle = isDoubles
-    ? isDarkMode
-      ? darkTeamColors[player.teamId]
-      : teamColors[player.teamId]
-    : isDarkMode
-    ? darkColors[playerFrame.playerIndex]
-    : colors[playerFrame.playerIndex];
+  screenLayer.context.fillStyle = getPrimaryColor(
+    player,
+    isDarkMode,
+    isDoubles,
+  );
   screenLayer.context.strokeStyle = isDarkMode ? 'white' : 'black';
   for (let stockIndex = 0; stockIndex < stockCount; stockIndex++) {
     const x = ((stockIndex - 2) * screenLayer.canvas.width) / 40;
@@ -114,13 +141,11 @@ const renderPercent = (
   screenLayer.context.font = `900 ${fontSize}px Arial`;
   screenLayer.context.textAlign = 'center';
   screenLayer.context.strokeStyle = isDarkMode ? 'white' : 'black';
-  screenLayer.context.fillStyle = isDoubles
-    ? isDarkMode
-      ? darkTeamColors[player.teamId]
-      : teamColors[player.teamId]
-    : isDarkMode
-    ? darkColors[playerFrame.playerIndex]
-    : colors[playerFrame.playerIndex];
+  screenLayer.context.fillStyle = getPrimaryColor(
+    player,
+    isDarkMode,
+    isDoubles,
+  );
   const x = 0;
   const y = -screenLayer.canvas.height / 10;
   screenLayer.context.translate(x, y);
@@ -144,13 +169,11 @@ const renderPlayerDetails = (
   screenLayer.context.font = `900 ${fontSize}px Verdana`;
   screenLayer.context.textAlign = 'center';
   screenLayer.context.strokeStyle = isDarkMode ? 'white' : 'black';
-  screenLayer.context.fillStyle = isDoubles
-    ? isDarkMode
-      ? darkTeamColors[player.teamId]
-      : teamColors[player.teamId]
-    : isDarkMode
-    ? darkColors[playerFrame.playerIndex]
-    : colors[playerFrame.playerIndex];
+  screenLayer.context.fillStyle = getPrimaryColor(
+    player,
+    isDarkMode,
+    isDoubles,
+  );
   const x = 0;
   const y = -screenLayer.canvas.height / 7.5;
   screenLayer.context.translate(x, y);
@@ -161,98 +184,6 @@ const renderPlayerDetails = (
   screenLayer.context.fillText(name, 0, 0);
   screenLayer.context.strokeText(name, 0, 0);
   screenLayer.context.restore();
-};
-
-const getFirstFrameOfAnimation = (
-  playerFrame: DeepRequired<PostFrameUpdateType>,
-  frames: DeepRequired<FramesType>,
-): DeepRequired<PostFrameUpdateType> => {
-  let frameIndex = playerFrame.frame - 1;
-  let pastConfirmedFrame = playerFrame;
-  let pastFrameToCheck =
-    frames[frameIndex]?.players?.[playerFrame.playerIndex]?.post;
-  while (
-    pastFrameToCheck &&
-    pastFrameToCheck.actionStateId === playerFrame.actionStateId
-  ) {
-    pastConfirmedFrame = pastFrameToCheck;
-    frameIndex--;
-    pastFrameToCheck =
-      frames[frameIndex]?.players?.[playerFrame.playerIndex]?.post;
-  }
-  return pastConfirmedFrame;
-};
-
-const getFrameIndexFromDuration = (
-  playerFrame: DeepRequired<PostFrameUpdateType>,
-  frames: DeepRequired<FramesType>,
-  player: DeepRequired<PlayerType>,
-): number => {
-  const firstIndex = isOneIndexed(player.characterId, playerFrame.actionStateId)
-    ? 1
-    : 0;
-  const firstFrame = getFirstFrameOfAnimation(playerFrame, frames);
-  const framesInAnimation = playerFrame.frame - firstFrame.frame;
-  return (
-    framesInAnimation * (firstFrame.lCancelStatus === 1 ? 2 : 1) - firstIndex
-  );
-};
-
-const getFacingDirection = (
-  frameFacing: number,
-  animationName: string,
-  character: CharacterName,
-  animationFrameIndex: number,
-): number => {
-  const isMarthBairTurnaround =
-    animationName === 'ATTACKAIRB' &&
-    character === 'Marth' &&
-    animationFrameIndex > 30;
-  const isSmashTurn = animationName === 'SMASHTURN';
-  const isSpacieBthrowTurnaround =
-    animationName === 'THROWBACK' &&
-    (character === 'Falco' || character === 'Fox') &&
-    animationFrameIndex > 8;
-  return isMarthBairTurnaround || isSmashTurn || isSpacieBthrowTurnaround
-    ? -frameFacing
-    : frameFacing;
-};
-
-const getThrowerName = (
-  player: DeepRequired<PlayerType>,
-  animationName: string,
-  frames: DeepRequired<FrameEntryType>,
-): string => {
-  const throwerAnimationName = `THROW${animationName.substr(6)}`;
-  for (let i = 0; i < 4; i++) {
-    if (i === player.playerIndex) {
-      continue;
-    }
-    const otherPlayerFrame = frames.players[i];
-    if (!otherPlayerFrame) {
-      continue;
-    }
-    // this could be wrong if there's multiple of the same throw happening. I
-    // don't know if replay data can connect thrower to throwee for doubles.
-    if (actions[otherPlayerFrame.post.actionStateId] === throwerAnimationName) {
-      const throwerName =
-        characterNamesByInternalId[otherPlayerFrame.post.internalCharacterId];
-      switch (throwerName) {
-        case 'Fox':
-          return 'FOX';
-        case 'Captain Falcon':
-          return 'FALCON';
-        case 'Falco':
-          return 'FALCO';
-        case 'Jigglypuff':
-          return 'PUFF';
-        case 'Marth':
-          return 'MARTH';
-      }
-    }
-  }
-  console.log('Failed to find thrower', player.playerIndex, animationName);
-  return 'FOX';
 };
 
 const renderCharacter = (
@@ -274,30 +205,10 @@ const renderCharacter = (
     playerFrame,
     frames,
   ).lCancelStatus;
-  worldContext.strokeStyle = isDarkMode
-    ? isDoubles
-      ? darkTeamColors[player.teamId]
-      : darkColors[playerFrame.playerIndex]
-    : playerFrame.hurtboxCollisionState > 0
-    ? 'blue' // invinc / invuln
-    : lCancelStatus === 2
-    ? 'red' // missed lcanc
-    : 'black';
-  worldContext.fillStyle = isDoubles
-    ? isDarkMode
-      ? playerFrame.hurtboxCollisionState > 0
-        ? 'blue' // invinc / invuln
-        : lCancelStatus === 2
-        ? 'red' // missed lcanc
-        : 'black'
-      : teamColors[player.teamId]
-    : isDarkMode
-    ? playerFrame.hurtboxCollisionState > 0
-      ? 'blue' // invinc / invuln
-      : lCancelStatus === 2
-      ? 'red' // missed lcanc
-      : 'black'
-    : colors[playerFrame.playerIndex];
+  const primaryColor = getPrimaryColor(player, isDarkMode, isDoubles);
+  const secondaryColor = getSecondaryColor(playerFrame, lCancelStatus);
+  worldContext.strokeStyle = isDarkMode ? primaryColor : secondaryColor;
+  worldContext.fillStyle = isDarkMode ? secondaryColor : primaryColor;
   worldContext.translate(playerFrame.positionX, playerFrame.positionY);
   // world space -> animation data space, -y is because the data seems to be
   // flipped relative to the stage data..
@@ -414,13 +325,7 @@ const renderShield = (
   }
   worldContext.save();
   worldContext.globalAlpha = 0.75;
-  worldContext.fillStyle = isDoubles
-    ? isDarkMode
-      ? darkTeamColors[player.teamId]
-      : teamColors[player.teamId]
-    : isDarkMode
-    ? darkColors[playerFrame.playerIndex]
-    : colors[playerFrame.playerIndex];
+  worldContext.fillStyle = getPrimaryColor(player, isDarkMode, isDoubles);
   worldContext.strokeStyle = isDarkMode ? 'white' : 'black';
   const shieldPercent = playerFrame.shieldSize / 60;
   worldContext.translate(playerFrame.positionX, playerFrame.positionY);

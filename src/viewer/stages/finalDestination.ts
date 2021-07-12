@@ -1,4 +1,5 @@
-import { Stage, Vector } from '../common';
+import type { Stage } from '../common';
+import { Vector } from '../vector';
 
 export const finalDestination: Stage = {
   lines: [

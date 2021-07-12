@@ -1,4 +1,5 @@
-import { Character, Vector } from '../common';
+import type { Character } from '../common';
+import { Vector } from '../vector';
 
 export const fox: Character = {
   scale: 0.35 / 4.5,
