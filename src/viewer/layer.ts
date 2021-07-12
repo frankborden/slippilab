@@ -31,14 +31,14 @@ export const drawToBase = (layers: Layers): void => {
   layers.base.context.drawImage(layers.screenSpace.canvas, 0, 0);
 };
 
-export const clearLayers = (layers: Layers): void => {
+export const clearLayers = (layers: Layers, isDarkMode: boolean): void => {
   clearLayer(layers.base);
   clearLayer(layers.worldSpace);
   clearLayer(layers.screenSpace);
   // workaround for GIF background not working
   layers.base.context.save();
   layers.base.context.resetTransform();
-  layers.base.context.fillStyle = 'white';
+  layers.base.context.fillStyle = isDarkMode ? 'black' : 'white';
   layers.base.context.fillRect(
     0,
     0,

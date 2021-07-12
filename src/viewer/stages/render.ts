@@ -7,10 +7,11 @@ export const createStageRender = (stage: Stage): Render => {
   return (
     layers: Layers,
     frame: DeepRequired<FrameEntryType>,
-    frames: DeepRequired<FramesType>,
+    _frames: DeepRequired<FramesType>,
+    isDarkMode: boolean,
   ) => {
-    renderStageLines(layers.worldSpace.context, frame, stage);
-    renderBlastzones(layers.worldSpace.context, frame, stage);
+    renderStageLines(layers.worldSpace.context, frame, stage, isDarkMode);
+    renderBlastzones(layers.worldSpace.context, frame, stage, isDarkMode);
   };
 };
 
@@ -18,10 +19,11 @@ const renderStageLines = (
   worldContext: CanvasRenderingContext2D,
   frame: DeepRequired<FrameEntryType>,
   stage: Stage,
+  isDarkMode: boolean,
 ): void => {
   worldContext.save();
   worldContext.lineWidth *= 2;
-  worldContext.strokeStyle = 'black';
+  worldContext.strokeStyle = isDarkMode ? 'white' : 'black';
   stage.lines.forEach((line: Line) => {
     worldContext.beginPath();
     worldContext.moveTo(line[0].x, line[0].y);
@@ -41,18 +43,18 @@ const renderStageLines = (
 
 const renderBlastzones = (
   worldContext: CanvasRenderingContext2D,
-  frame: DeepRequired<FrameEntryType>,
+  _frame: DeepRequired<FrameEntryType>,
   stage: Stage,
+  isDarkMode: boolean,
 ): void => {
-  const renderer = worldContext;
-  renderer.save();
-  renderer.lineWidth *= 2;
-  renderer.strokeStyle = 'black';
-  renderer.strokeRect(
+  worldContext.save();
+  worldContext.lineWidth *= isDarkMode ? 3 : 2;
+  worldContext.strokeStyle = isDarkMode ? 'white' : 'black';
+  worldContext.strokeRect(
     stage.bottomLeftBlastzone.x,
     stage.bottomLeftBlastzone.y,
     stage.topRightBlastzone.x - stage.bottomLeftBlastzone.x,
     stage.topRightBlastzone.y - stage.bottomLeftBlastzone.y,
   );
-  renderer.restore();
+  worldContext.restore();
 };

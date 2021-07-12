@@ -10,6 +10,7 @@ export type Render = (
   layers: Layers,
   frame: DeepRequired<FrameEntryType>,
   frames: DeepRequired<FramesType>,
+  isDarkMode: boolean,
 ) => void;
 
 interface Camera {
@@ -32,25 +33,32 @@ export class Game {
   public static async create(
     baseReplay: SlippiGame,
     baseCanvas: HTMLCanvasElement,
+    isDarkMode: boolean,
   ): Promise<Game> {
     const replay = baseReplay as DeepRequired<SlippiGame>;
-    return new Game(replay, setupLayers(baseCanvas), [
-      createStageRender(supportedStagesById[replay.getSettings().stageId]),
-      ...(await Promise.all(
-        replay
-          .getSettings()
-          .players.map((player) =>
-            createPlayerRender(player, replay.getSettings().isTeams),
-          ),
-      )),
-      createItemRender(),
-    ]);
+    return new Game(
+      replay,
+      setupLayers(baseCanvas),
+      [
+        createStageRender(supportedStagesById[replay.getSettings().stageId]),
+        ...(await Promise.all(
+          replay
+            .getSettings()
+            .players.map((player) =>
+              createPlayerRender(player, replay.getSettings().isTeams),
+            ),
+        )),
+        createItemRender(),
+      ],
+      isDarkMode,
+    );
   }
 
   constructor(
     private replay: DeepRequired<SlippiGame>,
     private layers: Layers,
     private renders: Render[],
+    private isDarkMode: boolean,
   ) {
     this.stage = supportedStagesById[replay.getSettings().stageId];
     this.intervalId = window.setInterval(() => this.maybeTick(), 1000 / 60);
@@ -92,6 +100,12 @@ export class Game {
 
   public zoomOut(): void {
     this.layers.worldSpace.context.scale(1 / 1.1, 1 / 1.1);
+    this.currentFrameNumber--;
+    this.tick();
+  }
+
+  public setDarkMode(dark: boolean) {
+    this.isDarkMode = dark;
     this.currentFrameNumber--;
     this.tick();
   }
@@ -143,9 +157,11 @@ export class Game {
       return;
     }
     this.tickHandler?.(this.currentFrameNumber);
-    clearLayers(this.layers);
+    clearLayers(this.layers, this.isDarkMode);
     this.updateCamera(frame, this.replay);
-    this.renders.forEach((render) => render(this.layers, frame, frames));
+    this.renders.forEach((render) =>
+      render(this.layers, frame, frames, this.isDarkMode),
+    );
     drawToBase(this.layers);
     this.currentFrameNumber++;
   }

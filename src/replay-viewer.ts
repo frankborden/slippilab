@@ -2,6 +2,7 @@ import type { SlippiGame } from '@slippi/slippi-js';
 import GIF from 'gif.js';
 import { css, html, LitElement, PropertyValues } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
+import { classMap } from 'lit/directives/class-map.js';
 import 'wired-elements';
 import type { WiredSlider } from 'wired-elements';
 
@@ -31,11 +32,19 @@ export class ReplayViewer extends LitElement {
       wired-slider {
         width: 100%;
         --wired-slider-knob-color: black;
+        --wired-slider-bar-color: black;
+      }
+      wired-slider.dark {
+        --wired-slider-knob-color: white;
+        --wired-slider-bar-color: white;
       }
     `;
   }
   @property({ type: Object })
   replay?: SlippiGame;
+
+  @property({ type: Boolean })
+  dark = false;
 
   @state()
   private currentFrame = -123;
@@ -158,6 +167,10 @@ export class ReplayViewer extends LitElement {
       }
       this.setup();
     }
+
+    if (oldValues.has('dark')) {
+      this.game?.setDarkMode(this.dark);
+    }
   }
 
   private async setup() {
@@ -168,7 +181,7 @@ export class ReplayViewer extends LitElement {
       return;
     }
     this.highestFrame = highestFrame;
-    this.game = await Game.create(this.replay, canvas);
+    this.game = await Game.create(this.replay, canvas, this.dark);
     this.game.onTick(
       (currentFrameNumber: number) => (this.currentFrame = currentFrameNumber),
     );
@@ -210,6 +223,7 @@ export class ReplayViewer extends LitElement {
   }
 
   render() {
+    const sliderClasses = { grid: true, dark: this.dark };
     return html`
       <div class="container">
         <canvas
@@ -224,6 +238,7 @@ export class ReplayViewer extends LitElement {
             max=${this.highestFrame}
             .value=${this.currentFrame}
             @change=${this.clicked}
+            class=${classMap(sliderClasses)}
           ></wired-slider>
           <div class="progress">${this.currentFrame}/${this.highestFrame}</div>
         </div>

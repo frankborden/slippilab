@@ -2,6 +2,7 @@ import { LitElement, html, css } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { SlippiGame } from '@slippi/slippi-js';
+import 'wired-elements';
 
 import './replay-select';
 import './replay-viewer';
@@ -30,6 +31,16 @@ export class AppRoot extends LitElement {
 
   static get styles() {
     return css`
+      .dark {
+        color: white;
+        background-color: black;
+      }
+      .darkSection {
+        text-align: end;
+      }
+      .topRight {
+        float: right;
+      }
       .grid {
         display: grid;
       }
@@ -53,6 +64,12 @@ export class AppRoot extends LitElement {
 
   @state()
   private replays?: File[];
+
+  @state()
+  private darkMode = false;
+
+  @state()
+  private showExplanation = true;
 
   @state()
   private currentReplay?: SlippiGame;
@@ -132,10 +149,37 @@ export class AppRoot extends LitElement {
     }`;
   }
 
+  private toggleDarkMode(e: CustomEvent<{ checked: boolean }>): void {
+    this.darkMode = e.detail.checked;
+    document.body.style.backgroundColor = this.darkMode ? 'black' : 'white';
+  }
+
+  private toggleExplanation(e: CustomEvent<{ checked: boolean }>): void {
+    this.showExplanation = e.detail.checked;
+  }
+
   render() {
     const viewerClasses = { hidden: !this.currentReplay };
+    const gridClasses = { grid: true, dark: this.darkMode };
     return html`
-      <div class="grid">
+      <div class="topRight">
+        <div class="darkSection">
+          <label for="darkToggle">Dark Mode</label>
+          <wired-toggle
+            id="darkToggle"
+            @change=${this.toggleDarkMode}
+          ></wired-toggle>
+        </div>
+        <div>
+          <label for="explanationToggle">Show Configuration</label>
+          <wired-toggle
+            id="explanationToggle"
+            @change=${this.toggleExplanation}
+            ?checked=${this.showExplanation}
+          ></wired-toggle>
+        </div>
+      </div>
+      <div class=${classMap(gridClasses)}>
         <div class="topbar">
           <replay-select
             @replays-selected=${this.replaySelected}
@@ -163,7 +207,7 @@ export class AppRoot extends LitElement {
             ? html` <span>${this.getIndexText()}</span> `
             : ''}
         </div>
-        <div class="explanation">
+        <div class="explanation" ?hidden=${!this.showExplanation}>
           <b>Supported Characters: Fox, Falco, Falcon, Marth, Puff</b><br />
           <b>Supported Stages: FD, BF, DL, YS, FoD (static), PS (static)</b
           ><br />
@@ -179,11 +223,12 @@ export class AppRoot extends LitElement {
           Slow Down: hold Down<br />
           Frame Forward: .<br />
           Frame Backwards: ,<br />
-          Capture next 10s as GIF: g<br />
+          Capture next 10s as GIF (allow popup): g<br />
         </div>
         ${this.currentReplay
           ? html` <replay-viewer
               .replay=${this.currentReplay}
+              .dark=${this.darkMode}
               class=${classMap(viewerClasses)}
             ></replay-viewer>`
           : ''}

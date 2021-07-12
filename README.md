@@ -5,6 +5,7 @@
 ### Replay Viewer
 
 - Something wrong with laser shooting animations (air and ground)
+- Something wrong with shield breaker animation
 - Something wrong with position when getting thrown (ex: dthrown by falcon)
 - Show Shield tilting (original visualiser reads inputs and checks for stun)
 - Customziation (custom colors/colorblind colors, UI info)
@@ -42,9 +43,13 @@
 ### App
 
 - Tests
+- Filter replays (matchup, date, player)
 - Fix VSCode complaining about json modules (resolveJsonModule=true makes
   tsc crash a lot due to json sizes)
+- export to other formats better than GIF? apng, webp, mp4?
+  - Discord doesn't like .apng and .webp. Will it allow embeded mp4 from url?
 - Upload gif to some host (example project with imgur: https://github.com/eirikb/gifie)
 - adjust start/end clip
 - Find clips within files
+- Show combos/conversions/etc from .slp getStats()
 - Webworkers
