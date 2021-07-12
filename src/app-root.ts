@@ -160,9 +160,10 @@ export class AppRoot extends LitElement {
 
   render() {
     const viewerClasses = { hidden: !this.currentReplay };
+    const topRightClasses = { topRight: true, dark: this.darkMode };
     const gridClasses = { grid: true, dark: this.darkMode };
     return html`
-      <div class="topRight">
+      <div class=${classMap(topRightClasses)}>
         <div class="darkSection">
           <label for="darkToggle">Dark Mode</label>
           <wired-toggle
