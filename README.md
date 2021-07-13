@@ -11,6 +11,7 @@
 - Something wrong with position when getting thrown (ex: dthrown by falcon)
 - Show Shield tilting (original visualiser reads inputs and checks for stun)
 - Bubble view when off camera / near blastzone?
+- Slow/medium walks
 - Powershield animation
   - is this in the .slp spec?
 - Lightshield

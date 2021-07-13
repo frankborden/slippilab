@@ -344,18 +344,18 @@ const renderShield = (
     isDoubles,
   );
   worldContext.strokeStyle = isDarkMode ? 'white' : 'black';
-  const shieldPercent = playerFrame.shieldSize / 60;
+  const shieldHealthPercent = playerFrame.shieldSize / 60;
   worldContext.translate(playerFrame.positionX, playerFrame.positionY);
   worldContext.translate(
     characterData.shieldOffset.x,
     characterData.shieldOffset.y,
   );
-  // world space -> shield space (unit render distance === max shield size)
-  const magic = 7.7696875;
-  worldContext.scale(magic, magic);
-  worldContext.lineWidth /= magic;
+  // TODO: Seems to be some constant added because shield break doesn't happen
+  // at radius 0.
+  // Guessing shield size attribute is diameter so divide by 2
+  const shieldRadius = (characterData.shieldSize * shieldHealthPercent) / 2;
   worldContext.beginPath();
-  worldContext.arc(0, 0, shieldPercent, 0, 2 * Math.PI);
+  worldContext.arc(0, 0, shieldRadius, 0, 2 * Math.PI);
   worldContext.closePath();
   worldContext.fill();
   worldContext.stroke();

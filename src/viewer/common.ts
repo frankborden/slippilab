@@ -46,6 +46,7 @@ export interface Stage {
 export interface Character {
   scale: number;
   shieldOffset: Vector;
+  shieldSize: number; // Model Size * Shield Size attributes
 }
 
 export type CharacterName = typeof characterNamesById[number];

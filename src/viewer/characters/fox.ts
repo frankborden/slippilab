@@ -3,5 +3,8 @@ import { Vector } from '../vector';
 
 export const fox: Character = {
   scale: 0.35 / 4.5,
-  shieldOffset: new Vector(5 / 4.5, 34 / 4.5),
+  // shieldOffset: new Vector(5 / 4.5, 34 / 4.5),
+  shieldOffset: new Vector(5 / 4.5, 34 / 4.5), // guess
+
+  shieldSize: 0.96 * 14.375,
 };
