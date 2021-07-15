@@ -41,12 +41,9 @@ export const yoshisStory: Stage = {
   topRightBlastzone: new Vector(173.6, 169),
   bottomLeftBlastzone: new Vector(-175.7, -91),
   getMovingPlatforms: (frame: number) => {
-    // data ported from https://github.com/altf4/libmelee which is LGPL, so this
-    // must be LGPL/GPL as well. Comments are ported as well.
     const frameInLap = frame % 1200;
     const randallWidth = 11.9;
 
-    // Top section
     if (476 < frameInLap && frameInLap < 1016) {
       const start = 101.235443115234;
       const speed = -0.35484;
@@ -56,7 +53,6 @@ export const yoshisStory: Stage = {
       const right = new Vector(start + speed * frameInSection, y);
       return [[left, right]];
     }
-    // Left section
     if (1022 < frameInLap && frameInLap < 1069) {
       const start = -15.2778692245483;
       const speed = -0.354839325;
@@ -66,7 +62,6 @@ export const yoshisStory: Stage = {
       const right = new Vector(-91.7, y);
       return [[left, right]];
     }
-    // Bottom section
     if (frameInLap > 1075 || frameInLap < 416) {
       const start = -101.850006103516;
       const speed = 0.35484;
@@ -79,7 +74,6 @@ export const yoshisStory: Stage = {
       );
       return [[left, right]];
     }
-    // Right section
     if (423 < frameInLap && frameInLap < 469) {
       const start = -31.160232543945312;
       const speed = 0.354839325;
@@ -90,8 +84,6 @@ export const yoshisStory: Stage = {
       return [[left, right]];
     }
 
-    // Here's an ugly section. But I don't know a better way to do it
-    // It just hardcodes the rounded corners of Randall's location
     const position = randallCornerPositions[frameInLap];
     const y = position[0];
     const left = new Vector(position[1], y);
