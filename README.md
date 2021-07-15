@@ -21,6 +21,6 @@ Build static site:
 ## Thanks
 
 The following projects and people are not associated with this project in any way, but served as references or key dependencies and are greatly appreciated.
-[project-slippi](https://github.com/project-slippi)
-[schmooblidon/slippi-visualiser](https://github.com/schmooblidon/slippi-visualiser)
-[vinceau/react-slp-viewer](https://github.com/vinceau/react-slp-viewer)
+- [project-slippi](https://github.com/project-slippi)
+- [schmooblidon/slippi-visualiser](https://github.com/schmooblidon/slippi-visualiser)
+- [vinceau/react-slp-viewer](https://github.com/vinceau/react-slp-viewer)
