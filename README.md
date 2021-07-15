@@ -2,6 +2,8 @@
 
 Replay your .slp files in the browser. SlpTube is still in development.
 
+![Example](screenshot.png)
+
 Background: https://github.com/project-slippi/project-slippi
 
 ## Features
