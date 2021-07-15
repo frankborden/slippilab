@@ -1,70 +1,19 @@
-# Slp Viewer
+# SlpTube
 
-## Ideas
+Replay your .slp files in the browser. SlpTube is still in development.
 
-### Replay Viewer
+Background: https://github.com/project-slippi/project-slippi
 
-#### Character
+## Features
 
-- Something wrong with laser shooting animations (air and ground)
-- Something wrong with shield breaker animation
-- Something wrong with position when getting thrown (ex: dthrown by falcon)
-- Show Shield tilting (original visualiser reads inputs and checks for stun)
-- Bubble view when off camera / near blastzone?
-- Slow/medium walks
-- Powershield animation
-  - is this in the .slp spec?
-- Lightshield
-  - is this in the .slp spec?
-- Death animation
-- Hit effect
-- Electric effect for knee/shine
-- Fire effect for spacie upB, falcon specials
-- Sword trails
-- Add characters, peach sheik at least.
-  - Needs zelda and everybody's turnip animations
-  - WebGL renderer with raw models + animations?
-  - HSDraw export model + animations, then generate SVG?
-    - Need Windows machine
-- Color by costume instead of port (first attempt = ugly)
-- indicate CPUs (Gray?)
-- Optional state-dependent colors? (hitstun, shieldstun, actionable)
+SlpTube does not re-simulate your match, it reads position and animation data directly from the .slp file. The main advantage of this is that playback is instantaneous from any given starting point whereas Dolphin needs to play through the entire match from the beginning in order to re-compute the game state at the given starting point. This enables a lot of convenience features (rewind, frame advance forwards and backwards) as well as analysis features that require a lot of jumping around (ex: search for a given situation across replays). 
 
-#### Stage
+SlpTube does not upload your replay files anywhere, everything happens on your computer to reduce load times. This means SlpTube can open huge replay folders quickly (200gb of replays takes about 5 seconds on my laptop).  
 
-- Background visuals / color stages
-- Fountain platforms (infeasible until it's added to .slp spec)
-- Wispy (infeasible until it's added to .slp spec)
+## Development
 
-#### Game UI / Viewer UI
+Local development:
+> yarn start
 
-- Game timer
-  - Seems present in .slp spec but not exposed in slippi-js?
-  - I can probably just add manually without issues..
-- Higher % = darker text
-- Stock icons that look like the character
-- Actionstate/frame below % as option (stun/lag remaining too)
-- Play/Pause button, other GUI controls..
-- Input display?
-
-#### Other
-
-- colorblind friendly colors
-  - make every match red vs blue?
-- Separate project (game.ts and children)
-- debug canvas for viewing individual animations
-- Tests
-
-### App
-
-- Tests
-- Filter replays (matchup, date, player)
-- Fix VSCode complaining about json modules (resolveJsonModule=true makes
-  tsc crash a lot due to json sizes)
-- export to other formats better than GIF? apng, webp, mp4?
-  - Discord doesn't like .apng and .webp. Will it allow embeded mp4 from url?
-- Upload gif to some host (example project with imgur: https://github.com/eirikb/gifie)
-- adjust start/end clip
-- Find clips within files
-- Show combos/conversions/etc from .slp getStats()
-- Webworkers
+Build static site:
+> yarn build
