@@ -31,8 +31,10 @@ const importAnimation = async (
   }
 };
 
+export type AnimationFrames = AnimationFrame[];
+export type AnimationFrame = Int16Array;
 export type RawCharacterAnimations = { [actionName: string]: number[][][] };
-export type CharacterAnimations = { [actionName: string]: Int16Array[][] };
+export type CharacterAnimations = { [actionName: string]: AnimationFrames };
 
 export const fetchAnimation = async (
   charId: number,
@@ -45,7 +47,7 @@ export const fetchAnimation = async (
   const converted: CharacterAnimations = {};
   Object.entries(charAnimations).forEach(([actionName, actionData]) => {
     converted[actionName] = actionData.map((innerData) => {
-      return [new Int16Array(innerData[0])];
+      return new Int16Array(innerData[0]);
     });
   });
 

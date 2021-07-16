@@ -7,6 +7,7 @@ import { supportedStagesById, createStageRender } from './stages';
 import { clearLayers, drawToBase, Layers, setupLayers } from './layer';
 import { Vector } from './vector';
 
+// TODO: frames and settings should just go into generators
 export type Render = (
   layers: Layers,
   frame: DeepRequired<FrameEntryType>,
@@ -31,6 +32,7 @@ export class Game {
   private tickHandler?: (currentFrameNumber: number) => any;
   private isPaused = false;
 
+  // You can't have an async constructor so I have to introduce a factory
   public static async create(
     baseReplay: SlippiGame,
     baseCanvas: HTMLCanvasElement,
@@ -171,6 +173,7 @@ export class Game {
     this.currentFrameNumber++;
   }
 
+  // TODO: move out of game file
   private updateCamera(
     currentFrame: DeepRequired<FrameEntryType>,
     replay: DeepRequired<SlippiGame>,

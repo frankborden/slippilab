@@ -43,6 +43,7 @@
   - Seems present in .slp spec but not exposed in slippi-js?
   - I can probably just add manually without issues..
 - Higher % = darker text
+- % dances when hit
 - Stock icons that look like the character
 - Actionstate/frame below % as option (stun/lag remaining too)
 - Play/Pause button, other GUI controls..

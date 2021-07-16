@@ -7,6 +7,7 @@ import type {
 
 import {
   CharacterAnimations,
+  AnimationFrame,
   fetchAnimation,
   isOneIndexed,
   actions,
@@ -110,6 +111,7 @@ const renderStocks = (
   isDoubles: boolean,
   isDarkMode: boolean,
 ): void => {
+  // TODO: Handle stock count >4 or non-stock modes
   const playerFrame = frame.players[player.playerIndex].post;
   const stockCount = playerFrame.stocksRemaining;
   screenLayer.context.save();
@@ -142,7 +144,7 @@ const renderPercent = (
   isDarkMode: boolean,
 ): void => {
   const playerFrame = frame.players[player.playerIndex].post;
-  const percent = playerFrame.percent;
+  const percent = `${Math.floor(playerFrame.percent)}%`;
   screenLayer.context.save();
   const fontSize = screenLayer.canvas.height / 15;
   screenLayer.context.font = `900 ${fontSize}px Arial`;
@@ -159,8 +161,8 @@ const renderPercent = (
   screenLayer.context.translate(x, y);
   // flip text back right-side after global flip
   screenLayer.context.scale(1, -1);
-  screenLayer.context.fillText(`${Math.floor(percent)}%`, 0, 0);
-  screenLayer.context.strokeText(`${Math.floor(percent)}%`, 0, 0);
+  screenLayer.context.fillText(percent, 0, 0);
+  screenLayer.context.strokeText(percent, 0, 0);
   screenLayer.context.restore();
 };
 
@@ -172,7 +174,7 @@ const renderPlayerDetails = (
   isDoubles: boolean,
   isDarkMode: boolean,
 ): void => {
-  const playerFrame = frame.players[player.playerIndex].post;
+  //const playerFrame = frame.players[player.playerIndex].post;
   screenLayer.context.save();
   const fontSize = screenLayer.canvas.height / 30;
   screenLayer.context.font = `900 ${fontSize}px Verdana`;
@@ -196,38 +198,18 @@ const renderPlayerDetails = (
   screenLayer.context.restore();
 };
 
-const renderCharacter = (
-  worldContext: CanvasRenderingContext2D,
-  frame: DeepRequired<FrameEntryType>,
-  frames: DeepRequired<FramesType>,
+const getAnimation = (
   player: DeepRequired<PlayerType>,
-  players: DeepRequired<PlayerType[]>,
-  isDoubles: boolean,
-  isDarkMode: boolean,
+  playerFrame: DeepRequired<PostFrameUpdateType>,
+  frames: DeepRequired<FramesType>,
+  frame: DeepRequired<FrameEntryType>,
   animations: CharacterAnimations,
-): void => {
-  const playerFrame = frame.players[player.playerIndex].post;
+  worldContext: CanvasRenderingContext2D,
+): AnimationFrame | undefined => {
   const character = characterNamesById[player.characterId];
-  const characterData = supportedCharactersById[player.characterId];
-  worldContext.save();
-  worldContext.lineWidth *= isDarkMode ? 3 : 2;
-
-  const lCancelStatus = getFirstFrameOfAnimation(
-    playerFrame,
-    frames,
-  ).lCancelStatus;
-  const primaryColor = getPrimaryColor(player, players, isDarkMode, isDoubles);
-  const secondaryColor = getSecondaryColor(playerFrame, lCancelStatus);
-  worldContext.strokeStyle = isDarkMode ? primaryColor : secondaryColor;
-  worldContext.fillStyle = isDarkMode ? secondaryColor : primaryColor;
-  worldContext.translate(playerFrame.positionX, playerFrame.positionY);
-  // world space -> animation data space, -y is because the data seems to be
-  // flipped relative to the stage data..
-  worldContext.scale(characterData.scale, -characterData.scale);
-  worldContext.lineWidth /= characterData.scale;
   const animationName =
     actions[playerFrame.actionStateId] ??
-    specials[characterNamesById[player.characterId]][playerFrame.actionStateId];
+    specials[character][playerFrame.actionStateId];
   console.assert(
     animationName !== undefined,
     'characterId',
@@ -236,10 +218,9 @@ const renderCharacter = (
     playerFrame.actionStateId,
   );
   if (animationName.match('DEAD')) {
-    worldContext.restore();
     return;
   }
-  const animationData =
+  const animation =
     animations[animationName] ??
     animations[
       animationName.substr(0, 6) +
@@ -247,11 +228,11 @@ const renderCharacter = (
         animationName.substr(6)
     ];
   console.assert(
-    animationData !== undefined,
+    animation !== undefined,
     'actionStateCounter',
     playerFrame.actionStateCounter,
     'animationData',
-    animationData,
+    animation,
     'animationName',
     animationName,
   );
@@ -260,25 +241,23 @@ const renderCharacter = (
     isOneIndexed(player.characterId, playerFrame.actionStateId)
       ? 1
       : 0;
-
-  const animationFrameIndex =
+  const frameIndex =
     animationName.startsWith('LANDINGATTACKAIR') ||
     animationName.startsWith('THROWN')
       ? Math.min(
           getFrameIndexFromDuration(playerFrame, frames, player),
-          animationData.length - 1,
+          animation.length - 1,
         )
       : // ENTRANCE has some negative actionStateCounters for some reason...
         // TODO: switch ENTRANCE to IndexFromDuration
         Math.max(0, Math.floor(playerFrame.actionStateCounter) - firstIndex) %
-        animationData.length;
-  const animationFrameLine = animationData[animationFrameIndex][0];
+        animation.length;
+  const animationFrame = animation[frameIndex];
   const isSpacieUpBLaunchAction =
     playerFrame.actionStateId === 355 || playerFrame.actionStateId === 356;
   const isSpacieUpBMovementFrame =
-    (character === 'Fox' && animationFrameIndex < 31) ||
-    (character === 'Falco' && animationFrameIndex < 23);
-
+    (character === 'Fox' && frameIndex < 31) ||
+    (character === 'Falco' && frameIndex < 23);
   if (isSpacieUpBLaunchAction && isSpacieUpBMovementFrame) {
     // just a guess, especially with 2 different characters...
     const rotationYOffset = -125;
@@ -298,23 +277,65 @@ const renderCharacter = (
     playerFrame.facingDirection,
     animationName,
     character,
-    animationFrameIndex,
+    frameIndex,
   );
   worldContext.scale(facingDirection, 1);
+  return animationFrame;
+};
+
+const renderCharacter = (
+  worldContext: CanvasRenderingContext2D,
+  frame: DeepRequired<FrameEntryType>,
+  frames: DeepRequired<FramesType>,
+  player: DeepRequired<PlayerType>,
+  players: DeepRequired<PlayerType[]>,
+  isDoubles: boolean,
+  isDarkMode: boolean,
+  animations: CharacterAnimations,
+): void => {
+  const playerFrame = frame.players[player.playerIndex].post;
+  const characterData = supportedCharactersById[player.characterId];
+  worldContext.save();
+  worldContext.lineWidth *= isDarkMode ? 3 : 2;
+
+  const lCancelStatus = getFirstFrameOfAnimation(
+    playerFrame,
+    frames,
+  ).lCancelStatus;
+  const primaryColor = getPrimaryColor(player, players, isDarkMode, isDoubles);
+  const secondaryColor = getSecondaryColor(playerFrame, lCancelStatus);
+  worldContext.strokeStyle = isDarkMode ? primaryColor : secondaryColor;
+  worldContext.fillStyle = isDarkMode ? secondaryColor : primaryColor;
+  worldContext.translate(playerFrame.positionX, playerFrame.positionY);
+  // world space -> animation data space, -y is because the data seems to be
+  // flipped relative to the stage data..
+  worldContext.scale(characterData.scale, -characterData.scale);
+  worldContext.lineWidth /= characterData.scale;
+  const animationFrame = getAnimation(
+    player,
+    playerFrame,
+    frames,
+    frame,
+    animations,
+    worldContext,
+  );
+  if (animationFrame === undefined) {
+    worldContext.restore();
+    return;
+  }
   worldContext.beginPath();
-  worldContext.moveTo(animationFrameLine[0], animationFrameLine[1]);
+  worldContext.moveTo(animationFrame[0], animationFrame[1]);
   // starting from index 2, each set of 6 numbers are bezier curve coords
-  for (var k = 2; k < animationFrameLine.length; k += 6) {
-    const a = animationFrameLine;
-    worldContext.bezierCurveTo(
-      a[k],
-      a[k + 1],
-      a[k + 2],
-      a[k + 3],
-      a[k + 4],
-      a[k + 5],
-    );
-    // renderer.lineTo(animationFrameLine[k + 4], animationFrameLine[k + 5]);
+  for (
+    let startOfBezierCurve = 2;
+    startOfBezierCurve < animationFrame.length;
+    startOfBezierCurve += 6
+  ) {
+    const nextBezierCurve = animationFrame.slice(
+      startOfBezierCurve,
+      startOfBezierCurve + 6,
+    ) as unknown as Parameters<typeof worldContext.bezierCurveTo>;
+    worldContext.bezierCurveTo(...nextBezierCurve);
   }
   worldContext.closePath();
   worldContext.fill();
@@ -350,8 +371,8 @@ const renderShield = (
     characterData.shieldOffset.x,
     characterData.shieldOffset.y,
   );
-  // TODO: Seems to be some constant added because shield break doesn't happen
-  // at radius 0.
+  // TODO: Seems to be some constant added because shield break happens before
+  // radius 0.
   // Guessing shield size attribute is diameter so divide by 2
   const shieldRadius = (characterData.shieldSize * shieldHealthPercent) / 2;
   worldContext.beginPath();
@@ -386,34 +407,33 @@ const renderShine = (
     characterData.shieldOffset.x,
     characterData.shieldOffset.y,
   );
-  const magic = 7.7696875; // "shield scale"
-  worldContext.scale(magic, magic); // world space -> shield space
-  worldContext.lineWidth /= magic;
-  worldContext.beginPath();
+  // world space --> shine space
+  // shine is 0.9 * shield size
   // TODO: spacies have different sized shines
   // not as big as shield because we have linewidth
-  worldContext.scale(0.9, 0.9);
-  const sixths = (2 * Math.PI) / 6;
-  let radius = 1;
-  worldContext.moveTo(0, radius);
-  for (var hexPart = 0; hexPart < 6; hexPart++) {
-    worldContext.lineTo(
-      radius * Math.sin(sixths * (hexPart + 1)),
-      radius * Math.cos(sixths * (hexPart + 1)),
-    );
-  }
-  radius = 0.5;
-  worldContext.moveTo(0, radius);
-  for (var hexPart = 0; hexPart < 6; hexPart++) {
-    worldContext.lineTo(
-      radius * Math.sin(sixths * (hexPart + 1)),
-      radius * Math.cos(sixths * (hexPart + 1)),
-    );
-  }
+  const shineScale = (characterData.shieldSize / 2) * 0.9;
+  worldContext.scale(shineScale, shineScale);
+  worldContext.lineWidth /= shineScale;
+  drawHexagon(1, worldContext);
+  drawHexagon(0.5, worldContext);
+  worldContext.restore();
+};
 
+const drawHexagon = (
+  radius: number,
+  worldContext: CanvasRenderingContext2D,
+) => {
+  worldContext.beginPath();
+  const sixths = (2 * Math.PI) / 6;
+  worldContext.moveTo(0, radius);
+  for (var hexPart = 0; hexPart < 6; hexPart++) {
+    worldContext.lineTo(
+      radius * Math.sin(sixths * (hexPart + 1)),
+      radius * Math.cos(sixths * (hexPart + 1)),
+    );
+  }
   worldContext.closePath();
   worldContext.stroke();
-  worldContext.restore();
 };
 
 const renderUi = (
