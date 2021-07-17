@@ -5,10 +5,11 @@ import { SlippiGame } from '@slippi/slippi-js';
 import 'wired-elements';
 
 import './replay-select';
-import './replay-viewer';
-import { fetchAnimation } from './viewer/animations';
-import { supportedCharactersById } from './viewer/characters';
-import { supportedStagesById } from './viewer/stages';
+import {
+  fetchAnimation,
+  supportedCharactersById,
+  supportedStagesById,
+} from './viewer';
 
 @customElement('app-root')
 export class AppRoot extends LitElement {

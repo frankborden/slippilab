@@ -6,7 +6,7 @@ import { classMap } from 'lit/directives/class-map.js';
 import 'wired-elements';
 import type { WiredSlider } from 'wired-elements';
 
-import { Game } from './viewer/game';
+import { Game } from './game';
 
 @customElement('replay-viewer')
 export class ReplayViewer extends LitElement {
