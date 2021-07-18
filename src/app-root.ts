@@ -10,6 +10,7 @@ import {
   supportedCharactersById,
   supportedStagesById,
 } from './viewer';
+import { Search, SearchSpec, FramePredicates } from './search';
 
 @customElement('app-root')
 export class AppRoot extends LitElement {
@@ -129,7 +130,42 @@ export class AppRoot extends LitElement {
         this.currentIndex++;
         replay = await this.parseGame(this.replays[this.currentIndex]);
       }
-      this.currentReplay = replay;
+      if (replay) {
+        this.currentReplay = replay;
+        const spec: SearchSpec = {
+          permanentGroupSpec: {
+            unitSpecs: [{ predicate: FramePredicates.isOffstage }],
+          },
+          groupSpecs: [
+            {
+              unitSpecs: [
+                {
+                  options: { minimumLength: 30 },
+                  predicate: FramePredicates.isOffstage,
+                },
+              ],
+            },
+            {
+              unitSpecs: [
+                {
+                  predicate: (frame, game) =>
+                    !FramePredicates.isInHitstun(frame, game),
+                },
+              ],
+            },
+            { unitSpecs: [{ predicate: FramePredicates.isInHitstun }] },
+            { unitSpecs: [{ predicate: FramePredicates.isDead }] },
+          ],
+        };
+        const edgeguardSearch = new Search(spec);
+        edgeguardSearch.clips$.subscribe((clip) =>
+          console.log('edgeguard', clip),
+        );
+        edgeguardSearch.searchFile(
+          replay,
+          this.replays[this.currentIndex].name,
+        );
+      }
     }
   }
 
@@ -147,7 +183,6 @@ export class AppRoot extends LitElement {
       Object.keys(supportedStagesById).includes(
         game.getSettings()?.stageId?.toString()!,
       );
-
     return valid ? game : undefined;
   }
 

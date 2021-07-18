@@ -1,6 +1,6 @@
 import { Group, Spec as GroupSpec } from './group';
 import { Observable, Subject } from 'rxjs';
-import { PlayerType, SlippiGame } from '@slippi/slippi-js';
+import type { PlayerType, SlippiGame } from '@slippi/slippi-js';
 import { distinct } from 'rxjs/operators';
 //import { sync as globSync } from 'glob';
 import type { GamePredicate } from './game-predicate';
@@ -11,6 +11,7 @@ export interface Clip {
   startFrame: number;
   endFrame: number;
 }
+
 export interface Spec {
   gamePredicates?: GamePredicate[];
   permanentGroupSpec?: GroupSpec;
@@ -60,9 +61,10 @@ export class Search {
   //}
   //}
 
-  public searchFile(replayFilePath: string): void {
-    this.game = new SlippiGame(replayFilePath);
-    this.replayFilePath = replayFilePath;
+  // TODO: change to web File instead of file path
+  public searchFile(game: SlippiGame, path: string): void {
+    this.game = game;
+    this.replayFilePath = path;
     this.game!.getSettings()!
       .players.map((player: PlayerType) => player.port - 1)
       .forEach((playerIndex) => this.searchPlayer(playerIndex));

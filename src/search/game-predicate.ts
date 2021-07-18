@@ -1,4 +1,4 @@
-import { SlippiGame } from '@slippi/slippi-js';
+import type { SlippiGame } from '@slippi/slippi-js';
 
 export type GamePredicate = (game: SlippiGame, playerIndex: number) => boolean;
 
