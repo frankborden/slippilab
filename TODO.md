@@ -1,10 +1,6 @@
-# Slp Viewer
+# Replay Viewer
 
-## Ideas
-
-### Replay Viewer
-
-#### Character
+## Character
 
 - Something wrong with laser shooting animations (air and ground)
 - Something wrong with shield breaker animation
@@ -31,25 +27,26 @@
 - indicate CPUs (Gray?)
 - Optional state-dependent colors? (hitstun, shieldstun, actionable)
 
-#### Stage
+## Stage
 
 - Background visuals / color stages
 - Fountain platforms (infeasible until it's added to .slp spec)
 - Wispy (infeasible until it's added to .slp spec)
 
-#### Game UI / Viewer UI
+## Game UI / Viewer UI
 
 - Game timer
   - Seems present in .slp spec but not exposed in slippi-js?
   - I can probably just add manually without issues..
 - Higher % = darker text
 - % dances when hit
+- % resets immediately on death
 - Stock icons that look like the character
 - Actionstate/frame below % as option (stun/lag remaining too)
 - Play/Pause button, other GUI controls..
 - Input display?
 
-#### Other
+## Other
 
 - colorblind friendly colors
   - make every match red vs blue?
@@ -57,16 +54,24 @@
 - debug canvas for viewing individual animations
 - Tests
 
-### App
+# Search
 
-- Tests
-- Filter replays (matchup, date, player)
-- Fix VSCode complaining about json modules (resolveJsonModule=true makes
-  tsc crash a lot due to json sizes)
+- Other filters (matchup, date, player, stage)
+- opponent available to frame predicates (at least in singles)
+
+# Export
+
 - export to other formats better than GIF? apng, webp, mp4?
   - Discord doesn't like .apng and .webp. Will it allow embeded mp4 from url?
 - Upload gif to some host (example project with imgur: https://github.com/eirikb/gifie)
 - adjust start/end clip
-- Find clips within files
+
+# App
+
+- Tests
+- Replace wire components
+- Fix tsc complaining about json modules (resolveJsonModule=true makes
+  tsc crash a lot due to json sizes)
 - Show combos/conversions/etc from .slp getStats()
-- Webworkers
+- Webworkers?
+- Waiting for game...

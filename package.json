@@ -1,4 +1,7 @@
 {
+  "name": "slptube",
+  "author": "Frank Borden",
+  "license": "LGPL-3.0-or-later",
   "scripts": {
     "start": "snowpack dev",
     "build": "snowpack build",

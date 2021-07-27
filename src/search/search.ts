@@ -1,12 +1,11 @@
 import { Group, Spec as GroupSpec } from './group';
-import { Observable, Subject } from 'rxjs';
 import type { PlayerType, SlippiGame } from '@slippi/slippi-js';
-import { distinct } from 'rxjs/operators';
 //import { sync as globSync } from 'glob';
 import type { GamePredicate } from './game-predicate';
 //import { createSameLineOutput } from './platform';
+import type { Highlight } from '../common';
 
-export interface Clip {
+export interface ClipBuilder {
   path: string;
   startFrame: number;
   endFrame: number;
@@ -19,14 +18,10 @@ export interface Spec {
 }
 
 export class Search {
-  public clips$: Observable<Clip>;
   private spec: Spec;
   private playerIndex = 0;
-
-  private clipSource: Subject<Clip> = new Subject();
   private game?: SlippiGame;
-  private replayFilePath?: string;
-  private clipBuilder?: Clip;
+  private clipBuilder?: Highlight;
   private groupStack: Group[] = [];
   private permanentGroup?: Group;
   // - replays start at -123,
@@ -36,48 +31,32 @@ export class Search {
 
   public constructor(spec: Spec) {
     this.spec = spec;
-    // TODO: remove distinct once search algorithm is better
-    this.clips$ = this.clipSource.pipe(distinct((clip) => clip.endFrame));
   }
 
   public done(): void {
     this.clipSource.complete();
   }
 
-  //public async searchDirectory(replayFolder: string): Promise<void> {
-  //const files = globSync(replayFolder + '**/*.slp');
-  //const output = createSameLineOutput();
-  //for (const file of files) {
-  //output.output(
-  //`File #${files.indexOf(file) + 1}/${files.length}: ${file
-  //.split('/')
-  //.pop()}`,
-  //);
-  //this.searchFile(file);
-  //// Hack to give breaks so that playback can buffer clips
-  //await new Promise((resolve) => {
-  //setTimeout(resolve, 1);
-  //});
-  //}
-  //}
-
-  // TODO: change to web File instead of file path
-  public searchFile(game: SlippiGame, path: string): void {
+  public searchFile(game: SlippiGame, path: string): Highlight[] {
     this.game = game;
     this.replayFilePath = path;
-    this.game!.getSettings()!
+    return this.game!.getSettings()!
       .players.map((player: PlayerType) => player.port - 1)
-      .forEach((playerIndex) => this.searchPlayer(playerIndex));
+      .flatMap((playerIndex) => this.searchPlayer(playerIndex))
+      .filter(
+        (clip, index, clips) =>
+          clips.map((c) => c.endFrame).indexOf(clip.endFrame) === index,
+      );
   }
 
-  private searchPlayer(playerIndex: number): void {
+  private searchPlayer(playerIndex: number): Highlight[] {
     if (
       this.spec.gamePredicates &&
       this.spec.gamePredicates.some(
         (predicate) => !predicate(this.game!, playerIndex),
       )
     ) {
-      return;
+      return [];
     }
 
     this.playerIndex = playerIndex;
@@ -87,21 +66,26 @@ export class Search {
       ? new Group(this.spec.permanentGroupSpec)
       : undefined;
     this.currentFrameIndex = -39;
-
+    const clips: Highlight[] = [];
     this.pushGroup();
     while (this.groupStack.length > 0) {
       while (this.game!.getFrames()[this.currentFrameIndex]) {
         this.sendFrame();
-        this.handleResult();
+        clips.push(...this.handleResult());
       }
-      this.saveClip();
+      // If we reach end of game with a clip, save it.
+      if (this.clipBuilder !== undefined) {
+        clips.push(this.clipBuilder);
+        this.clipBuilder = undefined;
+      }
       // reached end of game, go back to previous group
       if (this.groupStack.length > 1) {
         this.popGroup();
       } else {
-        return;
+        return clips;
       }
     }
+    return clips;
   }
 
   private sendFrame(): void {
@@ -116,7 +100,7 @@ export class Search {
     this.currentFrameIndex++;
   }
 
-  private handleResult(): void {
+  private handleResult(): Highlight[] {
     const currentGroup = this.groupStack[this.groupStack.length - 1];
     const currentPermanentGroupResult = this.permanentGroup
       ? this.permanentGroup.result
@@ -140,13 +124,24 @@ export class Search {
       currentPermanentGroupResult
     ) {
       // wait
-      this.saveClip();
+      //this.saveClip();
+      if (this.clipBuilder !== undefined) {
+        const clip = this.clipBuilder;
+        this.clipBuilder = undefined;
+        return [clip];
+      }
     } else {
       // failed, go back to previous group (or all the way if permanent group
       // failed)
-      this.saveClip();
+      //this.saveClip();
       this.popGroup();
+      if (this.clipBuilder !== undefined) {
+        const clip = this.clipBuilder;
+        this.clipBuilder = undefined;
+        return [clip];
+      }
     }
+    return [];
   }
 
   private popGroup(): void {
@@ -171,7 +166,6 @@ export class Search {
       this.clipBuilder.endFrame = this.currentFrameIndex - 1;
     } else {
       this.clipBuilder = {
-        path: this.replayFilePath!,
         startFrame: this.groupStack[0].segmentStartFrame!,
         endFrame: this.currentFrameIndex - 1,
       };

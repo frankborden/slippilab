@@ -1,4 +1,3 @@
-import type { SlippiGame } from '@slippi/slippi-js';
 import GIF from 'gif.js';
 import { css, html, LitElement, PropertyValues } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
@@ -6,6 +5,7 @@ import { classMap } from 'lit/directives/class-map.js';
 import 'wired-elements';
 import type { WiredSlider } from 'wired-elements';
 
+import type { Replay } from '../common';
 import { Game } from './game';
 
 @customElement('replay-viewer')
@@ -41,7 +41,7 @@ export class ReplayViewer extends LitElement {
     `;
   }
   @property({ type: Object })
-  replay?: SlippiGame;
+  replay?: Replay;
 
   @property({ type: Boolean })
   dark = false;
@@ -176,12 +176,19 @@ export class ReplayViewer extends LitElement {
   private async setup() {
     const canvas = this.renderRoot.querySelector('canvas');
     const context = this.renderRoot.querySelector('canvas')?.getContext('2d');
-    const highestFrame = this.replay?.getLatestFrame()?.frame;
+    const highestFrame = this.replay?.game.getLatestFrame()?.frame;
     if (!canvas || !context || !this.replay || highestFrame === undefined) {
       return;
     }
     this.highestFrame = highestFrame;
-    this.game = await Game.create(this.replay, canvas, this.dark);
+    this.game = await Game.create(
+      this.replay,
+      canvas,
+      this.dark,
+      this.replay.highlights.length > 0
+        ? this.replay.highlights[0].startFrame
+        : -123,
+    );
     this.game.onTick(
       (currentFrameNumber: number) => (this.currentFrame = currentFrameNumber),
     );

@@ -6,6 +6,7 @@ import { createPlayerRender } from './characters';
 import { supportedStagesById, createStageRender } from './stages';
 import { clearLayers, drawToBase, Layers, setupLayers } from './layer';
 import { Vector } from './vector';
+import type { Replay } from '../common';
 
 // TODO: frames and settings should just go into generators
 export type Render = (
@@ -34,41 +35,46 @@ export class Game {
 
   // You can't have an async constructor so I have to introduce a factory
   public static async create(
-    baseReplay: SlippiGame,
+    replay: Replay,
     baseCanvas: HTMLCanvasElement,
     isDarkMode: boolean,
+    startFrame: number,
   ): Promise<Game> {
-    const replay = baseReplay as DeepRequired<SlippiGame>;
     return new Game(
       replay,
       setupLayers(baseCanvas),
       [
-        createStageRender(supportedStagesById[replay.getSettings().stageId]),
+        createStageRender(
+          supportedStagesById[replay.game.getSettings().stageId],
+        ),
         ...(await Promise.all(
-          replay
+          replay.game
             .getSettings()
             .players.map((player) =>
               createPlayerRender(
                 player,
-                replay.getSettings().players,
-                replay.getSettings().isTeams,
+                replay.game.getSettings().players,
+                replay.game.getSettings().isTeams,
               ),
             ),
         )),
         createItemRender(),
       ],
       isDarkMode,
+      startFrame,
     );
   }
 
   constructor(
-    private replay: DeepRequired<SlippiGame>,
+    private replay: Replay,
     private layers: Layers,
     private renders: Render[],
     private isDarkMode: boolean,
+    startFrame: number,
   ) {
-    this.stage = supportedStagesById[replay.getSettings().stageId];
+    this.stage = supportedStagesById[replay.game.getSettings().stageId];
     this.intervalId = window.setInterval(() => this.maybeTick(), 1000 / 60);
+    this.currentFrameNumber = startFrame;
   }
 
   public resize(newWidth: number, newHeight: number) {
@@ -157,7 +163,7 @@ export class Game {
   }
 
   public tick(): void {
-    const frames = this.replay.getFrames();
+    const frames = this.replay.game.getFrames();
     const frame = frames[this.currentFrameNumber];
     if (!frame) {
       window.clearInterval(this.intervalId);
@@ -165,7 +171,7 @@ export class Game {
     }
     this.tickHandler?.(this.currentFrameNumber);
     clearLayers(this.layers, this.isDarkMode);
-    this.updateCamera(frame, this.replay);
+    this.updateCamera(frame, this.replay.game);
     this.renders.forEach((render) =>
       render(this.layers, frame, frames, this.isDarkMode),
     );
@@ -176,12 +182,12 @@ export class Game {
   // TODO: move out of game file
   private updateCamera(
     currentFrame: DeepRequired<FrameEntryType>,
-    replay: DeepRequired<SlippiGame>,
+    game: DeepRequired<SlippiGame>,
   ): void {
     const subjects: Vector[] = [];
     const lookaheadTime = 5;
     const lastFrameIndex = Math.min(
-      replay.getLatestFrame().frame,
+      game.getLatestFrame().frame,
       currentFrame.frame + lookaheadTime,
     );
     for (
@@ -189,7 +195,7 @@ export class Game {
       frameIndex <= lastFrameIndex;
       frameIndex++
     ) {
-      const frameToConsider = replay.getFrames()[frameIndex];
+      const frameToConsider = game.getFrames()[frameIndex];
       for (let playerIndex = 0; playerIndex < 4; playerIndex++) {
         const playerFrame = frameToConsider.players[playerIndex]?.post;
         if (
