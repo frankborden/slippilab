@@ -7,11 +7,11 @@ import type {
 
 import {
   CharacterAnimations,
-  AnimationFrame,
-  fetchAnimation,
+  fetchAnimations,
   isOneIndexed,
-  actions,
-  specials,
+  animationNameByActionId,
+  //actions,
+  //specials,
 } from '../animations';
 import { supportedCharactersById } from '../characters';
 import { characterNamesById, DeepRequired } from '../common';
@@ -31,7 +31,8 @@ export const createPlayerRender = async (
   players: DeepRequired<PlayerType[]>,
   isDoubles: boolean,
 ): Promise<Render> => {
-  const animations = await fetchAnimation(player.characterId);
+  const animations = await fetchAnimations(player.characterId);
+  //const sheikAnimations = (await import('../animations/sheik')).default;
   return (
     layers: Layers,
     frame: DeepRequired<FrameEntryType>,
@@ -174,7 +175,7 @@ const renderPlayerDetails = (
   isDoubles: boolean,
   isDarkMode: boolean,
 ): void => {
-  //const playerFrame = frame.players[player.playerIndex].post;
+  const playerFrame = frame.players[player.playerIndex].post;
   screenLayer.context.save();
   const fontSize = screenLayer.canvas.height / 30;
   screenLayer.context.font = `900 ${fontSize}px Verdana`;
@@ -191,8 +192,16 @@ const renderPlayerDetails = (
   screenLayer.context.translate(x, y);
   // flip text back right-side after global flip
   screenLayer.context.scale(1, -1);
-  const name = player.displayName?.length ? player.displayName : player.nametag;
-  // const name = `${playerFrame.actionStateId},${playerFrame.actionStateCounter}`;
+  //const name = player.displayName?.length ? player.displayName : player.nametag;
+  const characterData = supportedCharactersById[player.characterId];
+  let animationName;
+  const actionName = animationNameByActionId[playerFrame.actionStateId];
+  if (characterData.specialsMap.has(playerFrame.actionStateId)) {
+    animationName = characterData.specialsMap.get(playerFrame.actionStateId);
+  } else if (actionName) {
+    animationName = characterData.animationMap.get(actionName) ?? actionName;
+  }
+  const name = `${playerFrame.actionStateId},${animationName},${playerFrame.actionStateCounter}`;
   screenLayer.context.fillText(name, 0, 0);
   screenLayer.context.strokeText(name, 0, 0);
   screenLayer.context.restore();
@@ -207,9 +216,8 @@ const getAnimation = (
   worldContext: CanvasRenderingContext2D,
 ): AnimationFrame | undefined => {
   const character = characterNamesById[player.characterId];
-  const animationName =
-    actions[playerFrame.actionStateId] ??
-    specials[character][playerFrame.actionStateId];
+  const animationName = 'asdf'; //actions[playerFrame.actionStateId]; // ??
+  //specials[character][playerFrame.actionStateId];
   console.assert(
     animationName !== undefined,
     'characterId',
@@ -309,24 +317,42 @@ const renderCharacter = (
   worldContext.translate(playerFrame.positionX, playerFrame.positionY);
   // world space -> animation data space, -y is because the data seems to be
   // flipped relative to the stage data..
-  worldContext.scale(characterData.scale, -characterData.scale);
-  worldContext.lineWidth /= characterData.scale;
+  //worldContext.scale(characterData.scale, -characterData.scale);
+  //worldContext.lineWidth /= characterData.scale;
 
-  worldContext.save();
-  worldContext.scale(1 / characterData.scale, 1 / characterData.scale);
-  worldContext.lineWidth *= characterData.scale;
+  //worldContext.save();
+  //worldContext.scale(1 / characterData.scale, 1 / -characterData.scale);
+  //worldContext.lineWidth *= characterData.scale;
 
-  worldContext.scale(0.96, 0.96);
-  worldContext.lineWidth /= 0.96;
+  const modelScaling = characterData.scale;
+  worldContext.scale(modelScaling, modelScaling);
+  worldContext.lineWidth /= modelScaling;
   worldContext.scale(0.1, 0.1);
   worldContext.lineWidth /= 0.1;
-  worldContext.translate(-500, -500);
-  const foxDashFrame0Path = new Path2D(
-    'M 478.5 337 L 488 343.5 L 490.5 347 Q 499.8 348.8 504 355.5 L 508 361.5 L 511 370.5 L 511 380 Q 505.2 380.4 502 384.5 L 506.5 392 L 511 394.5 L 514 399.5 L 513 401.5 L 514 406.5 L 512 413.5 L 515 416.5 L 514 417.5 L 513 426.5 L 511 430 L 528.5 427 L 539.5 422 L 554.5 420 L 555.5 421 L 567.5 422 L 584 430 L 584 431.5 L 575.5 440 L 561.5 446 L 545.5 450 L 527.5 450 L 517.5 448 L 514.5 446 L 513 452.5 L 516 457.5 L 514 463.5 L 518 470.5 Q 517 479.8 520 484 L 526 485 L 525 491.5 L 526 492.5 L 526 499 L 499.5 501 Q 496.5 499.5 498 493.5 L 510 485.5 L 496.5 470 L 491 465.5 Q 490.8 458.8 487.5 455 Q 482.9 453.6 485 459.5 L 483 459.5 L 481 464.5 L 483 468.5 L 480 476.5 L 480 485.5 Q 484.5 490.3 483 500 L 459.5 499 L 458.5 500 L 444.5 500 L 441 499 L 440 493.5 Q 446.2 486.7 459.5 487 L 462.5 488 L 468 484.5 L 462 467.5 L 462 461.5 Q 458.5 459.5 459 453.5 L 462 447.5 L 459.5 447 L 456.5 448 L 455 445 Q 451.2 445.8 450 442.5 Q 447.4 439.6 448 433.5 Q 450.7 426.7 460.5 427 L 465 428 L 467.5 424 L 468.5 425 L 472 421.5 L 470 413.5 L 470 403.5 Q 472.3 402.3 469.5 401 Q 466.9 401.8 468 398.5 L 467 394.5 L 471 391.5 L 460.5 391 L 450.5 387 L 448 384.5 Q 445.9 378.6 450.5 380 L 460 373.5 Q 463 370.5 463 364.5 L 468 358.5 L 468 353.5 L 467 351.5 L 474 347.5 Q 474.6 340.6 478.5 337 Z',
-  );
-  //  worldContext.stroke(foxDashFrame0Path);
+  worldContext.scale(playerFrame.facingDirection, 1);
+  worldContext.translate(-500, 500);
+  worldContext.scale(1, -1);
+  let animationName;
+  const actionName = animationNameByActionId[playerFrame.actionStateId];
+  if (characterData.specialsMap.has(playerFrame.actionStateId)) {
+    animationName = characterData.specialsMap.get(playerFrame.actionStateId);
+  } else if (actionName) {
+    animationName = characterData.animationMap.get(actionName) ?? actionName;
+  }
+  if (animationName === 'Unsupported') {
+    worldContext.restore();
+    return;
+  }
+  console.log(animationName, actionName);
+  const animationFrames = animationName
+    ? animations[animationName] ?? animations['Appeal'] ?? animations['AppealL']
+    : animations['Appeal'] ?? animations['AppealL'];
+  console.log(animationFrames.length, playerFrame.actionStateCounter);
+  const animationFrame =
+    animationFrames[Math.max(Math.floor(playerFrame.actionStateCounter), 0)];
+  worldContext.stroke(new Path2D(animationFrame));
   worldContext.restore();
-
+  /*
   const animationFrame = getAnimation(
     player,
     playerFrame,
@@ -357,6 +383,7 @@ const renderCharacter = (
   worldContext.fill();
   worldContext.stroke();
   worldContext.restore();
+  */
 };
 
 const renderShield = (
@@ -368,7 +395,7 @@ const renderShield = (
   isDarkMode: boolean,
 ): void => {
   const playerFrame = frame.players[player.playerIndex].post;
-  const characterData = supportedCharactersById[player.characterId];
+  //const characterData = supportedCharactersById[player.characterId];
   if (playerFrame.actionStateId < 0x0b2 || playerFrame.actionStateId > 0x0b6) {
     return;
   }
@@ -383,14 +410,15 @@ const renderShield = (
   worldContext.strokeStyle = isDarkMode ? 'white' : 'black';
   const shieldHealthPercent = playerFrame.shieldSize / 60;
   worldContext.translate(playerFrame.positionX, playerFrame.positionY);
-  worldContext.translate(
-    characterData.shieldOffset.x,
-    characterData.shieldOffset.y,
-  );
+  //worldContext.translate(
+  //characterData.shieldOffset.x,
+  //characterData.shieldOffset.y,
+  //);
   // TODO: Seems to be some constant added because shield break happens before
   // radius 0.
   // Guessing shield size attribute is diameter so divide by 2
-  const shieldRadius = (characterData.shieldSize * shieldHealthPercent) / 2;
+  const shieldRadius =
+    /*characterData.shieldSize*/ (20 * shieldHealthPercent) / 2;
   worldContext.beginPath();
   worldContext.arc(0, 0, shieldRadius, 0, 2 * Math.PI);
   worldContext.closePath();

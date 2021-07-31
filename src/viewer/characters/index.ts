@@ -1,15 +1,17 @@
-import { marth } from './marth';
-import { falcon } from './falcon';
-import { fox } from './fox';
-import { jigglypuff } from './jigglypuff';
-import { falco } from './falco';
+import { sheik } from './sheik';
+import { peach } from './peach';
 import type { Character } from '../common';
+import { fox } from './fox';
+import { falco } from './falco';
+import { falcon } from './falcon';
+import { marth } from './marth';
 
 export { createPlayerRender } from './render';
 export const supportedCharactersById: { [characterId: number]: Character } = {
   0: falcon,
   2: fox,
   9: marth,
-  15: jigglypuff,
+  12: peach,
+  19: sheik,
   20: falco,
 };

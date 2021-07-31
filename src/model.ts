@@ -77,6 +77,8 @@ export class Model {
   }
 
   isSupported(game: SlippiGame): boolean {
+    return true;
+    /*
     const stageId = game.getSettings()?.stageId;
     const characterIds = game
       .getSettings()
@@ -90,5 +92,6 @@ export class Model {
         characterId !== null && Boolean(supportedCharactersById[characterId]),
     );
     return stageSupported && charactersSupported;
+    */
   }
 }

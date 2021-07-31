@@ -1,15 +1,24 @@
 {
   "name": "slptube",
   "author": "Frank Borden",
-  "license": "LGPL-3.0-or-later",
+  "license": "MIT",
   "scripts": {
     "start": "snowpack dev",
     "build": "snowpack build",
     "format": "prettier --write \"src/**/*.ts\"",
-    "lint": "prettier --check \"src/**/*.ts\""
+    "lint": "prettier --check \"src/**/*.ts\"",
+    "buildAnimations": "yarn clearAnimationBuild && yarn copyMaya && yarn svgo && yarn compress && yarn copyFinished",
+    "clearAnimationBuild": "rm -r tools/output/maya/* tools/output/svgo/* tools/output/compression/*",
+    "copyMaya": "cp -r /media/psf/Home/Downloads/Animation_Pack/Textured_Models/Marth/output/* ./tools/output/maya",
+    "svgo": "svgo -f tools/output/maya/ -o tools/output/svgo/ -p 3 --multipass --config tools/svgo.config.js",
+    "compress": "deno run -A --unstable tools/compressSvgs.ts",
+    "copyFinished": "mkdir src/viewer/animations/marth; cp -r tools/output/compression/* src/viewer/animations/marth"
   },
   "dependencies": {
     "@slippi/slippi-js": "frankborden/slippi-js",
+    "@spectrum-web-components/action-button": "^0.5.4",
+    "@spectrum-web-components/switch": "^0.7.11",
+    "@spectrum-web-components/theme": "^0.8.11",
     "gif.js": "^0.2.0",
     "lit": "^2.0.0-rc.2",
     "rxjs": "^7.2.0",
@@ -20,8 +29,10 @@
   "devDependencies": {
     "@types/gif.js": "^0.2.2",
     "@types/snowpack-env": "^2.3.3",
+    "imagetracerjs": "^1.2.6",
     "prettier": "^2.2.1",
     "snowpack": "^3.3.7",
+    "svgo": "^2.3.1",
     "typescript": "^4.3.5"
   }
 }

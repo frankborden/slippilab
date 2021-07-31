@@ -1,3 +1,4 @@
+import type { ActionName } from './animations/actions';
 import type { Vector } from './vector';
 
 export type Line = [Vector, Vector];
@@ -47,6 +48,8 @@ export interface Character {
   scale: number;
   shieldOffset: Vector;
   shieldSize: number; // Model Size * Shield Size attributes
+  animationMap: Map<ActionName, string>;
+  specialsMap: Map<number, string>;
 }
 
 export type CharacterName = typeof characterNamesById[number];

@@ -1,301 +1,443 @@
-import ATTACKAIRB from './ATTACKAIRB.json';
-import CLIFFESCAPESLOW from './CLIFFESCAPESLOW.json';
-import DOWNSMASH from './DOWNSMASH.json';
-import FALLSPECIAL from './FALLSPECIAL.json';
-import JUMPB from './JUMPB.json';
-import REBIRTHWAIT from './REBIRTHWAIT.json';
-import TECHF from './TECHF.json';
-import THROWNPUFFUP from './THROWNPUFFUP.json';
-import ATTACKAIRD from './ATTACKAIRD.json';
-import CLIFFGETUPQUICK from './CLIFFGETUPQUICK.json';
-import DOWNSPECIALAIRSTART from './DOWNSPECIALAIRSTART.json';
-import DOWNSPECIALAIRLOOP from './DOWNSPECIALAIRLOOP.json';
-import DOWNSPECIALAIREND from './DOWNSPECIALAIREND.json';
-import DOWNSPECIALAIRTURN from './DOWNSPECIALAIRTURN.json';
-import DOWNSPECIALAIRREFLECT from './DOWNSPECIALAIRREFLECT.json';
-import FIREFOXBOUNCE from './FIREFOXBOUNCE.json';
-import JUMPF from './JUMPF.json';
-import REBOUND from './REBOUND.json';
-import TECHN from './TECHN.json';
-import THROWUP from './THROWUP.json';
-import ATTACKAIRF from './ATTACKAIRF.json';
-import CLIFFGETUPSLOW from './CLIFFGETUPSLOW.json';
-import DOWNSPECIALGROUNDSTART from './DOWNSPECIALGROUNDSTART.json';
-import DOWNSPECIALGROUNDLOOP from './DOWNSPECIALGROUNDLOOP.json';
-import DOWNSPECIALGROUNDEND from './DOWNSPECIALGROUNDEND.json';
-import DOWNSPECIALGROUNDTURN from './DOWNSPECIALGROUNDTURN.json';
-import DOWNSPECIALGROUNDREFLECT from './DOWNSPECIALGROUNDREFLECT.json';
-import FORWARDSMASH from './FORWARDSMASH.json';
-import KNEEBEND from './KNEEBEND.json';
-import RUN from './RUN.json';
-import TECHU from './TECHU.json';
-import TILTTURN from './TILTTURN.json';
-import ATTACKAIRN from './ATTACKAIRN.json';
-import CLIFFJUMPQUICK from './CLIFFJUMPQUICK.json';
-import DOWNSTANDB from './DOWNSTANDB.json';
-import FORWARDTILT from './FORWARDTILT.json';
-import LANDING from './LANDING.json';
-import RUNBRAKE from './RUNBRAKE.json';
-import THROWBACK from './THROWBACK.json';
-import UPSMASH from './UPSMASH.json';
-import ATTACKAIRU from './ATTACKAIRU.json';
-import CLIFFJUMPSLOW from './CLIFFJUMPSLOW.json';
-import DOWNSTANDF from './DOWNSTANDF.json';
-import FURAFURA from './FURAFURA.json';
-import LANDINGATTACKAIRB from './LANDINGATTACKAIRB.json';
-import RUNTURN from './RUNTURN.json';
-import THROWDOWN from './THROWDOWN.json';
-import UPSPECIALCHARGE from './UPSPECIALCHARGE.json';
-import ATTACKDASH from './ATTACKDASH.json';
-import CLIFFWAIT from './CLIFFWAIT.json';
-import DOWNSTANDN from './DOWNSTANDN.json';
-import FURASLEEPEND from './FURASLEEPEND.json';
-import LANDINGATTACKAIRD from './LANDINGATTACKAIRD.json';
-import SHIELDBREAKDOWNBOUND from './SHIELDBREAKDOWNBOUND.json';
-import THROWFORWARD from './THROWFORWARD.json';
-import UPSPECIALLAUNCH from './UPSPECIALLAUNCH.json';
-import CAPTURECUT from './CAPTURECUT.json';
-import DAMAGEFALL from './DAMAGEFALL.json';
-import DOWNTILT from './DOWNTILT.json';
-import FURASLEEPLOOP from './FURASLEEPLOOP.json';
-import LANDINGATTACKAIRF from './LANDINGATTACKAIRF.json';
-import SHIELDBREAKFALL from './SHIELDBREAKFALL.json';
-import THROWNFOXBACK from './THROWNFOXBACK.json';
-import UPTILT from './UPTILT.json';
-import CAPTUREDAMAGE from './CAPTUREDAMAGE.json';
-import DAMAGEFLYN from './DAMAGEFLYN.json';
-import DOWNWAIT from './DOWNWAIT.json';
-import FURASLEEPSTART from './FURASLEEPSTART.json';
-import LANDINGATTACKAIRN from './LANDINGATTACKAIRN.json';
-import SHIELDBREAKSTAND from './SHIELDBREAKSTAND.json';
-import THROWNFOXDOWN from './THROWNFOXDOWN.json';
-import WAIT from './WAIT.json';
-import CAPTUREPULLED from './CAPTUREPULLED.json';
-import DAMAGEN2 from './DAMAGEN2.json';
-import ENTRANCE from './ENTRANCE.json';
-import GRAB from './GRAB.json';
-import LANDINGATTACKAIRU from './LANDINGATTACKAIRU.json';
-import SIDESPECIALAIR from './SIDESPECIALAIR.json';
-import THROWNFOXFORWARD from './THROWNFOXFORWARD.json';
-import WALK from './WALK.json';
-import CAPTUREWAIT from './CAPTUREWAIT.json';
-import DASH from './DASH.json';
-import ESCAPEAIR from './ESCAPEAIR.json';
-import GUARD from './GUARD.json';
-import LANDINGFALLSPECIAL from './LANDINGFALLSPECIAL.json';
-import LANDINGFALLSPECIALG from './LANDINGFALLSPECIALG.json';
-import SIDESPECIALGROUND from './SIDESPECIALGROUND.json';
-import THROWNFOXUP from './THROWNFOXUP.json';
-import WALLDAMAGE from './WALLDAMAGE.json';
-import CATCHATTACK from './CATCHATTACK.json';
-import DEADDOWN from './DEADDOWN.json';
-import ESCAPEB from './ESCAPEB.json';
-import GUARDOFF from './GUARDOFF.json';
-import MISSFOOT from './MISSFOOT.json';
-import SLEEP from './SLEEP.json';
-import THROWNMARTHBACK from './THROWNMARTHBACK.json';
-import WALLJUMP from './WALLJUMP.json';
-import CATCHCUT from './CATCHCUT.json';
-import DEADLEFT from './DEADLEFT.json';
-import ESCAPEF from './ESCAPEF.json';
-import GUARDON from './GUARDON.json';
-import NEUTRALSPECIALAIR from './NEUTRALSPECIALAIR.json';
-import SMASHTURN from './SMASHTURN.json';
-import THROWNMARTHDOWN from './THROWNMARTHDOWN.json';
-import WALLTECH from './WALLTECH.json';
-import CATCHWAIT from './CATCHWAIT.json';
-import DEADRIGHT from './DEADRIGHT.json';
-import ESCAPEN from './ESCAPEN.json';
-import JAB1 from './JAB1.json';
-import NEUTRALSPECIALGROUND from './NEUTRALSPECIALGROUND.json';
-import SQUAT from './SQUAT.json';
-import THROWNMARTHFORWARD from './THROWNMARTHFORWARD.json';
-import WALLTECHJUMP from './WALLTECHJUMP.json';
-import CLIFFATTACKQUICK from './CLIFFATTACKQUICK.json';
-import DEADUP from './DEADUP.json';
-import JAB2 from './JAB2.json';
-import OTTOTTO from './OTTOTTO.json';
-import SQUATRV from './SQUATRV.json';
-import THROWNMARTHUP from './THROWNMARTHUP.json';
-import CLIFFATTACKSLOW from './CLIFFATTACKSLOW.json';
-import DOWNATTACK from './DOWNATTACK.json';
-import JAB3 from './JAB3.json';
-import OTTOTTOWAIT from './OTTOTTOWAIT.json';
-import SQUATWAIT from './SQUATWAIT.json';
-import THROWNPUFFBACK from './THROWNPUFFBACK.json';
-import CLIFFCATCH from './CLIFFCATCH.json';
-import DOWNBOUND from './DOWNBOUND.json';
-import FALL from './FALL.json';
-import JUMPAERIALB from './JUMPAERIALB.json';
-import PASS from './PASS.json';
-import STOPCEIL from './STOPCEIL.json';
-import THROWNPUFFDOWN from './THROWNPUFFDOWN.json';
-import CLIFFESCAPEQUICK from './CLIFFESCAPEQUICK.json';
-import DOWNDAMAGE from './DOWNDAMAGE.json';
-import FALLAERIAL from './FALLAERIAL.json';
-import JUMPAERIALF from './JUMPAERIALF.json';
-import REBIRTH from './REBIRTH.json';
-import TECHB from './TECHB.json';
-import THROWNPUFFFORWARD from './THROWNPUFFFORWARD.json';
-import THROWNFALCOBACK from './THROWNFALCOBACK.json';
-import THROWNFALCODOWN from './THROWNFALCODOWN.json';
-import THROWNFALCOFORWARD from './THROWNFALCOFORWARD.json';
-import THROWNFALCOUP from './THROWNFALCOUP.json';
-import THROWNFALCONBACK from './THROWNFALCONBACK.json';
-import THROWNFALCONDOWN from './THROWNFALCONDOWN.json';
-import THROWNFALCONFORWARD from './THROWNFALCONFORWARD.json';
-import THROWNFALCONUP from './THROWNFALCONUP.json';
-import APPEAL from './APPEAL.json';
-import THROWNFALCONDIVE from './THROWNFALCONDIVE.json';
+import AttackAirLw from './AttackAirLw.json';
+import DamageLw1 from './DamageLw1.json';
+import Run from './Run.json';
+import SpecialS from './SpecialS.json';
+import DamageHi2 from './DamageHi2.json';
+import Ottotto from './Ottotto.json';
+import FallB from './FallB.json';
+import Rebound from './Rebound.json';
+import DamageAir1 from './DamageAir1.json';
+import StopCeil from './StopCeil.json';
+import CliffAttackQuick from './CliffAttackQuick.json';
+import CliffJumpSlow1 from './CliffJumpSlow1.json';
+import DownSpotD from './DownSpotD.json';
+import SpecialHiBound from './SpecialHiBound.json';
+import TurnRun from './TurnRun.json';
+import DamageLw3 from './DamageLw3.json';
+import DownFowardD from './DownFowardD.json';
+import ItemHammerMove from './ItemHammerMove.json';
+import FuraSleepStart from './FuraSleepStart.json';
+import ItemScopeAirFire from './ItemScopeAirFire.json';
+import DamageHi1 from './DamageHi1.json';
+import DamageHi3 from './DamageHi3.json';
+import LandingAirLw from './LandingAirLw.json';
+import AttackLw3 from './AttackLw3.json';
+import CliffClimbSlow from './CliffClimbSlow.json';
+import Swing3 from './Swing3.json';
+import ItemScopeRapid from './ItemScopeRapid.json';
+import JumpB from './JumpB.json';
+import SpecialAirSStart from './SpecialAirSStart.json';
+import LightThrowHi from './LightThrowHi.json';
+import Swing4 from './Swing4.json';
+import SpecialAirNStart from './SpecialAirNStart.json';
+import Dash from './Dash.json';
+import CliffJumpSlow2 from './CliffJumpSlow2.json';
+import SpecialLwStart from './SpecialLwStart.json';
+import AttackLw4 from './AttackLw4.json';
+import HeavyWalk2 from './HeavyWalk2.json';
+import SwingDash from './SwingDash.json';
+import ItemShoot from './ItemShoot.json';
+import Catch from './Catch.json';
+import ItemScopeAirEnd from './ItemScopeAirEnd.json';
+import PassiveWallJump from './PassiveWallJump.json';
+import ItemScopeFire from './ItemScopeFire.json';
+import ItemParasolFall from './ItemParasolFall.json';
+import DownBackD from './DownBackD.json';
+import CatchWait from './CatchWait.json';
+import ItemParasolOpen from './ItemParasolOpen.json';
+import DownDamageD from './DownDamageD.json';
+import AttackAirB from './AttackAirB.json';
+import EscapeN from './EscapeN.json';
+import RunBrake from './RunBrake.json';
+import CapturePulledLw from './CapturePulledLw.json';
+import FallAerialF from './FallAerialF.json';
+import CliffClimbQuick from './CliffClimbQuick.json';
+import AttackAirF from './AttackAirF.json';
+import Entry from './Entry.json';
+import EscapeF from './EscapeF.json';
+import PassiveWall from './PassiveWall.json';
+import CapturePulledHi from './CapturePulledHi.json';
+import CaptureDamageHi from './CaptureDamageHi.json';
+import SpecialAirSEnd from './SpecialAirSEnd.json';
+import Pass from './Pass.json';
+import DownBoundD from './DownBoundD.json';
+import LightThrowAirLw from './LightThrowAirLw.json';
+import Passive from './Passive.json';
+import AttackS3LwS from './AttackS3LwS.json';
+import GuardOff from './GuardOff.json';
+import ItemBlind from './ItemBlind.json';
+import SpecialAirNLoop from './SpecialAirNLoop.json';
+import TFalcoThrowHi from './TFalcoThrowHi.json';
+import AppealSEndL from './AppealSEndL.json';
+import SpecialHiHoldAir from './SpecialHiHoldAir.json';
+import DownStandD from './DownStandD.json';
+import FallSpecialB from './FallSpecialB.json';
+import Attack100Start from './Attack100Start.json';
+import EscapeAir from './EscapeAir.json';
+import CliffAttackSlow from './CliffAttackSlow.json';
+import DownWaitD from './DownWaitD.json';
+import AttackS3S from './AttackS3S.json';
+import DownBoundU from './DownBoundU.json';
+import DownStandU from './DownStandU.json';
+import CaptureCut from './CaptureCut.json';
+import Attack100End from './Attack100End.json';
+import DownWaitU from './DownWaitU.json';
+import DamageFlyRoll from './DamageFlyRoll.json';
+import LandingAirHi from './LandingAirHi.json';
+import SpecialAirLwHit from './SpecialAirLwHit.json';
+import CatchCut from './CatchCut.json';
+import WallDamage from './WallDamage.json';
+import SquatWaitItem from './SquatWaitItem.json';
+import LightThrowAirF from './LightThrowAirF.json';
+import HeavyThrowF from './HeavyThrowF.json';
+import SpecialNLoop from './SpecialNLoop.json';
+import SpecialLwLoop from './SpecialLwLoop.json';
+import ThrowB from './ThrowB.json';
+import CliffCatch from './CliffCatch.json';
+import SpecialLwHit from './SpecialLwHit.json';
+import Landing from './Landing.json';
+import DownBackU from './DownBackU.json';
+import DamageFlyTop from './DamageFlyTop.json';
+import SpecialNEnd from './SpecialNEnd.json';
+import AttackS3Hi from './AttackS3Hi.json';
+import Guard from './Guard.json';
+import DownFowardU from './DownFowardU.json';
+import Squat from './Squat.json';
+import Wait2 from './Wait2.json';
+import CliffWait from './CliffWait.json';
+import Attack12 from './Attack12.json';
+import FallSpecialF from './FallSpecialF.json';
+import DamageN2 from './DamageN2.json';
+import Appeal from './Appeal.json';
+import DamageFlyHi from './DamageFlyHi.json';
+import JumpAerialF from './JumpAerialF.json';
+import Attack11 from './Attack11.json';
+import HeavyThrowB from './HeavyThrowB.json';
+import DownAttackU from './DownAttackU.json';
+import LandingAirB from './LandingAirB.json';
+import PassiveStandF from './PassiveStandF.json';
+import CliffEscapeQuick from './CliffEscapeQuick.json';
+import AttackS3Lw from './AttackS3Lw.json';
+import SpecialHiHold from './SpecialHiHold.json';
+import CatchAttack from './CatchAttack.json';
+import FuraFura from './FuraFura.json';
+import Turn from './Turn.json';
+import CliffEscapeSlow from './CliffEscapeSlow.json';
+import Wait1 from './Wait1.json';
+import DownDamageU from './DownDamageU.json';
+import CaptureDamageLw from './CaptureDamageLw.json';
+import ItemScrewDamage from './ItemScrewDamage.json';
+import ThrowLw from './ThrowLw.json';
+import ItemScrewAir from './ItemScrewAir.json';
+import FuraSleepEnd from './FuraSleepEnd.json';
+import AttackS3HiS from './AttackS3HiS.json';
+import TFalcoThrowF from './TFalcoThrowF.json';
+import OttottoWait from './OttottoWait.json';
+import FallSpecial from './FallSpecial.json';
+import GuardOn from './GuardOn.json';
+import LightThrowB from './LightThrowB.json';
+import ItemScopeAirRapid from './ItemScopeAirRapid.json';
+import AttackDash from './AttackDash.json';
+import FallF from './FallF.json';
+import SpecialAirLwLoop from './SpecialAirLwLoop.json';
+import LandingAirN from './LandingAirN.json';
+import LightGet from './LightGet.json';
+import CliffJumpQuick1 from './CliffJumpQuick1.json';
+import LightThrowAirB from './LightThrowAirB.json';
+import PassiveCeil from './PassiveCeil.json';
+import AppealSL from './AppealSL.json';
+import ItemHammerWait from './ItemHammerWait.json';
+import HeavyThrowHi from './HeavyThrowHi.json';
+import AppealSR from './AppealSR.json';
+import WalkFast from './WalkFast.json';
+import SquatWait from './SquatWait.json';
+import HeavyThrowLw from './HeavyThrowLw.json';
+import CaptureJump from './CaptureJump.json';
+import SpecialNStart from './SpecialNStart.json';
+import PassiveStandB from './PassiveStandB.json';
+import WalkSlow from './WalkSlow.json';
+import CaptureWaitLw from './CaptureWaitLw.json';
+import SpecialAirLwStart from './SpecialAirLwStart.json';
+import EscapeB from './EscapeB.json';
+import SpecialLwEnd from './SpecialLwEnd.json';
+import DamageN3 from './DamageN3.json';
+import StopWall from './StopWall.json';
+import FallAerial from './FallAerial.json';
+import ItemScopeAirStart from './ItemScopeAirStart.json';
+import SpecialSStart from './SpecialSStart.json';
+import SquatRv from './SquatRv.json';
+import SpecialAirLwEnd from './SpecialAirLwEnd.json';
+import SpecialAirNEnd from './SpecialAirNEnd.json';
+import DamageLw2 from './DamageLw2.json';
+import CaptureWaitHi from './CaptureWaitHi.json';
+import AttackAirN from './AttackAirN.json';
+import SpecialHiFall from './SpecialHiFall.json';
+import HeavyWalk1 from './HeavyWalk1.json';
+import AttackS4 from './AttackS4.json';
+import DamageAir2 from './DamageAir2.json';
+import AppealSEndR from './AppealSEndR.json';
+import DamageFlyN from './DamageFlyN.json';
+import DownAttackD from './DownAttackD.json';
+import TFalcoThrowLw from './TFalcoThrowLw.json';
+import AppealSStartL from './AppealSStartL.json';
+import SpecialSEnd from './SpecialSEnd.json';
+import SpecialHiLanding from './SpecialHiLanding.json';
+import AppealSStartR from './AppealSStartR.json';
+import CatchDash from './CatchDash.json';
+import Fall from './Fall.json';
+import ItemScrew from './ItemScrew.json';
+import SpecialAirS from './SpecialAirS.json';
+import LightThrowDash from './LightThrowDash.json';
+import LightThrowAirHi from './LightThrowAirHi.json';
+import DamageFlyLw from './DamageFlyLw.json';
+import TFalcoThrowB from './TFalcoThrowB.json';
+import MissFoot from './MissFoot.json';
+import LightThrowLw from './LightThrowLw.json';
+import FuraSleepLoop from './FuraSleepLoop.json';
+import DamageFall from './DamageFall.json';
+import ThrowHi from './ThrowHi.json';
+import Swing1 from './Swing1.json';
+import DamageAir3 from './DamageAir3.json';
+import WalkMiddle from './WalkMiddle.json';
+import LightThrowF from './LightThrowF.json';
+import FallAerialB from './FallAerialB.json';
+import LightThrowDrop from './LightThrowDrop.json';
+import LandingAirF from './LandingAirF.json';
+import Attack100Loop from './Attack100Loop.json';
+import DamageN1 from './DamageN1.json';
+import JumpAerialB from './JumpAerialB.json';
+import HeavyGet from './HeavyGet.json';
+import ThrowF from './ThrowF.json';
+import CliffJumpQuick2 from './CliffJumpQuick2.json';
+import AttackHi4 from './AttackHi4.json';
+import JumpF from './JumpF.json';
+import GuardDamage from './GuardDamage.json';
+import AttackAirHi from './AttackAirHi.json';
+import SpecialHi from './SpecialHi.json';
+import ItemScopeStart from './ItemScopeStart.json';
+import AttackHi3 from './AttackHi3.json';
+import ItemShootAir from './ItemShootAir.json';
+import ItemScopeEnd from './ItemScopeEnd.json';
 
 export default {
-  ATTACKAIRB: ATTACKAIRB,
-  CLIFFESCAPESLOW: CLIFFESCAPESLOW,
-  DOWNSMASH: DOWNSMASH,
-  FALLSPECIAL: FALLSPECIAL,
-  JUMPB: JUMPB,
-  REBIRTHWAIT: REBIRTHWAIT,
-  TECHF: TECHF,
-  THROWNPUFFUP: THROWNPUFFUP,
-  ATTACKAIRD: ATTACKAIRD,
-  CLIFFGETUPQUICK: CLIFFGETUPQUICK,
-  DOWNSPECIALAIRSTART: DOWNSPECIALAIRSTART,
-  DOWNSPECIALAIRLOOP: DOWNSPECIALAIRLOOP,
-  DOWNSPECIALAIREND: DOWNSPECIALAIREND,
-  DOWNSPECIALAIRTURN: DOWNSPECIALAIRTURN,
-  DOWNSPECIALAIRREFLECT: DOWNSPECIALAIRREFLECT,
-  FIREFOXBOUNCE: FIREFOXBOUNCE,
-  JUMPF: JUMPF,
-  REBOUND: REBOUND,
-  TECHN: TECHN,
-  THROWUP: THROWUP,
-  ATTACKAIRF: ATTACKAIRF,
-  CLIFFGETUPSLOW: CLIFFGETUPSLOW,
-  DOWNSPECIALGROUNDSTART: DOWNSPECIALGROUNDSTART,
-  DOWNSPECIALGROUNDLOOP: DOWNSPECIALGROUNDLOOP,
-  DOWNSPECIALGROUNDEND: DOWNSPECIALGROUNDEND,
-  DOWNSPECIALGROUNDTURN: DOWNSPECIALGROUNDTURN,
-  DOWNSPECIALGROUNDREFLECT: DOWNSPECIALGROUNDREFLECT,
-  FORWARDSMASH: FORWARDSMASH,
-  KNEEBEND: KNEEBEND,
-  RUN: RUN,
-  TECHU: TECHU,
-  TILTTURN: TILTTURN,
-  ATTACKAIRN: ATTACKAIRN,
-  CLIFFJUMPQUICK: CLIFFJUMPQUICK,
-  DOWNSTANDB: DOWNSTANDB,
-  FORWARDTILT: FORWARDTILT,
-  LANDING: LANDING,
-  RUNBRAKE: RUNBRAKE,
-  THROWBACK: THROWBACK,
-  UPSMASH: UPSMASH,
-  ATTACKAIRU: ATTACKAIRU,
-  CLIFFJUMPSLOW: CLIFFJUMPSLOW,
-  DOWNSTANDF: DOWNSTANDF,
-  FURAFURA: FURAFURA,
-  LANDINGATTACKAIRB: LANDINGATTACKAIRB,
-  RUNTURN: RUNTURN,
-  THROWDOWN: THROWDOWN,
-  UPSPECIALCHARGE: UPSPECIALCHARGE,
-  ATTACKDASH: ATTACKDASH,
-  CLIFFWAIT: CLIFFWAIT,
-  DOWNSTANDN: DOWNSTANDN,
-  FURASLEEPEND: FURASLEEPEND,
-  LANDINGATTACKAIRD: LANDINGATTACKAIRD,
-  SHIELDBREAKDOWNBOUND: SHIELDBREAKDOWNBOUND,
-  THROWFORWARD: THROWFORWARD,
-  UPSPECIALLAUNCH: UPSPECIALLAUNCH,
-  CAPTURECUT: CAPTURECUT,
-  DAMAGEFALL: DAMAGEFALL,
-  DOWNTILT: DOWNTILT,
-  FURASLEEPLOOP: FURASLEEPLOOP,
-  LANDINGATTACKAIRF: LANDINGATTACKAIRF,
-  SHIELDBREAKFALL: SHIELDBREAKFALL,
-  THROWNFOXBACK: THROWNFOXBACK,
-  UPTILT: UPTILT,
-  CAPTUREDAMAGE: CAPTUREDAMAGE,
-  DAMAGEFLYN: DAMAGEFLYN,
-  DOWNWAIT: DOWNWAIT,
-  FURASLEEPSTART: FURASLEEPSTART,
-  LANDINGATTACKAIRN: LANDINGATTACKAIRN,
-  SHIELDBREAKSTAND: SHIELDBREAKSTAND,
-  THROWNFOXDOWN: THROWNFOXDOWN,
-  WAIT: WAIT,
-  CAPTUREPULLED: CAPTUREPULLED,
-  DAMAGEN2: DAMAGEN2,
-  ENTRANCE: ENTRANCE,
-  GRAB: GRAB,
-  LANDINGATTACKAIRU: LANDINGATTACKAIRU,
-  SIDESPECIALAIR: SIDESPECIALAIR,
-  THROWNFOXFORWARD: THROWNFOXFORWARD,
-  WALK: WALK,
-  CAPTUREWAIT: CAPTUREWAIT,
-  DASH: DASH,
-  ESCAPEAIR: ESCAPEAIR,
-  GUARD: GUARD,
-  LANDINGFALLSPECIAL: LANDINGFALLSPECIAL,
-  LANDINGFALLSPECIALG: LANDINGFALLSPECIALG,
-  SIDESPECIALGROUND: SIDESPECIALGROUND,
-  THROWNFOXUP: THROWNFOXUP,
-  WALLDAMAGE: WALLDAMAGE,
-  CATCHATTACK: CATCHATTACK,
-  DEADDOWN: DEADDOWN,
-  ESCAPEB: ESCAPEB,
-  GUARDOFF: GUARDOFF,
-  MISSFOOT: MISSFOOT,
-  SLEEP: SLEEP,
-  THROWNMARTHBACK: THROWNMARTHBACK,
-  WALLJUMP: WALLJUMP,
-  CATCHCUT: CATCHCUT,
-  DEADLEFT: DEADLEFT,
-  ESCAPEF: ESCAPEF,
-  GUARDON: GUARDON,
-  NEUTRALSPECIALAIR: NEUTRALSPECIALAIR,
-  SMASHTURN: SMASHTURN,
-  THROWNMARTHDOWN: THROWNMARTHDOWN,
-  WALLTECH: WALLTECH,
-  CATCHWAIT: CATCHWAIT,
-  DEADRIGHT: DEADRIGHT,
-  ESCAPEN: ESCAPEN,
-  JAB1: JAB1,
-  NEUTRALSPECIALGROUND: NEUTRALSPECIALGROUND,
-  SQUAT: SQUAT,
-  THROWNMARTHFORWARD: THROWNMARTHFORWARD,
-  WALLTECHJUMP: WALLTECHJUMP,
-  CLIFFATTACKQUICK: CLIFFATTACKQUICK,
-  DEADUP: DEADUP,
-  JAB2: JAB2,
-  OTTOTTO: OTTOTTO,
-  SQUATRV: SQUATRV,
-  THROWNMARTHUP: THROWNMARTHUP,
-  CLIFFATTACKSLOW: CLIFFATTACKSLOW,
-  DOWNATTACK: DOWNATTACK,
-  JAB3: JAB3,
-  OTTOTTOWAIT: OTTOTTOWAIT,
-  SQUATWAIT: SQUATWAIT,
-  THROWNPUFFBACK: THROWNPUFFBACK,
-  CLIFFCATCH: CLIFFCATCH,
-  DOWNBOUND: DOWNBOUND,
-  FALL: FALL,
-  JUMPAERIALB: JUMPAERIALB,
-  PASS: PASS,
-  STOPCEIL: STOPCEIL,
-  THROWNPUFFDOWN: THROWNPUFFDOWN,
-  CLIFFESCAPEQUICK: CLIFFESCAPEQUICK,
-  DOWNDAMAGE: DOWNDAMAGE,
-  FALLAERIAL: FALLAERIAL,
-  JUMPAERIALF: JUMPAERIALF,
-  REBIRTH: REBIRTH,
-  TECHB: TECHB,
-  THROWNPUFFFORWARD: THROWNPUFFFORWARD,
-  THROWNFALCOBACK: THROWNFALCOBACK,
-  THROWNFALCODOWN: THROWNFALCODOWN,
-  THROWNFALCOFORWARD: THROWNFALCOFORWARD,
-  THROWNFALCOUP: THROWNFALCOUP,
-  THROWNFALCONBACK: THROWNFALCONBACK,
-  THROWNFALCONDOWN: THROWNFALCONDOWN,
-  THROWNFALCONFORWARD: THROWNFALCONFORWARD,
-  THROWNFALCONUP: THROWNFALCONUP,
-  APPEAL: APPEAL,
-  THROWNFALCONDIVE: THROWNFALCONDIVE,
+  AttackAirLw,
+  DamageLw1,
+  Run,
+  SpecialS,
+  DamageHi2,
+  Ottotto,
+  FallB,
+  Rebound,
+  DamageAir1,
+  StopCeil,
+  CliffAttackQuick,
+  CliffJumpSlow1,
+  DownSpotD,
+  SpecialHiBound,
+  TurnRun,
+  DamageLw3,
+  DownFowardD,
+  ItemHammerMove,
+  FuraSleepStart,
+  ItemScopeAirFire,
+  DamageHi1,
+  DamageHi3,
+  LandingAirLw,
+  AttackLw3,
+  CliffClimbSlow,
+  Swing3,
+  ItemScopeRapid,
+  JumpB,
+  SpecialAirSStart,
+  LightThrowHi,
+  Swing4,
+  SpecialAirNStart,
+  Dash,
+  CliffJumpSlow2,
+  SpecialLwStart,
+  AttackLw4,
+  HeavyWalk2,
+  SwingDash,
+  ItemShoot,
+  Catch,
+  ItemScopeAirEnd,
+  PassiveWallJump,
+  ItemScopeFire,
+  ItemParasolFall,
+  DownBackD,
+  CatchWait,
+  ItemParasolOpen,
+  DownDamageD,
+  AttackAirB,
+  EscapeN,
+  RunBrake,
+  CapturePulledLw,
+  FallAerialF,
+  CliffClimbQuick,
+  AttackAirF,
+  Entry,
+  EscapeF,
+  PassiveWall,
+  CapturePulledHi,
+  CaptureDamageHi,
+  SpecialAirSEnd,
+  Pass,
+  DownBoundD,
+  LightThrowAirLw,
+  Passive,
+  AttackS3LwS,
+  GuardOff,
+  ItemBlind,
+  SpecialAirNLoop,
+  TFalcoThrowHi,
+  AppealSEndL,
+  SpecialHiHoldAir,
+  DownStandD,
+  FallSpecialB,
+  Attack100Start,
+  EscapeAir,
+  CliffAttackSlow,
+  DownWaitD,
+  AttackS3S,
+  DownBoundU,
+  DownStandU,
+  CaptureCut,
+  Attack100End,
+  DownWaitU,
+  DamageFlyRoll,
+  LandingAirHi,
+  SpecialAirLwHit,
+  CatchCut,
+  WallDamage,
+  SquatWaitItem,
+  LightThrowAirF,
+  HeavyThrowF,
+  SpecialNLoop,
+  SpecialLwLoop,
+  ThrowB,
+  CliffCatch,
+  SpecialLwHit,
+  Landing,
+  DownBackU,
+  DamageFlyTop,
+  SpecialNEnd,
+  AttackS3Hi,
+  Guard,
+  DownFowardU,
+  Squat,
+  Wait2,
+  CliffWait,
+  Attack12,
+  FallSpecialF,
+  DamageN2,
+  Appeal,
+  DamageFlyHi,
+  JumpAerialF,
+  Attack11,
+  HeavyThrowB,
+  DownAttackU,
+  LandingAirB,
+  PassiveStandF,
+  CliffEscapeQuick,
+  AttackS3Lw,
+  SpecialHiHold,
+  CatchAttack,
+  FuraFura,
+  Turn,
+  CliffEscapeSlow,
+  Wait1,
+  DownDamageU,
+  CaptureDamageLw,
+  ItemScrewDamage,
+  ThrowLw,
+  ItemScrewAir,
+  FuraSleepEnd,
+  AttackS3HiS,
+  TFalcoThrowF,
+  OttottoWait,
+  FallSpecial,
+  GuardOn,
+  LightThrowB,
+  ItemScopeAirRapid,
+  AttackDash,
+  FallF,
+  SpecialAirLwLoop,
+  LandingAirN,
+  LightGet,
+  CliffJumpQuick1,
+  LightThrowAirB,
+  PassiveCeil,
+  AppealSL,
+  ItemHammerWait,
+  HeavyThrowHi,
+  AppealSR,
+  WalkFast,
+  SquatWait,
+  HeavyThrowLw,
+  CaptureJump,
+  SpecialNStart,
+  PassiveStandB,
+  WalkSlow,
+  CaptureWaitLw,
+  SpecialAirLwStart,
+  EscapeB,
+  SpecialLwEnd,
+  DamageN3,
+  StopWall,
+  FallAerial,
+  ItemScopeAirStart,
+  SpecialSStart,
+  SquatRv,
+  SpecialAirLwEnd,
+  SpecialAirNEnd,
+  DamageLw2,
+  CaptureWaitHi,
+  AttackAirN,
+  SpecialHiFall,
+  HeavyWalk1,
+  AttackS4,
+  DamageAir2,
+  AppealSEndR,
+  DamageFlyN,
+  DownAttackD,
+  TFalcoThrowLw,
+  AppealSStartL,
+  SpecialSEnd,
+  SpecialHiLanding,
+  AppealSStartR,
+  CatchDash,
+  Fall,
+  ItemScrew,
+  SpecialAirS,
+  LightThrowDash,
+  LightThrowAirHi,
+  DamageFlyLw,
+  TFalcoThrowB,
+  MissFoot,
+  LightThrowLw,
+  FuraSleepLoop,
+  DamageFall,
+  ThrowHi,
+  Swing1,
+  DamageAir3,
+  WalkMiddle,
+  LightThrowF,
+  FallAerialB,
+  LightThrowDrop,
+  LandingAirF,
+  Attack100Loop,
+  DamageN1,
+  JumpAerialB,
+  HeavyGet,
+  ThrowF,
+  CliffJumpQuick2,
+  AttackHi4,
+  JumpF,
+  GuardDamage,
+  AttackAirHi,
+  SpecialHi,
+  ItemScopeStart,
+  AttackHi3,
+  ItemShootAir,
+  ItemScopeEnd,
 };

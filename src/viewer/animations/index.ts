@@ -1,57 +1,40 @@
 import { characterNamesById } from '../common';
 export { isOneIndexed } from './oneIndexed';
-export { actions, specials } from './actions';
-// Adapted directly from https://github.com/vinceau/react-slp-viewer
+export { animationNameByActionId } from './actions';
 
-// Store all the imported animations here
-const loadedAnimationsByCharacterId = new Map<number, any>();
+const animationsCache = new Map<number, any>();
 
-export type AnimationFrames = AnimationFrame[];
-export type AnimationFrame = Int16Array;
-export type RawCharacterAnimations = { [actionName: string]: number[][][] };
+export type AnimationFrames = string[];
 export type CharacterAnimations = { [actionName: string]: AnimationFrames };
 
-export const fetchAnimation = async (
+export const fetchAnimations = async (
   charId: number,
 ): Promise<CharacterAnimations> => {
-  if (loadedAnimationsByCharacterId.has(charId)) {
-    return loadedAnimationsByCharacterId.get(charId);
+  if (animationsCache.has(charId)) {
+    return animationsCache.get(charId);
   }
-
-  const rawAnimations = await importRawAnimation(charId);
-  const animations: CharacterAnimations = {};
-  Object.entries(rawAnimations).forEach(([name, data]) => {
-    animations[name] = data.map((frame) => {
-      return new Int16Array(frame[0]);
-    });
-  });
-
-  // Store it for later
-  loadedAnimationsByCharacterId.set(charId, animations);
+  const animations = importAnimation(charId);
+  animationsCache.set(charId, animations);
   return animations;
 };
 
-const importRawAnimation = async (
+const importAnimation = async (
   charId: number,
-): Promise<RawCharacterAnimations> => {
+): Promise<CharacterAnimations> => {
   switch (characterNamesById[charId]) {
-    case 'Captain Falcon': {
-      return (await import('./falcon')).default;
-    }
-    case 'Fox': {
+    case 'Sheik':
+      return (await import('./sheik')).default;
+    case 'Peach':
+      return (await import('./peach')).default;
+    case 'Fox':
       return (await import('./fox')).default;
-    }
-    case 'Marth': {
-      return (await import('./marth')).default;
-    }
-    case 'Jigglypuff': {
-      return (await import('./puff')).default;
-    }
-    case 'Falco': {
+    case 'Falco':
       return (await import('./falco')).default;
-    }
-    default: {
+    case 'Captain Falcon':
+      return (await import('./falcon')).default;
+    case 'Marth':
+      return (await import('./marth')).default;
+    default:
       throw new Error(`Unsupported character id: ${charId}`);
-    }
   }
 };

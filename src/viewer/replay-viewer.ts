@@ -221,7 +221,7 @@ export class ReplayViewer extends LitElement {
     for (let i = 0; i < 600; i = i + 3) {
       // TODO: this is 20fps because the gif spec only stores framerate in
       // centiseconds, which doesn't line up with 60/30 fps... =[
-      gif.addFrame(context, { copy: true, delay: 1000 / 20 });
+      gif.addFrame(context, { copy: true, delay: 40 /*1000 / 20*/ });
       this.game.tick();
       this.game.tick();
       this.game.tick();
