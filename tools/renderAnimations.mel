@@ -1,0 +1,54 @@
+// Assumes you have already loaded the Model
+// Also it helps to delete all the textures
+
+string $character = "Fox";
+string $baseDirectory = "/Users/frank/Downloads/Animation_Pack/Textured_Models/" + $character;
+string $throwsDirectory = "/Users/frank/Downloads/Animation_Pack/Throws";
+string $animsDirectory = $baseDirectory + "/anims";
+string $outputDirectory = $baseDirectory + "/output/" /*+ $baseFileName + "/"*/;
+sysFile -md $outputDirectory;
+
+// keep character centered during animation
+// position in replay file will handle the translation instead
+string $jobj1 = $character + ":JOBJ_1";
+transformLimits -tx 0 0 -ty 0 0 -tz 0 0 -etx 1 1 -ety 1 1 -etz 1 1 $jobj1;
+
+// put the camera to the -X side so that animation are facing right
+camera -e -o true -ow 100 side;
+xform -worldSpace -translation -1000.1 0 0 -rotation 0 -90 0 side;
+
+// for testing only:
+//string $file = "PlySeak5K_Share_ACTION_Wait_figatree.anim";
+    
+for($file in `getFileList -folder $animsDirectory`) {
+    render($outputDirectory, $animsDirectory, $file);
+}
+
+transformLimits -tx 0 0 -ty 0 0 -tz 0 0 -etx 0 0 -ety 0 0 -etz 0 0 $jobj1;
+for($file in `getFileList -folder $throwsDirectory`) {
+    render($outputDirectory, $throwsDirectory, $file);
+}
+
+proc render(string $outputDirectory, string $fileDirectory, string $file) {
+    if(!endsWith($file, ".anim"))
+        return;
+    
+    string $animFilePath = $fileDirectory + "/" + $file;
+    string $baseFileName = substituteAllString($file, ".anim", "");
+ 
+    // Restore
+    currentTime 0;
+    select -r `ls -type joint`;
+    cutKey -time "0:600";
+    gotoBindPose;
+    
+    file -import -type animImport $animFilePath;
+    string $outputFilePath = $outputDirectory + $baseFileName;
+    vectorize -imageFormat "svg" -sa Native
+    -w 1000 -h 1000
+    -ff "name.ext" -of $outputFilePath
+    -dl 2 -fs SingleColor
+    //-ed -ec 0 0 0 -es Outline -ew 3.0
+    -sf 0.0 -ef 100.0 -bf 1.0
+    -c side;
+}
