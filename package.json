@@ -18,6 +18,7 @@
   "dependencies": {
     "@slippi/slippi-js": "frankborden/slippi-js",
     "@spectrum-web-components/action-button": "^0.5.4",
+    "@spectrum-web-components/slider": "^0.10.3",
     "@spectrum-web-components/switch": "^0.7.11",
     "@spectrum-web-components/theme": "^0.8.11",
     "@zip.js/zip.js": "^2.3.8",
@@ -25,7 +26,6 @@
     "lit": "^2.0.0-rc.2",
     "rxjs": "^7.2.0",
     "safe-buffer": "^5.2.1",
-    "wired-elements": "^3.0.0-rc.6",
     "ws": "^7.5.2"
   },
   "devDependencies": {

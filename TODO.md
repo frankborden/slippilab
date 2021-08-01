@@ -61,7 +61,6 @@
 # App
 
 - Tests
-- Replace wire components
 - Fix tsc complaining about json modules (resolveJsonModule=true makes
   tsc crash a lot due to json sizes)
 - Show combos/conversions/etc from .slp getStats()

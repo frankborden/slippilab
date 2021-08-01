@@ -2,8 +2,8 @@ import GIF from 'gif.js';
 import { css, html, LitElement, PropertyValues } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
-import 'wired-elements';
-import type { WiredSlider } from 'wired-elements';
+import '@spectrum-web-components/slider/sp-slider';
+import type { Slider } from '@spectrum-web-components/slider';
 
 import type { Replay } from '../common';
 import { Game } from './game';
@@ -18,7 +18,6 @@ export class ReplayViewer extends LitElement {
         position: relative;
       }
       canvas {
-        background-color: white;
         width: 100%;
         height: 100%;
       }
@@ -27,16 +26,9 @@ export class ReplayViewer extends LitElement {
         bottom: 10px;
         left: 25%;
         width: 50%;
-        align-self: center;
       }
-      wired-slider {
+      sp-slider {
         width: 100%;
-        --wired-slider-knob-color: black;
-        --wired-slider-bar-color: black;
-      }
-      wired-slider.dark {
-        --wired-slider-knob-color: white;
-        --wired-slider-bar-color: white;
       }
     `;
   }
@@ -130,8 +122,7 @@ export class ReplayViewer extends LitElement {
 
   firstUpdated() {
     const canvas = this.renderRoot.querySelector('canvas');
-    const slider: WiredSlider | null =
-      this.renderRoot.querySelector('wired-slider');
+    const slider: Slider | null = this.renderRoot.querySelector('sp-slider');
     if (!canvas || !slider) {
       return;
     }
@@ -195,7 +186,8 @@ export class ReplayViewer extends LitElement {
   }
 
   private clicked() {
-    const slider = this.renderRoot.querySelector('wired-slider') as WiredSlider;
+    const slider = this.renderRoot.querySelector('sp-slider') as Slider;
+    console.log(slider.value);
     this.game?.setFrame(slider.value);
   }
 
@@ -219,18 +211,18 @@ export class ReplayViewer extends LitElement {
     });
 
     for (let i = 0; i < 600; i = i + 3) {
-      // TODO: this is 20fps because the gif spec only stores framerate in
-      // centiseconds, which doesn't line up with 60/30 fps... =[
-      gif.addFrame(context, { copy: true, delay: 40 /*1000 / 20*/ });
+      // TODO: this is a little sped up. The GIF renders 2 frames in
+      // 30ms while game advances 32ms, becausethe gif spec only stores
+      // framerate in centiseconds, which doesn't line up =[
+      gif.addFrame(context, { copy: true, delay: 33 });
       this.game.tick();
       this.game.tick();
-      this.game.tick();
+      //this.game.tick();
     }
     gif.render();
   }
 
   render() {
-    const sliderClasses = { grid: true, dark: this.dark };
     return html`
       <div class="container">
         <canvas
@@ -239,15 +231,16 @@ export class ReplayViewer extends LitElement {
           @click=${() => this.game?.togglePause()}
         ></canvas>
         <div class="controls">
-          <wired-slider
+          <sp-slider
+            hide-value-label
+            label="${this.currentFrame}/${this.highestFrame}"
+            variant="filled"
             min="-123"
-            knobradius="100"
             max=${this.highestFrame}
             .value=${this.currentFrame}
             @change=${this.clicked}
-            class=${classMap(sliderClasses)}
-          ></wired-slider>
-          <div class="progress">${this.currentFrame}/${this.highestFrame}</div>
+            @input=${this.clicked}
+          ></sp-slider>
         </div>
       </div>
     `;

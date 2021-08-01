@@ -153,7 +153,7 @@ const renderPlayerDetails = (
   isDoubles: boolean,
   isDarkMode: boolean,
 ): void => {
-  const playerFrame = frame.players[player.playerIndex].post;
+  //const playerFrame = frame.players[player.playerIndex].post;
   screenLayer.context.save();
   const fontSize = screenLayer.canvas.height / 30;
   screenLayer.context.font = `900 ${fontSize}px Verdana`;
@@ -165,7 +165,8 @@ const renderPlayerDetails = (
   screenLayer.context.translate(x, y);
   // flip text back right-side after global flip
   screenLayer.context.scale(1, -1);
-  //const name = player.displayName?.length ? player.displayName : player.nametag;
+  const name = player.displayName?.length ? player.displayName : player.nametag;
+  /*
   const characterData = supportedCharactersById[player.characterId];
   let animationName;
   const actionName = animationNameByActionId[playerFrame.actionStateId];
@@ -175,6 +176,7 @@ const renderPlayerDetails = (
     animationName = characterData.animationMap.get(actionName) ?? actionName;
   }
   const name = `${playerFrame.actionStateId},${animationName},${playerFrame.actionStateCounter}`;
+  */
   screenLayer.context.fillText(name, 0, 0);
   screenLayer.context.strokeText(name, 0, 0);
   screenLayer.context.restore();
@@ -414,7 +416,7 @@ const renderUi = (
 ): void => {
   screenLayer.context.save();
   const playerUiX = screenLayer.canvas.width * 0.2 * (player.playerIndex + 1);
-  const playerUiY = screenLayer.canvas.height / 5;
+  const playerUiY = screenLayer.canvas.height / 4;
   screenLayer.context.translate(playerUiX, playerUiY);
   renderStocks(screenLayer, frame, player, players, isDoubles, isDarkMode);
   renderPercent(screenLayer, frame, player, players, isDoubles, isDarkMode);
