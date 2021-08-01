@@ -143,6 +143,8 @@ export class ReplayViewer extends LitElement {
           newWidth = entry.contentRect.width;
           newHeight = entry.contentRect.height;
         }
+        canvas.width = newWidth;
+        canvas.height = newHeight;
         this.game?.resize(newWidth, newHeight);
         slider.requestUpdate();
       }
@@ -187,7 +189,6 @@ export class ReplayViewer extends LitElement {
 
   private clicked() {
     const slider = this.renderRoot.querySelector('sp-slider') as Slider;
-    console.log(slider.value);
     this.game?.setFrame(slider.value);
   }
 

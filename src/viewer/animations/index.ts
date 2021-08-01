@@ -13,7 +13,7 @@ export const fetchAnimations = async (
   if (animationsCache.has(charId)) {
     return animationsCache.get(charId);
   }
-  const animations = importAnimation(charId);
+  const animations = await importAnimation(charId);
   animationsCache.set(charId, animations);
   return animations;
 };
@@ -23,19 +23,33 @@ const importAnimation = async (
 ): Promise<CharacterAnimations> => {
   switch (characterNamesById[charId]) {
     case 'Sheik':
-      return (await import('./sheik')).default;
+      const sheik = await import('./sheik');
+      await sheik.init();
+      return sheik.animations;
     case 'Peach':
-      return (await import('./peach')).default;
+      const peach = await import('./peach');
+      await peach.init();
+      return peach.animations;
     case 'Fox':
-      return (await import('./fox')).default;
+      const fox = await import('./fox');
+      await fox.init();
+      return fox.animations;
     case 'Falco':
-      return (await import('./falco')).default;
+      const falco = await import('./falco');
+      await falco.init();
+      return falco.animations;
     case 'Captain Falcon':
-      return (await import('./falcon')).default;
+      const falcon = await import('./falcon');
+      await falcon.init();
+      return falcon.animations;
     case 'Marth':
-      return (await import('./marth')).default;
+      const marth = await import('./marth');
+      await marth.init();
+      return marth.animations;
     case 'Jigglypuff':
-      return (await import('./jigglypuff')).default;
+      const jigglypuff = await import('./jigglypuff');
+      await jigglypuff.init();
+      return jigglypuff.animations;
     default:
       throw new Error(`Unsupported character id: ${charId}`);
   }
