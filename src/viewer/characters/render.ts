@@ -61,42 +61,23 @@ export const createPlayerRender = async (
     renderShine(layers.worldSpace.context, frame, player);
   };
 };
-/*
-const colors = ['pink', 'lightblue', 'yellow', 'lightgreen'];
-const darkColors = ['red', 'blue', 'gold', 'green'];
-const teamColors = [
-  ['#FFA0A0', '#FFC0CB', 'red'],
-  ['lightblue', 'lightcyan', 'blue'],
-  ['limegreen', 'lightgreen', 'green'],
-];
-const darkTeamColors = [
-  ['red', '#FF5050', 'darkred'],
-  ['dodgerblue', 'deepskyblue', 'darkblue'],
-  ['#00BB00', 'springgreen', 'darkgreen'],
-];
-*/
 const colors = ['#FB2323', '#2266BB', '#FFDD44', '#66BB22'];
-const darkColors = colors;
+// darks are untested
 const teamColors = [
-  ['#CC241D', '#FB4934', '#9D0006'],
-  ['#458588', '#83A598', '#876678'],
-  ['#D79921', '#FABD2F', '#B57614'],
-  ['#98971A', '#B8BB26', '#79740E'],
+  ['#FB2323', '#FB9999', '#9D0006'],
+  ['#2266BB', '#66AAFF', '#876678'],
+  ['#66BB22', '#AAFF66', '#79740E'],
 ];
-const darkTeamColors = teamColors;
 
 const getPrimaryColor = (
   player: DeepRequired<PlayerType>,
   players: DeepRequired<PlayerType[]>,
-  isDarkMode: boolean,
   isDoubles: boolean,
 ): string => {
   if (isDoubles) {
-    return (isDarkMode ? darkTeamColors : teamColors)[player.teamId][
-      getShade(player.playerIndex, players)
-    ];
+    return teamColors[player.teamId][getShade(player.playerIndex, players)];
   } else {
-    return (isDarkMode ? darkColors : colors)[player.playerIndex];
+    return colors[player.playerIndex];
   }
 };
 
@@ -123,12 +104,7 @@ const renderStocks = (
   const playerFrame = frame.players[player.playerIndex].post;
   const stockCount = playerFrame.stocksRemaining;
   screenLayer.context.save();
-  screenLayer.context.fillStyle = getPrimaryColor(
-    player,
-    players,
-    isDarkMode,
-    isDoubles,
-  );
+  screenLayer.context.fillStyle = getPrimaryColor(player, players, isDoubles);
   screenLayer.context.strokeStyle = isDarkMode ? 'white' : 'black';
   for (let stockIndex = 0; stockIndex < stockCount; stockIndex++) {
     const x = ((stockIndex - 2) * screenLayer.canvas.width) / 40;
@@ -158,12 +134,7 @@ const renderPercent = (
   screenLayer.context.font = `900 ${fontSize}px Arial`;
   screenLayer.context.textAlign = 'center';
   screenLayer.context.strokeStyle = isDarkMode ? 'white' : 'black';
-  screenLayer.context.fillStyle = getPrimaryColor(
-    player,
-    players,
-    isDarkMode,
-    isDoubles,
-  );
+  screenLayer.context.fillStyle = getPrimaryColor(player, players, isDoubles);
   const x = 0;
   const y = -screenLayer.canvas.height / 10;
   screenLayer.context.translate(x, y);
@@ -188,12 +159,7 @@ const renderPlayerDetails = (
   screenLayer.context.font = `900 ${fontSize}px Verdana`;
   screenLayer.context.textAlign = 'center';
   screenLayer.context.strokeStyle = isDarkMode ? 'white' : 'black';
-  screenLayer.context.fillStyle = getPrimaryColor(
-    player,
-    players,
-    isDarkMode,
-    isDoubles,
-  );
+  screenLayer.context.fillStyle = getPrimaryColor(player, players, isDoubles);
   const x = 0;
   const y = -screenLayer.canvas.height / 7.5;
   screenLayer.context.translate(x, y);
@@ -313,7 +279,7 @@ const renderCharacter = (
     playerFrame,
     frames,
   ).lCancelStatus;
-  const primaryColor = getPrimaryColor(player, players, isDarkMode, isDoubles);
+  const primaryColor = getPrimaryColor(player, players, isDoubles);
   const secondaryColor = getSecondaryColor(playerFrame, lCancelStatus);
   worldContext.strokeStyle = isDarkMode ? primaryColor : secondaryColor;
   worldContext.fillStyle = isDarkMode ? secondaryColor : primaryColor;
@@ -359,12 +325,7 @@ const renderShield = (
   }
   worldContext.save();
   worldContext.globalAlpha = 0.75;
-  worldContext.fillStyle = getPrimaryColor(
-    player,
-    players,
-    isDarkMode,
-    isDoubles,
-  );
+  worldContext.fillStyle = getPrimaryColor(player, players, isDoubles);
   worldContext.strokeStyle = isDarkMode ? 'white' : 'black';
   const shieldHealthPercent = playerFrame.shieldSize / 60;
   worldContext.translate(playerFrame.positionX, playerFrame.positionY);
