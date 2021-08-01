@@ -1,6 +1,7 @@
 import { css, html, LitElement } from 'lit';
-import { customElement } from 'lit/decorators.js';
+import { customElement, query, queryAll } from 'lit/decorators.js';
 import '@spectrum-web-components/action-button/sp-action-button';
+import type { ActionButton } from '@spectrum-web-components/action-button';
 
 @customElement('replay-select')
 export class ReplaySelect extends LitElement {
@@ -12,15 +13,26 @@ export class ReplaySelect extends LitElement {
     `;
   }
 
+  @query('#replay-input-files')
+  private filesInput?: HTMLInputElement;
+
+  @query('#replay-input-dir')
+  private dirInput?: HTMLInputElement;
+
+  @queryAll('input')
+  private inputs?: NodeListOf<HTMLInputElement>;
+
+  @queryAll('sp-action-button')
+  private actionButtons?: NodeListOf<ActionButton>;
+
   private async filesSelected() {
     // TODO: clear selections and remove focus from buttons
-    const inputs = Array.from(this.renderRoot.querySelectorAll('input'));
-    const files = inputs
-      .map((input) => input.files)
-      .filter((fileList): fileList is FileList => fileList !== null)
-      .flatMap((fileList) => Array.from(fileList));
-    inputs.forEach((input) => input.blur());
-    this.renderRoot.querySelectorAll('sp-action-button').forEach((actionButton) => actionButton.blur());
+    const files = Array.from(this.inputs ?? [])
+      ?.map((input) => input.files)
+      ?.filter((fileList): fileList is FileList => fileList !== null)
+      ?.flatMap((fileList) => Array.from(fileList));
+    this.inputs?.forEach((input) => input.blur());
+    this.actionButtons?.forEach((actionButton) => actionButton.blur());
     if (!files || files.length === 0) {
       return;
     }
@@ -31,15 +43,11 @@ export class ReplaySelect extends LitElement {
   }
 
   private openFile() {
-    this.renderRoot
-      .querySelector<HTMLInputElement>('#replay-input-files')
-      ?.click();
+    this.filesInput?.click();
   }
 
   private openFolder() {
-    this.renderRoot
-      .querySelector<HTMLInputElement>('#replay-input-dir')
-      ?.click();
+    this.dirInput?.click();
   }
   render() {
     return html`
