@@ -19,6 +19,8 @@ export class ReplaySelect extends LitElement {
       .map((input) => input.files)
       .filter((fileList): fileList is FileList => fileList !== null)
       .flatMap((fileList) => Array.from(fileList));
+    inputs.forEach((input) => input.blur());
+    this.renderRoot.querySelectorAll('sp-action-button').forEach((actionButton) => actionButton.blur());
     if (!files || files.length === 0) {
       return;
     }

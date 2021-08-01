@@ -59,9 +59,10 @@ export class Model {
       if (file.name.endsWith('.slp')) {
         const game = new SlippiGame(await file.arrayBuffer());
         if (this.isSupported(game)) {
-          const highlights = this.searches.flatMap((search) =>
+          /*const highlights = this.searches.flatMap((search) =>
             search.searchFile(game, ''),
-          );
+          );*/
+          const highlights = [];
           return {
             fileName: file.name,
             game: game as DeepRequired<SlippiGame>,
@@ -70,15 +71,13 @@ export class Model {
         }
       }
     } catch (e) {
-      console.error(`cannot parse file ${file.name}`);
+      console.error(`cannot parse file ${file.name}`, e);
       return undefined;
     }
     return undefined;
   }
 
   isSupported(game: SlippiGame): boolean {
-    return true;
-    /*
     const stageId = game.getSettings()?.stageId;
     const characterIds = game
       .getSettings()
@@ -92,6 +91,5 @@ export class Model {
         characterId !== null && Boolean(supportedCharactersById[characterId]),
     );
     return stageSupported && charactersSupported;
-    */
   }
 }

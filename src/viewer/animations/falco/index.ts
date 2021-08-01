@@ -67,7 +67,6 @@ import AttackS3LwS from './AttackS3LwS.json';
 import GuardOff from './GuardOff.json';
 import ItemBlind from './ItemBlind.json';
 import SpecialAirNLoop from './SpecialAirNLoop.json';
-import TFalcoThrowHi from './TFalcoThrowHi.json';
 import AppealSEndL from './AppealSEndL.json';
 import SpecialHiHoldAir from './SpecialHiHoldAir.json';
 import DownStandD from './DownStandD.json';
@@ -131,7 +130,6 @@ import ThrowLw from './ThrowLw.json';
 import ItemScrewAir from './ItemScrewAir.json';
 import FuraSleepEnd from './FuraSleepEnd.json';
 import AttackS3HiS from './AttackS3HiS.json';
-import TFalcoThrowF from './TFalcoThrowF.json';
 import OttottoWait from './OttottoWait.json';
 import FallSpecial from './FallSpecial.json';
 import GuardOn from './GuardOn.json';
@@ -178,7 +176,6 @@ import DamageAir2 from './DamageAir2.json';
 import AppealSEndR from './AppealSEndR.json';
 import DamageFlyN from './DamageFlyN.json';
 import DownAttackD from './DownAttackD.json';
-import TFalcoThrowLw from './TFalcoThrowLw.json';
 import AppealSStartL from './AppealSStartL.json';
 import SpecialSEnd from './SpecialSEnd.json';
 import SpecialHiLanding from './SpecialHiLanding.json';
@@ -190,7 +187,6 @@ import SpecialAirS from './SpecialAirS.json';
 import LightThrowDash from './LightThrowDash.json';
 import LightThrowAirHi from './LightThrowAirHi.json';
 import DamageFlyLw from './DamageFlyLw.json';
-import TFalcoThrowB from './TFalcoThrowB.json';
 import MissFoot from './MissFoot.json';
 import LightThrowLw from './LightThrowLw.json';
 import FuraSleepLoop from './FuraSleepLoop.json';
@@ -218,6 +214,31 @@ import ItemScopeStart from './ItemScopeStart.json';
 import AttackHi3 from './AttackHi3.json';
 import ItemShootAir from './ItemShootAir.json';
 import ItemScopeEnd from './ItemScopeEnd.json';
+import TCaptainSpecialHi from './TCaptainSpecialHi.json';
+import TCaptainThrowB from './TCaptainThrowB.json';
+import TCaptainThrowF from './TCaptainThrowF.json';
+import TCaptainThrowHi from './TCaptainThrowHi.json';
+import TCaptainThrowLw from './TCaptainThrowLw.json';
+import TFalcoThrowB from './TFalcoThrowB.json';
+import TFalcoThrowF from './TFalcoThrowF.json';
+import TFalcoThrowHi from './TFalcoThrowHi.json';
+import TFalcoThrowLw from './TFalcoThrowLw.json';
+import TFoxThrowB from './TFoxThrowB.json';
+import TFoxThrowF from './TFoxThrowF.json';
+import TFoxThrowHi from './TFoxThrowHi.json';
+import TFoxThrowLw from './TFoxThrowLw.json';
+import TMarsThrowB from './TMarsThrowB.json';
+import TMarsThrowF from './TMarsThrowF.json';
+import TMarsThrowHi from './TMarsThrowHi.json';
+import TMarsThrowLw from './TMarsThrowLw.json';
+import TPeachThrowB from './TPeachThrowB.json';
+import TPeachThrowF from './TPeachThrowF.json';
+import TPeachThrowHi from './TPeachThrowHi.json';
+import TPeachThrowLw from './TPeachThrowLw.json';
+import TSeakThrowB from './TSeakThrowB.json';
+import TSeakThrowF from './TSeakThrowF.json';
+import TSeakThrowHi from './TSeakThrowHi.json';
+import TSeakThrowLw from './TSeakThrowLw.json';
 
 export default {
   AttackAirLw,
@@ -289,7 +310,6 @@ export default {
   GuardOff,
   ItemBlind,
   SpecialAirNLoop,
-  TFalcoThrowHi,
   AppealSEndL,
   SpecialHiHoldAir,
   DownStandD,
@@ -353,7 +373,6 @@ export default {
   ItemScrewAir,
   FuraSleepEnd,
   AttackS3HiS,
-  TFalcoThrowF,
   OttottoWait,
   FallSpecial,
   GuardOn,
@@ -400,7 +419,6 @@ export default {
   AppealSEndR,
   DamageFlyN,
   DownAttackD,
-  TFalcoThrowLw,
   AppealSStartL,
   SpecialSEnd,
   SpecialHiLanding,
@@ -412,7 +430,6 @@ export default {
   LightThrowDash,
   LightThrowAirHi,
   DamageFlyLw,
-  TFalcoThrowB,
   MissFoot,
   LightThrowLw,
   FuraSleepLoop,
@@ -440,4 +457,29 @@ export default {
   AttackHi3,
   ItemShootAir,
   ItemScopeEnd,
+  TCaptainSpecialHi,
+  TCaptainThrowB,
+  TCaptainThrowF,
+  TCaptainThrowHi,
+  TCaptainThrowLw,
+  TFalcoThrowB,
+  TFalcoThrowF,
+  TFalcoThrowHi,
+  TFalcoThrowLw,
+  TFoxThrowB,
+  TFoxThrowF,
+  TFoxThrowHi,
+  TFoxThrowLw,
+  TMarsThrowB,
+  TMarsThrowF,
+  TMarsThrowHi,
+  TMarsThrowLw,
+  TPeachThrowB,
+  TPeachThrowF,
+  TPeachThrowHi,
+  TPeachThrowLw,
+  TSeakThrowB,
+  TSeakThrowF,
+  TSeakThrowHi,
+  TSeakThrowLw,
 };

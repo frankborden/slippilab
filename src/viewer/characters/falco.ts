@@ -3,9 +3,7 @@ import { Vector } from '../vector';
 import type { ActionName } from '../animations/actions';
 export const falco: Character = {
   scale: 1.1,
-  // shieldOffset: new Vector(5 / 4.5, 34 / 4.5),
-  shieldOffset: new Vector(5 / 4.5, 34 / 4.5), // guess
-
+  shieldOffset: new Vector(2.724, 9.003),
   shieldSize: 1.1 * 12.5,
   animationMap: new Map<ActionName, string>([
     ['Rebirth', 'Entry'],
@@ -48,11 +46,6 @@ export const falco: Character = {
     ['CaptureFoot', ''],
     ['Escape', 'EscapeN'],
     ['ReboundStop', ''],
-    ['ThrownF', ''],
-    ['ThrownB', ''],
-    ['ThrownHi', ''],
-    ['ThrownLw', ''],
-    ['ThrownLwWomen', ''],
     ['FlyReflectWall', 'WallDamage'],
     ['FlyReflectCeil', ''],
     ['AppealR', 'Appeal'],

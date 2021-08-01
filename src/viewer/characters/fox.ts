@@ -3,10 +3,8 @@ import { Vector } from '../vector';
 import type { ActionName } from '../animations/actions';
 export const fox: Character = {
   scale: 0.96,
-  // shieldOffset: new Vector(5 / 4.5, 34 / 4.5),
-  shieldOffset: new Vector(5 / 4.5, 34 / 4.5), // guess
-
-  shieldSize: 0.96 * 14.375,
+  shieldOffset: new Vector(2.724, 9.003), // model units
+  shieldSize: 0.96 * 14.375, // world units
   animationMap: new Map<ActionName, string>([
     ['Rebirth', 'Entry'],
     ['RebirthWait', 'Entry'],
@@ -48,11 +46,6 @@ export const fox: Character = {
     ['CaptureFoot', ''],
     ['Escape', 'EscapeN'],
     ['ReboundStop', ''],
-    ['ThrownF', ''],
-    ['ThrownB', ''],
-    ['ThrownHi', ''],
-    ['ThrownLw', ''],
-    ['ThrownLwWomen', ''],
     ['FlyReflectWall', 'WallDamage'],
     ['FlyReflectCeil', ''],
     ['AppealR', 'Appeal'],
@@ -156,12 +149,12 @@ export const fox: Character = {
     [361, 'SpecialLwLoop'],
     [362, 'SpecialLwHit'],
     [363, 'SpecialLwEnd'],
-    [364, 'SpecialLw2'],
+    [364, 'SpecialLwLoop'],
     [365, 'SpecialAirLwStart'],
     [366, 'SpecialAirLwLoop'],
     [367, 'SpecialAirLwHit'],
     [368, 'SpecialAirLwEnd'],
-    [369, 'SpecialAirLw2'],
+    [369, 'SpecialAirLwLoop'],
     [370, 'AppealSStartR'],
     [371, 'AppealSStartL'],
     [372, 'AppealSR'],

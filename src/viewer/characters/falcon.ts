@@ -3,9 +3,7 @@ import { Vector } from '../vector';
 import type { ActionName } from '../animations/actions';
 export const falcon: Character = {
   scale: 0.97,
-  // shieldOffset: new Vector(5 / 4.5, 34 / 4.5),
-  shieldOffset: new Vector(5 / 4.5, 34 / 4.5), // guess
-
+  shieldOffset: new Vector(0.2, 10.447),
   shieldSize: 0.97 * 15,
   animationMap: new Map<ActionName, string>([
     ['Rebirth', 'Entry'],

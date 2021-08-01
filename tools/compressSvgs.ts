@@ -1,12 +1,14 @@
 import { walkSync } from 'https://deno.land/std@0.103.0/fs/mod.ts';
 import { parse } from 'https://deno.land/x/xml/mod.ts';
-for (const baseSvg of walkSync('./tools/output/maya/')) {
+for (const baseSvg of walkSync('./tools/output/svgo/')) {
   if (baseSvg.isDirectory) {
     continue;
   }
   console.log('parsing', baseSvg.path);
   const contents: any = parse(Deno.readTextFileSync(baseSvg.path));
-  const dStrings = contents.svg.g.map((group: any) => group.path['@d']);
+  const dStrings = contents.svg.g
+    .filter((group: any) => group.path?.['@d'])
+    .map((group: any) => group.path['@d']);
   const dedupedDStrings = dStrings.filter(
     (dString: string, index: number, _array: String[]) =>
       dStrings.indexOf(dString) === index,

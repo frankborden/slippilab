@@ -60,25 +60,24 @@ export const getFacingDirection = (
   animationFrameIndex: number,
 ): number => {
   const isMarthBairTurnaround =
-    animationName === 'ATTACKAIRB' &&
+    animationName === 'AttackAirB' &&
     character === 'Marth' &&
-    animationFrameIndex > 30;
-  const isSmashTurn = animationName === 'SMASHTURN';
+    animationFrameIndex > 31;
   const isSpacieBthrowTurnaround =
-    animationName === 'THROWBACK' &&
+    animationName === 'ThrowB' &&
     (character === 'Falco' || character === 'Fox') &&
     animationFrameIndex > 8;
-  return isMarthBairTurnaround || isSmashTurn || isSpacieBthrowTurnaround
+  return isMarthBairTurnaround || isSpacieBthrowTurnaround
     ? -frameFacing
     : frameFacing;
 };
 
 export const getThrowerName = (
   player: DeepRequired<PlayerType>,
-  animationName: string,
+  throwDirection: string,
   frames: DeepRequired<FrameEntryType>,
 ): string => {
-  const throwerAnimationName = `THROW${animationName.substr(6)}`;
+  const throwerAnimationName = `Throw${throwDirection}`;
   for (let i = 0; i < 4; i++) {
     if (i === player.playerIndex) {
       continue;
@@ -97,17 +96,17 @@ export const getThrowerName = (
         characterNamesByInternalId[otherPlayerFrame.post.internalCharacterId];
       switch (throwerName) {
         case 'Fox':
-          return 'FOX';
+          return 'Fox';
         case 'Captain Falcon':
-          return 'FALCON';
+          return 'Captain';
         case 'Falco':
-          return 'FALCO';
+          return 'Falco';
         case 'Jigglypuff':
-          return 'PUFF';
+          return 'Mars';
         case 'Marth':
-          return 'MARTH';
+          return 'Mars';
         case 'Sheik':
-          return 'SHEIK';
+          return 'Seak';
       }
     }
   }

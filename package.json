@@ -9,10 +9,10 @@
     "lint": "prettier --check \"src/**/*.ts\"",
     "buildAnimations": "yarn clearAnimationBuild && yarn copyMaya && yarn svgo && yarn compress && yarn copyFinished",
     "clearAnimationBuild": "rm -r tools/output/maya/* tools/output/svgo/* tools/output/compression/*",
-    "copyMaya": "cp -r /media/psf/Home/Downloads/Animation_Pack/Textured_Models/Marth/output/* ./tools/output/maya",
+    "copyMaya": "cp -r /media/psf/Home/Downloads/Animation_Pack/Textured_Models/Fox/output/* ./tools/output/maya",
     "svgo": "svgo -f tools/output/maya/ -o tools/output/svgo/ -p 3 --multipass --config tools/svgo.config.js",
     "compress": "deno run -A --unstable tools/compressSvgs.ts",
-    "copyFinished": "mkdir src/viewer/animations/marth; cp -r tools/output/compression/* src/viewer/animations/marth"
+    "copyFinished": "mkdir src/viewer/animations/fox; cp -r tools/output/compression/* src/viewer/animations/fox"
   },
   "dependencies": {
     "@slippi/slippi-js": "frankborden/slippi-js",

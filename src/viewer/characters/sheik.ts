@@ -3,9 +3,7 @@ import { Vector } from '../vector';
 import type { ActionName } from '../animations/actions';
 export const sheik: Character = {
   scale: 1.4,
-  // shieldOffset: new Vector(5 / 4.5, 34 / 4.5),
-  shieldOffset: new Vector(5 / 4.5, 34 / 4.5), // guess
-
+  shieldOffset: new Vector(0.541, 6.969),
   shieldSize: 1.4 * 11.625,
   animationMap: new Map<ActionName, string>([
     ['Rebirth', 'Entry'],

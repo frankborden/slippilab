@@ -34,6 +34,8 @@ const importAnimation = async (
       return (await import('./falcon')).default;
     case 'Marth':
       return (await import('./marth')).default;
+    case 'Jigglypuff':
+      return (await import('./jigglypuff')).default;
     default:
       throw new Error(`Unsupported character id: ${charId}`);
   }

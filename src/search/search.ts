@@ -90,12 +90,14 @@ export class Search {
 
   private sendFrame(): void {
     const frame =
-      this.game!.getFrames()[this.currentFrameIndex].players[this.playerIndex]!
-        .post;
-    const group = this.groupStack[this.groupStack.length - 1];
-    group.step(this.game!, frame);
-    if (this.permanentGroup) {
-      this.permanentGroup.step(this.game!, frame);
+      this.game!.getFrames()[this.currentFrameIndex].players[this.playerIndex]
+        ?.post;
+    if (frame) {
+      const group = this.groupStack[this.groupStack.length - 1];
+      group.step(this.game!, frame);
+      if (this.permanentGroup) {
+        this.permanentGroup.step(this.game!, frame);
+      }
     }
     this.currentFrameIndex++;
   }

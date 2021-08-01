@@ -2,10 +2,6 @@
 
 ## Character
 
-- Something wrong with laser shooting animations (air and ground)
-- Something wrong with shield breaker animation
-- Something wrong with position when getting thrown (ex: dthrown by falcon)
-- walk animation scaling based on speed
 - Shield put up / take down animation
 - Show Shield tilting (original visualiser reads inputs and checks for stun)
 - Bubble view when off camera / near blastzone?
@@ -18,14 +14,10 @@
 - Electric effect for knee/shine
 - Fire effect for spacie upB, falcon specials
 - Sword trails
-- Add characters, peach sheik at least.
-  - Needs zelda and everybody's turnip animations
-  - WebGL renderer with raw models + animations?
-  - HSDraw export model + animations, then generate SVG?
-    - Need Windows machine
 - Color by costume instead of port (first attempt = ugly)
 - indicate CPUs (Gray?)
 - Optional state-dependent colors? (hitstun, shieldstun, actionable)
+- Marth sideB colors
 
 ## Stage
 

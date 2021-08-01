@@ -38,7 +38,7 @@ export const clearLayers = (layers: Layers, isDarkMode: boolean): void => {
   // workaround for GIF background not working
   layers.base.context.save();
   layers.base.context.resetTransform();
-  layers.base.context.fillStyle = isDarkMode ? 'black' : 'white';
+  layers.base.context.fillStyle = isDarkMode ? 'black' : '#EEEEEE';
   layers.base.context.fillRect(
     0,
     0,

@@ -188,7 +188,10 @@ export class AppRoot extends LitElement {
               ? html` <span>${this.getIndexText()}</span> `
               : ''}
             <div class="explanation" ?hidden=${!this.showExplanation}>
-              <b>Supported Characters: Fox, Falco, Falcon, Marth, Puff</b><br />
+              <b
+                >Supported Characters: Falco, Falcon, Fox, Marth, Peach, Puff,
+                Sheik</b
+              ><br />
               <b>Supported Stages: FD, BF, DL, YS, FoD (static), PS (static)</b
               ><br />
               Previous Replay: [<br />

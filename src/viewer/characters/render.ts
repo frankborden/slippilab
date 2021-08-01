@@ -10,18 +10,16 @@ import {
   fetchAnimations,
   isOneIndexed,
   animationNameByActionId,
-  //actions,
-  //specials,
 } from '../animations';
 import { supportedCharactersById } from '../characters';
-import { characterNamesById, DeepRequired } from '../common';
+import { Character, characterNamesById, DeepRequired } from '../common';
 import type { Render } from '../game';
 import type { Layer, Layers } from '../layer';
 import {
   isInFrame,
   getFacingDirection,
   getFirstFrameOfAnimation,
-  getFrameIndexFromDuration,
+  //getFrameIndexFromDuration,
   getThrowerName,
   getShade,
 } from '../replay';
@@ -32,7 +30,6 @@ export const createPlayerRender = async (
   isDoubles: boolean,
 ): Promise<Render> => {
   const animations = await fetchAnimations(player.characterId);
-  //const sheikAnimations = (await import('../animations/sheik')).default;
   return (
     layers: Layers,
     frame: DeepRequired<FrameEntryType>,
@@ -207,88 +204,84 @@ const renderPlayerDetails = (
   screenLayer.context.restore();
 };
 
-const getAnimation = (
+const getAnimationFrame = (
   player: DeepRequired<PlayerType>,
   playerFrame: DeepRequired<PostFrameUpdateType>,
   frames: DeepRequired<FramesType>,
   frame: DeepRequired<FrameEntryType>,
   animations: CharacterAnimations,
+  characterData: Character,
   worldContext: CanvasRenderingContext2D,
-): AnimationFrame | undefined => {
+): string | undefined => {
   const character = characterNamesById[player.characterId];
-  const animationName = 'asdf'; //actions[playerFrame.actionStateId]; // ??
-  //specials[character][playerFrame.actionStateId];
-  console.assert(
-    animationName !== undefined,
-    'characterId',
-    player.characterId,
-    'actionStateId',
-    playerFrame.actionStateId,
-  );
-  if (animationName.match('DEAD')) {
-    return;
+
+  // Determine animation
+  let animationName;
+  const actionName = animationNameByActionId[playerFrame.actionStateId];
+  if (characterData.specialsMap.has(playerFrame.actionStateId)) {
+    animationName = characterData.specialsMap.get(playerFrame.actionStateId);
+  } else if (actionName) {
+    animationName = characterData.animationMap.get(actionName) ?? actionName;
   }
-  const animation =
-    animations[animationName] ??
-    animations[
-      animationName.substr(0, 6) +
-        getThrowerName(player, animationName, frame) +
-        animationName.substr(6)
-    ];
-  console.assert(
-    animation !== undefined,
-    'actionStateCounter',
-    playerFrame.actionStateCounter,
-    'animationData',
-    animation,
-    'animationName',
-    animationName,
-  );
-  const firstIndex =
-    playerFrame.actionStateCounter < 0 ||
-    isOneIndexed(player.characterId, playerFrame.actionStateId)
-      ? 1
-      : 0;
-  const frameIndex =
-    animationName.startsWith('LANDINGATTACKAIR') ||
-    animationName.startsWith('THROWN')
-      ? Math.min(
-          getFrameIndexFromDuration(playerFrame, frames, player),
-          animation.length - 1,
-        )
-      : // ENTRANCE has some negative actionStateCounters for some reason...
-        // TODO: switch ENTRANCE to IndexFromDuration
-        Math.max(0, Math.floor(playerFrame.actionStateCounter) - firstIndex) %
-        animation.length;
-  const animationFrame = animation[frameIndex];
-  const isSpacieUpBLaunchAction =
-    playerFrame.actionStateId === 355 || playerFrame.actionStateId === 356;
-  const isSpacieUpBMovementFrame =
-    (character === 'Fox' && frameIndex < 31) ||
-    (character === 'Falco' && frameIndex < 23);
-  if (isSpacieUpBLaunchAction && isSpacieUpBMovementFrame) {
-    // just a guess, especially with 2 different characters...
-    const rotationYOffset = -125;
-    const rawAngle = Math.atan2(
-      playerFrame.selfInducedSpeeds.y + playerFrame.selfInducedSpeeds.attackY,
-      playerFrame.selfInducedSpeeds.airX +
-        playerFrame.selfInducedSpeeds.attackX +
-        playerFrame.selfInducedSpeeds.groundX,
-    );
-    const angleFromUp = rawAngle - Math.PI / 2;
-    worldContext.translate(0, rotationYOffset);
-    worldContext.rotate(-angleFromUp);
-    worldContext.translate(0, -rotationYOffset);
+  if (animationName?.match('Thrown')) {
+    const direction = animationName.match(/[A-Z][a-z]*$/g);
+    const opponent = getThrowerName(player, direction![0], frame);
+    animationName = `T${opponent}Throw${direction}`;
   }
 
+  // Determine frame
+  const firstIndex =
+    playerFrame.actionStateCounter < 0 //||
+      ? //isOneIndexed(player.characterId, playerFrame.actionStateId)
+        1
+      : 0;
+  const animationFrames = animationName
+    ? animations[animationName] ?? animations['Appeal'] ?? animations['AppealL']
+    : animations['Appeal'] ?? animations['AppealL'];
+  const animationIndex = Math.max(
+    Math.floor(playerFrame.actionStateCounter + firstIndex),
+    0,
+  );
+  if (!animationName) {
+    return;
+  }
+
+  // Other work
   const facingDirection = getFacingDirection(
     playerFrame.facingDirection,
     animationName,
     character,
-    frameIndex,
+    animationIndex,
   );
   worldContext.scale(facingDirection, 1);
-  return animationFrame;
+  const isSpacieUpBLaunchAction =
+    playerFrame.actionStateId === 355 || playerFrame.actionStateId === 356;
+  const isSpacieUpBMovementFrame =
+    (character === 'Fox' && animationIndex < 31) ||
+    (character === 'Falco' && animationIndex < 23);
+  const isDamageFlyRoll = playerFrame.actionStateId === 91;
+  if (
+    (isSpacieUpBLaunchAction && isSpacieUpBMovementFrame) ||
+    isDamageFlyRoll
+  ) {
+    // just a guess, especially between different characters..
+    const rotationYOffset = 10;
+    const rawAngle = Math.atan2(
+      playerFrame.selfInducedSpeeds.y + playerFrame.selfInducedSpeeds.attackY,
+      facingDirection *
+        (playerFrame.selfInducedSpeeds.airX +
+          playerFrame.selfInducedSpeeds.attackX +
+          playerFrame.selfInducedSpeeds.groundX),
+    );
+    // Spacie UpB animation default angle is straight right (not counting facingDirection)
+    // DamageFlyRoll animation default angle is straight up
+    const rotationAmount = rawAngle - (isDamageFlyRoll ? Math.PI / 2 : 0);
+    worldContext.translate(0, rotationYOffset);
+    worldContext.rotate(rotationAmount);
+    worldContext.translate(0, -rotationYOffset);
+  }
+
+  return animationFrames[animationIndex];
 };
 
 const renderCharacter = (
@@ -304,7 +297,7 @@ const renderCharacter = (
   const playerFrame = frame.players[player.playerIndex].post;
   const characterData = supportedCharactersById[player.characterId];
   worldContext.save();
-  worldContext.lineWidth *= isDarkMode ? 3 : 2;
+  worldContext.lineWidth *= isDarkMode ? 6 : 2;
 
   const lCancelStatus = getFirstFrameOfAnimation(
     playerFrame,
@@ -315,75 +308,30 @@ const renderCharacter = (
   worldContext.strokeStyle = isDarkMode ? primaryColor : secondaryColor;
   worldContext.fillStyle = isDarkMode ? secondaryColor : primaryColor;
   worldContext.translate(playerFrame.positionX, playerFrame.positionY);
-  // world space -> animation data space, -y is because the data seems to be
-  // flipped relative to the stage data..
-  //worldContext.scale(characterData.scale, -characterData.scale);
-  //worldContext.lineWidth /= characterData.scale;
-
-  //worldContext.save();
-  //worldContext.scale(1 / characterData.scale, 1 / -characterData.scale);
-  //worldContext.lineWidth *= characterData.scale;
-
-  const modelScaling = characterData.scale;
-  worldContext.scale(modelScaling, modelScaling);
-  worldContext.lineWidth /= modelScaling;
-  worldContext.scale(0.1, 0.1);
-  worldContext.lineWidth /= 0.1;
-  worldContext.scale(playerFrame.facingDirection, 1);
-  worldContext.translate(-500, 500);
-  worldContext.scale(1, -1);
-  let animationName;
-  const actionName = animationNameByActionId[playerFrame.actionStateId];
-  if (characterData.specialsMap.has(playerFrame.actionStateId)) {
-    animationName = characterData.specialsMap.get(playerFrame.actionStateId);
-  } else if (actionName) {
-    animationName = characterData.animationMap.get(actionName) ?? actionName;
-  }
-  if (animationName === 'Unsupported') {
-    worldContext.restore();
-    return;
-  }
-  console.log(animationName, actionName);
-  const animationFrames = animationName
-    ? animations[animationName] ?? animations['Appeal'] ?? animations['AppealL']
-    : animations['Appeal'] ?? animations['AppealL'];
-  console.log(animationFrames.length, playerFrame.actionStateCounter);
-  const animationFrame =
-    animationFrames[Math.max(Math.floor(playerFrame.actionStateCounter), 0)];
-  worldContext.stroke(new Path2D(animationFrame));
-  worldContext.restore();
-  /*
-  const animationFrame = getAnimation(
+  worldContext.scale(characterData.scale, characterData.scale);
+  worldContext.lineWidth /= characterData.scale;
+  const animationFrame = getAnimationFrame(
     player,
     playerFrame,
     frames,
     frame,
     animations,
+    characterData,
     worldContext,
   );
-  if (animationFrame === undefined) {
+  if (!animationFrame) {
     worldContext.restore();
     return;
   }
-  worldContext.beginPath();
-  worldContext.moveTo(animationFrame[0], animationFrame[1]);
-  // starting from index 2, each set of 6 numbers are bezier curve coords
-  for (
-    let startOfBezierCurve = 2;
-    startOfBezierCurve < animationFrame.length;
-    startOfBezierCurve += 6
-  ) {
-    const nextBezierCurve = animationFrame.slice(
-      startOfBezierCurve,
-      startOfBezierCurve + 6,
-    ) as unknown as Parameters<typeof worldContext.bezierCurveTo>;
-    worldContext.bezierCurveTo(...nextBezierCurve);
-  }
-  worldContext.closePath();
-  worldContext.fill();
-  worldContext.stroke();
+  const path = new Path2D(animationFrame);
+  // SVG data is 10x too big, offset by 500, and needs to be flipped
+  worldContext.scale(0.1, 0.1);
+  worldContext.lineWidth /= 0.1;
+  worldContext.translate(-500, 500);
+  worldContext.scale(1, -1);
+  worldContext.stroke(path);
+  worldContext.fill(path);
   worldContext.restore();
-  */
 };
 
 const renderShield = (
@@ -395,7 +343,7 @@ const renderShield = (
   isDarkMode: boolean,
 ): void => {
   const playerFrame = frame.players[player.playerIndex].post;
-  //const characterData = supportedCharactersById[player.characterId];
+  const characterData = supportedCharactersById[player.characterId];
   if (playerFrame.actionStateId < 0x0b2 || playerFrame.actionStateId > 0x0b6) {
     return;
   }
@@ -410,15 +358,17 @@ const renderShield = (
   worldContext.strokeStyle = isDarkMode ? 'white' : 'black';
   const shieldHealthPercent = playerFrame.shieldSize / 60;
   worldContext.translate(playerFrame.positionX, playerFrame.positionY);
-  //worldContext.translate(
-  //characterData.shieldOffset.x,
-  //characterData.shieldOffset.y,
-  //);
+  worldContext.scale(playerFrame.facingDirection, 1);
+  worldContext.scale(characterData.scale, characterData.scale);
+  worldContext.lineWidth /= characterData.scale;
+  worldContext.translate(
+    characterData.shieldOffset.x,
+    characterData.shieldOffset.y,
+  );
   // TODO: Seems to be some constant added because shield break happens before
   // radius 0.
   // Guessing shield size attribute is diameter so divide by 2
-  const shieldRadius =
-    /*characterData.shieldSize*/ (20 * shieldHealthPercent) / 2;
+  const shieldRadius = (characterData.shieldSize * shieldHealthPercent) / 2;
   worldContext.beginPath();
   worldContext.arc(0, 0, shieldRadius, 0, 2 * Math.PI);
   worldContext.closePath();
@@ -447,6 +397,9 @@ const renderShine = (
   worldContext.lineWidth *= 5;
 
   worldContext.translate(playerFrame.positionX, playerFrame.positionY);
+  worldContext.scale(playerFrame.facingDirection, 1);
+  worldContext.scale(characterData.scale, characterData.scale);
+  worldContext.lineWidth /= characterData.scale;
   worldContext.translate(
     characterData.shieldOffset.x,
     characterData.shieldOffset.y,
