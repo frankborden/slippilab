@@ -154,7 +154,7 @@ export const falco: Character = {
     [366, 'SpecialAirLwLoop'],
     [367, 'SpecialAirLwHit'],
     [368, 'SpecialAirLwEnd'],
-    [369, 'SpecialAirLw2'],
+    [369, 'SpecialAirLwLoop'],
     [370, 'AppealSStartR'],
     [371, 'AppealSStartL'],
     [372, 'AppealSR'],

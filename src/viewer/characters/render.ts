@@ -61,7 +61,7 @@ export const createPlayerRender = async (
     renderShine(layers.worldSpace.context, frame, player);
   };
 };
-
+/*
 const colors = ['pink', 'lightblue', 'yellow', 'lightgreen'];
 const darkColors = ['red', 'blue', 'gold', 'green'];
 const teamColors = [
@@ -74,6 +74,16 @@ const darkTeamColors = [
   ['dodgerblue', 'deepskyblue', 'darkblue'],
   ['#00BB00', 'springgreen', 'darkgreen'],
 ];
+*/
+const colors = ['#FB2323', '#2266BB', '#FFDD44', '#66BB22'];
+const darkColors = colors;
+const teamColors = [
+  ['#CC241D', '#FB4934', '#9D0006'],
+  ['#458588', '#83A598', '#876678'],
+  ['#D79921', '#FABD2F', '#B57614'],
+  ['#98971A', '#B8BB26', '#79740E'],
+];
+const darkTeamColors = teamColors;
 
 const getPrimaryColor = (
   player: DeepRequired<PlayerType>,
@@ -393,7 +403,7 @@ const renderShine = (
     return;
   }
   worldContext.save();
-  worldContext.strokeStyle = 'aqua';
+  worldContext.strokeStyle = 'deepskyblue';
   worldContext.lineWidth *= 5;
 
   worldContext.translate(playerFrame.positionX, playerFrame.positionY);
