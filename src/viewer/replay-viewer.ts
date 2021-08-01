@@ -1,7 +1,6 @@
 import GIF from 'gif.js';
 import { css, html, LitElement, PropertyValues } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
-import { classMap } from 'lit/directives/class-map.js';
+import { customElement, property, query, state } from 'lit/decorators.js';
 import '@spectrum-web-components/slider/sp-slider';
 import type { Slider } from '@spectrum-web-components/slider';
 
@@ -43,6 +42,12 @@ export class ReplayViewer extends LitElement {
 
   @state()
   private highestFrame = 400;
+
+  @query('canvas')
+  private canvas?: HTMLCanvasElement;
+
+  @query('sp-slider')
+  private slider?: Slider;
 
   private game?: Game;
 
@@ -121,9 +126,7 @@ export class ReplayViewer extends LitElement {
   }
 
   firstUpdated() {
-    const canvas = this.renderRoot.querySelector('canvas');
-    const slider: Slider | null = this.renderRoot.querySelector('sp-slider');
-    if (!canvas || !slider) {
+    if (!this.canvas) {
       return;
     }
     const resizeObserver = new ResizeObserver((entries) => {
@@ -143,14 +146,17 @@ export class ReplayViewer extends LitElement {
           newWidth = entry.contentRect.width;
           newHeight = entry.contentRect.height;
         }
-        canvas.width = newWidth;
-        canvas.height = newHeight;
+        if (!this.canvas || !this.slider) {
+          return;
+        }
+        this.canvas.width = newWidth;
+        this.canvas.height = newHeight;
         this.game?.resize(newWidth, newHeight);
-        slider.requestUpdate();
+        this.slider.requestUpdate();
       }
     });
 
-    resizeObserver.observe(canvas);
+    resizeObserver.observe(this.canvas);
   }
 
   updated(oldValues: PropertyValues<ReplayViewer>) {
@@ -167,35 +173,40 @@ export class ReplayViewer extends LitElement {
   }
 
   private async setup() {
-    const canvas = this.renderRoot.querySelector('canvas');
-    const context = this.renderRoot.querySelector('canvas')?.getContext('2d');
+    const context = this.canvas?.getContext('2d');
     const highestFrame = this.replay?.game.getLatestFrame()?.frame;
-    if (!canvas || !context || !this.replay || highestFrame === undefined) {
+    if (
+      !this.canvas ||
+      !context ||
+      !this.replay ||
+      highestFrame === undefined
+    ) {
       return;
     }
     this.highestFrame = highestFrame;
     this.game = await Game.create(
       this.replay,
-      canvas,
+      this.canvas,
       this.dark,
       this.replay.highlights.length > 0
         ? this.replay.highlights[0].startFrame
         : -123,
     );
+    this.game.resize(this.canvas.width, this.canvas.height);
     this.game.onTick(
       (currentFrameNumber: number) => (this.currentFrame = currentFrameNumber),
     );
   }
 
   private clicked() {
-    const slider = this.renderRoot.querySelector('sp-slider') as Slider;
-    this.game?.setFrame(slider.value);
+    if (this.slider) {
+      this.game?.setFrame(this.slider.value);
+    }
   }
 
   private captureGif() {
-    const canvas = this.renderRoot.querySelector('canvas');
-    const context = canvas?.getContext('2d');
-    if (!context || !canvas || !this.game) {
+    const context = this.canvas?.getContext('2d');
+    if (!context || !this.canvas || !this.game) {
       return;
     }
     this.game.setPause();
@@ -203,8 +214,8 @@ export class ReplayViewer extends LitElement {
     const gif = new GIF({
       workers: 4,
       quality: 10,
-      width: canvas.width,
-      height: canvas.height,
+      width: this.canvas.width,
+      height: this.canvas.height,
       background: '#fff',
     });
     gif.on('finished', (blob: Blob, _data: Uint8Array) => {
