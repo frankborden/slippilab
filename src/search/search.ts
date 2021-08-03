@@ -1,8 +1,6 @@
 import { Group, Spec as GroupSpec } from './group';
 import type { PlayerType, SlippiGame } from '@slippi/slippi-js';
-//import { sync as globSync } from 'glob';
 import type { GamePredicate } from './game-predicate';
-//import { createSameLineOutput } from './platform';
 import type { Highlight } from '../common';
 
 export interface ClipBuilder {
@@ -33,13 +31,8 @@ export class Search {
     this.spec = spec;
   }
 
-  public done(): void {
-    this.clipSource.complete();
-  }
-
-  public searchFile(game: SlippiGame, path: string): Highlight[] {
+  public searchFile(game: SlippiGame): Highlight[] {
     this.game = game;
-    this.replayFilePath = path;
     return this.game!.getSettings()!
       .players.map((player: PlayerType) => player.port - 1)
       .flatMap((playerIndex) => this.searchPlayer(playerIndex))
@@ -171,13 +164,6 @@ export class Search {
         startFrame: this.groupStack[0].segmentStartFrame!,
         endFrame: this.currentFrameIndex - 1,
       };
-    }
-  }
-
-  private saveClip(): void {
-    if (this.clipBuilder !== undefined) {
-      this.clipSource.next(this.clipBuilder);
-      this.clipBuilder = undefined;
     }
   }
 }

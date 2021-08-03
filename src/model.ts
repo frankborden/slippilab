@@ -1,68 +1,92 @@
 import { SlippiGame } from '@slippi/slippi-js';
 import { Subject } from 'rxjs';
-import type { Search } from './search';
+import { Search, SearchSpec } from './search';
 import { supportedCharactersById, supportedStagesById } from './viewer';
 import type { DeepRequired, Replay } from './common';
 
+export interface State {
+  replay?: Replay;
+  currentFileIndex?: number;
+  files: File[];
+  searches: SearchSpec[];
+}
+
 export class Model {
-  files: File[] = [];
-  searches: Search[] = [];
-  currentFileIndex = -1;
-  replay$: Subject<Replay> = new Subject<Replay>();
+  private currentState: State = { files: [], searches: [] };
+  private replay$: Subject<State> = new Subject<State>();
   replayOutput$ = this.replay$.asObservable();
 
-  constructor() {}
+  constructor() {
+    this.replay$.next(this.currentState);
+  }
 
   setFiles(...files: File[]) {
-    this.files = files;
-    this.currentFileIndex = -1;
+    const newState = { ...this.currentState, files };
+    this.currentState = newState;
+    this.replay$.next(newState);
     this.next();
   }
 
-  setSearches(...searches: Search[]) {
-    this.searches = searches;
+  setSearches(...searches: SearchSpec[]) {
+    const newState = { ...this.currentState, searches };
+    this.currentState = newState;
+    this.replay$.next(newState);
   }
 
   async next() {
-    const initialFileIndex = this.currentFileIndex;
-    let replay: Replay | undefined;
+    const initialFileIndex = this.currentState.currentFileIndex ?? -1;
+    let currentFileIndex = initialFileIndex;
+    let nextReplay: Replay | undefined;
     do {
-      this.currentFileIndex = (this.currentFileIndex + 1) % this.files.length;
-      replay = await this.parseFile(this.files[this.currentFileIndex]);
-    } while (
-      replay === undefined &&
-      this.currentFileIndex !== initialFileIndex
-    );
-    if (replay !== undefined) {
-      this.replay$.next(replay);
+      currentFileIndex =
+        (currentFileIndex + 1) % this.currentState.files.length;
+      console.log(currentFileIndex, this.currentState.files);
+      nextReplay = await this.parseFile(
+        this.currentState.files[currentFileIndex],
+      );
+    } while (nextReplay === undefined && currentFileIndex !== initialFileIndex);
+    if (nextReplay !== undefined) {
+      const newState = {
+        ...this.currentState,
+        replay: nextReplay,
+        currentFileIndex,
+      };
+      this.currentState = newState;
+      this.replay$.next(newState);
     }
   }
 
   async prev() {
-    const initialFileIndex = this.currentFileIndex;
-    let replay: Replay | undefined;
+    const initialFileIndex = this.currentState.currentFileIndex ?? -1;
+    let currentFileIndex = initialFileIndex;
+    let prevReplay: Replay | undefined;
     do {
-      this.currentFileIndex =
-        (this.currentFileIndex - 1 + this.files.length) % this.files.length;
-      replay = await this.parseFile(this.files[this.currentFileIndex]);
-    } while (
-      replay === undefined &&
-      this.currentFileIndex !== initialFileIndex
-    );
-    if (replay !== undefined) {
-      this.replay$.next(replay);
+      currentFileIndex =
+        (currentFileIndex - 1 + this.currentState.files.length) %
+        this.currentState.files.length;
+      prevReplay = await this.parseFile(
+        this.currentState.files[currentFileIndex],
+      );
+    } while (prevReplay === undefined && currentFileIndex !== initialFileIndex);
+    if (prevReplay !== undefined) {
+      const newState = {
+        ...this.currentState,
+        replay: prevReplay,
+        currentFileIndex,
+      };
+      this.currentState = newState;
+      this.replay$.next(newState);
     }
   }
 
-  async parseFile(file: File): Promise<Replay | undefined> {
+  private async parseFile(file: File): Promise<Replay | undefined> {
     try {
       if (file.name.endsWith('.slp')) {
         const game = new SlippiGame(await file.arrayBuffer());
         if (this.isSupported(game)) {
-          /*const highlights = this.searches.flatMap((search) =>
-            search.searchFile(game, ''),
-          );*/
-          const highlights = [];
+          const highlights = this.currentState.searches
+            .map((searchSpec) => new Search(searchSpec))
+            .flatMap((search) => search.searchFile(game));
           return {
             fileName: file.name,
             game: game as DeepRequired<SlippiGame>,
@@ -77,7 +101,7 @@ export class Model {
     return undefined;
   }
 
-  isSupported(game: SlippiGame): boolean {
+  private isSupported(game: SlippiGame): boolean {
     const stageId = game.getSettings()?.stageId;
     const characterIds = game
       .getSettings()
@@ -93,3 +117,33 @@ export class Model {
     return stageSupported && charactersSupported;
   }
 }
+
+export const model = new Model();
+/*
+const successfulEdgeguardSpec: SearchSpec = {
+      permanentGroupSpec: {
+        unitSpecs: [{ predicate: FramePredicates.isOffstage }],
+      },
+      groupSpecs: [
+        {
+          unitSpecs: [
+            {
+              options: { minimumLength: 30 },
+              predicate: FramePredicates.isOffstage,
+            },
+          ],
+        },
+        {
+          unitSpecs: [
+            {
+              predicate: (frame, game) =>
+                !FramePredicates.isInHitstun(frame, game),
+            },
+          ],
+        },
+        { unitSpecs: [{ predicate: FramePredicates.isInHitstun }] },
+        { unitSpecs: [{ predicate: FramePredicates.isDead }] },
+      ],
+    };
+    model.setSearches(successfulEdgeguardSpec);
+ */

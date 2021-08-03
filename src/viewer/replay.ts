@@ -110,7 +110,7 @@ export const getThrowerName = (
       }
     }
   }
-  console.log('Failed to find thrower', player.playerIndex, animationName);
+  console.log('Failed to find thrower', player.playerIndex, throwDirection);
   return 'FOX';
 };
 

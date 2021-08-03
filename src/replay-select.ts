@@ -26,7 +26,7 @@ export class ReplaySelect extends LitElement {
   private actionButtons?: NodeListOf<ActionButton>;
 
   private async filesSelected() {
-    // TODO: clear selections and remove focus from buttons
+    // TODO: clear selections
     const files = Array.from(this.inputs ?? [])
       ?.map((input) => input.files)
       ?.filter((fileList): fileList is FileList => fileList !== null)

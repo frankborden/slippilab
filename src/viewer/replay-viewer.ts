@@ -12,21 +12,19 @@ export class ReplayViewer extends LitElement {
   static get styles() {
     return css`
       .container {
+        position: relative;
         width: 100%;
         height: 100%;
-        position: relative;
+        display: flex;
+        flex-direction: column;
       }
       canvas {
-        width: 100%;
-        height: 100%;
-      }
-      .controls {
-        position: absolute;
-        bottom: 10px;
-        left: 25%;
-        width: 50%;
+        flex-grow: 1;
       }
       sp-slider {
+        position: absolute;
+        left: 0;
+        bottom: 0;
         width: 100%;
       }
     `;
@@ -238,22 +236,20 @@ export class ReplayViewer extends LitElement {
     return html`
       <div class="container">
         <canvas
-          width="1000"
-          height="1000"
+          width="800"
+          height="400"
           @click=${() => this.game?.togglePause()}
         ></canvas>
-        <div class="controls">
-          <sp-slider
-            hide-value-label
-            label="${this.currentFrame}/${this.highestFrame}"
-            variant="filled"
-            min="-123"
-            max=${this.highestFrame}
-            .value=${this.currentFrame}
-            @change=${this.clicked}
-            @input=${this.clicked}
-          ></sp-slider>
-        </div>
+        <sp-slider
+          hide-value-label
+          label="${this.currentFrame}/${this.highestFrame}"
+          variant="filled"
+          min="-123"
+          max=${this.highestFrame}
+          .value=${this.currentFrame}
+          @change=${this.clicked}
+          @input=${this.clicked}
+        ></sp-slider>
       </div>
     `;
   }
