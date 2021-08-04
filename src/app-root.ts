@@ -8,7 +8,6 @@ import '@spectrum-web-components/theme/scale-large';
 import '@spectrum-web-components/action-button/sp-action-button';
 
 import { model } from './model';
-import './replay-select';
 import { fetchAnimation, supportedCharactersById } from './viewer';
 import './file-list';
 import type { Replay } from './common';
@@ -17,15 +16,6 @@ import type { Replay } from './common';
 export class AppRoot extends LitElement {
   constructor() {
     super();
-    model.replayOutput$.subscribe((state) => {
-      this.currentReplay = state.replay;
-      if (!this.currentReplay || state.currentFileIndex === undefined) {
-        this.indexFraction = '';
-        return;
-      }
-      const fraction = `${state.currentFileIndex + 1}/${state.files.length}`;
-      this.indexFraction = `Playing file (${fraction}): ${this.currentReplay.fileName}`;
-    });
     window.addEventListener('keydown', (e: KeyboardEvent) => {
       switch (e.key) {
         case 'd':
@@ -39,6 +29,11 @@ export class AppRoot extends LitElement {
           break;
       }
     });
+    model.replayOutput$.subscribe((state) => {
+      if (this.currentReplay !== state.replay) {
+        this.currentReplay = state.replay;
+      }
+    })
     Object.keys(supportedCharactersById).forEach((characterId) =>
       fetchAnimation(Number(characterId)),
     );
@@ -77,19 +72,12 @@ export class AppRoot extends LitElement {
   @state()
   private currentReplay?: Replay;
 
-  @state()
-  private indexFraction?: string;
-
   private async playPrevReplay(): Promise<void> {
     model.prev();
   }
 
   private async playNextReplay(): Promise<void> {
     model.next();
-  }
-
-  private async replaySelected(event: CustomEvent<File[]>): Promise<void> {
-    model.setFiles(...event.detail);
   }
 
   private toggleDarkMode(): void {
@@ -110,20 +98,6 @@ export class AppRoot extends LitElement {
             <sp-switch @change=${this.toggleDarkMode} ?checked=${this.darkMode}>
               Dark Mode
             </sp-switch>
-            <replay-select
-              @replays-selected=${this.replaySelected}
-            ></replay-select>
-            ${this.currentReplay
-              ? html`
-                  <sp-action-button @click=${this.playPrevReplay}>
-                    Start Prev Replay
-                  </sp-action-button>
-                  <sp-action-button @click=${this.playNextReplay}>
-                    Start Next Replay
-                  </sp-action-button>
-                `
-              : ``}
-            ${this.indexFraction}
           </div>
           <div class="sidebar">
             <file-list></file-list>

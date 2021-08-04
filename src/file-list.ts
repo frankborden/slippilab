@@ -2,6 +2,7 @@ import { css, html, LitElement } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 
 import { model } from './model';
+import './replay-select';
 
 @customElement('file-list')
 export class FileList extends LitElement {
@@ -15,9 +16,7 @@ export class FileList extends LitElement {
     super();
     model.replayOutput$.subscribe((state) => {
       this.files = state.files;
-      console.log(this.files);
       this.currentFileIndex = state.currentFileIndex;
-      console.log(this.currentFileIndex);
     });
   }
 
@@ -28,26 +27,37 @@ export class FileList extends LitElement {
 
   static get styles() {
     return css`
-      select {
+      .container {
         width: 100%;
         height: 100%;
+        display: flex;
+        flex-direction: column;
+      }
+      select {
+        flex-grow: 1;
       }
     `;
   }
 
   render() {
     return html`
-      <select multiple @change=${this.selected}>
-        ${this.files.map(
-          (file, index) =>
-            html`<option
-              value=${index}
-              ?selected=${this.currentFileIndex === index}
-            >
-              ${file.name}
-            </option>`,
-        )}
-      </select>
+      <div class="container">
+        <replay-select></replay-select>
+        <select multiple @change=${this.selected}>
+          ${this.files.map(
+            (file, index) =>
+              html`<option
+                value=${index}
+                ?selected=${this.currentFileIndex === index}
+              >
+                ${
+                  // @ts-expect-error
+                  file.webkitRelativePath
+                    ?? file.name}
+              </option>`,
+          )}
+        </select>
+      </div>
     `;
   }
 }

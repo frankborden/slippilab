@@ -2,6 +2,7 @@ import { css, html, LitElement } from 'lit';
 import { customElement, query, queryAll } from 'lit/decorators.js';
 import '@spectrum-web-components/action-button/sp-action-button';
 import type { ActionButton } from '@spectrum-web-components/action-button';
+import { model } from './model';
 
 @customElement('replay-select')
 export class ReplaySelect extends LitElement {
@@ -36,10 +37,7 @@ export class ReplaySelect extends LitElement {
     if (!files || files.length === 0) {
       return;
     }
-    const replaySelectedEvent = new CustomEvent<File[]>('replays-selected', {
-      detail: files,
-    });
-    this.dispatchEvent(replaySelectedEvent);
+    model.setFiles(files);
   }
 
   private openFile() {

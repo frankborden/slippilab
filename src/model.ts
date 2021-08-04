@@ -20,14 +20,14 @@ export class Model {
     this.replay$.next(this.currentState);
   }
 
-  setFiles(...files: File[]) {
+  setFiles(files: File[]) {
     const newState = { ...this.currentState, files };
     this.currentState = newState;
     this.replay$.next(newState);
     this.next();
   }
 
-  setSearches(...searches: SearchSpec[]) {
+  setSearches(searches: SearchSpec[]) {
     const newState = { ...this.currentState, searches };
     this.currentState = newState;
     this.replay$.next(newState);
