@@ -232,25 +232,31 @@ const getAnimationFrame = (
     animationIndex,
   );
   worldContext.scale(facingDirection, 1);
-  const isSpacieUpBLaunchAction =
+  const isSpacieUpBMovementAction =
     playerFrame.actionStateId === 355 || playerFrame.actionStateId === 356;
-  const isSpacieUpBMovementFrame =
-    (character === 'Fox' && animationIndex < 31) ||
-    (character === 'Falco' && animationIndex < 23);
   const isDamageFlyRoll = playerFrame.actionStateId === 91;
-  if (
-    (isSpacieUpBLaunchAction && isSpacieUpBMovementFrame) ||
-    isDamageFlyRoll
-  ) {
+  if (isSpacieUpBMovementAction || isDamageFlyRoll) {
     // just a guess, especially between different characters..
     const rotationYOffset = 10;
-    const rawAngle = Math.atan2(
-      playerFrame.selfInducedSpeeds.y + playerFrame.selfInducedSpeeds.attackY,
-      facingDirection *
-        (playerFrame.selfInducedSpeeds.airX +
-          playerFrame.selfInducedSpeeds.attackX +
-          playerFrame.selfInducedSpeeds.groundX),
-    );
+    let referenceFrame: DeepRequired<PostFrameUpdateType>;
+    let deltaFrame: DeepRequired<PostFrameUpdateType>;
+    if (isSpacieUpBMovementAction) {
+      referenceFrame =
+        frames[playerFrame.frame - playerFrame.actionStateCounter - 1].players[
+          player.playerIndex
+        ].post;
+      deltaFrame =
+        frames[playerFrame.frame - playerFrame.actionStateCounter].players[
+          player.playerIndex
+        ].post;
+    } else {
+      referenceFrame =
+        frames[playerFrame.frame - 1].players[player.playerIndex].post;
+      deltaFrame = playerFrame;
+    }
+    const xDiff = deltaFrame.positionX - referenceFrame.positionX;
+    const yDiff = deltaFrame.positionY - referenceFrame.positionY;
+    const rawAngle = Math.atan2(yDiff, facingDirection * xDiff);
     // Spacie UpB animation default angle is straight right (not counting facingDirection)
     // DamageFlyRoll animation default angle is straight up
     const rotationAmount = rawAngle - (isDamageFlyRoll ? Math.PI / 2 : 0);

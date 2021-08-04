@@ -33,6 +33,20 @@ export class Model {
     this.replay$.next(newState);
   }
 
+  async jumpTo(file: File) {
+    const index = this.currentState.files.indexOf(file);
+    if (this.currentState.currentFileIndex === index) {
+      return;
+    }
+    const replay = await this.parseFile(file);
+    if (replay === undefined) {
+      return;
+    }
+    const newState = { ...this.currentState, replay, currentFileIndex: index };
+    this.currentState = newState;
+    this.replay$.next(newState);
+  }
+
   async next() {
     const initialFileIndex = this.currentState.currentFileIndex ?? -1;
     let currentFileIndex = initialFileIndex;
@@ -40,7 +54,6 @@ export class Model {
     do {
       currentFileIndex =
         (currentFileIndex + 1) % this.currentState.files.length;
-      console.log(currentFileIndex, this.currentState.files);
       nextReplay = await this.parseFile(
         this.currentState.files[currentFileIndex],
       );

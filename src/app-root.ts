@@ -18,7 +18,6 @@ export class AppRoot extends LitElement {
   constructor() {
     super();
     model.replayOutput$.subscribe((state) => {
-      console.log(state);
       this.currentReplay = state.replay;
       if (!this.currentReplay || state.currentFileIndex === undefined) {
         this.indexFraction = '';
@@ -135,7 +134,7 @@ export class AppRoot extends LitElement {
                   .replay=${this.currentReplay}
                   .dark=${this.darkMode}
                 ></replay-viewer>`
-              : html`<div class="noReplay">Waiting for game...</div>`}
+              : html`<div class="noReplay">Waiting for game.</div>`}
           </div>
         </div>
       </sp-theme>

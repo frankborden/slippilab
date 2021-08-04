@@ -9,15 +9,23 @@ export class FileList extends LitElement {
   private files: File[] = [];
 
   @state()
-  private currentFileIndex? = -1;
+  private currentFileIndex?: number;
 
   constructor() {
     super();
     model.replayOutput$.subscribe((state) => {
       this.files = state.files;
+      console.log(this.files);
       this.currentFileIndex = state.currentFileIndex;
+      console.log(this.currentFileIndex);
     });
   }
+
+  private selected(e: Event) {
+    const select = e.currentTarget as HTMLSelectElement;
+    model.jumpTo(this.files[Number(select.value)]);
+  }
+
   static get styles() {
     return css`
       select {
@@ -26,12 +34,16 @@ export class FileList extends LitElement {
       }
     `;
   }
+
   render() {
     return html`
-      <select multiple>
+      <select multiple @change=${this.selected}>
         ${this.files.map(
           (file, index) =>
-            html`<option ?selected=${this.currentFileIndex === index}>
+            html`<option
+              value=${index}
+              ?selected=${this.currentFileIndex === index}
+            >
               ${file.name}
             </option>`,
         )}
