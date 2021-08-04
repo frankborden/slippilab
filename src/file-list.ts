@@ -43,7 +43,7 @@ export class FileList extends LitElement {
     return html`
       <div class="container">
         <replay-select></replay-select>
-        <select multiple @change=${this.selected}>
+        <select size="3" @change=${this.selected}>
           ${this.files.map(
             (file, index) =>
               html`<option

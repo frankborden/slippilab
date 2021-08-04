@@ -50,11 +50,15 @@ export class AppRoot extends LitElement {
         grid-template: min-content 1fr / 1fr 4fr;
       }
       .topbar {
-        grid-column-start: span 2;
+        grid-column-start: span 1;
       }
       .main {
         display: flex;
         justify-content: center;
+        grid-row-start: span 2;
+      }
+      .sidebar {
+        grid-row-start: 2;
       }
       replay-viewer {
         width: 100%;

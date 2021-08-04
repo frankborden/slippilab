@@ -8,7 +8,7 @@ import type {
 import {
   CharacterAnimations,
   fetchAnimations,
-  isOneIndexed,
+  //isOneIndexed,
   animationNameByActionId,
 } from '../animations';
 import { supportedCharactersById } from '../characters';
@@ -19,7 +19,6 @@ import {
   isInFrame,
   getFacingDirection,
   getFirstFrameOfAnimation,
-  //getFrameIndexFromDuration,
   getThrowerName,
   getShade,
 } from '../replay';
@@ -154,6 +153,7 @@ const renderPlayerDetails = (
   isDarkMode: boolean,
 ): void => {
   //const playerFrame = frame.players[player.playerIndex].post;
+  const character = characterNamesById[player.characterId];
   screenLayer.context.save();
   const fontSize = screenLayer.canvas.height / 30;
   screenLayer.context.font = `900 ${fontSize}px Verdana`;
@@ -165,7 +165,12 @@ const renderPlayerDetails = (
   screenLayer.context.translate(x, y);
   // flip text back right-side after global flip
   screenLayer.context.scale(1, -1);
-  const name = player.displayName?.length ? player.displayName : player.nametag;
+  console.log(player.displayName, player.nametag, character);
+  const name = player.displayName.length
+    ? player.displayName
+    : player.nametag.length
+    ? player.nametag
+    : character;
   /*
   const characterData = supportedCharactersById[player.characterId];
   let animationName;

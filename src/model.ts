@@ -66,6 +66,8 @@ export class Model {
       };
       this.currentState = newState;
       this.replay$.next(newState);
+      console.log(newState.replay.game.getSettings());
+      console.log(newState.replay.game.getMetadata());
     }
   }
 
