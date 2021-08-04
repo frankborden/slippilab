@@ -196,6 +196,15 @@
     "@spectrum-web-components/checkbox" "^0.10.4"
     tslib "^2.0.0"
 
+"@spectrum-web-components/tabs@^0.6.6":
+  version "0.6.6"
+  resolved "https://registry.yarnpkg.com/@spectrum-web-components/tabs/-/tabs-0.6.6.tgz#f94e04fc3a757c3cdea0860a6644eafb1d9aaaf1"
+  integrity sha512-APbpFULBF9GH8Az3TQ+2BiTOUKXqxyKEpDVvdh8nbERZHJv5lN0KhJzl7vRDZCQxXPAzWWuqVeqDNARaSCB4Xw==
+  dependencies:
+    "@spectrum-web-components/base" "^0.4.5"
+    "@spectrum-web-components/shared" "^0.12.7"
+    tslib "^2.0.0"
+
 "@spectrum-web-components/theme@^0.8.11":
   version "0.8.11"
   resolved "https://registry.yarnpkg.com/@spectrum-web-components/theme/-/theme-0.8.11.tgz#6ac762fd39b59dc6c281ba00b88ece70110762f6"

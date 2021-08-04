@@ -6,6 +6,9 @@ import '@spectrum-web-components/theme/theme-dark';
 import '@spectrum-web-components/theme/theme-light';
 import '@spectrum-web-components/theme/scale-large';
 import '@spectrum-web-components/action-button/sp-action-button';
+import '@spectrum-web-components/tabs/sp-tab';
+import '@spectrum-web-components/tabs/sp-tabs';
+import '@spectrum-web-components/tabs/sp-tab-panel';
 
 import { model } from './model';
 import { fetchAnimation, supportedCharactersById } from './viewer';
@@ -22,10 +25,10 @@ export class AppRoot extends LitElement {
           this.toggleDarkMode();
           break;
         case '[':
-          this.playPrevReplay();
+          model.prev();
           break;
         case ']':
-          this.playNextReplay();
+          model.next();
           break;
       }
     });
@@ -33,7 +36,7 @@ export class AppRoot extends LitElement {
       if (this.currentReplay !== state.replay) {
         this.currentReplay = state.replay;
       }
-    })
+    });
     Object.keys(supportedCharactersById).forEach((characterId) =>
       fetchAnimation(Number(characterId)),
     );
@@ -47,18 +50,13 @@ export class AppRoot extends LitElement {
       .container {
         height: 100vh;
         display: grid;
-        grid-template: min-content 1fr / 1fr 4fr;
-      }
-      .topbar {
-        grid-column-start: span 1;
+        grid-template: 1fr / 1fr 3fr;
       }
       .main {
         display: flex;
         justify-content: center;
-        grid-row-start: span 2;
       }
       .sidebar {
-        grid-row-start: 2;
       }
       replay-viewer {
         width: 100%;
@@ -76,14 +74,6 @@ export class AppRoot extends LitElement {
   @state()
   private currentReplay?: Replay;
 
-  private async playPrevReplay(): Promise<void> {
-    model.prev();
-  }
-
-  private async playNextReplay(): Promise<void> {
-    model.next();
-  }
-
   private toggleDarkMode(): void {
     this.darkMode = !this.darkMode;
     document.body.style.backgroundColor = this.darkMode ? 'black' : 'white';
@@ -97,14 +87,20 @@ export class AppRoot extends LitElement {
         class=${this.darkMode ? 'dark' : ''}
       >
         <div class="container">
-          <div class="topbar">
-            Top Bar
-            <sp-switch @change=${this.toggleDarkMode} ?checked=${this.darkMode}>
-              Dark Mode
-            </sp-switch>
-          </div>
           <div class="sidebar">
-            <file-list></file-list>
+            <sp-tabs selected="1">
+              <sp-tab label="Files" value="1"></sp-tab>
+              <sp-tab label="Clips" value="2"></sp-tab>
+              <sp-tab label="Settings" value="3"></sp-tab>
+              <sp-tab-panel value="1">
+                <file-list></file-list>
+              </sp-tab-panel>
+              <sp-tab-panel value="3">
+                <sp-switch @change=${this.toggleDarkMode} ?checked=${this.darkMode}>
+                  Dark Mode
+                </sp-switch>
+              </sp-tab-panel>
+            </sp-tabs>
           </div>
           <div class="main">
             ${this.currentReplay

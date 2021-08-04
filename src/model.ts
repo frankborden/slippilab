@@ -1,6 +1,6 @@
 import { SlippiGame } from '@slippi/slippi-js';
 import { Subject } from 'rxjs';
-import { Search, SearchSpec } from './search';
+import { FramePredicates, Search, SearchSpec } from './search';
 import { supportedCharactersById, supportedStagesById } from './viewer';
 import type { DeepRequired, Replay } from './common';
 
@@ -66,8 +66,6 @@ export class Model {
       };
       this.currentState = newState;
       this.replay$.next(newState);
-      console.log(newState.replay.game.getSettings());
-      console.log(newState.replay.game.getMetadata());
     }
   }
 
@@ -134,31 +132,31 @@ export class Model {
 }
 
 export const model = new Model();
-/*
+
 const successfulEdgeguardSpec: SearchSpec = {
-      permanentGroupSpec: {
-        unitSpecs: [{ predicate: FramePredicates.isOffstage }],
-      },
-      groupSpecs: [
+  permanentGroupSpec: {
+    unitSpecs: [{ predicate: FramePredicates.isOffstage }],
+  },
+  groupSpecs: [
+    {
+      unitSpecs: [
         {
-          unitSpecs: [
-            {
-              options: { minimumLength: 30 },
-              predicate: FramePredicates.isOffstage,
-            },
-          ],
+          options: { minimumLength: 30 },
+          predicate: FramePredicates.isOffstage,
         },
-        {
-          unitSpecs: [
-            {
-              predicate: (frame, game) =>
-                !FramePredicates.isInHitstun(frame, game),
-            },
-          ],
-        },
-        { unitSpecs: [{ predicate: FramePredicates.isInHitstun }] },
-        { unitSpecs: [{ predicate: FramePredicates.isDead }] },
       ],
-    };
-    model.setSearches(successfulEdgeguardSpec);
- */
+    },
+    {
+      unitSpecs: [
+        {
+          predicate: (frame, game) =>
+            !FramePredicates.isInHitstun(frame, game),
+        },
+      ],
+    },
+    { unitSpecs: [{ predicate: FramePredicates.isInHitstun }] },
+    { unitSpecs: [{ predicate: FramePredicates.isDead }] },
+  ],
+};
+model.setSearches([successfulEdgeguardSpec]);
+

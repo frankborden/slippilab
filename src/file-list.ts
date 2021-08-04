@@ -23,6 +23,7 @@ export class FileList extends LitElement {
   private selected(e: Event) {
     const select = e.currentTarget as HTMLSelectElement;
     model.jumpTo(this.files[Number(select.value)]);
+    select.blur();
   }
 
   static get styles() {
@@ -43,7 +44,7 @@ export class FileList extends LitElement {
     return html`
       <div class="container">
         <replay-select></replay-select>
-        <select size="3" @change=${this.selected}>
+        <select size="20" @change=${this.selected}>
           ${this.files.map(
             (file, index) =>
               html`<option

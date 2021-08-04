@@ -236,8 +236,8 @@ export class ReplayViewer extends LitElement {
     return html`
       <div class="container">
         <canvas
-          width="800"
-          height="400"
+          width="400"
+          height="200"
           @click=${() => this.game?.togglePause()}
         ></canvas>
         <sp-slider
