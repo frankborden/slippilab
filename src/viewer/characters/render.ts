@@ -127,6 +127,12 @@ const renderPercent = (
   isDarkMode: boolean,
 ): void => {
   const playerFrame = frame.players[player.playerIndex].post;
+  const characterData = supportedCharactersById[player.characterId];
+  const actionName = animationNameByActionId[playerFrame.actionStateId];
+  const animationName = characterData.animationMap.get(actionName) ?? actionName;
+  if (animationName.match('Dead')) {
+    return;
+  }
   const percent = `${Math.floor(playerFrame.percent)}%`;
   screenLayer.context.save();
   const fontSize = screenLayer.canvas.height / 15;
