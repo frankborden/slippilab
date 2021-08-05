@@ -13,7 +13,7 @@ import '@spectrum-web-components/tabs/sp-tab-panel';
 import { model } from './model';
 import { fetchAnimation, supportedCharactersById } from './viewer';
 import './file-list';
-import type { Replay } from './common';
+import './highlight-list';
 
 @customElement('app-root')
 export class AppRoot extends LitElement {
@@ -30,11 +30,6 @@ export class AppRoot extends LitElement {
         case ']':
           model.next();
           break;
-      }
-    });
-    model.replayOutput$.subscribe((state) => {
-      if (this.currentReplay !== state.replay) {
-        this.currentReplay = state.replay;
       }
     });
     Object.keys(supportedCharactersById).forEach((characterId) =>
@@ -71,9 +66,6 @@ export class AppRoot extends LitElement {
   @state()
   private darkMode = false;
 
-  @state()
-  private currentReplay?: Replay;
-
   private toggleDarkMode(): void {
     this.darkMode = !this.darkMode;
     document.body.style.backgroundColor = this.darkMode ? 'black' : 'white';
@@ -95,20 +87,21 @@ export class AppRoot extends LitElement {
               <sp-tab-panel value="1">
                 <file-list></file-list>
               </sp-tab-panel>
+              <sp-tab-panel value="2">
+                <highlight-list></highlight-list>
+              </sp-tab-panel>
               <sp-tab-panel value="3">
-                <sp-switch @change=${this.toggleDarkMode} ?checked=${this.darkMode}>
+                <sp-switch
+                  @change=${this.toggleDarkMode}
+                  ?checked=${this.darkMode}
+                >
                   Dark Mode
                 </sp-switch>
               </sp-tab-panel>
             </sp-tabs>
           </div>
           <div class="main">
-            ${this.currentReplay
-              ? html` <replay-viewer
-                  .replay=${this.currentReplay}
-                  .dark=${this.darkMode}
-                ></replay-viewer>`
-              : html`<div class="noReplay">Waiting for game.</div>`}
+              <replay-viewer .dark=${this.darkMode}></replay-viewer>
           </div>
         </div>
       </sp-theme>

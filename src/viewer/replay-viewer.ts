@@ -4,8 +4,9 @@ import { customElement, property, query, state } from 'lit/decorators.js';
 import '@spectrum-web-components/slider/sp-slider';
 import type { Slider } from '@spectrum-web-components/slider';
 
-import type { Replay } from '../common';
+import type { Highlight, Replay } from '../common';
 import { Game } from './game';
+import { model } from '../model';
 
 @customElement('replay-viewer')
 export class ReplayViewer extends LitElement {
@@ -29,8 +30,11 @@ export class ReplayViewer extends LitElement {
       }
     `;
   }
-  @property({ type: Object })
+  @state()
   replay?: Replay;
+
+  @state()
+  highlight?: Highlight;
 
   @property({ type: Boolean })
   dark = false;
@@ -51,6 +55,22 @@ export class ReplayViewer extends LitElement {
 
   constructor() {
     super();
+    model.state$.subscribe(async (state) => {
+      if (this.replay !== state.replay) {
+        if (this.replay) {
+          this.game?.stop();
+        }
+        this.replay = state.replay;
+        await this.setup();
+      }
+      this.highlight =
+        state.currentHighlightIndex === undefined
+          ? undefined
+          : state.replay?.highlights[state.currentHighlightIndex];
+      if (this.highlight) {
+        this.game?.setFrame(this.highlight.startFrame);
+      }
+    });
     window.addEventListener('keyup', (e: KeyboardEvent) => {
       switch (e.key) {
         case 'ArrowUp':
@@ -158,13 +178,6 @@ export class ReplayViewer extends LitElement {
   }
 
   updated(oldValues: PropertyValues<ReplayViewer>) {
-    if (oldValues.has('replay')) {
-      if (oldValues.get('replay')) {
-        this.game?.stop();
-      }
-      this.setup();
-    }
-
     if (oldValues.has('dark')) {
       this.game?.setDarkMode(this.dark);
     }
@@ -182,14 +195,7 @@ export class ReplayViewer extends LitElement {
       return;
     }
     this.highestFrame = highestFrame;
-    this.game = await Game.create(
-      this.replay,
-      this.canvas,
-      this.dark,
-      this.replay.highlights.length > 0
-        ? this.replay.highlights[0].startFrame
-        : -123,
-    );
+    this.game = await Game.create(this.replay, this.canvas, this.dark, -123);
     this.game.resize(this.canvas.width, this.canvas.height);
     this.game.onTick(
       (currentFrameNumber: number) => (this.currentFrame = currentFrameNumber),
@@ -227,7 +233,6 @@ export class ReplayViewer extends LitElement {
       gif.addFrame(context, { copy: true, delay: 33 });
       this.game.tick();
       this.game.tick();
-      //this.game.tick();
     }
     gif.render();
   }

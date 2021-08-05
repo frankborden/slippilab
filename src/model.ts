@@ -2,35 +2,36 @@ import { SlippiGame } from '@slippi/slippi-js';
 import { Subject } from 'rxjs';
 import { FramePredicates, Search, SearchSpec } from './search';
 import { supportedCharactersById, supportedStagesById } from './viewer';
-import type { DeepRequired, Replay } from './common';
+import type { DeepRequired, Highlight, Replay } from './common';
 
 export interface State {
   replay?: Replay;
   currentFileIndex?: number;
+  currentHighlightIndex?: number;
   files: File[];
   searches: SearchSpec[];
 }
 
 export class Model {
   private currentState: State = { files: [], searches: [] };
-  private replay$: Subject<State> = new Subject<State>();
-  replayOutput$ = this.replay$.asObservable();
+  private stateSubject$: Subject<State> = new Subject<State>();
+  state$ = this.stateSubject$.asObservable();
 
   constructor() {
-    this.replay$.next(this.currentState);
+    this.stateSubject$.next(this.currentState);
   }
 
   setFiles(files: File[]) {
     const newState = { ...this.currentState, files };
     this.currentState = newState;
-    this.replay$.next(newState);
+    this.stateSubject$.next(newState);
     this.next();
   }
 
   setSearches(searches: SearchSpec[]) {
     const newState = { ...this.currentState, searches };
     this.currentState = newState;
-    this.replay$.next(newState);
+    this.stateSubject$.next(newState);
   }
 
   async jumpTo(file: File) {
@@ -42,9 +43,24 @@ export class Model {
     if (replay === undefined) {
       return;
     }
-    const newState = { ...this.currentState, replay, currentFileIndex: index };
+    const newState = {
+      ...this.currentState,
+      replay,
+      currentHighlightIndex: undefined,
+      currentFileIndex: index
+    };
     this.currentState = newState;
-    this.replay$.next(newState);
+    this.stateSubject$.next(newState);
+  }
+
+  async jumpToHighlight(highlight: Highlight) {
+    const index = this.currentState.replay?.highlights.indexOf(highlight);
+    if (index === undefined || index === -1) {
+      return;
+    }
+    const newState = { ...this.currentState, currentHighlightIndex: index };
+    this.currentState = newState;
+    this.stateSubject$.next(newState);
   }
 
   async next() {
@@ -62,10 +78,11 @@ export class Model {
       const newState = {
         ...this.currentState,
         replay: nextReplay,
+        currentHighlightIndex: undefined,
         currentFileIndex,
       };
       this.currentState = newState;
-      this.replay$.next(newState);
+      this.stateSubject$.next(newState);
     }
   }
 
@@ -85,10 +102,11 @@ export class Model {
       const newState = {
         ...this.currentState,
         replay: prevReplay,
+        currentHighlightIndex: undefined,
         currentFileIndex,
       };
       this.currentState = newState;
-      this.replay$.next(newState);
+      this.stateSubject$.next(newState);
     }
   }
 
@@ -149,8 +167,7 @@ const successfulEdgeguardSpec: SearchSpec = {
     {
       unitSpecs: [
         {
-          predicate: (frame, game) =>
-            !FramePredicates.isInHitstun(frame, game),
+          predicate: (frame, game) => !FramePredicates.isInHitstun(frame, game),
         },
       ],
     },
@@ -159,4 +176,3 @@ const successfulEdgeguardSpec: SearchSpec = {
   ],
 };
 model.setSearches([successfulEdgeguardSpec]);
-

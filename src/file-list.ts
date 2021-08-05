@@ -14,7 +14,7 @@ export class FileList extends LitElement {
 
   constructor() {
     super();
-    model.replayOutput$.subscribe((state) => {
+    model.state$.subscribe((state) => {
       this.files = state.files;
       this.currentFileIndex = state.currentFileIndex;
     });

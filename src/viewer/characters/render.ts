@@ -129,7 +129,8 @@ const renderPercent = (
   const playerFrame = frame.players[player.playerIndex].post;
   const characterData = supportedCharactersById[player.characterId];
   const actionName = animationNameByActionId[playerFrame.actionStateId];
-  const animationName = characterData.animationMap.get(actionName) ?? actionName;
+  const animationName =
+    characterData.animationMap.get(actionName) ?? actionName;
   if (animationName.match('Dead')) {
     return;
   }
@@ -171,7 +172,6 @@ const renderPlayerDetails = (
   screenLayer.context.translate(x, y);
   // flip text back right-side after global flip
   screenLayer.context.scale(1, -1);
-  console.log(player.displayName, player.nametag, character);
   const name = player.displayName.length
     ? player.displayName
     : player.nametag.length

@@ -91,6 +91,7 @@ export class Game {
   public stop() {
     window.clearInterval(this.intervalId);
     this.layers.base.context.resetTransform();
+    this.tickHandler = undefined;
   }
 
   public onTick(tickHandler: (currentFrameNumber: number) => any) {
