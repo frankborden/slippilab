@@ -2,7 +2,6 @@ import { css, html, LitElement } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 
 import { model } from './model';
-import './replay-select';
 
 @customElement('file-list')
 export class FileList extends LitElement {
@@ -34,17 +33,13 @@ export class FileList extends LitElement {
         display: flex;
         flex-direction: column;
       }
-      select {
-        flex-grow: 1;
-      }
     `;
   }
 
   render() {
     return html`
       <div class="container">
-        <replay-select></replay-select>
-        <select size="20" @change=${this.selected}>
+        <select size="30" @change=${this.selected}>
           ${this.files.map(
             (file, index) =>
               html`<option

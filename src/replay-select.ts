@@ -11,6 +11,10 @@ export class ReplaySelect extends LitElement {
       input {
         display: none;
       }
+      .container {
+        display: flex;
+        justify-content: center;
+      }
     `;
   }
 
@@ -49,27 +53,29 @@ export class ReplaySelect extends LitElement {
   }
   render() {
     return html`
-      <sp-action-button class="label" @click=${this.openFile}>
-        Open File
-      </sp-action-button>
-      <input
-        id="replay-input-files"
-        name="replay-input-files"
-        type="file"
-        accept=".slp"
-        multiple
-        @change=${this.filesSelected}
-      />
-      <sp-action-button class="label" @click=${this.openFolder}>
-        Open Folder
-      </sp-action-button>
-      <input
-        id="replay-input-dir"
-        name="replay-input-dir"
-        type="file"
-        webkitdirectory
-        @change=${this.filesSelected}
-      />
+      <div class="container">
+        <sp-action-button class="label" @click=${this.openFile}>
+          Open File
+        </sp-action-button>
+        <input
+          id="replay-input-files"
+          name="replay-input-files"
+          type="file"
+          accept=".slp"
+          multiple
+          @change=${this.filesSelected}
+        />
+        <sp-action-button class="label" @click=${this.openFolder}>
+          Open Folder
+        </sp-action-button>
+        <input
+          id="replay-input-dir"
+          name="replay-input-dir"
+          type="file"
+          webkitdirectory
+          @change=${this.filesSelected}
+        />
+      </div>
     `;
   }
 }

@@ -12,6 +12,7 @@ import '@spectrum-web-components/tabs/sp-tab-panel';
 
 import { model } from './model';
 import { fetchAnimation, supportedCharactersById } from './viewer';
+import './replay-select';
 import './file-list';
 import './highlight-list';
 
@@ -47,18 +48,18 @@ export class AppRoot extends LitElement {
         display: grid;
         grid-template: 1fr / 1fr 3fr;
       }
-      .main {
-        display: flex;
-        justify-content: center;
-      }
       .sidebar {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
       }
       replay-viewer {
         width: 100%;
         height: 100%;
       }
-      .noReplay {
-        align-self: center;
+      file-list,
+      highlight-list {
+        width: 100%;
       }
     `;
   }
@@ -81,7 +82,7 @@ export class AppRoot extends LitElement {
         <div class="container">
           <div class="sidebar">
             <sp-tabs selected="1">
-              <sp-tab label="Files" value="1"></sp-tab>
+              <sp-tab label="Replays" value="1"></sp-tab>
               <sp-tab label="Clips" value="2"></sp-tab>
               <sp-tab label="Settings" value="3"></sp-tab>
               <sp-tab-panel value="1">
@@ -99,6 +100,7 @@ export class AppRoot extends LitElement {
                 </sp-switch>
               </sp-tab-panel>
             </sp-tabs>
+            <replay-select></replay-select>
           </div>
           <div class="main">
               <replay-viewer .dark=${this.darkMode}></replay-viewer>
