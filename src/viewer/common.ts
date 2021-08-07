@@ -38,7 +38,7 @@ export type DeepRequired<T> = T extends (...args: any) => any
   : NonNullable<T>;
 
 export interface Stage {
-  lines: Line[];
+  parts: [string, Vector[]][];
   topRightBlastzone: Vector;
   bottomLeftBlastzone: Vector;
   getMovingPlatforms?: (frame: number) => Line[];

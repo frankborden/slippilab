@@ -2,6 +2,7 @@ import type { FrameEntryType, FramesType } from '@slippi/slippi-js';
 import type { Line, DeepRequired, Stage } from '../common';
 import type { Render } from '../game';
 import type { Layers } from '../layer';
+import type { Vector } from '../vector';
 
 export const createStageRender = (stage: Stage): Render => {
   return (
@@ -23,14 +24,20 @@ const renderStageLines = (
 ): void => {
   worldContext.save();
   worldContext.lineWidth *= 2;
-  worldContext.strokeStyle = isDarkMode ? 'white' : 'black';
-  stage.lines.forEach((line: Line) => {
+  stage.parts.forEach(([color, vectors]) => {
+    worldContext.strokeStyle = color;
     worldContext.beginPath();
-    worldContext.moveTo(line[0].x, line[0].y);
-    worldContext.lineTo(line[1].x, line[1].y);
-    worldContext.closePath();
+    vectors.forEach((vector: Vector, index: number) => {
+      if (index === 0) {
+        worldContext.moveTo(vector.x, vector.y);
+      } else {
+        worldContext.lineTo(vector.x, vector.y);
+      }
+    });
     worldContext.stroke();
+    worldContext.closePath();
   });
+  worldContext.strokeStyle = isDarkMode ? 'white' : 'black';
   stage.getMovingPlatforms?.(frame.frame)?.forEach((line: Line) => {
     worldContext.beginPath();
     worldContext.moveTo(line[0].x, line[0].y);
