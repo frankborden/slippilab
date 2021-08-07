@@ -1,5 +1,8 @@
 import { css, html, LitElement } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
+import '@spectrum-web-components/action-button/sp-action-button';
+import '@spectrum-web-components/icons/sp-icons-medium';
+import '@spectrum-web-components/icon/sp-icon';
 
 import { model } from './model';
 
@@ -25,6 +28,18 @@ export class FileList extends LitElement {
     select.blur();
   }
 
+  private next(e: Event) {
+    const arrow = e.currentTarget as HTMLElement;
+    model.next();
+    arrow.blur();
+  }
+
+  private prev(e: Event) {
+    const arrow = e.currentTarget as HTMLElement;
+    model.prev();
+    arrow.blur();
+  }
+
   static get styles() {
     return css`
       .container {
@@ -33,12 +48,28 @@ export class FileList extends LitElement {
         display: flex;
         flex-direction: column;
       }
+      .arrow-container {
+        display: flex;
+        justify-content: space-evenly;
+      }
+      .flipped {
+        transform: scaleX(-1);
+      }
     `;
   }
 
   render() {
     return html`
       <div class="container">
+        <div class="arrow-container">
+          <sp-icons-medium></sp-icons-medium>
+          <sp-action-button quiet size="m" @click=${this.prev}>
+            <sp-icon class="flipped" name="ui:Arrow100"></sp-icon>
+          </sp-action-button>
+          <sp-action-button quiet size="m" @click=${this.next}>
+            <sp-icon name="ui:Arrow100"></sp-icon>
+          </sp-action-button>
+        </div>
         <select size="30" @change=${this.selected}>
           ${this.files.map(
             (file, index) =>
@@ -48,8 +79,8 @@ export class FileList extends LitElement {
               >
                 ${
                   // @ts-expect-error
-                  file.webkitRelativePath
-                    ?? file.name}
+                  file.webkitRelativePath ?? file.name
+                }
               </option>`,
           )}
         </select>

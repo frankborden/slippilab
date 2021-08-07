@@ -17,7 +17,8 @@
   },
   "dependencies": {
     "@slippi/slippi-js": "frankborden/slippi-js",
-    "@spectrum-web-components/action-button": "^0.5.4",
+    "@spectrum-web-components/action-button": "^0.5.5",
+    "@spectrum-web-components/icons": "^0.7.7",
     "@spectrum-web-components/slider": "^0.10.3",
     "@spectrum-web-components/switch": "^0.7.11",
     "@spectrum-web-components/tabs": "^0.6.6",

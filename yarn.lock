@@ -244,7 +244,7 @@
     reconnect-core "^1.3.0"
     semver "^7.3.2"
 
-"@spectrum-web-components/action-button@^0.5.4":
+"@spectrum-web-components/action-button@^0.5.5":
   version "0.5.5"
   resolved "https://registry.yarnpkg.com/@spectrum-web-components/action-button/-/action-button-0.5.5.tgz#b1df7578853fa0f41b0fa3b15875faa30efe6913"
   integrity sha512-QLXVrTawFMegNTOl7kx9ukPmh+J4VEdSa8sWhW9teSLGfd9yUCFCRSA+RVuGVBGbvTbxyh4b1G3Zrvrs4Utjuw==
@@ -302,6 +302,15 @@
   dependencies:
     "@spectrum-web-components/base" "^0.4.5"
     "@spectrum-web-components/icon" "^0.9.9"
+    "@spectrum-web-components/iconset" "^0.5.7"
+    tslib "^2.0.0"
+
+"@spectrum-web-components/icons@^0.7.7":
+  version "0.7.7"
+  resolved "https://registry.yarnpkg.com/@spectrum-web-components/icons/-/icons-0.7.7.tgz#bc6e1880e70305a3a986be602c9876971549ec85"
+  integrity sha512-1S4UyKfz9w2wEKDTiypxLO8Qp6dy7nfkQ9q3GaztZ36TbnsCNoPsZNv35nS0Yp29f5nnP6d4h7E0u/QYnz6hrw==
+  dependencies:
+    "@spectrum-web-components/base" "^0.4.5"
     "@spectrum-web-components/iconset" "^0.5.7"
     tslib "^2.0.0"
 

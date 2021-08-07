@@ -47,7 +47,7 @@ export class Model {
       ...this.currentState,
       replay,
       currentHighlightIndex: undefined,
-      currentFileIndex: index
+      currentFileIndex: index,
     };
     this.currentState = newState;
     this.stateSubject$.next(newState);
@@ -115,9 +115,12 @@ export class Model {
       if (file.name.endsWith('.slp')) {
         const game = new SlippiGame(await file.arrayBuffer());
         if (this.isSupported(game)) {
-          const highlights = this.currentState.searches
-            .map((searchSpec) => new Search(searchSpec))
-            .flatMap((search) => search.searchFile(game));
+          let highlights: Highlight[] = [];
+          if (game.getSettings()?.players?.length === 2) {
+            highlights = this.currentState.searches
+              .map((searchSpec) => new Search(searchSpec))
+              .flatMap((search) => search.searchFile(game));
+          }
           return {
             fileName: file.name,
             game: game as DeepRequired<SlippiGame>,
@@ -175,4 +178,32 @@ const successfulEdgeguardSpec: SearchSpec = {
     { unitSpecs: [{ predicate: FramePredicates.isDead }] },
   ],
 };
-model.setSearches([successfulEdgeguardSpec]);
+const successfulComboSpec: SearchSpec = {
+  permanentGroupSpec: {
+    unitSpecs: [{ predicate: FramePredicates.isNotInGroundedControl }],
+  },
+  groupSpecs: [
+    { unitSpecs: [{ predicate: FramePredicates.isInBeginningOfHitstun }] },
+    {
+      options: { allowDelayed: true },
+      unitSpecs: [{ predicate: FramePredicates.isInNotBeginningOfHitstun }],
+    },
+    {
+      options: { allowDelayed: true },
+      unitSpecs: [{ predicate: FramePredicates.isInBeginningOfHitstun }],
+    },
+    {
+      options: { allowDelayed: true },
+      unitSpecs: [{ predicate: FramePredicates.isInNotBeginningOfHitstun }],
+    },
+    {
+      options: { allowDelayed: true },
+      unitSpecs: [{ predicate: FramePredicates.isInBeginningOfHitstun }],
+    },
+    {
+      options: { allowDelayed: true },
+      unitSpecs: [{ predicate: FramePredicates.isDead }],
+    },
+  ],
+};
+model.setSearches([successfulComboSpec]);

@@ -26,11 +26,32 @@ export const isInGroundedControl: FramePredicate = (
   return isInControl(frame.actionStateId!);
 };
 
+export const isNotInGroundedControl: FramePredicate = (
+  frame: PostFrameUpdateType,
+  _game: SlippiGame,
+) => {
+  return !isInControl(frame.actionStateId!);
+};
+
 export const isInHitstun: FramePredicate = (
   frame: PostFrameUpdateType,
   _game: SlippiGame,
 ) => {
   return isDamaged(frame.actionStateId!);
+};
+
+export const isInBeginningOfHitstun: FramePredicate = (
+  frame: PostFrameUpdateType,
+  _game: SlippiGame,
+) => {
+  return isDamaged(frame.actionStateId!) && frame.actionStateCounter === 1;
+};
+
+export const isInNotBeginningOfHitstun: FramePredicate = (
+  frame: PostFrameUpdateType,
+  _game: SlippiGame,
+) => {
+  return isDamaged(frame.actionStateId!) && frame.actionStateCounter === 2;
 };
 
 export const isDead: FramePredicate = (
