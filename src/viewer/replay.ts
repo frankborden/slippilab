@@ -67,7 +67,9 @@ export const getFacingDirection = (
     animationName === 'ThrowB' &&
     (character === 'Falco' || character === 'Fox') &&
     animationFrameIndex > 8;
+  const isStandingTurnaround = animationName === 'Turn' && animationFrameIndex > 5;
   return isMarthBairTurnaround || isSpacieBthrowTurnaround
+  || isStandingTurnaround
     ? -frameFacing
     : frameFacing;
 };
