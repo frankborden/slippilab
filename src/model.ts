@@ -185,7 +185,6 @@ const successfulComboSpec: SearchSpec = {
   groupSpecs: [
     { unitSpecs: [{ predicate: FramePredicates.isInBeginningOfHitstun }] },
     {
-      options: { allowDelayed: true },
       unitSpecs: [{ predicate: FramePredicates.isInNotBeginningOfHitstun }],
     },
     {
@@ -193,7 +192,13 @@ const successfulComboSpec: SearchSpec = {
       unitSpecs: [{ predicate: FramePredicates.isInBeginningOfHitstun }],
     },
     {
+      unitSpecs: [{ predicate: FramePredicates.isInNotBeginningOfHitstun }],
+    },
+    {
       options: { allowDelayed: true },
+      unitSpecs: [{ predicate: FramePredicates.isInBeginningOfHitstun }],
+    },
+    {
       unitSpecs: [{ predicate: FramePredicates.isInNotBeginningOfHitstun }],
     },
     {
