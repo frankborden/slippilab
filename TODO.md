@@ -44,6 +44,7 @@
   - make every match red vs blue?
 - Separate project (game.ts and children)
 - debug canvas for viewing individual animations
+- Problems on windows firefox
 - Tests
 
 # Search

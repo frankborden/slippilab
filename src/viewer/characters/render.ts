@@ -73,6 +73,10 @@ const getPrimaryColor = (
   players: DeepRequired<PlayerType[]>,
   isDoubles: boolean,
 ): string => {
+  // CPU
+  if (player.type === 1) {
+    return 'grey';
+  }
   if (isDoubles) {
     return teamColors[player.teamId][getShade(player.playerIndex, players)];
   } else {
@@ -172,11 +176,16 @@ const renderPlayerDetails = (
   screenLayer.context.translate(x, y);
   // flip text back right-side after global flip
   screenLayer.context.scale(1, -1);
-  const name = player.displayName.length
+  const name = player.displayName?.length
     ? player.displayName
+    : player.connectCode?.length
+    ? player.connectCode
     : player.nametag.length
     ? player.nametag
+    : player.type === 1
+    ? 'CPU'
     : character;
+  // Debug mode
   /*
   const characterData = supportedCharactersById[player.characterId];
   let animationName;
