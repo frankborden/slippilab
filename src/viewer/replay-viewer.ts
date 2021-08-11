@@ -18,6 +18,10 @@ export class ReplayViewer extends LitElement {
         height: 100%;
         display: flex;
         flex-direction: column;
+        justify-content: center;
+      }
+      div {
+        align-self: center;
       }
       canvas {
         flex-grow: 1;
@@ -243,11 +247,13 @@ export class ReplayViewer extends LitElement {
         <canvas
           width="400"
           height="200"
+          ?hidden="${!this.replay}"
           @click=${() => this.game?.togglePause()}
         ></canvas>
         <sp-slider
           hide-value-label
           label="${this.currentFrame}/${this.highestFrame}"
+          ?hidden="${!this.replay}"
           variant="filled"
           min="-123"
           max=${this.highestFrame}
@@ -255,6 +261,9 @@ export class ReplayViewer extends LitElement {
           @change=${this.clicked}
           @input=${this.clicked}
         ></sp-slider>
+        <div ?hidden="${Boolean(this.replay)}">
+          Waiting for game...
+        </div>
       </div>
     `;
   }

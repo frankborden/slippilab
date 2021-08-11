@@ -258,22 +258,10 @@ const getAnimationFrame = (
   if (isSpacieUpBMovementAction || isDamageFlyRoll) {
     // just a guess, especially between different characters..
     const rotationYOffset = 10;
-    let referenceFrame: DeepRequired<PostFrameUpdateType>;
-    let deltaFrame: DeepRequired<PostFrameUpdateType>;
-    if (isSpacieUpBMovementAction) {
-      referenceFrame =
-        frames[playerFrame.frame - playerFrame.actionStateCounter - 1].players[
-          player.playerIndex
-        ].post;
-      deltaFrame =
-        frames[playerFrame.frame - playerFrame.actionStateCounter].players[
-          player.playerIndex
-        ].post;
-    } else {
-      referenceFrame =
-        frames[playerFrame.frame - 1].players[player.playerIndex].post;
-      deltaFrame = playerFrame;
-    }
+    let referenceFrame = isSpacieUpBMovementAction
+      ? getFirstFrameOfAnimation(playerFrame, frames)
+      : frames[playerFrame.frame - 1].players[player.playerIndex].post;
+    let deltaFrame = frames[referenceFrame.frame + 1].players[player.playerIndex].post;
     const xDiff = deltaFrame.positionX - referenceFrame.positionX;
     const yDiff = deltaFrame.positionY - referenceFrame.positionY;
     const rawAngle = Math.atan2(yDiff, facingDirection * xDiff);

@@ -66,11 +66,10 @@
 
 - Tests
 - Fix tsc complaining about zip modules
-- Show combos/conversions/etc from .slp getStats()
+- Show combos/conversions/etc from .slp getStats()?
 - Webworkers?
-- Waiting for game...
 - Separate projects (game.ts and children, search)
   - npm packages
   - git submodules?
-- Migrate to Vite or other build tool with better bundle support for production
+- optimized bundle for production
 - npm org?
