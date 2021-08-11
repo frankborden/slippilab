@@ -42,7 +42,7 @@ const renderItem = (
         ) - 10, // 10 = guess to account for edge of char to center of char
       );
       const length = Math.min(
-        item.typeId === 54 ? 25 : 30, // guesses
+        30, // guess
         Math.abs(distToOwner),
       );
       worldContext.rotate(angle);

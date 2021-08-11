@@ -5,6 +5,8 @@
 - Shield put up / take down animation
 - Show Shield tilting (original visualiser reads inputs and checks for stun)
 - Bubble view when off camera / near blastzone?
+- correct laser & fly guy sizes
+- show needles
 - Powershield animation
   - 0x0b6: 'GUARD', //GuardReflect (182 decimal)
 - Lightshield
@@ -15,13 +17,14 @@
 - Fire effect for spacie upB, falcon specials
 - Sword trails
 - Color by costume instead of port (first attempt = ugly)
-- indicate CPUs (Gray?)
 - Optional state-dependent colors? (hitstun, shieldstun, actionable)
 - Marth sideB colors
+- spacie sideB clones
+- support more characters
 
 ## Stage
 
-- Background visuals / color stages
+- Background visuals (grid?)
 - Fountain platforms (infeasible until it's added to .slp spec)
 - Wispy (infeasible until it's added to .slp spec)
 
@@ -42,7 +45,6 @@
 
 - colorblind friendly colors
   - make every match red vs blue?
-- Separate project (game.ts and children)
 - debug canvas for viewing individual animations
 - Problems on windows firefox
 - Tests
@@ -50,11 +52,12 @@
 # Search
 
 - Other filters (matchup, date, player, stage)
-- opponent available to frame predicates (at least in singles)
+- opponent frame available to frame predicates (at least in singles)
+- Fix doubles
 
 # Export
 
-- export to other formats better than GIF? apng, webp, mp4?
+- export to other formats better than gif? apng, webp, mp4?
   - Discord doesn't like .apng and .webp. Will it allow embeded mp4 from url?
 - Upload gif to some host (example project with imgur: https://github.com/eirikb/gifie)
 - adjust start/end clip
@@ -62,8 +65,12 @@
 # App
 
 - Tests
-- Fix tsc complaining about json modules (resolveJsonModule=true makes
-  tsc crash a lot due to json sizes)
+- Fix tsc complaining about zip modules
 - Show combos/conversions/etc from .slp getStats()
 - Webworkers?
 - Waiting for game...
+- Separate projects (game.ts and children, search)
+  - npm packages
+  - git submodules?
+- Migrate to Vite or other build tool with better bundle support for production
+- npm org?
