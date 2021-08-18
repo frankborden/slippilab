@@ -40,14 +40,16 @@ Optionally delete stuff you don't want
 6) Compress all the .json files into a single .zip
 yarn zip
 
-7) Move the .zip file to the character directory
-cp ~/slippilab/tools/output/zip/animations.zip ~/slippilab/src/viewer/animations/$CHARACTER/
+7) Move the .zip file to the zips directory
+cp ~/slippilab/tools/output/zip/animations.zip ~/slippilab/src/viewer/animations/zips/$CHARACTER.zip
 
 8) Add the character's action state <-> animation mapping
-TODO
+copy an existing src/viewer/characters/$CHARACTER.ts for the new character and adjust the specials and
+any other non-standard mappings.
 
-9) Add the character to the supported characters list
-TODO
+9) Add the character:
+src/viewer/characters/index.ts supportedCharactersById function
+src/viewer/animations/index.ts importAnimation function
 
 done!
 */
