@@ -1,20 +1,79 @@
 import { walkSync } from 'https://deno.land/std@0.103.0/fs/mod.ts';
-import { parse } from 'https://deno.land/x/xml/mod.ts';
-for (const baseSvg of walkSync('./tools/output/svgo/')) {
-  if (baseSvg.isDirectory) {
+import {parse} from 'https://deno.land/x/xml/mod.ts';
+
+/*
+Adding a character:
+
+1) Render animations with Maya (student license with .edu email)
+Open character scene in Maya (from New and Improved Animation Pack)
+Set side camera environemnt background color to white
+Set framerate to 60!
+Delete all the textures. Window -> Rendering Editors -> Hypershade, Edit -> Delete All By Type -> Textures
+Set render settings to match vectorize command and render to check (don't skip this)
+Adjust .mel script to your character.
+Run script (depends on Animation_Pack, which is different from the one above, adjust input/output directories as needed)
+
+2) Trace .bmp's into .svgs (fish script, install potrace)
+for folder in /mnt/d/Output/*
+  cd $folder; echo $folder;
+  ls | parallel potrace --svg --opaque;
+  cd ..;
+end
+
+3) Remove bmps, prepare pipeline
+find /mnt/d/Output/ | rg "bmp\$" | xargs -P 0 rm
+yarn clearAnimationBuild
+cp -r /mnt/d/Output/* ~/slippilab/tools/output/maya/
+
+4) Optimize svgs with SVGO (fish script)
+cd ~/slippilab/tools/output/maya/
+for folder in *                                                                                                     Tue Aug 17 18:18:19 2021
+  echo $folder;
+  npx svgo -f $folder -o ~/slippilab/tools/output/svgo/$folder -p 1 --multipass --config ~/slippilab/tools/svgo.config.js;
+end
+
+5) Collect path strings from SVGs into a single .json for each animation
+yarn compress
+
+Optionally delete stuff you don't want
+
+6) Compress all the .json files into a single .zip
+yarn zip
+
+7) Move the .zip file to the character directory
+cp ~/slippilab/tools/output/zip/animations.zip ~/slippilab/src/viewer/animations/$CHARACTER/
+
+8) Add the character's action state <-> animation mapping
+TODO
+
+9) Add the character to the supported characters list
+TODO
+
+done!
+*/
+
+for (const folder of walkSync('./tools/output/svgo', {maxDepth:1})) {
+  if (folder.path === 'tools/output/svgo') {
     continue;
   }
-  console.log('parsing', baseSvg.path);
-  const contents: any = parse(Deno.readTextFileSync(baseSvg.path));
-  const dStrings = contents.svg.g
-    .filter((group: any) => group.path?.['@d'])
-    .map((group: any) => group.path['@d']);
-  const dedupedDStrings = dStrings.filter(
-    (dString: string, index: number, _array: String[]) =>
-      dStrings.indexOf(dString) === index,
+  const files = Array.from(walkSync(folder.path)).filter((file) => file.isFile).map((file) => file.path);
+  files.sort();
+  const dStrings = files.map((file) => {
+    const svg = (parse(Deno.readTextFileSync(file)) as any).svg;
+    return svg.path['@d'] ?? svg.path[0]['@d'];
+  });
+  const dedupedDStrings = dStrings.map(
+    (dString: string, index: number, _array: String[]) => {
+      const firstIndex = dStrings.indexOf(dString);
+      if (firstIndex === index) {
+        return dString;
+      } else {
+        return `frame${firstIndex}`;
+      }
+    }
   );
   console.log(' -', dedupedDStrings.length, 'total frames');
-  const animationName = baseSvg.name
+  const animationName = folder.name
     .replace(/.*ACTION_/, '')
     .replace(/_figatree.*$/, '');
   const outputPath = `tools/output/compression/${animationName}.json`;

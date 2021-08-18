@@ -50,6 +50,10 @@ const importAnimation = async (
       const jigglypuff = await import('./jigglypuff');
       await jigglypuff.init();
       return jigglypuff.animations;
+    case 'Pikachu':
+      const pikachu = await import('./pikachu');
+      await pikachu.init();
+      return pikachu.animations;
     default:
       throw new Error(`Unsupported character id: ${charId}`);
   }

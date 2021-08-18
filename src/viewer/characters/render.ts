@@ -186,17 +186,16 @@ const renderPlayerDetails = (
     ? 'CPU'
     : character;
   // Debug mode
-  /*
-  const characterData = supportedCharactersById[player.characterId];
-  let animationName;
-  const actionName = animationNameByActionId[playerFrame.actionStateId];
-  if (characterData.specialsMap.has(playerFrame.actionStateId)) {
-    animationName = characterData.specialsMap.get(playerFrame.actionStateId);
-  } else if (actionName) {
-    animationName = characterData.animationMap.get(actionName) ?? actionName;
-  }
-  const name = `${playerFrame.actionStateId},${animationName},${playerFrame.actionStateCounter}`;
-  */
+  // const characterData = supportedCharactersById[player.characterId];
+  // let animationName;
+  // const actionName = animationNameByActionId[playerFrame.actionStateId];
+  // if (characterData.specialsMap.has(playerFrame.actionStateId)) {
+  //   animationName = characterData.specialsMap.get(playerFrame.actionStateId);
+  // } else if (actionName) {
+  //   animationName = characterData.animationMap.get(actionName) ?? actionName;
+  // }
+  // const name = `${playerFrame.actionStateId},${animationName},${playerFrame.actionStateCounter}`;
+  
   screenLayer.context.fillText(name, 0, 0);
   screenLayer.context.strokeText(name, 0, 0);
   screenLayer.context.restore();
@@ -273,7 +272,12 @@ const getAnimationFrame = (
     worldContext.translate(0, -rotationYOffset);
   }
 
-  return animationFrames[animationIndex];
+  const animationString = animationFrames[animationIndex];
+  if (animationString?.startsWith('frame')) {
+    const referencedFrameIndex = Number(animationString.substr(5));
+    return animationFrames[referencedFrameIndex];
+  }
+  return animationString;
 };
 
 const renderCharacter = (

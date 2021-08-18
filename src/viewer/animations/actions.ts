@@ -12,7 +12,7 @@ export const animationNameByActionId = [
   'DeadUpFallIce', //  9
   'DeadUpFallHitCameraIce', //  10
   'Rebirth', //  11
-  'UNSUPPORTED', //  12
+  'Rebirth', //  12
   'RebirthWait', //  13
   'Wait', //  14
   'WalkSlow', //  15
