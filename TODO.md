@@ -6,7 +6,7 @@
 - Show Shield tilting (original visualiser reads inputs and checks for stun)
 - Bubble view when off camera / near blastzone?
 - correct laser & fly guy sizes
-- show needles
+- show needles, pika jolts, turnips, etc.
 - Powershield animation
   - 0x0b6: 'GUARD', //GuardReflect (182 decimal)
 - Lightshield
@@ -15,12 +15,13 @@
 - Hit effect
 - Electric effect for knee/shine
 - Fire effect for spacie upB, falcon specials
-- Sword trails
 - Color by costume instead of port (first attempt = ugly)
 - Optional state-dependent colors? (hitstun, shieldstun, actionable)
 - Marth sideB colors
 - spacie sideB clones
 - support more characters
+  - pre-load fox/falco/falcon/marth, load the rest on demand
+- combine all characters jsons into one?
 
 ## Stage
 
@@ -67,8 +68,9 @@
 - Tests
 - Fix tsc complaining about zip modules
 - Show combos/conversions/etc from .slp getStats()?
+- write fully browser-friendly parser
 - Webworkers?
-- Separate projects (game.ts and children, search)
+- Separate projects (viewer, search, parser)
   - npm packages
   - git submodules?
 - optimized bundle for production
