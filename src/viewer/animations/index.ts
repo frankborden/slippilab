@@ -1,8 +1,18 @@
+import { BlobReader, TextWriter, ZipReader } from '@zip.js/zip.js';
+
+import foxAnimationsUrl from './zips/fox.zip';
+import falcoAnimationsUrl from './zips/falco.zip';
+import falconAnimationsUrl from './zips/falcon.zip';
+import jigglypuffAnimationsUrl from './zips/jigglypuff.zip';
+import marthAnimationsUrl from './zips/marth.zip';
+import peachAnimationsUrl from './zips/peach.zip';
+import pikachuAnimationsUrl from './zips/pikachu.zip';
+import sheikAnimationsUrl from './zips/sheik.zip';
 import { characterNamesById } from '../common';
 export { isOneIndexed } from './oneIndexed';
 export { animationNameByActionId } from './actions';
 
-const animationsCache = new Map<number, any>();
+const animationsCache = new Map<number, CharacterAnimations>();
 
 export type AnimationFrames = string[];
 export type CharacterAnimations = { [actionName: string]: AnimationFrames };
@@ -11,7 +21,7 @@ export const fetchAnimations = async (
   charId: number,
 ): Promise<CharacterAnimations> => {
   if (animationsCache.has(charId)) {
-    return animationsCache.get(charId);
+    return animationsCache.get(charId)!;
   }
   const animations = await importAnimation(charId);
   animationsCache.set(charId, animations);
@@ -23,38 +33,39 @@ const importAnimation = async (
 ): Promise<CharacterAnimations> => {
   switch (characterNamesById[charId]) {
     case 'Sheik':
-      const sheik = await import('./sheik');
-      await sheik.init();
-      return sheik.animations;
+      return load(sheikAnimationsUrl);
     case 'Peach':
-      const peach = await import('./peach');
-      await peach.init();
-      return peach.animations;
+      return load(peachAnimationsUrl);
     case 'Fox':
-      const fox = await import('./fox');
-      await fox.init();
-      return fox.animations;
+      return load(foxAnimationsUrl);
     case 'Falco':
-      const falco = await import('./falco');
-      await falco.init();
-      return falco.animations;
+      return load(falcoAnimationsUrl);
     case 'Captain Falcon':
-      const falcon = await import('./falcon');
-      await falcon.init();
-      return falcon.animations;
+      return load(falconAnimationsUrl);
     case 'Marth':
-      const marth = await import('./marth');
-      await marth.init();
-      return marth.animations;
+      return load(marthAnimationsUrl);
     case 'Jigglypuff':
-      const jigglypuff = await import('./jigglypuff');
-      await jigglypuff.init();
-      return jigglypuff.animations;
+      return load(jigglypuffAnimationsUrl);
     case 'Pikachu':
-      const pikachu = await import('./pikachu');
-      await pikachu.init();
-      return pikachu.animations;
+      return load(pikachuAnimationsUrl);
     default:
       throw new Error(`Unsupported character id: ${charId}`);
   }
+};
+
+const load = async (url: string): Promise<CharacterAnimations> => {
+  const animations: CharacterAnimations = {};
+  const response = await fetch(url);
+  const animationsZip = await response.blob();
+  const reader = new ZipReader(new BlobReader(animationsZip));
+  const files = await reader.getEntries();
+  await Promise.all(
+    files.map(async (file) => {
+      const animationName = file.filename.replace('.json', '');
+      const contents = await file.getData?.(new TextWriter());
+      const animationData = JSON.parse(contents);
+      animations[animationName] = animationData;
+    }),
+  );
+  return animations;
 };
