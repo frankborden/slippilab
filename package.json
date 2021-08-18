@@ -17,27 +17,25 @@
     "copyFinished": "mkdir src/viewer/animations/falco; cp -r tools/output/zip/* src/viewer/animations/falco"
   },
   "dependencies": {
-    "@slippi/slippi-js": "frankborden/slippi-js",
+    "@slippi/slippi-js": "^6.1.2",
     "@spectrum-web-components/action-button": "^0.5.5",
     "@spectrum-web-components/icons": "^0.7.7",
-    "@spectrum-web-components/slider": "^0.10.3",
-    "@spectrum-web-components/switch": "^0.7.11",
+    "@spectrum-web-components/slider": "^0.10.5",
+    "@spectrum-web-components/switch": "^0.7.12",
     "@spectrum-web-components/tabs": "^0.6.6",
-    "@spectrum-web-components/theme": "^0.8.11",
+    "@spectrum-web-components/theme": "^0.8.12",
     "@zip.js/zip.js": "^2.3.8",
     "gif.js": "^0.2.0",
     "lit": "^2.0.0-rc.2",
-    "rxjs": "^7.2.0",
-    "safe-buffer": "^5.2.1",
-    "ws": "^7.5.2"
+    "rxjs": "^7.3.0",
+    "safe-buffer": "^5.2.1"
   },
   "devDependencies": {
     "@types/gif.js": "^0.2.2",
-    "@types/snowpack-env": "^2.3.3",
-    "imagetracerjs": "^1.2.6",
-    "prettier": "^2.2.1",
-    "snowpack": "^3.3.7",
-    "svgo": "^2.3.1",
+    "@types/snowpack-env": "^2.3.4",
+    "prettier": "^2.3.2",
+    "snowpack": "^3.8.6",
+    "svgo": "^2.4.0",
     "typescript": "^4.3.5"
   }
 }

@@ -1,8 +1,7 @@
 /** @type {import("snowpack").SnowpackUserConfig } */
 export default {
-  // These work around bugs in snowpack and the node polyfill buffer library
   alias: {
-    "'enet'": 'enet',
+    // https://github.com/ChALkeR/safer-buffer/issues/7
     'safer-buffer': 'safe-buffer',
   },
   mount: {
