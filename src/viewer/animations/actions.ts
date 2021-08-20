@@ -6,12 +6,12 @@ export const animationNameByActionId = [
   'DeadUp', //  3
   'DeadUpStar', //  4
   'DeadUpStarIce', //  5
-  'UNSUPPORTED', //  6
-  'UNSUPPORTED', //  7
-  'DeadUpFallHitCamera', //  8
+  'DeadUpFall', //  6
+  'DeadUpFallHitCamera', //  7
+  'DeadUpFallHitCameraFlat', //  8
   'DeadUpFallIce', //  9
   'DeadUpFallHitCameraIce', //  10
-  'Rebirth', //  11
+  'Sleep', //  11
   'Rebirth', //  12
   'RebirthWait', //  13
   'Wait', //  14
@@ -157,7 +157,7 @@ export const animationNameByActionId = [
   'ItemScrew', //  154
   'ItemScrewAir', //  155
   'DamageScrew', //  156
-  ' DamageScrewAir', //  157
+  'DamageScrewAir', //  157
   'ItemScopeStart', //  158
   'ItemScopeRapid', //  159
   'ItemScopeFire', //  160
@@ -341,46 +341,4 @@ export const animationNameByActionId = [
   'CapturewaitCrazyhand', //  338
   'ThrownCrazyhand', //  339
   'BarrelCannonWait', //  340
-  'Wait1', //  341
-  'Wait2', //  342
-  'Wait3', //  343
-  'Wait4', //  344
-  'WaitItem', //  345
-  'SquatWait1', //  346
-  'SquatWait2', //  347
-  'SquatWaitItem', //  348
-  'GuardDamage', //  349
-  'EscapeN', //  350
-  'AttackS4Hold', //  351
-  'HeavyWalk1', //  352
-  'HeavyWalk2', //  353
-  'ItemHammerWait', //  354
-  'ItemHammerMove', //  355
-  'ItemBlind', //  356
-  'DamageElec', //  357
-  'FuraSleepStart', //  358
-  'FuraSleepLoop', //  359
-  'FuraSleepEnd', //  360
-  'WallDamage', //  361
-  'CliffWait1', //  362
-  'CliffWait2', //  363
-  'SlipDown', //  364
-  'Slip', //  365
-  'SlipTurn', //  366
-  'SlipDash', //  367
-  'SlipWait', //  368
-  'SlipStand', //  369
-  'SlipAttack', //  370
-  'SlipEscapeF', //  371
-  'SlipEscapeB', //  372
-  'AppealS', //  373
-  'Zitabata', //  374
-  'CaptureKoopaHit', //  375
-  'ThrownKoopaEndF', //  376
-  'ThrownKoopaEndB', //  377
-  'CaptureKoopaAirHit', //  378
-  'ThrownKoopaAirEndF', //  379
-  'ThrownKoopaAirEndB', //  380
-  'ThrownKirbyDrinkSShot', //  381
-  'ThrownKirbySpitSShot', //  382
-] as const;
+] as const; // 341+ are character-specific

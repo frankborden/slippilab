@@ -59,6 +59,12 @@ export const getFacingDirection = (
   character: CharacterName,
   animationFrameIndex: number,
 ): number => {
+  const isBackItemToss = [
+    'LightThrowB',
+    'LightThrowB4',
+    'LightThrowAirB',
+    'LightThrowAirB4',
+  ].includes(animationName) && animationFrameIndex > 7;
   const isMarthBairTurnaround =
     animationName === 'AttackAirB' &&
     character === 'Marth' &&
@@ -67,9 +73,12 @@ export const getFacingDirection = (
     animationName === 'ThrowB' &&
     (character === 'Falco' || character === 'Fox') &&
     animationFrameIndex > 8;
-  const isStandingTurnaround = animationName === 'Turn' && animationFrameIndex > 5;
-  return isMarthBairTurnaround || isSpacieBthrowTurnaround
-  || isStandingTurnaround
+  const isStandingTurnaround =
+    animationName === 'Turn' && animationFrameIndex > 5;
+  return isBackItemToss ||
+    isMarthBairTurnaround ||
+    isSpacieBthrowTurnaround ||
+    isStandingTurnaround
     ? -frameFacing
     : frameFacing;
 };

@@ -2,6 +2,8 @@
 
 ## Character
 
+- Peach/Pikachu calculate shield origin
+- Spacies calculate shine origin
 - Shield put up / take down animation
 - Show Shield tilting (original visualiser reads inputs and checks for stun)
 - Bubble view when off camera / near blastzone?

@@ -1,6 +1,6 @@
+import type { Character } from '../common';
 import { sheik } from './sheik';
 import { peach } from './peach';
-import type { Character } from '../common';
 import { fox } from './fox';
 import { falco } from './falco';
 import { falcon } from './falcon';

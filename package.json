@@ -26,7 +26,7 @@
     "@spectrum-web-components/theme": "^0.8.12",
     "@zip.js/zip.js": "^2.3.8",
     "gif.js": "^0.2.0",
-    "lit": "^2.0.0-rc.2",
+    "lit": "^2.0.0-rc.3",
     "rxjs": "^7.3.0",
     "safe-buffer": "^5.2.1"
   },

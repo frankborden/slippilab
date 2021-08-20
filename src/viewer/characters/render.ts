@@ -135,7 +135,7 @@ const renderPercent = (
   const actionName = animationNameByActionId[playerFrame.actionStateId];
   const animationName =
     characterData.animationMap.get(actionName) ?? actionName;
-  if (animationName.match('Dead')) {
+  if (animationName?.match('Dead')) {
     return;
   }
   const percent = `${Math.floor(playerFrame.percent)}%`;
@@ -163,7 +163,7 @@ const renderPlayerDetails = (
   isDoubles: boolean,
   isDarkMode: boolean,
 ): void => {
-  //const playerFrame = frame.players[player.playerIndex].post;
+  // const playerFrame = frame.players[player.playerIndex].post;
   const character = characterNamesById[player.characterId];
   screenLayer.context.save();
   const fontSize = screenLayer.canvas.height / 30;
@@ -195,7 +195,7 @@ const renderPlayerDetails = (
   //   animationName = characterData.animationMap.get(actionName) ?? actionName;
   // }
   // const name = `${playerFrame.actionStateId},${animationName},${playerFrame.actionStateCounter}`;
-  
+
   screenLayer.context.fillText(name, 0, 0);
   screenLayer.context.strokeText(name, 0, 0);
   screenLayer.context.restore();
@@ -235,10 +235,9 @@ const getAnimationFrame = (
   const animationFrames = animationName
     ? animations[animationName] ?? animations['Appeal'] ?? animations['AppealL']
     : animations['Appeal'] ?? animations['AppealL'];
-  const animationIndex = Math.max(
-    Math.floor(playerFrame.actionStateCounter + firstIndex),
-    0,
-  );
+  const animationIndex =
+    Math.max(Math.floor(playerFrame.actionStateCounter + firstIndex), 0) %
+    animationFrames.length;
   if (!animationName) {
     return;
   }
@@ -260,7 +259,8 @@ const getAnimationFrame = (
     let referenceFrame = isSpacieUpBMovementAction
       ? getFirstFrameOfAnimation(playerFrame, frames)
       : frames[playerFrame.frame - 1].players[player.playerIndex].post;
-    let deltaFrame = frames[referenceFrame.frame + 1].players[player.playerIndex].post;
+    let deltaFrame =
+      frames[referenceFrame.frame + 1].players[player.playerIndex].post;
     const xDiff = deltaFrame.positionX - referenceFrame.positionX;
     const yDiff = deltaFrame.positionY - referenceFrame.positionY;
     const rawAngle = Math.atan2(yDiff, facingDirection * xDiff);
