@@ -1,64 +1,65 @@
-import {
-  PostFrameUpdateType,
-  SlippiGame,
-  isDamaged,
-  isInControl,
-  isDead as slippiIsDead,
-  isGrabbed as slippiIsGrabbed,
-} from '@slippi/slippi-js';
+import type { Game, PostFrameUpdateEvent } from '../parser/slp';
 
 export type FramePredicate = (
-  frame: PostFrameUpdateType,
-  game: SlippiGame,
+  frame: PostFrameUpdateEvent,
+  game: Game,
 ) => boolean;
 
 export const isGrabbed: FramePredicate = (
-  frame: PostFrameUpdateType,
-  _game: SlippiGame,
+  frame: PostFrameUpdateEvent,
+  _game: Game,
 ) => {
-  return slippiIsGrabbed(frame.actionStateId!);
+  return frame.actionStateId >= 0xdf && frame.actionStateId <= 0xe8;
 };
 
 export const isInGroundedControl: FramePredicate = (
-  frame: PostFrameUpdateType,
-  _game: SlippiGame,
+  frame: PostFrameUpdateEvent,
+  _game: Game,
 ) => {
-  return isInControl(frame.actionStateId!);
+  const id = frame.actionStateId;
+  const ground = id >= 0x0e && id <= 0x18;
+  const squat = id >= 0x27 && id <= 0x29;
+  const groundAttack = id >= 0x2c && id <= 0x40;
+  const grab = id === 0xd4;
+  return ground || squat || groundAttack || grab;
 };
 
 export const isNotInGroundedControl: FramePredicate = (
-  frame: PostFrameUpdateType,
-  _game: SlippiGame,
+  frame: PostFrameUpdateEvent,
+  game: Game,
 ) => {
-  return !isInControl(frame.actionStateId!);
+  return !isInGroundedControl(frame, game);
 };
 
 export const isInHitstun: FramePredicate = (
-  frame: PostFrameUpdateType,
-  _game: SlippiGame,
+  frame: PostFrameUpdateEvent,
+  _game: Game,
 ) => {
-  return isDamaged(frame.actionStateId!);
+  return (
+    (frame.actionStateId >= 0x4b && frame.actionStateId <= 0x5b) ||
+    frame.actionStateId === 0x26
+  );
 };
 
 export const isInBeginningOfHitstun: FramePredicate = (
-  frame: PostFrameUpdateType,
-  _game: SlippiGame,
+  frame: PostFrameUpdateEvent,
+  game: Game,
 ) => {
-  return isDamaged(frame.actionStateId!) && frame.actionStateCounter === 1;
+  return isInHitstun(frame, game) && frame.actionStateFrameCounter === 1;
 };
 
 export const isInNotBeginningOfHitstun: FramePredicate = (
-  frame: PostFrameUpdateType,
-  _game: SlippiGame,
+  frame: PostFrameUpdateEvent,
+  game: Game,
 ) => {
-  return isDamaged(frame.actionStateId!) && frame.actionStateCounter === 2;
+  return isInHitstun(frame, game) && frame.actionStateFrameCounter === 2;
 };
 
 export const isDead: FramePredicate = (
-  frame: PostFrameUpdateType,
-  _game: SlippiGame,
+  frame: PostFrameUpdateEvent,
+  _game: Game,
 ) => {
-  return slippiIsDead(frame.actionStateId!);
+  return frame.actionStateId >= 0x00 && frame.actionStateId <= 0x0a;
 };
 
 interface StageData {
@@ -148,16 +149,16 @@ const stageData: { [stageId: number]: StageData } = {
 };
 
 export const isOffstage: FramePredicate = (
-  frame: PostFrameUpdateType,
-  _game: SlippiGame,
+  frame: PostFrameUpdateEvent,
+  _game: Game,
 ) => {
-  const currentStageData = stageData[_game.getSettings()!.stageId!];
+  const currentStageData = stageData[_game.gameStart.stageId!];
   if (currentStageData === undefined) {
     return false;
   }
   return (
-    frame.positionY! < currentStageData.mainPlatformHeight ||
-    frame.positionX! < currentStageData.leftLedgeX ||
-    frame.positionX! > currentStageData.rightLedgeX
+    frame.yPosition! < currentStageData.mainPlatformHeight ||
+    frame.xPosition! < currentStageData.leftLedgeX ||
+    frame.xPosition! > currentStageData.rightLedgeX
   );
 };

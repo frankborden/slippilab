@@ -1,4 +1,4 @@
-import type { SlippiGame } from '@slippi/slippi-js';
+import type { Game } from '../parser/slp';
 
 export interface Highlight {
   startFrame: number;
@@ -7,7 +7,7 @@ export interface Highlight {
 
 export interface Replay {
   fileName: string;
-  game: DeepRequired<SlippiGame>;
+  game: Game;
   highlights: Highlight[];
 }
 

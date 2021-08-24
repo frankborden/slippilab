@@ -1,10 +1,8 @@
 import type {
-  FrameEntryType,
-  FramesType,
-  PlayerType,
-  PostFrameUpdateType,
-} from '@slippi/slippi-js';
-
+  Frame,
+  PlayerSettings,
+  PostFrameUpdateEvent,
+} from '../../parser/slp';
 import {
   CharacterAnimations,
   fetchAnimations,
@@ -12,7 +10,7 @@ import {
   animationNameByActionId,
 } from '../animations';
 import { supportedCharactersById } from '../characters';
-import { Character, characterNamesById, DeepRequired } from '../common';
+import { Character, characterNamesById } from '../common';
 import type { Render } from '../game';
 import type { Layer, Layers } from '../layer';
 import {
@@ -24,15 +22,15 @@ import {
 } from '../replay';
 
 export const createPlayerRender = async (
-  player: DeepRequired<PlayerType>,
-  players: DeepRequired<PlayerType[]>,
+  player: PlayerSettings,
+  players: PlayerSettings[],
   isDoubles: boolean,
 ): Promise<Render> => {
-  const animations = await fetchAnimations(player.characterId);
+  const animations = await fetchAnimations(player.externalCharacterId);
   return (
     layers: Layers,
-    frame: DeepRequired<FrameEntryType>,
-    frames: DeepRequired<FramesType>,
+    frame: Frame,
+    frames: Frame[],
     isDarkMode: boolean,
   ) => {
     if (!isInFrame(frame, player)) {
@@ -69,12 +67,12 @@ const teamColors = [
 ];
 
 const getPrimaryColor = (
-  player: DeepRequired<PlayerType>,
-  players: DeepRequired<PlayerType[]>,
+  player: PlayerSettings,
+  players: PlayerSettings[],
   isDoubles: boolean,
 ): string => {
   // CPU
-  if (player.type === 1) {
+  if (player.playerType === 1) {
     return 'grey';
   }
   if (isDoubles) {
@@ -85,7 +83,7 @@ const getPrimaryColor = (
 };
 
 const getSecondaryColor = (
-  playerFrame: DeepRequired<PostFrameUpdateType>,
+  playerFrame: PostFrameUpdateEvent,
   lCancelStatus: number,
 ): string => {
   return playerFrame.hurtboxCollisionState > 0
@@ -97,9 +95,9 @@ const getSecondaryColor = (
 
 const renderStocks = (
   screenLayer: Layer,
-  frame: DeepRequired<FrameEntryType>,
-  player: DeepRequired<PlayerType>,
-  players: DeepRequired<PlayerType[]>,
+  frame: Frame,
+  player: PlayerSettings,
+  players: PlayerSettings[],
   isDoubles: boolean,
   isDarkMode: boolean,
 ): void => {
@@ -124,14 +122,14 @@ const renderStocks = (
 
 const renderPercent = (
   screenLayer: Layer,
-  frame: DeepRequired<FrameEntryType>,
-  player: DeepRequired<PlayerType>,
-  players: DeepRequired<PlayerType[]>,
+  frame: Frame,
+  player: PlayerSettings,
+  players: PlayerSettings[],
   isDoubles: boolean,
   isDarkMode: boolean,
 ): void => {
   const playerFrame = frame.players[player.playerIndex].post;
-  const characterData = supportedCharactersById[player.characterId];
+  const characterData = supportedCharactersById[player.externalCharacterId];
   const actionName = animationNameByActionId[playerFrame.actionStateId];
   const animationName =
     characterData.animationMap.get(actionName) ?? actionName;
@@ -157,14 +155,14 @@ const renderPercent = (
 
 const renderPlayerDetails = (
   screenLayer: Layer,
-  frame: DeepRequired<FrameEntryType>,
-  player: DeepRequired<PlayerType>,
-  players: DeepRequired<PlayerType[]>,
+  frame: Frame,
+  player: PlayerSettings,
+  players: PlayerSettings[],
   isDoubles: boolean,
   isDarkMode: boolean,
 ): void => {
   // const playerFrame = frame.players[player.playerIndex].post;
-  const character = characterNamesById[player.characterId];
+  const character = characterNamesById[player.externalCharacterId];
   screenLayer.context.save();
   const fontSize = screenLayer.canvas.height / 30;
   screenLayer.context.font = `900 ${fontSize}px Verdana`;
@@ -182,7 +180,7 @@ const renderPlayerDetails = (
     ? player.connectCode
     : player.nametag.length
     ? player.nametag
-    : player.type === 1
+    : player.playerType === 1
     ? 'CPU'
     : character;
   // Debug mode
@@ -202,15 +200,15 @@ const renderPlayerDetails = (
 };
 
 const getAnimationFrame = (
-  player: DeepRequired<PlayerType>,
-  playerFrame: DeepRequired<PostFrameUpdateType>,
-  frames: DeepRequired<FramesType>,
-  frame: DeepRequired<FrameEntryType>,
+  player: PlayerSettings,
+  playerFrame: PostFrameUpdateEvent,
+  frames: Frame[],
+  frame: Frame,
   animations: CharacterAnimations,
   characterData: Character,
   worldContext: CanvasRenderingContext2D,
 ): string | undefined => {
-  const character = characterNamesById[player.characterId];
+  const character = characterNamesById[player.externalCharacterId];
 
   // Determine animation
   let animationName;
@@ -228,7 +226,7 @@ const getAnimationFrame = (
 
   // Determine frame
   const firstIndex =
-    playerFrame.actionStateCounter < 0 //||
+    playerFrame.actionStateFrameCounter < 0 //||
       ? //isOneIndexed(player.characterId, playerFrame.actionStateId)
         1
       : 0;
@@ -236,7 +234,7 @@ const getAnimationFrame = (
     ? animations[animationName] ?? animations['Appeal'] ?? animations['AppealL']
     : animations['Appeal'] ?? animations['AppealL'];
   const animationIndex =
-    Math.max(Math.floor(playerFrame.actionStateCounter + firstIndex), 0) %
+    Math.max(Math.floor(playerFrame.actionStateFrameCounter + firstIndex), 0) %
     animationFrames.length;
   if (!animationName) {
     return;
@@ -258,11 +256,11 @@ const getAnimationFrame = (
     const rotationYOffset = 10;
     let referenceFrame = isSpacieUpBMovementAction
       ? getFirstFrameOfAnimation(playerFrame, frames)
-      : frames[playerFrame.frame - 1].players[player.playerIndex].post;
+      : frames[playerFrame.frameNumber - 1].players[player.playerIndex].post;
     let deltaFrame =
-      frames[referenceFrame.frame + 1].players[player.playerIndex].post;
-    const xDiff = deltaFrame.positionX - referenceFrame.positionX;
-    const yDiff = deltaFrame.positionY - referenceFrame.positionY;
+      frames[referenceFrame.frameNumber + 1].players[player.playerIndex].post;
+    const xDiff = deltaFrame.xPosition - referenceFrame.xPosition;
+    const yDiff = deltaFrame.yPosition - referenceFrame.yPosition;
     const rawAngle = Math.atan2(yDiff, facingDirection * xDiff);
     // Spacie UpB animation default angle is straight right (not counting facingDirection)
     // DamageFlyRoll animation default angle is straight up
@@ -282,16 +280,16 @@ const getAnimationFrame = (
 
 const renderCharacter = (
   worldContext: CanvasRenderingContext2D,
-  frame: DeepRequired<FrameEntryType>,
-  frames: DeepRequired<FramesType>,
-  player: DeepRequired<PlayerType>,
-  players: DeepRequired<PlayerType[]>,
+  frame: Frame,
+  frames: Frame[],
+  player: PlayerSettings,
+  players: PlayerSettings[],
   isDoubles: boolean,
   isDarkMode: boolean,
   animations: CharacterAnimations,
 ): void => {
   const playerFrame = frame.players[player.playerIndex].post;
-  const characterData = supportedCharactersById[player.characterId];
+  const characterData = supportedCharactersById[player.externalCharacterId];
   worldContext.save();
   worldContext.lineWidth *= isDarkMode ? 6 : 2;
 
@@ -303,7 +301,7 @@ const renderCharacter = (
   const secondaryColor = getSecondaryColor(playerFrame, lCancelStatus);
   worldContext.strokeStyle = isDarkMode ? primaryColor : secondaryColor;
   worldContext.fillStyle = isDarkMode ? secondaryColor : primaryColor;
-  worldContext.translate(playerFrame.positionX, playerFrame.positionY);
+  worldContext.translate(playerFrame.xPosition, playerFrame.yPosition);
   worldContext.scale(characterData.scale, characterData.scale);
   worldContext.lineWidth /= characterData.scale;
   const animationFrame = getAnimationFrame(
@@ -332,14 +330,14 @@ const renderCharacter = (
 
 const renderShield = (
   worldContext: CanvasRenderingContext2D,
-  frame: DeepRequired<FrameEntryType>,
-  player: DeepRequired<PlayerType>,
-  players: DeepRequired<PlayerType[]>,
+  frame: Frame,
+  player: PlayerSettings,
+  players: PlayerSettings[],
   isDoubles: boolean,
   isDarkMode: boolean,
 ): void => {
   const playerFrame = frame.players[player.playerIndex].post;
-  const characterData = supportedCharactersById[player.characterId];
+  const characterData = supportedCharactersById[player.externalCharacterId];
   if (playerFrame.actionStateId < 0x0b2 || playerFrame.actionStateId > 0x0b6) {
     return;
   }
@@ -348,7 +346,7 @@ const renderShield = (
   worldContext.fillStyle = getPrimaryColor(player, players, isDoubles);
   worldContext.strokeStyle = isDarkMode ? 'white' : 'black';
   const shieldHealthPercent = playerFrame.shieldSize / 60;
-  worldContext.translate(playerFrame.positionX, playerFrame.positionY);
+  worldContext.translate(playerFrame.xPosition, playerFrame.yPosition);
   worldContext.scale(playerFrame.facingDirection, 1);
   worldContext.scale(characterData.scale, characterData.scale);
   worldContext.lineWidth /= characterData.scale;
@@ -370,12 +368,12 @@ const renderShield = (
 
 const renderShine = (
   worldContext: CanvasRenderingContext2D,
-  frame: DeepRequired<FrameEntryType>,
-  player: DeepRequired<PlayerType>,
+  frame: Frame,
+  player: PlayerSettings,
 ): void => {
   const playerFrame = frame.players[player.playerIndex].post;
-  const character = characterNamesById[player.characterId];
-  const characterData = supportedCharactersById[player.characterId];
+  const character = characterNamesById[player.externalCharacterId];
+  const characterData = supportedCharactersById[player.externalCharacterId];
   if (
     (character !== 'Fox' && character !== 'Falco') ||
     playerFrame.actionStateId < 360 ||
@@ -387,7 +385,7 @@ const renderShine = (
   worldContext.strokeStyle = 'deepskyblue';
   worldContext.lineWidth *= 5;
 
-  worldContext.translate(playerFrame.positionX, playerFrame.positionY);
+  worldContext.translate(playerFrame.xPosition, playerFrame.yPosition);
   worldContext.scale(playerFrame.facingDirection, 1);
   worldContext.scale(characterData.scale, characterData.scale);
   worldContext.lineWidth /= characterData.scale;
@@ -426,9 +424,9 @@ const drawHexagon = (
 
 const renderUi = (
   screenLayer: Layer,
-  frame: DeepRequired<FrameEntryType>,
-  player: DeepRequired<PlayerType>,
-  players: DeepRequired<PlayerType[]>,
+  frame: Frame,
+  player: PlayerSettings,
+  players: PlayerSettings[],
   isDoubles: boolean,
   isDarkMode: boolean,
 ): void => {

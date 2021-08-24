@@ -1,4 +1,4 @@
-import type { PostFrameUpdateType, SlippiGame } from '@slippi/slippi-js';
+import type { Game, PostFrameUpdateEvent } from '../parser/slp';
 import type { FramePredicate } from './frame-predicate';
 
 export interface Options {
@@ -44,26 +44,26 @@ export class Unit {
     };
   }
 
-  step(game: SlippiGame, frame: PostFrameUpdateType): void {
+  step(game: Game, frame: PostFrameUpdateEvent): void {
     if (this.spec.predicate(frame, game)) {
       // increment streak, maximize leniency
       this.inARow++;
       this.result = this.inARow >= this.spec.options.minimumLength;
-      this.segmentStartFrame = this.segmentStartFrame ?? frame.frame!;
-      this.lastSeenFrame = frame.frame!;
+      this.segmentStartFrame = this.segmentStartFrame ?? frame.frameNumber;
+      this.lastSeenFrame = frame.frameNumber;
       this.leniencyRemaining = this.spec.options.leniency;
     } else if (this.leniencyRemaining > 0) {
       // leniency turns result true, still increases streak
       this.inARow++;
       this.result = this.inARow >= this.spec.options.minimumLength;
-      this.segmentStartFrame = this.segmentStartFrame ?? frame.frame!;
-      this.lastSeenFrame = frame.frame!;
+      this.segmentStartFrame = this.segmentStartFrame ?? frame.frameNumber;
+      this.lastSeenFrame = frame.frameNumber;
       this.leniencyRemaining--;
     } else {
       // resets streak
       this.result = false;
       this.segmentStartFrame = undefined;
-      this.lastSeenFrame = frame.frame!;
+      this.lastSeenFrame = frame.frameNumber;
       this.inARow = 0;
       this.leniencyRemaining = 0;
     }

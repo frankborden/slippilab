@@ -1,8 +1,8 @@
-import { SlippiGame } from '@slippi/slippi-js';
+import { Game } from './parser/slp';
 import { Subject } from 'rxjs';
 import { FramePredicates, Search, SearchSpec } from './search';
 import { supportedCharactersById, supportedStagesById } from './viewer';
-import type { DeepRequired, Highlight, Replay } from './common';
+import type { Highlight, Replay } from './common';
 
 export interface State {
   replay?: Replay;
@@ -113,17 +113,17 @@ export class Model {
   private async parseFile(file: File): Promise<Replay | undefined> {
     try {
       if (file.name.endsWith('.slp')) {
-        const game = new SlippiGame(await file.arrayBuffer());
+        const game = new Game(await file.arrayBuffer());
         if (this.isSupported(game)) {
           let highlights: Highlight[] = [];
-          if (game.getSettings()?.players?.length === 2) {
-            highlights = this.currentState.searches
-              .map((searchSpec) => new Search(searchSpec))
-              .flatMap((search) => search.searchFile(game));
-          }
+          // if (game.gameStart.playerSettings.length === 2) {
+          //   highlights = this.currentState.searches
+          //     .map((searchSpec) => new Search(searchSpec))
+          //     .flatMap((search) => search.searchFile(game));
+          // }
           return {
             fileName: file.name,
-            game: game as DeepRequired<SlippiGame>,
+            game: game, //as DeepRequired<SlippiGame>,
             highlights,
           };
         }
@@ -135,11 +135,11 @@ export class Model {
     return undefined;
   }
 
-  private isSupported(game: SlippiGame): boolean {
-    const stageId = game.getSettings()?.stageId;
-    const characterIds = game
-      .getSettings()
-      ?.players.map((player) => player.characterId);
+  private isSupported(game: Game): boolean {
+    const stageId = game.gameStart.stageId;
+    const characterIds = game.gameStart?.playerSettings.map(
+      (player) => player.externalCharacterId,
+    );
     if (!stageId || !characterIds) {
       return false;
     }
@@ -149,6 +149,7 @@ export class Model {
         characterId !== null && Boolean(supportedCharactersById[characterId]),
     );
     return stageSupported && charactersSupported;
+    return true;
   }
 }
 

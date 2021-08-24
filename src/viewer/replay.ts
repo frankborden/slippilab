@@ -1,28 +1,20 @@
 import type {
-  FrameEntryType,
-  FramesType,
-  PlayerType,
-  PostFrameUpdateType,
-} from '@slippi/slippi-js';
+  Frame,
+  PlayerSettings,
+  PostFrameUpdateEvent,
+} from '../parser/slp';
 import { isOneIndexed, animationNameByActionId } from './animations';
-import {
-  CharacterName,
-  characterNamesByInternalId,
-  DeepRequired,
-} from './common';
+import { CharacterName, characterNamesByInternalId } from './common';
 
-export const isInFrame = (
-  frame: DeepRequired<FrameEntryType>,
-  player: DeepRequired<PlayerType>,
-): boolean => {
+export const isInFrame = (frame: Frame, player: PlayerSettings): boolean => {
   return Boolean(frame.players[player.playerIndex]);
 };
 
 export const getFirstFrameOfAnimation = (
-  playerFrame: DeepRequired<PostFrameUpdateType>,
-  frames: DeepRequired<FramesType>,
-): DeepRequired<PostFrameUpdateType> => {
-  let frameIndex = playerFrame.frame - 1;
+  playerFrame: PostFrameUpdateEvent,
+  frames: Frame[],
+): PostFrameUpdateEvent => {
+  let frameIndex = playerFrame.frameNumber - 1;
   let pastConfirmedFrame = playerFrame;
   let pastFrameToCheck =
     frames[frameIndex]?.players?.[playerFrame.playerIndex]?.post;
@@ -39,15 +31,18 @@ export const getFirstFrameOfAnimation = (
 };
 
 export const getFrameIndexFromDuration = (
-  playerFrame: DeepRequired<PostFrameUpdateType>,
-  frames: DeepRequired<FramesType>,
-  player: DeepRequired<PlayerType>,
+  playerFrame: PostFrameUpdateEvent,
+  frames: Frame[],
+  player: PlayerSettings,
 ): number => {
-  const firstIndex = isOneIndexed(player.characterId, playerFrame.actionStateId)
+  const firstIndex = isOneIndexed(
+    player.externalCharacterId,
+    playerFrame.actionStateId,
+  )
     ? 1
     : 0;
   const firstFrame = getFirstFrameOfAnimation(playerFrame, frames);
-  const framesInAnimation = playerFrame.frame - firstFrame.frame;
+  const framesInAnimation = playerFrame.frameNumber - firstFrame.frameNumber;
   return (
     framesInAnimation * (firstFrame.lCancelStatus === 1 ? 2 : 1) - firstIndex
   );
@@ -59,12 +54,13 @@ export const getFacingDirection = (
   character: CharacterName,
   animationFrameIndex: number,
 ): number => {
-  const isBackItemToss = [
-    'LightThrowB',
-    'LightThrowB4',
-    'LightThrowAirB',
-    'LightThrowAirB4',
-  ].includes(animationName) && animationFrameIndex > 7;
+  const isBackItemToss =
+    [
+      'LightThrowB',
+      'LightThrowB4',
+      'LightThrowAirB',
+      'LightThrowAirB4',
+    ].includes(animationName) && animationFrameIndex > 7;
   const isMarthBairTurnaround =
     animationName === 'AttackAirB' &&
     character === 'Marth' &&
@@ -84,16 +80,16 @@ export const getFacingDirection = (
 };
 
 export const getThrowerName = (
-  player: DeepRequired<PlayerType>,
+  player: PlayerSettings,
   throwDirection: string,
-  frames: DeepRequired<FrameEntryType>,
+  frame: Frame,
 ): string => {
   const throwerAnimationName = `Throw${throwDirection}`;
   for (let i = 0; i < 4; i++) {
     if (i === player.playerIndex) {
       continue;
     }
-    const otherPlayerFrame = frames.players[i];
+    const otherPlayerFrame = frame.players[i];
     if (!otherPlayerFrame) {
       continue;
     }
@@ -127,12 +123,12 @@ export const getThrowerName = (
 
 export const getShade = (
   playerIndex: number,
-  players: DeepRequired<PlayerType[]>,
+  players: PlayerSettings[],
 ): number => {
   return players.filter(
     (player) =>
       player.playerIndex < playerIndex &&
-      player.characterId === players[playerIndex].characterId &&
+      player.externalCharacterId === players[playerIndex].externalCharacterId &&
       player.teamId === players[playerIndex].teamId,
   ).length;
 };

@@ -1,5 +1,5 @@
-import type { FrameEntryType, FramesType } from '@slippi/slippi-js';
-import type { Line, DeepRequired, Stage } from '../common';
+import type { Frame } from '../../parser/slp';
+import type { Line, Stage } from '../common';
 import type { Render } from '../game';
 import type { Layers } from '../layer';
 import type { Vector } from '../vector';
@@ -7,8 +7,8 @@ import type { Vector } from '../vector';
 export const createStageRender = (stage: Stage): Render => {
   return (
     layers: Layers,
-    frame: DeepRequired<FrameEntryType>,
-    _frames: DeepRequired<FramesType>,
+    frame: Frame,
+    _frames: Frame[],
     isDarkMode: boolean,
   ) => {
     renderStageLines(layers.worldSpace.context, frame, stage, isDarkMode);
@@ -18,7 +18,7 @@ export const createStageRender = (stage: Stage): Render => {
 
 const renderStageLines = (
   worldContext: CanvasRenderingContext2D,
-  frame: DeepRequired<FrameEntryType>,
+  frame: Frame,
   stage: Stage,
   isDarkMode: boolean,
 ): void => {
@@ -38,7 +38,7 @@ const renderStageLines = (
     worldContext.closePath();
   });
   worldContext.strokeStyle = isDarkMode ? 'white' : 'black';
-  stage.getMovingPlatforms?.(frame.frame)?.forEach((line: Line) => {
+  stage.getMovingPlatforms?.(frame.frameNumber)?.forEach((line: Line) => {
     worldContext.beginPath();
     worldContext.moveTo(line[0].x, line[0].y);
     worldContext.lineTo(line[1].x, line[1].y);
@@ -50,7 +50,7 @@ const renderStageLines = (
 
 const renderBlastzones = (
   worldContext: CanvasRenderingContext2D,
-  _frame: DeepRequired<FrameEntryType>,
+  _frame: Frame,
   stage: Stage,
   isDarkMode: boolean,
 ): void => {

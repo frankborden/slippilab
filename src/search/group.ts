@@ -1,4 +1,4 @@
-import type { PostFrameUpdateType, SlippiGame } from '@slippi/slippi-js';
+import type { Game, PostFrameUpdateEvent } from '../parser/slp';
 import { Unit, Spec as UnitSpec } from './unit';
 
 export interface Options {
@@ -39,7 +39,7 @@ export class Group {
       .forEach((unit) => this.units.add(unit));
   }
 
-  step(game: SlippiGame, frame: PostFrameUpdateType): void {
+  step(game: Game, frame: PostFrameUpdateEvent): void {
     this.units.forEach((unit) => unit.step(game, frame));
     this.result =
       this.spec.options.requiredUnits === 'all'

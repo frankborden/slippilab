@@ -34,8 +34,6 @@
 ## Game UI / Viewer UI
 
 - Game timer
-  - Seems present in .slp spec but not exposed in slippi-js?
-  - I can probably just add manually without issues..
 - Higher % = darker text
 - % dances when hit
 - % resets immediately on death
@@ -70,7 +68,6 @@
 - Tests
 - Fix tsc complaining about zip modules
 - Show combos/conversions/etc from .slp getStats()?
-- write fully browser-friendly parser
 - Webworkers?
 - Separate projects (viewer, search, parser)
   - npm packages

@@ -1,6 +1,6 @@
-import type { SlippiGame } from '@slippi/slippi-js';
+import type { Game } from '../parser/slp';
 
-export type GamePredicate = (game: SlippiGame, playerIndex: number) => boolean;
+export type GamePredicate = (game: Game, playerIndex: number) => boolean;
 
 export type Character = typeof characters[number];
 
@@ -9,31 +9,27 @@ export type Matchup = `${Character} vs ${Character}`;
 export const isMatchup = (matchup: Matchup) => {
   const self = isCharacter(matchup.split(' vs ')[0] as Character);
   const opponent = vsCharacter(matchup.split(' vs ')[1] as Character);
-  return (game: SlippiGame, playerIndex: number) =>
+  return (game: Game, playerIndex: number) =>
     self(game, playerIndex) && opponent(game, playerIndex);
 };
 
 export const isCharacter =
   (character: Character): GamePredicate =>
-  (game: SlippiGame, playerIndex: number) =>
-    game
-      .getSettings()
-      ?.players.some(
-        (playerSettings) =>
-          playerSettings.playerIndex === playerIndex &&
-          playerSettings.characterId === characters.indexOf(character),
-      ) ?? false;
+  (game: Game, playerIndex: number) =>
+    game.gameStart.playerSettings.some(
+      (playerSettings) =>
+        playerSettings.playerIndex === playerIndex &&
+        playerSettings.externalCharacterId === characters.indexOf(character),
+    ) ?? false;
 
 export const vsCharacter =
   (character: Character): GamePredicate =>
-  (game: SlippiGame, playerIndex: number) =>
-    game
-      .getSettings()
-      ?.players.some(
-        (playerSettings) =>
-          playerSettings.playerIndex !== playerIndex &&
-          playerSettings.characterId === characters.indexOf(character),
-      ) ?? false;
+  (game: Game, playerIndex: number) =>
+    game.gameStart.playerSettings.some(
+      (playerSettings) =>
+        playerSettings.playerIndex !== playerIndex &&
+        playerSettings.externalCharacterId === characters.indexOf(character),
+    ) ?? false;
 
 // These are indexed by external ID. IDs are from
 // https://github.com/project-slippi/slippi-wiki/blob/master/SPEC.md#melee-ids
@@ -68,9 +64,8 @@ const characters = [
 
 export type Stage = typeof stages[number];
 
-export const isStage =
-  (stage: Stage) => (game: SlippiGame, playerIndex: number) =>
-    (game.getSettings()?.stageId ?? -1) === stages.indexOf(stage);
+export const isStage = (stage: Stage) => (game: Game, playerIndex: number) =>
+  game.gameStart.stageId === stages.indexOf(stage);
 
 const tournamentStages: Stage[] = [
   'Battlefield',
@@ -80,10 +75,10 @@ const tournamentStages: Stage[] = [
   'Pokémon Stadium',
   "Yoshi's Story",
 ];
-export const isTournamentStage = (game: SlippiGame, playerIndex: number) =>
+export const isTournamentStage = (game: Game, playerIndex: number) =>
   tournamentStages
     .map((stage) => stages.indexOf(stage))
-    .filter((stageId) => stageId === game.getSettings()?.stageId).length > 0;
+    .filter((stageId) => stageId === game.gameStart.stageId).length > 0;
 
 // These are indexed by external ID. IDs are from
 // https://github.com/project-slippi/slippi-wiki/blob/master/SPEC.md#melee-ids
@@ -125,11 +120,9 @@ const stages = [
 
 export const hasConnectCode =
   (connectCode: string) =>
-  (game: SlippiGame, playerIndex: number): boolean =>
-    game
-      .getSettings()
-      ?.players.some(
-        (playerSettings) =>
-          playerSettings.playerIndex === playerIndex &&
-          playerSettings.connectCode === connectCode,
-      ) ?? false;
+  (game: Game, playerIndex: number): boolean =>
+    game.gameStart.playerSettings.some(
+      (playerSettings) =>
+        playerSettings.playerIndex === playerIndex &&
+        playerSettings.connectCode === connectCode,
+    ) ?? false;

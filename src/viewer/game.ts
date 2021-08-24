@@ -1,6 +1,5 @@
-import type { FrameEntryType, FramesType, SlippiGame } from '@slippi/slippi-js';
-
-import type { DeepRequired, Stage } from './common';
+import type { Frame, Game as ParsedGame } from '../parser/slp';
+import type { Stage } from './common';
 import { createItemRender } from './itemRenderer';
 import { createPlayerRender } from './characters';
 import { supportedStagesById, createStageRender } from './stages';
@@ -11,8 +10,8 @@ import type { Replay } from '../common';
 // TODO: frames and settings should just go into generators
 export type Render = (
   layers: Layers,
-  frame: DeepRequired<FrameEntryType>,
-  frames: DeepRequired<FramesType>,
+  frame: Frame,
+  frames: Frame[],
   isDarkMode: boolean,
 ) => void;
 
@@ -44,19 +43,15 @@ export class Game {
       replay,
       setupLayers(baseCanvas),
       [
-        createStageRender(
-          supportedStagesById[replay.game.getSettings().stageId],
-        ),
+        createStageRender(supportedStagesById[replay.game.gameStart.stageId]),
         ...(await Promise.all(
-          replay.game
-            .getSettings()
-            .players.map((player) =>
-              createPlayerRender(
-                player,
-                replay.game.getSettings().players,
-                replay.game.getSettings().isTeams,
-              ),
+          replay.game.gameStart.playerSettings.map((player) =>
+            createPlayerRender(
+              player,
+              replay.game.gameStart.playerSettings,
+              replay.game.gameStart.isTeams,
             ),
+          ),
         )),
         createItemRender(),
       ],
@@ -72,7 +67,7 @@ export class Game {
     private isDarkMode: boolean,
     startFrame: number,
   ) {
-    this.stage = supportedStagesById[replay.game.getSettings().stageId];
+    this.stage = supportedStagesById[replay.game.gameStart.stageId];
     this.intervalId = window.setInterval(() => this.maybeTick(), 1000 / 60);
     this.currentFrameNumber = startFrame;
   }
@@ -164,7 +159,7 @@ export class Game {
   }
 
   public tick(): void {
-    const frames = this.replay.game.getFrames();
+    const frames = this.replay.game.frames;
     const frame = frames[this.currentFrameNumber];
     if (!frame) {
       window.clearInterval(this.intervalId);
@@ -181,22 +176,21 @@ export class Game {
   }
 
   // TODO: move out of game file
-  private updateCamera(
-    currentFrame: DeepRequired<FrameEntryType>,
-    game: DeepRequired<SlippiGame>,
-  ): void {
+  private updateCamera(currentFrame: Frame, game: ParsedGame): void {
     const subjects: Vector[] = [];
     const lookaheadTime = 5;
     const lastFrameIndex = Math.min(
-      game.getLatestFrame().frame,
-      currentFrame.frame + lookaheadTime,
+      // game.getLatestFrame().frame,
+      game.metadata.lastFrame,
+      currentFrame.frameNumber + lookaheadTime,
     );
     for (
-      let frameIndex = currentFrame.frame;
+      let frameIndex = currentFrame.frameNumber;
       frameIndex <= lastFrameIndex;
       frameIndex++
     ) {
-      const frameToConsider = game.getFrames()[frameIndex];
+      // const frameToConsider = game.getFrames()[frameIndex];
+      const frameToConsider = game.frames[frameIndex];
       for (let playerIndex = 0; playerIndex < 4; playerIndex++) {
         const playerFrame = frameToConsider.players[playerIndex]?.post;
         if (
@@ -206,7 +200,7 @@ export class Game {
         ) {
           continue;
         }
-        subjects.push(new Vector(playerFrame.positionX, playerFrame.positionY));
+        subjects.push(new Vector(playerFrame.xPosition, playerFrame.yPosition));
       }
     }
     if (subjects.length === 0) {

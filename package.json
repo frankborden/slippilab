@@ -17,7 +17,7 @@
     "copyFinished": "mkdir src/viewer/animations/falco; cp -r tools/output/zip/* src/viewer/animations/falco"
   },
   "dependencies": {
-    "@slippi/slippi-js": "^6.1.2",
+    "@shelacek/ubjson": "^1.1.0",
     "@spectrum-web-components/action-button": "^0.5.5",
     "@spectrum-web-components/icons": "^0.7.7",
     "@spectrum-web-components/slider": "^0.10.5",
@@ -27,8 +27,7 @@
     "@zip.js/zip.js": "^2.3.8",
     "gif.js": "^0.2.0",
     "lit": "^2.0.0-rc.3",
-    "rxjs": "^7.3.0",
-    "safe-buffer": "^5.2.1"
+    "rxjs": "^7.3.0"
   },
   "devDependencies": {
     "@types/gif.js": "^0.2.2",

@@ -1,10 +1,4 @@
-import type {
-  FrameEntryType,
-  FramesType,
-  ItemUpdateType,
-} from '@slippi/slippi-js';
-
-import type { DeepRequired } from './common';
+import type { Frame, ItemUpdateEvent } from '../parser/slp';
 import type { Render } from './game';
 import type { Layers } from './layer';
 
@@ -16,13 +10,13 @@ const supportedItems = [
 
 const renderItem = (
   worldContext: CanvasRenderingContext2D,
-  item: DeepRequired<ItemUpdateType>,
-  frame: DeepRequired<FrameEntryType>,
+  item: ItemUpdateEvent,
+  frame: Frame,
 ): void => {
   worldContext.save();
   worldContext.strokeStyle = 'red';
   worldContext.fillStyle = 'red';
-  worldContext.translate(item.positionX, item.positionY);
+  worldContext.translate(item.xPosition, item.yPosition);
   switch (item.typeId) {
     case 54:
     case 55:
@@ -33,12 +27,12 @@ const renderItem = (
       }
       // TODO: currently length is based on current owner position, rather than
       // owner position when item spawned.
-      const angle = Math.atan2(item.velocityY, item.velocityX);
+      const angle = Math.atan2(item.yVelocity, item.xVelocity);
       const distToOwner = Math.max(
         0,
         Math.sqrt(
-          Math.pow(item.positionX - owner.positionX, 2) +
-            Math.pow(item.positionY - owner.positionY, 2),
+          Math.pow(item.xPosition - owner.xPosition, 2) +
+            Math.pow(item.yPosition - owner.yPosition, 2),
         ) - 10, // 10 = guess to account for edge of char to center of char
       );
       const length = Math.min(
@@ -63,11 +57,7 @@ const renderItem = (
 };
 
 export const createItemRender = (): Render => {
-  return (
-    layers: Layers,
-    frame: DeepRequired<FrameEntryType>,
-    frames: DeepRequired<FramesType>,
-  ) => {
+  return (layers: Layers, frame: Frame, frames: Frame[]) => {
     frame.items
       ?.filter((item) => supportedItems.includes(item.typeId))
       ?.forEach((item) => {

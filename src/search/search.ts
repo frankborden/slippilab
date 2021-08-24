@@ -1,7 +1,7 @@
 import { Group, Spec as GroupSpec } from './group';
-import type { PlayerType, SlippiGame } from '@slippi/slippi-js';
 import type { GamePredicate } from './game-predicate';
 import type { Highlight } from '../common';
+import type { Game, PlayerSettings } from '../parser/slp';
 
 export interface ClipBuilder {
   path: string;
@@ -18,7 +18,7 @@ export interface Spec {
 export class Search {
   private spec: Spec;
   private playerIndex = 0;
-  private game?: SlippiGame;
+  private game?: Game;
   private clipBuilder?: Highlight;
   private groupStack: Group[] = [];
   private permanentGroup?: Group;
@@ -31,10 +31,10 @@ export class Search {
     this.spec = spec;
   }
 
-  public searchFile(game: SlippiGame): Highlight[] {
+  public searchFile(game: Game): Highlight[] {
     this.game = game;
-    return this.game!.getSettings()!
-      .players.map((player: PlayerType) => player.port - 1)
+    return this.game.gameStart.playerSettings
+      .map((player: PlayerSettings) => player.playerIndex)
       .flatMap((playerIndex) => this.searchPlayer(playerIndex))
       .filter(
         (clip, index, clips) =>
@@ -62,7 +62,7 @@ export class Search {
     const clips: Highlight[] = [];
     this.pushGroup();
     while (this.groupStack.length > 0) {
-      while (this.game!.getFrames()[this.currentFrameIndex]) {
+      while (this.game!.frames[this.currentFrameIndex]) {
         this.sendFrame();
         clips.push(...this.handleResult());
       }
@@ -83,8 +83,7 @@ export class Search {
 
   private sendFrame(): void {
     const frame =
-      this.game!.getFrames()[this.currentFrameIndex].players[this.playerIndex]
-        ?.post;
+      this.game!.frames[this.currentFrameIndex].players[this.playerIndex]?.post;
     if (frame) {
       const group = this.groupStack[this.groupStack.length - 1];
       group.step(this.game!, frame);
