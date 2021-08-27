@@ -3,7 +3,8 @@ import type { Stage } from './common';
 import { createItemRender } from './itemRenderer';
 import { createPlayerRender } from './characters';
 import { supportedStagesById, createStageRender } from './stages';
-import { clearLayers, drawToBase, Layers, setupLayers } from './layer';
+import { clearLayers, drawToBase, setupLayers } from './layer';
+import type { Layers } from './layer';
 import { Vector } from './vector';
 import type { Replay } from '../common';
 

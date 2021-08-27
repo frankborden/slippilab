@@ -1,4 +1,4 @@
-import type { Line, Stage } from '../common';
+import type { Stage } from '../common';
 import { Vector } from '../vector';
 
 export const battlefield: Stage = {

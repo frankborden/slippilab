@@ -5,6 +5,8 @@ import { decode } from '@shelacek/ubjson';
  * It is based off of the replay format SPEC up to 3.9.0.0.
  * It is incomplete, I have left out things I don't need right now.
  * slippi-js can work too if your build tool de-node-ifies it enough.
+ * TODO: don't crash on old format versions, just skip the missing
+ * fields.
  */
 
 interface EventPayloadsEvent {
@@ -104,13 +106,13 @@ export interface FrameBookendEvent {
   frameNumber: number;
   latestFinalizedFrame: number;
 }
-interface GeckoListEvent {}
-interface MessageSplitterEvent {
-  actualSize: number;
-  fixedSizeBlock: any;
-  internalCommand: number;
-  lastMessage: true;
-}
+// interface GeckoListEvent {}
+// interface MessageSplitterEvent {
+//   actualSize: number;
+//   fixedSizeBlock: any;
+//   internalCommand: number;
+//   lastMessage: true;
+// }
 export interface PlayerNames {
   displayName: string;
   connectCode: string;
@@ -253,13 +255,24 @@ export class Game {
       }
       event.playerSettings[playerIndex] = {
         playerIndex: playerIndex,
-        connectCode: 'TODO',
+        // TODO replace double width # with single width #
+        connectCode: this.readShiftJisString(
+          offset + 0x221 + 0x0a * playerIndex,
+          10,
+        ),
         costumeIndex: this.raw.getUint8(offset + 0x68 + 0x24 * playerIndex),
-        displayName: 'TODO',
+        displayName: this.readShiftJisString(
+          offset + 0x1a5 + 0x1f * playerIndex,
+          16,
+        ),
         externalCharacterId: this.raw.getUint8(
           offset + 0x65 + 0x24 * playerIndex,
         ),
-        nametag: 'TODO',
+        // TODO verify
+        nametag: this.readShiftJisString(
+          offset + 0x161 + 0x10 * playerIndex,
+          9,
+        ),
         playerType,
         teamId: this.raw.getUint8(offset + 0x6e + 0x24 * playerIndex),
         teamShade: this.raw.getUint8(offset + 0x6c + 0x24 * playerIndex),
@@ -359,5 +372,19 @@ export class Game {
       gameEndMethod: this.raw.getUint8(offset + 0x01),
       quitInitiator: this.raw.getInt8(offset + 0x02),
     };
+  }
+
+  private readShiftJisString(offset: number, maxLength: number): string {
+    const shiftJisBytes = new Uint8Array(maxLength);
+    let charNum = 0;
+    do {
+      shiftJisBytes[charNum] = this.raw.getUint8(offset + charNum * 0x01);
+      charNum++;
+    } while (shiftJisBytes[charNum - 1] !== 0x00);
+    if (shiftJisBytes[0] !== 0x00) {
+      const decoder = new TextDecoder('shift-jis');
+      return decoder.decode(shiftJisBytes.subarray(0, charNum - 1));
+    }
+    return '';
   }
 }

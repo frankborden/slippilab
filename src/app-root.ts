@@ -11,7 +11,7 @@ import '@spectrum-web-components/tabs/sp-tabs';
 import '@spectrum-web-components/tabs/sp-tab-panel';
 
 import { model } from './model';
-import { fetchAnimation, supportedCharactersById } from './viewer';
+// import { fetchAnimation, supportedCharactersById } from './viewer';
 import './replay-select';
 import './file-list';
 import './highlight-list';
@@ -33,9 +33,9 @@ export class AppRoot extends LitElement {
           break;
       }
     });
-    Object.keys(supportedCharactersById).forEach((characterId) =>
-      fetchAnimation(Number(characterId)),
-    );
+    // Object.keys(supportedCharactersById).forEach((characterId) =>
+    //   fetchAnimation(Number(characterId)),
+    // );
   }
 
   static get styles() {

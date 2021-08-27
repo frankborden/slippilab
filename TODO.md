@@ -4,6 +4,7 @@
 
 - Peach/Pikachu calculate shield origin
 - Spacies calculate shine origin
+- Can't do constant slowmo
 - Shield put up / take down animation
 - Show Shield tilting (original visualiser reads inputs and checks for stun)
 - Bubble view when off camera / near blastzone?
@@ -48,13 +49,16 @@
   - make every match red vs blue?
 - debug canvas for viewing individual animations
 - Problems on windows firefox
-- Tests
 
 # Search
 
 - Other filters (matchup, date, player, stage)
 - opponent frame available to frame predicates (at least in singles)
 - Fix doubles
+
+# Parser
+
+- Support older replay formats that do not have all current fields.
 
 # Export
 
@@ -66,8 +70,6 @@
 # App
 
 - Tests
-- Fix tsc complaining about zip modules
-- Show combos/conversions/etc from .slp getStats()?
 - Webworkers?
 - Separate projects (viewer, search, parser)
   - npm packages

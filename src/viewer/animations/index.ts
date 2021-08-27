@@ -1,13 +1,21 @@
 import { BlobReader, TextWriter, ZipReader } from '@zip.js/zip.js';
 
-import foxAnimationsUrl from './zips/fox.zip';
-import falcoAnimationsUrl from './zips/falco.zip';
-import falconAnimationsUrl from './zips/falcon.zip';
-import jigglypuffAnimationsUrl from './zips/jigglypuff.zip';
-import marthAnimationsUrl from './zips/marth.zip';
-import peachAnimationsUrl from './zips/peach.zip';
-import pikachuAnimationsUrl from './zips/pikachu.zip';
-import sheikAnimationsUrl from './zips/sheik.zip';
+// @ts-ignore
+import foxAnimationsUrl from './zips/fox.zip?url';
+// @ts-ignore
+import falcoAnimationsUrl from './zips/falco.zip?url';
+// @ts-ignore
+import falconAnimationsUrl from './zips/falcon.zip?url';
+// @ts-ignore
+import jigglypuffAnimationsUrl from './zips/jigglypuff.zip?url';
+// @ts-ignore
+import marthAnimationsUrl from './zips/marth.zip?url';
+// @ts-ignore
+import peachAnimationsUrl from './zips/peach.zip?url';
+// @ts-ignore
+import pikachuAnimationsUrl from './zips/pikachu.zip?url';
+// @ts-ignore
+import sheikAnimationsUrl from './zips/sheik.zip?url';
 import { characterNamesById } from '../common';
 export { isOneIndexed } from './oneIndexed';
 export { animationNameByActionId } from './actions';

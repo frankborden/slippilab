@@ -4,7 +4,8 @@ import type {
   PostFrameUpdateEvent,
 } from '../parser/slp';
 import { isOneIndexed, animationNameByActionId } from './animations';
-import { CharacterName, characterNamesByInternalId } from './common';
+import { characterNamesByInternalId } from './common';
+import type { CharacterName } from './common';
 
 export const isInFrame = (frame: Frame, player: PlayerSettings): boolean => {
   return Boolean(frame.players[player.playerIndex]);

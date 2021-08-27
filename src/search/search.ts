@@ -1,4 +1,5 @@
-import { Group, Spec as GroupSpec } from './group';
+import { Group } from './group';
+import type { Spec as GroupSpec } from './group';
 import type { GamePredicate } from './game-predicate';
 import type { Highlight } from '../common';
 import type { Game, PlayerSettings } from '../parser/slp';

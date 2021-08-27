@@ -1,5 +1,6 @@
-import GIF from 'gif.js';
-import { css, html, LitElement, PropertyValues } from 'lit';
+//import GIF from 'gif.js';
+import { css, html, LitElement } from 'lit';
+import type { PropertyValues } from 'lit';
 import { customElement, property, query, state } from 'lit/decorators.js';
 import '@spectrum-web-components/slider/sp-slider';
 import type { Slider } from '@spectrum-web-components/slider';
@@ -213,32 +214,32 @@ export class ReplayViewer extends LitElement {
   }
 
   private captureGif() {
-    const context = this.canvas?.getContext('2d');
-    if (!context || !this.canvas || !this.game) {
-      return;
-    }
-    this.game.setPause();
-    this.game.resize(960, 720);
-    const gif = new GIF({
-      workers: 4,
-      quality: 10,
-      width: this.canvas.width,
-      height: this.canvas.height,
-      background: '#fff',
-    });
-    gif.on('finished', (blob: Blob, _data: Uint8Array) => {
-      window.open(URL.createObjectURL(blob));
-    });
+    // const context = this.canvas?.getContext('2d');
+    // if (!context || !this.canvas || !this.game) {
+    //   return;
+    // }
+    // this.game.setPause();
+    // this.game.resize(960, 720);
+    // const gif = new GIF({
+    //   workers: 4,
+    //   quality: 10,
+    //   width: this.canvas.width,
+    //   height: this.canvas.height,
+    //   background: '#fff',
+    // });
+    // gif.on('finished', (blob: Blob, _data: Uint8Array) => {
+    //   window.open(URL.createObjectURL(blob));
+    // });
 
-    for (let i = 0; i < 600; i = i + 3) {
-      // TODO: this is a little sped up. The GIF renders 2 frames in
-      // 30ms while game advances 32ms, becausethe gif spec only stores
-      // framerate in centiseconds, which doesn't line up =[
-      gif.addFrame(context, { copy: true, delay: 33 });
-      this.game.tick();
-      this.game.tick();
-    }
-    gif.render();
+    // for (let i = 0; i < 600; i = i + 3) {
+    //   // TODO: this is a little sped up. The GIF renders 2 frames in
+    //   // 30ms while game advances 32ms, becausethe gif spec only stores
+    //   // framerate in centiseconds, which doesn't line up =[
+    //   gif.addFrame(context, { copy: true, delay: 33 });
+    //   this.game.tick();
+    //   this.game.tick();
+    // }
+    // gif.render();
   }
 
   render() {
@@ -261,9 +262,7 @@ export class ReplayViewer extends LitElement {
           @change=${this.clicked}
           @input=${this.clicked}
         ></sp-slider>
-        <div ?hidden="${Boolean(this.replay)}">
-          Waiting for game...
-        </div>
+        <div ?hidden="${Boolean(this.replay)}">Waiting for game...</div>
       </div>
     `;
   }

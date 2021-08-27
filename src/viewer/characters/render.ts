@@ -4,13 +4,14 @@ import type {
   PostFrameUpdateEvent,
 } from '../../parser/slp';
 import {
-  CharacterAnimations,
   fetchAnimations,
   //isOneIndexed,
   animationNameByActionId,
 } from '../animations';
+import type { CharacterAnimations } from '../animations';
 import { supportedCharactersById } from '../characters';
-import { Character, characterNamesById } from '../common';
+import { characterNamesById } from '../common';
+import type { Character } from '../common';
 import type { Render } from '../game';
 import type { Layer, Layers } from '../layer';
 import {
@@ -155,13 +156,13 @@ const renderPercent = (
 
 const renderPlayerDetails = (
   screenLayer: Layer,
-  frame: Frame,
+  _frame: Frame,
   player: PlayerSettings,
   players: PlayerSettings[],
   isDoubles: boolean,
   isDarkMode: boolean,
 ): void => {
-  // const playerFrame = frame.players[player.playerIndex].post;
+  // const playerFrame = _frame.players[player.playerIndex].post;
   const character = characterNamesById[player.externalCharacterId];
   screenLayer.context.save();
   const fontSize = screenLayer.canvas.height / 30;
@@ -174,9 +175,10 @@ const renderPlayerDetails = (
   screenLayer.context.translate(x, y);
   // flip text back right-side after global flip
   screenLayer.context.scale(1, -1);
-  const name = player.displayName?.length
-    ? player.displayName
-    : player.connectCode?.length
+  const name =
+    // player.displayName?.length
+    // ? player.displayName
+    player.connectCode?.length
     ? player.connectCode
     : player.nametag.length
     ? player.nametag

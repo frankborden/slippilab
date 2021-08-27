@@ -1,5 +1,6 @@
 import type { Game, PostFrameUpdateEvent } from '../parser/slp';
-import { Unit, Spec as UnitSpec } from './unit';
+import { Unit } from './unit';
+import type { Spec as UnitSpec } from './unit';
 
 export interface Options {
   allowDelayed?: boolean;
@@ -60,6 +61,6 @@ export class Group {
         Math.min(a, b),
       );
     }
-    this.lastSeenFrame = frame.frame!;
+    this.lastSeenFrame = frame.frameNumber!;
   }
 }

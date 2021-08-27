@@ -3,8 +3,8 @@
   "author": "Frank Borden",
   "license": "MIT",
   "scripts": {
-    "start": "snowpack dev",
-    "build": "snowpack build",
+    "start": "vite",
+    "build": "tsc && vite build",
     "format": "prettier --write \"src/**/*.ts\"",
     "lint": "prettier --check \"src/**/*.ts\"",
     "buildAnimations": "yarn clearAnimationBuild && yarn copyMaya && yarn svgo && yarn compress && yarn zip && yarn copyFinished",
@@ -19,22 +19,20 @@
   "dependencies": {
     "@shelacek/ubjson": "^1.1.0",
     "@spectrum-web-components/action-button": "^0.5.5",
+    "@spectrum-web-components/icon": "^0.9.10",
     "@spectrum-web-components/icons": "^0.7.7",
     "@spectrum-web-components/slider": "^0.10.5",
     "@spectrum-web-components/switch": "^0.7.12",
     "@spectrum-web-components/tabs": "^0.6.6",
     "@spectrum-web-components/theme": "^0.8.12",
     "@zip.js/zip.js": "^2.3.8",
-    "gif.js": "^0.2.0",
     "lit": "^2.0.0-rc.3",
     "rxjs": "^7.3.0"
   },
   "devDependencies": {
-    "@types/gif.js": "^0.2.2",
-    "@types/snowpack-env": "^2.3.4",
     "prettier": "^2.3.2",
-    "snowpack": "^3.8.6",
     "svgo": "^2.4.0",
-    "typescript": "^4.3.5"
+    "typescript": "^4.3.5",
+    "vite": "^2.5.1"
   }
 }

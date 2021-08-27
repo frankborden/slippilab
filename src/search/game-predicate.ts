@@ -64,7 +64,7 @@ const characters = [
 
 export type Stage = typeof stages[number];
 
-export const isStage = (stage: Stage) => (game: Game, playerIndex: number) =>
+export const isStage = (stage: Stage) => (game: Game, _playerIndex: number) =>
   game.gameStart.stageId === stages.indexOf(stage);
 
 const tournamentStages: Stage[] = [
@@ -75,7 +75,7 @@ const tournamentStages: Stage[] = [
   'Pokémon Stadium',
   "Yoshi's Story",
 ];
-export const isTournamentStage = (game: Game, playerIndex: number) =>
+export const isTournamentStage = (game: Game, _playerIndex: number) =>
   tournamentStages
     .map((stage) => stages.indexOf(stage))
     .filter((stageId) => stageId === game.gameStart.stageId).length > 0;

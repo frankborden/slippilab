@@ -1,4 +1,11 @@
-.snowpack
-build
 node_modules
 /tools/output/
+dist/
+types/
+.yarn/*
+!.yarn/patches
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
+.pnp.*
