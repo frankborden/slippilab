@@ -9,7 +9,6 @@
   "scripts": {
     "start": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview",
     "format": "prettier --write \"./**/*.ts\"",
     "buildAnimations": "yarn clearAnimationBuild && yarn copyMaya && yarn svgo && yarn compress && yarn zip && yarn copyFinished",
     "clearAnimationBuild": "rm -r tools/output/maya/* tools/output/svgo/* tools/output/compression/* tools/output/zip/*",

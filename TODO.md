@@ -72,8 +72,5 @@
 
 - Tests
 - Webworkers?
-- Separate projects (viewer, search, parser)
-  - npm packages
-  - git submodules?
-- optimized bundle for production
+- git submodules?
 - npm org?

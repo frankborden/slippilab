@@ -1,21 +1,21 @@
 import { BlobReader, TextWriter, ZipReader } from '@zip.js/zip.js';
 
 // @ts-ignore
-import foxAnimationsUrl from './zips/fox.zip?url';
+import foxAnimationsUrl from './zips/fox.zip';
 // @ts-ignore
-import falcoAnimationsUrl from './zips/falco.zip?url';
+import falcoAnimationsUrl from './zips/falco.zip';
 // @ts-ignore
-import falconAnimationsUrl from './zips/falcon.zip?url';
+import falconAnimationsUrl from './zips/falcon.zip';
 // @ts-ignore
-import jigglypuffAnimationsUrl from './zips/jigglypuff.zip?url';
+import jigglypuffAnimationsUrl from './zips/jigglypuff.zip';
 // @ts-ignore
-import marthAnimationsUrl from './zips/marth.zip?url';
+import marthAnimationsUrl from './zips/marth.zip';
 // @ts-ignore
-import peachAnimationsUrl from './zips/peach.zip?url';
+import peachAnimationsUrl from './zips/peach.zip';
 // @ts-ignore
-import pikachuAnimationsUrl from './zips/pikachu.zip?url';
+import pikachuAnimationsUrl from './zips/pikachu.zip';
 // @ts-ignore
-import sheikAnimationsUrl from './zips/sheik.zip?url';
+import sheikAnimationsUrl from './zips/sheik.zip';
 import { characterNamesById } from '../common';
 export { isOneIndexed } from './oneIndexed';
 export { animationNameByActionId } from './actions';
