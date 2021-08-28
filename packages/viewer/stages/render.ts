@@ -1,4 +1,4 @@
-import type { Frame } from '../../parser/slp';
+import type { Frame } from '@slippilab/parser';
 import type { Line, Stage } from '../common';
 import type { Render } from '../game';
 import type { Layers } from '../layer';

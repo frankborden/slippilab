@@ -1,7 +1,11 @@
 {
-  "name": "slptube",
+  "name": "@slippilab/slippilab",
+  "private": true,
   "author": "Frank Borden",
   "license": "MIT",
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
     "start": "vite",
     "build": "tsc && vite build",
@@ -17,15 +21,16 @@
     "copyFinished": "mkdir src/viewer/animations/falco; cp -r tools/output/zip/* src/viewer/animations/falco"
   },
   "dependencies": {
-    "@shelacek/ubjson": "^1.1.0",
+    "@slippilab/common": "0.0.1",
+    "@slippilab/parser": "0.0.1",
+    "@slippilab/search": "0.0.1",
+    "@slippilab/viewer": "0.0.1",
     "@spectrum-web-components/action-button": "^0.5.5",
     "@spectrum-web-components/icon": "^0.9.10",
     "@spectrum-web-components/icons": "^0.7.7",
-    "@spectrum-web-components/slider": "^0.10.5",
     "@spectrum-web-components/switch": "^0.7.12",
     "@spectrum-web-components/tabs": "^0.6.6",
     "@spectrum-web-components/theme": "^0.8.12",
-    "@zip.js/zip.js": "^2.3.8",
     "lit": "^2.0.0-rc.3",
     "rxjs": "^7.3.0"
   },

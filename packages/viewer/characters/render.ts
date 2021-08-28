@@ -2,7 +2,7 @@ import type {
   Frame,
   PlayerSettings,
   PostFrameUpdateEvent,
-} from '../../parser/slp';
+} from '@slippilab/parser';
 import {
   fetchAnimations,
   //isOneIndexed,

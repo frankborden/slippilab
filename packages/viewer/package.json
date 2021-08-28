@@ -1,0 +1,12 @@
+{
+  "name": "@slippilab/viewer",
+  "version": "0.0.1",
+  "main": "index.ts",
+  "dependencies": {
+    "@slippilab/common": "0.0.1",
+    "@slippilab/parser": "0.0.1",
+    "@spectrum-web-components/slider": "^0.10.5",
+    "@zip.js/zip.js": "^2.3.8",
+    "lit": "^2.0.0-rc.3"
+  }
+}

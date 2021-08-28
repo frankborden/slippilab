@@ -1,4 +1,4 @@
-import type { Game } from '../parser/slp';
+import type { Game } from '@slippilab/parser';
 
 export interface Highlight {
   startFrame: number;

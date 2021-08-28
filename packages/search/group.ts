@@ -1,4 +1,4 @@
-import type { Game, PostFrameUpdateEvent } from '../parser/slp';
+import type { Game, PostFrameUpdateEvent } from '@slippilab/parser';
 import { Unit } from './unit';
 import type { Spec as UnitSpec } from './unit';
 

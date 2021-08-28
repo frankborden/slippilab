@@ -1,9 +1,12 @@
-import { Game } from './parser/slp';
+import { Game } from '@slippilab/parser';
 import { Subject } from 'rxjs';
-import { FramePredicates } from './search';
-import type { SearchSpec } from './search';
-import { supportedCharactersById, supportedStagesById } from './viewer';
-import type { Highlight, Replay } from './common';
+import { FramePredicates } from '@slippilab/search';
+import type { SearchSpec } from '@slippilab/search';
+import {
+  supportedCharactersById,
+  supportedStagesById,
+} from '@slippilab/viewer';
+import type { Highlight, Replay } from '../packages/common';
 
 export interface State {
   replay?: Replay;

@@ -1,4 +1,4 @@
-import type { Frame, Game as ParsedGame } from '../parser/slp';
+import type { Frame, Game as ParsedGame } from '@slippilab/parser';
 import type { Stage } from './common';
 import { createItemRender } from './itemRenderer';
 import { createPlayerRender } from './characters';
@@ -6,7 +6,7 @@ import { supportedStagesById, createStageRender } from './stages';
 import { clearLayers, drawToBase, setupLayers } from './layer';
 import type { Layers } from './layer';
 import { Vector } from './vector';
-import type { Replay } from '../common';
+import type { Replay } from '../../packages/common';
 
 // TODO: frames and settings should just go into generators
 export type Render = (

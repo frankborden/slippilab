@@ -1,4 +1,4 @@
-import type { Game, PostFrameUpdateEvent } from '../parser/slp';
+import type { Game, PostFrameUpdateEvent } from '@slippilab/parser';
 
 export type FramePredicate = (
   frame: PostFrameUpdateEvent,

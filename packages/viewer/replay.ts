@@ -2,7 +2,7 @@ import type {
   Frame,
   PlayerSettings,
   PostFrameUpdateEvent,
-} from '../parser/slp';
+} from '@slippilab/parser';
 import { isOneIndexed, animationNameByActionId } from './animations';
 import { characterNamesByInternalId } from './common';
 import type { CharacterName } from './common';

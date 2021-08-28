@@ -1,4 +1,4 @@
-import type { Game } from '../parser/slp';
+import type { Game } from '@slippilab/parser';
 
 export type GamePredicate = (game: Game, playerIndex: number) => boolean;
 

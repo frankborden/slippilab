@@ -64,6 +64,65 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@slippilab/common@0.0.1, @slippilab/common@workspace:packages/common":
+  version: 0.0.0-use.local
+  resolution: "@slippilab/common@workspace:packages/common"
+  dependencies:
+    "@slippilab/parser": 0.0.1
+  languageName: unknown
+  linkType: soft
+
+"@slippilab/parser@0.0.1, @slippilab/parser@workspace:packages/parser":
+  version: 0.0.0-use.local
+  resolution: "@slippilab/parser@workspace:packages/parser"
+  dependencies:
+    "@shelacek/ubjson": ^1.1.0
+  languageName: unknown
+  linkType: soft
+
+"@slippilab/search@0.0.1, @slippilab/search@workspace:packages/search":
+  version: 0.0.0-use.local
+  resolution: "@slippilab/search@workspace:packages/search"
+  dependencies:
+    "@slippilab/parser": 0.0.1
+  languageName: unknown
+  linkType: soft
+
+"@slippilab/slippilab@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "@slippilab/slippilab@workspace:."
+  dependencies:
+    "@slippilab/common": 0.0.1
+    "@slippilab/parser": 0.0.1
+    "@slippilab/search": 0.0.1
+    "@slippilab/viewer": 0.0.1
+    "@spectrum-web-components/action-button": ^0.5.5
+    "@spectrum-web-components/icon": ^0.9.10
+    "@spectrum-web-components/icons": ^0.7.7
+    "@spectrum-web-components/switch": ^0.7.12
+    "@spectrum-web-components/tabs": ^0.6.6
+    "@spectrum-web-components/theme": ^0.8.12
+    lit: ^2.0.0-rc.3
+    prettier: ^2.3.2
+    rxjs: ^7.3.0
+    svgo: ^2.4.0
+    typescript: ^4.3.5
+    vite: ^2.5.1
+  languageName: unknown
+  linkType: soft
+
+"@slippilab/viewer@0.0.1, @slippilab/viewer@workspace:packages/viewer":
+  version: 0.0.0-use.local
+  resolution: "@slippilab/viewer@workspace:packages/viewer"
+  dependencies:
+    "@slippilab/common": 0.0.1
+    "@slippilab/parser": 0.0.1
+    "@spectrum-web-components/slider": ^0.10.5
+    "@zip.js/zip.js": ^2.3.8
+    lit: ^2.0.0-rc.3
+  languageName: unknown
+  linkType: soft
+
 "@spectrum-web-components/action-button@npm:^0.5.5":
   version: 0.5.5
   resolution: "@spectrum-web-components/action-button@npm:0.5.5"
@@ -1340,28 +1399,6 @@ resolve@^1.20.0:
   checksum: f0169d3f1263d06df32ca072b0bf33b34c6f8f0341a7a1621558a2444dfbe8f5fec76b35537fcc6f0bc4944bdb5336fe0bdcf41a5422c4e45a1dba3f45475e6c
   languageName: node
   linkType: hard
-
-"slptube@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "slptube@workspace:."
-  dependencies:
-    "@shelacek/ubjson": ^1.1.0
-    "@spectrum-web-components/action-button": ^0.5.5
-    "@spectrum-web-components/icon": ^0.9.10
-    "@spectrum-web-components/icons": ^0.7.7
-    "@spectrum-web-components/slider": ^0.10.5
-    "@spectrum-web-components/switch": ^0.7.12
-    "@spectrum-web-components/tabs": ^0.6.6
-    "@spectrum-web-components/theme": ^0.8.12
-    "@zip.js/zip.js": ^2.3.8
-    lit: ^2.0.0-rc.3
-    prettier: ^2.3.2
-    rxjs: ^7.3.0
-    svgo: ^2.4.0
-    typescript: ^4.3.5
-    vite: ^2.5.1
-  languageName: unknown
-  linkType: soft
 
 "smart-buffer@npm:^4.1.0":
   version: 4.2.0

@@ -62,6 +62,7 @@
 
 # Export
 
+- re-enable
 - export to other formats better than gif? apng, webp, mp4?
   - Discord doesn't like .apng and .webp. Will it allow embeded mp4 from url?
 - Upload gif to some host (example project with imgur: https://github.com/eirikb/gifie)

@@ -1,4 +1,4 @@
-import type { Frame, ItemUpdateEvent } from '../parser/slp';
+import type { Frame, ItemUpdateEvent } from '@slippilab/parser';
 import type { Render } from './game';
 import type { Layers } from './layer';
 

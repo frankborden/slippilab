@@ -2,7 +2,7 @@ import { Group } from './group';
 import type { Spec as GroupSpec } from './group';
 import type { GamePredicate } from './game-predicate';
 import type { Highlight } from '../common';
-import type { Game, PlayerSettings } from '../parser/slp';
+import type { Game, PlayerSettings } from '@slippilab/parser';
 
 export interface ClipBuilder {
   path: string;

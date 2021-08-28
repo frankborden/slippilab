@@ -15,11 +15,21 @@ import { model } from './model';
 import './replay-select';
 import './file-list';
 import './highlight-list';
+import type { Highlight, Replay } from '../packages/common';
 
 @customElement('app-root')
 export class AppRoot extends LitElement {
   constructor() {
     super();
+    model.state$.subscribe(async (state) => {
+      if (this.replay !== state.replay) {
+        this.replay = state.replay;
+      }
+      this.highlight =
+        state.currentHighlightIndex === undefined
+          ? undefined
+          : state.replay?.highlights[state.currentHighlightIndex];
+    });
     window.addEventListener('keydown', (e: KeyboardEvent) => {
       switch (e.key) {
         case 'd':
@@ -65,6 +75,12 @@ export class AppRoot extends LitElement {
   }
 
   @state()
+  private replay?: Replay;
+
+  @state()
+  private highlight?: Highlight;
+
+  @state()
   private darkMode = false;
 
   private toggleDarkMode(): void {
@@ -103,7 +119,11 @@ export class AppRoot extends LitElement {
             <replay-select></replay-select>
           </div>
           <div class="main">
-              <replay-viewer .dark=${this.darkMode}></replay-viewer>
+            <replay-viewer
+              .dark=${this.darkMode}
+              .replay=${this.replay}
+              .highlight=${this.highlight}
+            ></replay-viewer>
           </div>
         </div>
       </sp-theme>

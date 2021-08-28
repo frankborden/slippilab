@@ -5,9 +5,8 @@ import { customElement, property, query, state } from 'lit/decorators.js';
 import '@spectrum-web-components/slider/sp-slider';
 import type { Slider } from '@spectrum-web-components/slider';
 
-import type { Highlight, Replay } from '../common';
+import type { Highlight, Replay } from '../../packages/common';
 import { Game } from './game';
-import { model } from '../model';
 
 @customElement('replay-viewer')
 export class ReplayViewer extends LitElement {
@@ -35,10 +34,10 @@ export class ReplayViewer extends LitElement {
       }
     `;
   }
-  @state()
+  @property({ type: Object })
   replay?: Replay;
 
-  @state()
+  @property({ type: Object })
   highlight?: Highlight;
 
   @property({ type: Boolean })
@@ -60,22 +59,6 @@ export class ReplayViewer extends LitElement {
 
   constructor() {
     super();
-    model.state$.subscribe(async (state) => {
-      if (this.replay !== state.replay) {
-        if (this.replay) {
-          this.game?.stop();
-        }
-        this.replay = state.replay;
-        await this.setup();
-      }
-      this.highlight =
-        state.currentHighlightIndex === undefined
-          ? undefined
-          : state.replay?.highlights[state.currentHighlightIndex];
-      if (this.highlight) {
-        this.game?.setFrame(this.highlight.startFrame);
-      }
-    });
     window.addEventListener('keyup', (e: KeyboardEvent) => {
       switch (e.key) {
         case 'ArrowUp':
@@ -182,9 +165,20 @@ export class ReplayViewer extends LitElement {
     resizeObserver.observe(this.canvas);
   }
 
-  updated(oldValues: PropertyValues<ReplayViewer>) {
+  async updated(oldValues: PropertyValues<ReplayViewer>) {
     if (oldValues.has('dark')) {
       this.game?.setDarkMode(this.dark);
+    }
+    if (oldValues.has('replay')) {
+      if (oldValues.get('replay')) {
+        this.game?.stop();
+      }
+      await this.setup();
+    }
+    if (oldValues.has('highlight')) {
+      if (this.highlight) {
+        this.game?.setFrame(this.highlight.startFrame);
+      }
     }
   }
 
@@ -230,7 +224,6 @@ export class ReplayViewer extends LitElement {
     // gif.on('finished', (blob: Blob, _data: Uint8Array) => {
     //   window.open(URL.createObjectURL(blob));
     // });
-
     // for (let i = 0; i < 600; i = i + 3) {
     //   // TODO: this is a little sped up. The GIF renders 2 frames in
     //   // 30ms while game advances 32ms, becausethe gif spec only stores
