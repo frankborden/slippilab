@@ -1,8 +1,5 @@
 .vscode/
-node_modules/
-/tools/output/
-dist/
-types/
+.vite/
 .yarn/*
 !.yarn/patches
 !.yarn/releases
@@ -10,3 +7,6 @@ types/
 !.yarn/sdks
 !.yarn/versions
 .pnp.*
+tools/output/
+dist/
+types/
