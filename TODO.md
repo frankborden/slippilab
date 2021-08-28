@@ -73,4 +73,4 @@
 - Tests
 - Webworkers?
 - git submodules?
-- npm org?
+- npm org
