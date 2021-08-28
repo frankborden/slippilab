@@ -8,8 +8,5 @@ export default defineConfig({
       entry: 'src/app-root.ts',
       formats: ['es'],
     },
-    rollupOptions: {
-      external: /^lit/,
-    },
   },
 });

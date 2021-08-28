@@ -84,6 +84,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@slippilab/search@workspace:packages/search"
   dependencies:
+    "@slippilab/common": 0.0.1
     "@slippilab/parser": 0.0.1
   languageName: unknown
   linkType: soft

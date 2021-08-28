@@ -127,7 +127,7 @@ export class Model {
           // }
           return {
             fileName: file.name,
-            game: game, //as DeepRequired<SlippiGame>,
+            game: game,
             highlights,
           };
         }
