@@ -6,7 +6,7 @@ import { supportedStagesById, createStageRender } from './stages';
 import { clearLayers, drawToBase, setupLayers } from './layer';
 import type { Layers } from './layer';
 import { Vector } from './vector';
-import type { Replay } from '../../packages/common';
+import type { Replay } from '@slippilab/common';
 
 // TODO: frames and settings should just go into generators
 export type Render = (

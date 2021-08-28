@@ -5,7 +5,7 @@ import { customElement, property, query, state } from 'lit/decorators.js';
 import '@spectrum-web-components/slider/sp-slider';
 import type { Slider } from '@spectrum-web-components/slider';
 
-import type { Highlight, Replay } from '../../packages/common';
+import type { Highlight, Replay } from '@slippilab/common';
 import { Game } from './game';
 
 @customElement('replay-viewer')

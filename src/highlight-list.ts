@@ -1,6 +1,6 @@
 import { css, html, LitElement } from 'lit';
 import { customElement, query, state } from 'lit/decorators.js';
-import type { Highlight } from '../packages/common';
+import type { Highlight } from '@slippilab/common';
 
 import { model } from './model';
 

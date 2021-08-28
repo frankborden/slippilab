@@ -15,7 +15,7 @@ import { model } from './model';
 import './replay-select';
 import './file-list';
 import './highlight-list';
-import type { Highlight, Replay } from '../packages/common';
+import type { Highlight, Replay } from '@slippilab/common';
 
 @customElement('app-root')
 export class AppRoot extends LitElement {

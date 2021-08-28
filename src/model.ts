@@ -6,7 +6,7 @@ import {
   supportedCharactersById,
   supportedStagesById,
 } from '@slippilab/viewer';
-import type { Highlight, Replay } from '../packages/common';
+import type { Highlight, Replay } from '@slippilab/common';
 
 export interface State {
   replay?: Replay;
