@@ -175,12 +175,11 @@ const renderPlayerDetails = (
   screenLayer.context.translate(x, y);
   // flip text back right-side after global flip
   screenLayer.context.scale(1, -1);
-  const name =
-    // player.displayName?.length
-    // ? player.displayName
-    player.connectCode?.length
+  const name = player.displayName?.length
+    ? player.displayName
+    : player.connectCode?.length
     ? player.connectCode
-    : player.nametag.length
+    : player.nametag?.length
     ? player.nametag
     : player.playerType === 1
     ? 'CPU'

@@ -18,7 +18,7 @@ export class HighlightList extends LitElement {
       if (this.highlights !== state.replay?.highlights) {
         this.highlights = state.replay?.highlights ?? [];
         if (this.select) {
-          this.select.value = "-1";
+          this.select.value = '-1';
         }
       }
     });

@@ -1,5 +1,5 @@
 import { walkSync } from 'https://deno.land/std@0.103.0/fs/mod.ts';
-import {parse} from 'https://deno.land/x/xml/mod.ts';
+import { parse } from 'https://deno.land/x/xml/mod.ts';
 
 /*
 Adding a character:
@@ -54,11 +54,13 @@ src/viewer/animations/index.ts importAnimation function
 done!
 */
 
-for (const folder of walkSync('./tools/output/svgo', {maxDepth:1})) {
+for (const folder of walkSync('./tools/output/svgo', { maxDepth: 1 })) {
   if (folder.path === 'tools/output/svgo') {
     continue;
   }
-  const files = Array.from(walkSync(folder.path)).filter((file) => file.isFile).map((file) => file.path);
+  const files = Array.from(walkSync(folder.path))
+    .filter((file) => file.isFile)
+    .map((file) => file.path);
   files.sort();
   const dStrings = files.map((file) => {
     const svg = (parse(Deno.readTextFileSync(file)) as any).svg;
@@ -72,7 +74,7 @@ for (const folder of walkSync('./tools/output/svgo', {maxDepth:1})) {
       } else {
         return `frame${firstIndex}`;
       }
-    }
+    },
   );
   console.log(' -', dedupedDStrings.length, 'total frames');
   const animationName = folder.name

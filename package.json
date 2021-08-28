@@ -9,8 +9,8 @@
   "scripts": {
     "start": "vite",
     "build": "tsc && vite build",
-    "format": "prettier --write \"src/**/*.ts\"",
-    "lint": "prettier --check \"src/**/*.ts\"",
+    "preview": "vite preview",
+    "format": "prettier --write \"./**/*.ts\"",
     "buildAnimations": "yarn clearAnimationBuild && yarn copyMaya && yarn svgo && yarn compress && yarn zip && yarn copyFinished",
     "clearAnimationBuild": "rm -r tools/output/maya/* tools/output/svgo/* tools/output/compression/* tools/output/zip/*",
     "copyMaya": "cp -r /media/psf/Home/Downloads/Animation_Pack/Textured_Models/Falco/output/* ./tools/output/maya",
