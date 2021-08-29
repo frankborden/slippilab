@@ -63,7 +63,7 @@ export class ReplayViewer extends LitElement {
       switch (e.key) {
         case 'ArrowUp':
         case 'ArrowDown':
-          this.game?.normalSpeed();
+          this.game?.setNormalSpeed();
           break;
       }
     });
@@ -84,10 +84,10 @@ export class ReplayViewer extends LitElement {
           );
           break;
         case 'ArrowUp':
-          this.game?.speedUp();
+          this.game?.setFastSpeed();
           break;
         case 'ArrowDown':
-          this.game?.slowDown();
+          this.game?.setSlowSpeed();
           break;
         case '.':
           this.game?.setPause();

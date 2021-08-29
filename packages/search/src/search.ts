@@ -119,7 +119,6 @@ export class Search {
       currentPermanentGroupResult
     ) {
       // wait
-      //this.saveClip();
       if (this.clipBuilder !== undefined) {
         const clip = this.clipBuilder;
         this.clipBuilder = undefined;
@@ -128,7 +127,6 @@ export class Search {
     } else {
       // failed, go back to previous group (or all the way if permanent group
       // failed)
-      //this.saveClip();
       this.popGroup();
       if (this.clipBuilder !== undefined) {
         const clip = this.clipBuilder;

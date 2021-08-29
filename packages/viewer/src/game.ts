@@ -30,6 +30,10 @@ export class Game {
   };
   private stage: Stage;
   private intervalId: number;
+  private intervalSpeed: number;
+  private fastSpeed = 1000 / 60 / 2.5;
+  private slowSpeed = (1000 / 60) * 3;
+  private normalSpeed = 1000 / 60;
   private tickHandler?: (currentFrameNumber: number) => any;
   private isPaused = false;
 
@@ -69,7 +73,11 @@ export class Game {
     startFrame: number,
   ) {
     this.stage = supportedStagesById[replay.game.gameStart.stageId];
-    this.intervalId = window.setInterval(() => this.maybeTick(), 1000 / 60);
+    this.intervalSpeed = this.normalSpeed;
+    this.intervalId = window.setInterval(
+      () => this.maybeTick(),
+      this.intervalSpeed,
+    );
     this.currentFrameNumber = startFrame;
   }
 
@@ -120,29 +128,40 @@ export class Game {
     this.tick();
   }
 
-  public speedUp(): void {
+  public setFastSpeed(): void {
+    if (this.intervalSpeed === this.fastSpeed) {
+      return;
+    }
     window.clearInterval(this.intervalId);
-    const normalFrameTime = 1000 / 60;
-    const speedFactor = 3;
+    this.intervalSpeed = this.fastSpeed;
     this.intervalId = window.setInterval(
       () => this.maybeTick(),
-      normalFrameTime / speedFactor,
+      this.intervalSpeed,
     );
   }
 
-  public slowDown(): void {
+  public setSlowSpeed(): void {
+    if (this.intervalSpeed === this.slowSpeed) {
+      return;
+    }
     window.clearInterval(this.intervalId);
-    const normalFrameTime = 1000 / 60;
-    const speedFactor = 1 / 4;
+    this.intervalSpeed = this.slowSpeed;
     this.intervalId = window.setInterval(
       () => this.maybeTick(),
-      normalFrameTime / speedFactor,
+      this.intervalSpeed,
     );
   }
 
-  public normalSpeed(): void {
+  public setNormalSpeed(): void {
+    if (this.intervalSpeed === this.normalSpeed) {
+      return;
+    }
     window.clearInterval(this.intervalId);
-    this.intervalId = window.setInterval(() => this.maybeTick(), 1000 / 60);
+    this.intervalSpeed = this.normalSpeed;
+    this.intervalId = window.setInterval(
+      () => this.maybeTick(),
+      this.intervalSpeed,
+    );
   }
 
   public setFrame(newFrameNumber: number): void {
@@ -181,7 +200,6 @@ export class Game {
     const subjects: Vector[] = [];
     const lookaheadTime = 5;
     const lastFrameIndex = Math.min(
-      // game.getLatestFrame().frame,
       game.metadata.lastFrame,
       currentFrame.frameNumber + lookaheadTime,
     );
@@ -190,7 +208,6 @@ export class Game {
       frameIndex <= lastFrameIndex;
       frameIndex++
     ) {
-      // const frameToConsider = game.getFrames()[frameIndex];
       const frameToConsider = game.frames[frameIndex];
       for (let playerIndex = 0; playerIndex < 4; playerIndex++) {
         const playerFrame = frameToConsider.players[playerIndex]?.post;

@@ -4,7 +4,6 @@
 
 - Peach/Pikachu calculate shield origin
 - Spacies calculate shine origin
-- Can't do constant slowmo
 - Shield put up / take down animation
 - Show Shield tilting (original visualiser reads inputs and checks for stun)
 - Bubble view when off camera / near blastzone?
@@ -23,8 +22,7 @@
 - Marth sideB colors
 - spacie sideB clones
 - support more characters
-  - pre-load fox/falco/falcon/marth, load the rest on demand
-- combine all characters jsons into one?
+- combine all of a character's jsons into one?
 
 ## Stage
 

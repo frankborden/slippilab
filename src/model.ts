@@ -1,6 +1,6 @@
 import { Game } from '@slippilab/parser';
 import { Subject } from 'rxjs';
-import { FramePredicates } from '@slippilab/search';
+import { FramePredicates, Search } from '@slippilab/search';
 import type { SearchSpec } from '@slippilab/search';
 import {
   supportedCharactersById,
@@ -120,11 +120,11 @@ export class Model {
         const game = new Game(await file.arrayBuffer());
         if (this.isSupported(game)) {
           let highlights: Highlight[] = [];
-          // if (game.gameStart.playerSettings.length === 2) {
-          //   highlights = this.currentState.searches
-          //     .map((searchSpec) => new Search(searchSpec))
-          //     .flatMap((search) => search.searchFile(game));
-          // }
+          if (game.gameStart.playerSettings.length === 2) {
+            highlights = this.currentState.searches
+              .map((searchSpec) => new Search(searchSpec))
+              .flatMap((search) => search.searchFile(game));
+          }
           return {
             fileName: file.name,
             game: game,
