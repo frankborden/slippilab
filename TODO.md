@@ -1,4 +1,4 @@
-# Replay Viewer
+# @slippilab/viewer
 
 ## Character
 
@@ -46,19 +46,19 @@
 - colorblind friendly colors
   - make every match red vs blue?
 - debug canvas for viewing individual animations
-- Problems on windows firefox
+- Render loop problems on windows firefox
 
-# Search
+# @slippilab/search
 
 - Other filters (matchup, date, player, stage)
 - opponent frame available to frame predicates (at least in singles)
 - Fix doubles
 
-# Parser
+# @slippilab/parser
 
 - Support older replay formats that do not have all current fields.
 
-# Export
+# Export Highlight
 
 - re-enable
 - export to other formats better than gif? apng, webp, mp4?
@@ -66,7 +66,7 @@
 - Upload gif to some host (example project with imgur: https://github.com/eirikb/gifie)
 - adjust start/end clip
 
-# App
+# @slippilab/slippilab
 
 - Tests
 - Webworkers?
