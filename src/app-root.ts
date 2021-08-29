@@ -15,6 +15,7 @@ import { fetchAnimation } from '@slippilab/viewer';
 import './replay-select';
 import './file-list';
 import './highlight-list';
+import './sl-settings';
 import type { Highlight, Replay } from '@slippilab/common';
 
 @customElement('app-root')
@@ -22,6 +23,9 @@ export class AppRoot extends LitElement {
   constructor() {
     super();
     model.state$.subscribe(async (state) => {
+      this.darkMode = state.darkMode;
+      document.body.style.backgroundColor = state.darkMode ? 'black' : 'white';
+
       if (this.replay !== state.replay) {
         this.replay = state.replay;
       }
@@ -33,7 +37,7 @@ export class AppRoot extends LitElement {
     window.addEventListener('keydown', (e: KeyboardEvent) => {
       switch (e.key) {
         case 'd':
-          this.toggleDarkMode();
+          model.setDarkMode(!this.darkMode);
           break;
         case '[':
           model.prev();
@@ -85,11 +89,6 @@ export class AppRoot extends LitElement {
   @state()
   private darkMode = false;
 
-  private toggleDarkMode(): void {
-    this.darkMode = !this.darkMode;
-    document.body.style.backgroundColor = this.darkMode ? 'black' : 'white';
-  }
-
   render() {
     return html`
       <sp-theme
@@ -110,12 +109,7 @@ export class AppRoot extends LitElement {
                 <highlight-list></highlight-list>
               </sp-tab-panel>
               <sp-tab-panel value="3">
-                <sp-switch
-                  @change=${this.toggleDarkMode}
-                  ?checked=${this.darkMode}
-                >
-                  Dark Mode
-                </sp-switch>
+                <sl-settings></sl-settings>
               </sp-tab-panel>
             </sp-tabs>
             <replay-select></replay-select>

@@ -9,6 +9,7 @@ import {
 import type { Highlight, Replay } from '@slippilab/common';
 
 export interface State {
+  darkMode: boolean;
   replay?: Replay;
   currentFileIndex?: number;
   currentHighlightIndex?: number;
@@ -17,12 +18,18 @@ export interface State {
 }
 
 export class Model {
-  private currentState: State = { files: [], searches: [] };
+  private currentState: State = { darkMode: true, files: [], searches: [] };
   private stateSubject$: Subject<State> = new Subject<State>();
   state$ = this.stateSubject$.asObservable();
 
   constructor() {
     this.stateSubject$.next(this.currentState);
+  }
+
+  setDarkMode(darkMode: boolean) {
+    const newState = {...this.currentState, darkMode};
+    this.currentState = newState;
+    this.stateSubject$.next(newState);
   }
 
   setFiles(files: File[]) {
