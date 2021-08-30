@@ -16,6 +16,8 @@ import peachAnimationsUrl from './zips/peach.zip';
 import pikachuAnimationsUrl from './zips/pikachu.zip';
 // @ts-ignore
 import sheikAnimationsUrl from './zips/sheik.zip';
+// @ts-ignore
+import samusAnimationsUrl from './zips/samus.zip';
 import { characterNamesById } from '../common';
 export { isOneIndexed } from './oneIndexed';
 export { animationNameByActionId } from './actions';
@@ -56,6 +58,8 @@ const importAnimation = async (
       return load(jigglypuffAnimationsUrl);
     case 'Pikachu':
       return load(pikachuAnimationsUrl);
+    case 'Samus':
+      return load(samusAnimationsUrl);
     default:
       throw new Error(`Unsupported character id: ${charId}`);
   }

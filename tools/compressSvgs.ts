@@ -27,9 +27,9 @@ cp -r /mnt/d/Output/* ~/slippilab/tools/output/maya/
 
 4) Optimize svgs with SVGO (fish script)
 cd ~/slippilab/tools/output/maya/
-for folder in *                                                                                                     Tue Aug 17 18:18:19 2021
+for folder in * 
   echo $folder;
-  npx svgo -f $folder -o ~/slippilab/tools/output/svgo/$folder -p 1 --multipass --config ~/slippilab/tools/svgo.config.js;
+  yarn dlx svgo -f $folder -o ~/slippilab/tools/output/svgo/$folder -p 1 --multipass --config ~/slippilab/tools/svgo.config.js;
 end
 
 5) Collect path strings from SVGs into a single .json for each animation
@@ -41,15 +41,15 @@ Optionally delete stuff you don't want
 yarn zip
 
 7) Move the .zip file to the zips directory
-cp ~/slippilab/tools/output/zip/animations.zip ~/slippilab/src/viewer/animations/zips/$CHARACTER.zip
+cp ~/slippilab/tools/output/zip/animations.zip ~/slippilab/packages/viewer/src/animations/zips/$CHARACTER.zip
 
 8) Add the character's action state <-> animation mapping
-copy an existing src/viewer/characters/$CHARACTER.ts for the new character and adjust the specials and
+copy an existing packages/viewer/src/characters/$CHARACTER.ts for the new character and adjust the specials and
 any other non-standard mappings.
 
 9) Add the character:
-src/viewer/characters/index.ts supportedCharactersById function
-src/viewer/animations/index.ts importAnimation function
+packages/viewer/src/characters/index.ts supportedCharactersById function
+packages/viewer/src/animations/index.ts importAnimation function
 
 done!
 */
@@ -58,10 +58,15 @@ for (const folder of walkSync('./tools/output/svgo', { maxDepth: 1 })) {
   if (folder.path === 'tools/output/svgo') {
     continue;
   }
+  const fileNameMatcher = /.*figatree_([0-9]+)_tmp.*/;
   const files = Array.from(walkSync(folder.path))
     .filter((file) => file.isFile)
     .map((file) => file.path);
-  files.sort();
+  files.sort(
+    (a, b) =>
+      Number((a.match(fileNameMatcher)!)[1]) -
+      Number((b.match(fileNameMatcher)!)[1]),
+  );
   const dStrings = files.map((file) => {
     const svg = (parse(Deno.readTextFileSync(file)) as any).svg;
     return svg.path['@d'] ?? svg.path[0]['@d'];

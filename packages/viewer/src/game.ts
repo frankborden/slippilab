@@ -50,13 +50,15 @@ export class Game {
       [
         createStageRender(supportedStagesById[replay.game.gameStart.stageId]),
         ...(await Promise.all(
-          replay.game.gameStart.playerSettings.map((player) =>
-            createPlayerRender(
-              player,
-              replay.game.gameStart.playerSettings,
-              replay.game.gameStart.isTeams,
+          replay.game.gameStart.playerSettings
+            .filter((player) => Boolean(player))
+            .map((player) =>
+              createPlayerRender(
+                player,
+                replay.game.gameStart.playerSettings,
+                replay.game.gameStart.isTeams,
+              ),
             ),
-          ),
         )),
         createItemRender(),
       ],
@@ -72,6 +74,8 @@ export class Game {
     private isDarkMode: boolean,
     startFrame: number,
   ) {
+    console.log('constructor renders', renders);
+    renders.forEach((render) => console.log(render));
     this.stage = supportedStagesById[replay.game.gameStart.stageId];
     this.intervalSpeed = this.normalSpeed;
     this.intervalId = window.setInterval(

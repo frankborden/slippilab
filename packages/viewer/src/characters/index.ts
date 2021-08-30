@@ -7,6 +7,7 @@ import { falcon } from './falcon';
 import { marth } from './marth';
 import { jigglypuff } from './jigglypuff';
 import { pikachu } from './pikachu';
+import { samus } from './samus';
 
 export { createPlayerRender } from './render';
 export const supportedCharactersById: { [characterId: number]: Character } = {
@@ -16,6 +17,7 @@ export const supportedCharactersById: { [characterId: number]: Character } = {
   12: peach,
   13: pikachu,
   15: jigglypuff,
+  16: samus,
   19: sheik,
   20: falco,
 };

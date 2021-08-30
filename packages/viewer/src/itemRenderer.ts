@@ -57,7 +57,9 @@ const renderItem = (
 };
 
 export const createItemRender = (): Render => {
+  console.log('creating item render');
   return (layers: Layers, frame: Frame, _frames: Frame[]) => {
+    console.log('?');
     frame.items
       ?.filter((item) => supportedItems.includes(item.typeId))
       ?.forEach((item) => {
