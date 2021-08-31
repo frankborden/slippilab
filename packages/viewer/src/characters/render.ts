@@ -162,7 +162,7 @@ const renderPlayerDetails = (
   isDoubles: boolean,
   isDarkMode: boolean,
 ): void => {
-  const playerFrame = _frame.players[player.playerIndex].post;
+  // const playerFrame = _frame.players[player.playerIndex].post;
   const character = characterNamesById[player.externalCharacterId];
   screenLayer.context.save();
   const fontSize = screenLayer.canvas.height / 30;
@@ -175,25 +175,25 @@ const renderPlayerDetails = (
   screenLayer.context.translate(x, y);
   // flip text back right-side after global flip
   screenLayer.context.scale(1, -1);
-  // const name = player.displayName?.length
-  //   ? player.displayName
-  //   : player.connectCode?.length
-  //   ? player.connectCode
-  //   : player.nametag?.length
-  //   ? player.nametag
-  //   : player.playerType === 1
-  //   ? 'CPU'
-  //   : character;
+  const name = player.displayName?.length
+    ? player.displayName
+    : player.connectCode?.length
+    ? player.connectCode
+    : player.nametag?.length
+    ? player.nametag
+    : player.playerType === 1
+    ? 'CPU'
+    : character;
   // Debug mode
-  const characterData = supportedCharactersById[player.externalCharacterId];
-  let animationName;
-  const actionName = animationNameByActionId[playerFrame.actionStateId];
-  if (characterData.specialsMap.has(playerFrame.actionStateId)) {
-    animationName = characterData.specialsMap.get(playerFrame.actionStateId);
-  } else if (actionName) {
-    animationName = characterData.animationMap.get(actionName) ?? actionName;
-  }
-  const name = `${playerFrame.actionStateId},${animationName},${playerFrame.actionStateFrameCounter}`;
+  // const characterData = supportedCharactersById[player.externalCharacterId];
+  // let animationName;
+  // const actionName = animationNameByActionId[playerFrame.actionStateId];
+  // if (characterData.specialsMap.has(playerFrame.actionStateId)) {
+  //   animationName = characterData.specialsMap.get(playerFrame.actionStateId);
+  // } else if (actionName) {
+  //   animationName = characterData.animationMap.get(actionName) ?? actionName;
+  // }
+  // const name = `${playerFrame.actionStateId},${animationName},${playerFrame.actionStateFrameCounter}`;
 
   screenLayer.context.fillText(name, 0, 0);
   screenLayer.context.strokeText(name, 0, 0);

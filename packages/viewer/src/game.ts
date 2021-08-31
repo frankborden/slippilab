@@ -74,8 +74,6 @@ export class Game {
     private isDarkMode: boolean,
     startFrame: number,
   ) {
-    console.log('constructor renders', renders);
-    renders.forEach((render) => console.log(render));
     this.stage = supportedStagesById[replay.game.gameStart.stageId];
     this.intervalSpeed = this.normalSpeed;
     this.intervalId = window.setInterval(

@@ -18,7 +18,7 @@ export interface State {
 }
 
 export class Model {
-  private currentState: State = { darkMode: true, files: [], searches: [] };
+  private currentState: State = { darkMode: false, files: [], searches: [] };
   private stateSubject$: Subject<State> = new Subject<State>();
   state$ = this.stateSubject$.asObservable();
 

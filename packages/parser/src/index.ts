@@ -2,7 +2,7 @@ import { decode } from '@shelacek/ubjson';
 
 /**
  * This is a quick-n-dirty parser for use in the browser.
- * It is based off of the replay format SPEC up to 3.9.0.0.
+ * It is based off of the replay format spec up to 3.9.0.0.
  * It is incomplete, I have left out things I don't need right now.
  * slippi-js can work too if your build tool de-node-ifies it enough.
  * TODO: don't crash on old format versions, just skip the missing
@@ -140,6 +140,8 @@ export interface Frame {
 }
 
 export class Game {
+  static readonly baseVersion = '0.0.0.0';
+  private formatVersion = Game.baseVersion;
   public metadata: Metadata;
   private raw: DataView;
   private commandPayloadSizes: EventPayloadsEvent = {};
@@ -160,7 +162,7 @@ export class Game {
     let offset = 0x00;
     let command, size, event;
     while (offset < this.raw.byteLength) {
-      command = this.getUint(8, offset);
+      command = this.getUint(8, Game.baseVersion, offset);
       switch (command) {
         case 0x35:
           this.commandPayloadSizes = this.parseEventPayloadsEvent(offset);
@@ -170,6 +172,17 @@ export class Game {
           break;
         case 0x37:
           event = this.parsePreFrameUpdateEvent(offset);
+          if (!this.frames[event.frameNumber]) {
+            this.frames[event.frameNumber] = {
+              frameNumber: event.frameNumber,
+              //@ts-ignore
+              start: undefined,
+              //@ts-ignore
+              end: undefined,
+              players: [],
+              items: [],
+            };
+          }
           this.frames[event.frameNumber].players[event.playerIndex] = {
             pre: event,
             //@ts-ignore
@@ -219,9 +232,13 @@ export class Game {
   }
 
   private parseEventPayloadsEvent(offset: number): EventPayloadsEvent {
-    const commandByte = this.getUint(8, offset + 0x00);
+    const commandByte = this.getUint(8, Game.baseVersion, offset + 0x00);
     const commandPayloadSizes: { [commandByte: number]: number } = {};
-    const eventPayloadsPayloadSize = this.getUint(8, offset + 0x01);
+    const eventPayloadsPayloadSize = this.getUint(
+      8,
+      Game.baseVersion,
+      offset + 0x01,
+    );
     commandPayloadSizes[commandByte] = eventPayloadsPayloadSize;
     const listOffset = offset + 0x02;
     for (
@@ -229,8 +246,8 @@ export class Game {
       i < eventPayloadsPayloadSize + listOffset - 0x01;
       i += 0x03
     ) {
-      const commandByte = this.getUint(8, i + 0x00);
-      const payloadSize = this.getUint(16, i + 0x01);
+      const commandByte = this.getUint(8, Game.baseVersion, i + 0x00);
+      const payloadSize = this.getUint(16, Game.baseVersion, i + 0x01);
       commandPayloadSizes[commandByte] = payloadSize;
     }
     return commandPayloadSizes;
@@ -238,47 +255,66 @@ export class Game {
 
   private parseGameStartEvent(offset: number): GameStartEvent {
     const event: GameStartEvent = {
-      isTeams: Boolean(this.getUint(8, offset + 0x0d)),
+      isTeams: Boolean(this.getUint(8, Game.baseVersion, offset + 0x0d)),
       playerSettings: [],
       replayFormatVersion: [
-        this.getUint(8, offset + 0x01),
-        this.getUint(8, offset + 0x02),
-        this.getUint(8, offset + 0x03),
-        this.getUint(8, offset + 0x04),
+        this.getUint(8, Game.baseVersion, offset + 0x01),
+        this.getUint(8, Game.baseVersion, offset + 0x02),
+        this.getUint(8, Game.baseVersion, offset + 0x03),
+        this.getUint(8, Game.baseVersion, offset + 0x04),
       ].join('.'),
-      stageId: this.getUint(16, offset + 0x13),
+      stageId: this.getUint(16, Game.baseVersion, offset + 0x13),
     };
+    this.formatVersion = event.replayFormatVersion;
     for (let playerIndex = 0; playerIndex < 4; playerIndex++) {
-      const playerType = this.getUint(8, offset + 0x66 + 0x24 * playerIndex);
+      const playerType = this.getUint(
+        8,
+        Game.baseVersion,
+        offset + 0x66 + 0x24 * playerIndex,
+      );
       if (playerType === 3) {
         continue;
       }
       event.playerSettings[playerIndex] = {
         playerIndex: playerIndex,
         // TODO replace double width # with single width #
-        connectCode: 'TODO',
-        // connectCode: this.readShiftJisString(
-        //   offset + 0x221 + 0x0a * playerIndex,
-        //   10,
-        // ),
-        costumeIndex: this.getUint(8, offset + 0x68 + 0x24 * playerIndex),
-        displayName: 'TODO',
-        // displayName: this.readShiftJisString(
-        //   offset + 0x1a5 + 0x1f * playerIndex,
-        //   16,
-        // ),
+        connectCode: this.readShiftJisString(
+          '3.9.0.0',
+          offset + 0x221 + 0x0a * playerIndex,
+          10,
+        ),
+        costumeIndex: this.getUint(
+          8,
+          Game.baseVersion,
+          offset + 0x68 + 0x24 * playerIndex,
+        ),
+        displayName: this.readShiftJisString(
+          '3.9.0.0',
+          offset + 0x1a5 + 0x1f * playerIndex,
+          16,
+        ),
         externalCharacterId: this.getUint(
           8,
+          Game.baseVersion,
           offset + 0x65 + 0x24 * playerIndex,
         ),
         // TODO verify
         nametag: this.readShiftJisString(
+          '1.3.0.0',
           offset + 0x161 + 0x10 * playerIndex,
           9,
         ),
         playerType,
-        teamId: this.getUint(8, offset + 0x6e + 0x24 * playerIndex),
-        teamShade: this.getUint(8, offset + 0x6c + 0x24 * playerIndex),
+        teamId: this.getUint(
+          8,
+          Game.baseVersion,
+          offset + 0x6e + 0x24 * playerIndex,
+        ),
+        teamShade: this.getUint(
+          8,
+          Game.baseVersion,
+          offset + 0x6c + 0x24 * playerIndex,
+        ),
       };
     }
     return event;
@@ -286,99 +322,103 @@ export class Game {
 
   private parseFrameStartEvent(offset: number): FrameStartEvent {
     return {
-      frameNumber: this.getInt(32, offset + 0x01),
-      randomSeed: this.getUint(32, offset + 0x05),
+      frameNumber: this.getInt(32, '2.2.0.0', offset + 0x01),
+      randomSeed: this.getUint(32, '2.2.0.0', offset + 0x05),
     };
   }
 
   private parsePreFrameUpdateEvent(offset: number): PreFrameUpdateEvent {
     return {
-      frameNumber: this.getInt(32, offset + 0x01),
-      playerIndex: this.getUint(8, offset + 0x05),
-      isFollower: Boolean(this.getUint(8, offset + 0x06)),
-      actionStateId: this.getUint(16, offset + 0x0b),
-      xPosition: this.getFloat(32, offset + 0x0d),
-      yPosition: this.getFloat(32, offset + 0x11),
-      facingDirection: this.getFloat(32, offset + 0x15),
-      joystickX: this.getFloat(32, offset + 0x19),
-      joystickY: this.getFloat(32, offset + 0x1d),
-      cStickX: this.getFloat(32, offset + 0x21),
-      cStickY: this.getFloat(32, offset + 0x25),
-      trigger: this.getFloat(32, offset + 0x29),
-      processedButtons: this.getUint(32, offset + 0x2d),
-      physicalButtons: this.getUint(16, offset + 0x31),
-      physicalLTrigger: this.getFloat(32, offset + 0x33),
-      physicalRTrigger: this.getFloat(32, offset + 0x37),
-      percent: this.getFloat(32, offset + 0x3c),
+      frameNumber: this.getInt(32, '0.1.0.0', offset + 0x01),
+      playerIndex: this.getUint(8, '0.1.0.0', offset + 0x05),
+      isFollower: Boolean(this.getUint(8, '0.1.0.0', offset + 0x06)),
+      actionStateId: this.getUint(16, '0.1.0.0', offset + 0x0b),
+      xPosition: this.getFloat(32, '0.1.0.0', offset + 0x0d),
+      yPosition: this.getFloat(32, '0.1.0.0', offset + 0x11),
+      facingDirection: this.getFloat(32, '0.1.0.0', offset + 0x15),
+      joystickX: this.getFloat(32, '0.1.0.0', offset + 0x19),
+      joystickY: this.getFloat(32, '0.1.0.0', offset + 0x1d),
+      cStickX: this.getFloat(32, '0.1.0.0', offset + 0x21),
+      cStickY: this.getFloat(32, '0.1.0.0', offset + 0x25),
+      trigger: this.getFloat(32, '0.1.0.0', offset + 0x29),
+      processedButtons: this.getUint(32, '0.1.0.0', offset + 0x2d),
+      physicalButtons: this.getUint(16, '0.1.0.0', offset + 0x31),
+      physicalLTrigger: this.getFloat(32, '0.1.0.0', offset + 0x33),
+      physicalRTrigger: this.getFloat(32, '0.1.0.0', offset + 0x37),
+      percent: this.getFloat(32, '1.4.0.0', offset + 0x3c),
     };
   }
 
   private parsePostFrameUpdateEvent(offset: number): PostFrameUpdateEvent {
     return {
-      frameNumber: this.getInt(32, offset + 0x01),
-      playerIndex: this.getUint(8, offset + 0x05),
-      isFollower: Boolean(this.getUint(8, offset + 0x06)),
-      internalCharacterId: this.getUint(8, offset + 0x07),
-      actionStateId: this.getUint(16, offset + 0x08),
-      xPosition: this.getFloat(32, offset + 0x0a),
-      yPosition: this.getFloat(32, offset + 0x0e),
-      facingDirection: this.getFloat(32, offset + 0x12),
-      percent: this.getFloat(32, offset + 0x16),
-      shieldSize: this.getFloat(32, offset + 0x1a),
-      lastHittingAttackId: this.getUint(8, offset + 0x1e),
-      currentComboCount: this.getUint(8, offset + 0x1f),
-      lastHitBy: this.getUint(8, offset + 0x20),
-      stocksRemaining: this.getUint(8, offset + 0x21),
-      actionStateFrameCounter: this.getFloat(32, offset + 0x22),
-      isGrounded: !Boolean(this.getUint(8, offset + 0x2f)),
-      lastGroundId: this.getUint(8, offset + 0x30),
-      jumpsRemaining: this.getUint(8, offset + 0x32),
-      lCancelStatus: this.getUint(8, offset + 0x33),
-      hurtboxCollisionState: this.getUint(8, offset + 0x34),
-      selfInducedAirXSpeed: this.getFloat(32, offset + 0x35),
-      selfInducedAirYSpeed: this.getFloat(32, offset + 0x39),
-      attackBasedXSpeed: this.getFloat(32, offset + 0x3d),
-      attackBasedYSpeed: this.getFloat(32, offset + 0x41),
-      selfInducedGroundXSpeed: this.getFloat(32, offset + 0x45),
-      hitlagRemaining: this.getFloat(32, offset + 0x49),
+      frameNumber: this.getInt(32, '0.1.0.0', offset + 0x01),
+      playerIndex: this.getUint(8, '0.1.0.0', offset + 0x05),
+      isFollower: Boolean(this.getUint(8, '0.1.0.0', offset + 0x06)),
+      internalCharacterId: this.getUint(8, '0.1.0.0', offset + 0x07),
+      actionStateId: this.getUint(16, '0.1.0.0', offset + 0x08),
+      xPosition: this.getFloat(32, '0.1.0.0', offset + 0x0a),
+      yPosition: this.getFloat(32, '0.1.0.0', offset + 0x0e),
+      facingDirection: this.getFloat(32, '0.1.0.0', offset + 0x12),
+      percent: this.getFloat(32, '0.1.0.0', offset + 0x16),
+      shieldSize: this.getFloat(32, '0.1.0.0', offset + 0x1a),
+      lastHittingAttackId: this.getUint(8, '0.1.0.0', offset + 0x1e),
+      currentComboCount: this.getUint(8, '0.1.0.0', offset + 0x1f),
+      lastHitBy: this.getUint(8, '0.1.0.0', offset + 0x20),
+      stocksRemaining: this.getUint(8, '0.1.0.0', offset + 0x21),
+      actionStateFrameCounter: this.getFloat(32, '0.2.0.0', offset + 0x22),
+      isGrounded: !Boolean(this.getUint(8, '2.0.0.0', offset + 0x2f)),
+      lastGroundId: this.getUint(8, '2.0.0.0', offset + 0x30),
+      jumpsRemaining: this.getUint(8, '2.0.0.0', offset + 0x32),
+      lCancelStatus: this.getUint(8, '2.0.0.0', offset + 0x33),
+      hurtboxCollisionState: this.getUint(8, '2.1.0.0', offset + 0x34),
+      selfInducedAirXSpeed: this.getFloat(32, '3.5.0.0', offset + 0x35),
+      selfInducedAirYSpeed: this.getFloat(32, '3.5.0.0', offset + 0x39),
+      attackBasedXSpeed: this.getFloat(32, '3.5.0.0', offset + 0x3d),
+      attackBasedYSpeed: this.getFloat(32, '3.5.0.0', offset + 0x41),
+      selfInducedGroundXSpeed: this.getFloat(32, '3.5.0.0', offset + 0x45),
+      hitlagRemaining: this.getFloat(32, '3.8.0.0', offset + 0x49),
     };
   }
 
   private parseItemUpdateEvent(offset: number): ItemUpdateEvent {
     return {
-      frameNumber: this.getInt(32, offset + 0x01),
-      typeId: this.getUint(16, offset + 0x05),
-      state: this.getUint(8, offset + 0x07),
-      facingDirection: this.getFloat(32, offset + 0x08),
-      xVelocity: this.getFloat(32, offset + 0x0c),
-      yVelocity: this.getFloat(32, offset + 0x10),
-      xPosition: this.getFloat(32, offset + 0x14),
-      yPosition: this.getFloat(32, offset + 0x18),
-      damageTaken: this.getUint(16, offset + 0x1c),
-      expirationTimer: this.getFloat(32, offset + 0x1e),
-      spawnId: this.getUint(32, offset + 0x22),
-      samusMissileType: this.getUint(8, offset + 0x26),
-      peachTurnipFace: this.getUint(8, offset + 0x27),
-      owner: this.getInt(8, offset + 0x2a),
+      frameNumber: this.getInt(32, '3.0.0.0', offset + 0x01),
+      typeId: this.getUint(16, '3.0.0.0', offset + 0x05),
+      state: this.getUint(8, '3.0.0.0', offset + 0x07),
+      facingDirection: this.getFloat(32, '3.0.0.0', offset + 0x08),
+      xVelocity: this.getFloat(32, '3.0.0.0', offset + 0x0c),
+      yVelocity: this.getFloat(32, '3.0.0.0', offset + 0x10),
+      xPosition: this.getFloat(32, '3.0.0.0', offset + 0x14),
+      yPosition: this.getFloat(32, '3.0.0.0', offset + 0x18),
+      damageTaken: this.getUint(16, '3.0.0.0', offset + 0x1c),
+      expirationTimer: this.getFloat(32, '3.0.0.0', offset + 0x1e),
+      spawnId: this.getUint(32, '3.0.0.0', offset + 0x22),
+      samusMissileType: this.getUint(8, '3.2.0.0', offset + 0x26),
+      peachTurnipFace: this.getUint(8, '3.2.0.0', offset + 0x27),
+      owner: this.getInt(8, '3.6.0.0', offset + 0x2a),
     };
   }
 
   private parseFrameBookendEvent(offset: number): FrameBookendEvent {
     return {
-      frameNumber: this.getInt(32, offset + 0x01),
-      latestFinalizedFrame: this.getInt(32, offset + 0x05),
+      frameNumber: this.getInt(32, '3.0.0.0', offset + 0x01),
+      latestFinalizedFrame: this.getInt(32, '3.7.0.0', offset + 0x05),
     };
   }
 
   private parseGameEndEvent(offset: number): GameEndEvent {
     return {
-      gameEndMethod: this.getUint(8, offset + 0x01),
-      quitInitiator: this.getInt(8, offset + 0x02),
+      gameEndMethod: this.getUint(8, '0.1.0.0', offset + 0x01),
+      quitInitiator: this.getInt(8, '2.0.0.0', offset + 0x02),
     };
   }
 
-  private getUint(size: 8 | 16 | 32, offset: number): number {
-    if (this.raw.byteLength - this.raw.byteOffset < offset) {
+  private getUint(
+    size: 8 | 16 | 32,
+    firstVersion: string,
+    offset: number,
+  ): number {
+    if ([this.formatVersion, firstVersion].sort()[0] !== firstVersion) {
       // @ts-ignore
       return undefined;
     }
@@ -392,8 +432,12 @@ export class Game {
     }
   }
 
-  private getFloat(size: 32 | 64, offset: number): number {
-    if (this.raw.byteLength - this.raw.byteOffset < offset) {
+  private getFloat(
+    size: 32 | 64,
+    firstVersion: string,
+    offset: number,
+  ): number {
+    if ([this.formatVersion, firstVersion].sort()[0] !== firstVersion) {
       // @ts-ignore
       return undefined;
     }
@@ -405,8 +449,12 @@ export class Game {
     }
   }
 
-  private getInt(size: 8 | 16 | 32, offset: number): number {
-    if (this.raw.byteLength - this.raw.byteOffset < offset) {
+  private getInt(
+    size: 8 | 16 | 32,
+    firstVersion: string,
+    offset: number,
+  ): number {
+    if ([this.formatVersion, firstVersion].sort()[0] !== firstVersion) {
       // @ts-ignore
       return undefined;
     }
@@ -420,7 +468,15 @@ export class Game {
     }
   }
 
-  private readShiftJisString(offset: number, maxLength: number): string {
+  private readShiftJisString(
+    firstVersion: string,
+    offset: number,
+    maxLength: number,
+  ): string {
+    if ([this.formatVersion, firstVersion].sort()[0] !== firstVersion) {
+      // @ts-ignore
+      return undefined;
+    }
     const shiftJisBytes = new Uint8Array(maxLength);
     let charNum = 0;
     do {
