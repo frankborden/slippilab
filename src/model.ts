@@ -27,7 +27,7 @@ export class Model {
   }
 
   setDarkMode(darkMode: boolean) {
-    const newState = {...this.currentState, darkMode};
+    const newState = { ...this.currentState, darkMode };
     this.currentState = newState;
     this.stateSubject$.next(newState);
   }
