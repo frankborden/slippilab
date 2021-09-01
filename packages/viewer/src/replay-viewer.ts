@@ -159,6 +159,17 @@ export class ReplayViewer extends LitElement {
         this.canvas.height = newHeight;
         this.game?.resize(newWidth, newHeight);
         this.slider.requestUpdate();
+        const baseContext = this.canvas.getContext('2d');
+        if (baseContext) {
+          baseContext.fillStyle = 'black';
+          baseContext.font = `${this.canvas.height / 80}px Verdana`;
+          baseContext.textAlign = 'center';
+          baseContext?.fillText(
+            'Loading animations',
+            this.canvas.width / 2,
+            this.canvas.height / 2,
+          );
+        }
       }
     });
 
@@ -192,6 +203,17 @@ export class ReplayViewer extends LitElement {
       highestFrame === undefined
     ) {
       return;
+    }
+    const baseContext = this.canvas.getContext('2d');
+    if (baseContext) {
+      baseContext.fillStyle = 'black';
+      baseContext.font = `${this.canvas.height / 80}px Verdana`;
+      baseContext.textAlign = 'center';
+      baseContext?.fillText(
+        'Loading animations',
+        this.canvas.width / 2,
+        this.canvas.height / 2,
+      );
     }
     this.highestFrame = highestFrame;
     this.game = await Game.create(this.replay, this.canvas, this.dark, -123);
