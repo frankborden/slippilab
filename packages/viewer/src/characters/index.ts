@@ -9,12 +9,14 @@ import { jigglypuff } from './jigglypuff';
 import { pikachu } from './pikachu';
 import { samus } from './samus';
 import { luigi } from './luigi';
+import {mario} from './mario';
 
 export { createPlayerRender } from './render';
 export const supportedCharactersById: { [characterId: number]: Character } = {
   0: falcon,
   2: fox,
   7: luigi,
+  8: mario,
   9: marth,
   12: peach,
   13: pikachu,

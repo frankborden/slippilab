@@ -20,6 +20,8 @@ import sheikAnimationsUrl from './zips/sheik.zip';
 import samusAnimationsUrl from './zips/samus.zip';
 // @ts-ignore
 import luigiAnimationsUrl from './zips/luigi.zip';
+// @ts-ignore
+import marioAnimationsUrl from './zips/mario.zip';
 import { characterNamesById } from '../common';
 export { isOneIndexed } from './oneIndexed';
 export { animationNameByActionId } from './actions';
@@ -64,6 +66,8 @@ const importAnimation = async (
       return load(samusAnimationsUrl);
     case 'Luigi':
       return load(luigiAnimationsUrl);
+    case 'Mario':
+      return load(marioAnimationsUrl);
     default:
       throw new Error(`Unsupported character id: ${charId}`);
   }
