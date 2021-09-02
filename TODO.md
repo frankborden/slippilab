@@ -2,7 +2,9 @@
 
 ## Character
 
-- Peach/Pikachu calculate shield origin
+- Peach/Pikachu/Samus/Luigi calculate shield origin
+- Luigi upB is rotated
+- Samus downB doesn't use ball model
 - Spacies calculate shine origin
 - Shield put up / take down animation
 - Show Shield tilting (original visualiser reads inputs and checks for stun)

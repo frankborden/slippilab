@@ -29,7 +29,7 @@ cp -r /mnt/d/Output/* ~/slippilab/tools/output/maya/
 cd ~/slippilab/tools/output/maya/
 for folder in * 
   echo $folder;
-  yarn dlx svgo -f $folder -o ~/slippilab/tools/output/svgo/$folder -p 1 --multipass --config ~/slippilab/tools/svgo.config.js;
+  svgo -f $folder -o ~/slippilab/tools/output/svgo/$folder -p 1 --multipass --config ~/slippilab/tools/svgo.config.js;
 end
 
 5) Collect path strings from SVGs into a single .json for each animation
