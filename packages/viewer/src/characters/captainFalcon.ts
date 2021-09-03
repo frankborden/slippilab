@@ -17,7 +17,7 @@ export const captainFalcon: Character = {
     ['AttackS4HiS', 'AttackS4Hi'],
     ['AttackS4Lw', 'AttackS4Lw'],
     ['AttackS4LwS', 'AttackS4Lw'],
-    ['AttackS4S', 'AttackS4'],
+    ['AttackS4S', 'AttackS4S'],
     ['BarrelWait', ''],
     ['Bury', ''],
     ['BuryJump', ''],

@@ -2,7 +2,7 @@
 
 ## Character
 
-- Peach/Pikachu/Samus/Luigi/Mario/Dr. Mario calculate shield origin
+- Peach/Pikachu/Samus/Luigi/Mario/Dr. Mario/DK calculate shield origin
 - Luigi upB is rotated
 - Samus downB doesn't use ball model
 - Spacies calculate shine origin
@@ -84,4 +84,5 @@
 - list supported characters / stages
 - publish subpackages
 - git submodules?
+- about page / link to source
 - npm org

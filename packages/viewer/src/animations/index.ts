@@ -24,6 +24,8 @@ import luigiAnimationsUrl from './zips/luigi.zip';
 import marioAnimationsUrl from './zips/mario.zip';
 // @ts-ignore
 import doctorMarioAnimationsUrl from './zips/doctorMario.zip';
+// @ts-ignore
+import donkeyKongAnimationsUrl from './zips/donkeyKong.zip';
 import { characterNamesById } from '../common';
 export { isOneIndexed } from './oneIndexed';
 export { animationNameByActionId } from './actions';
@@ -72,6 +74,8 @@ const importAnimation = async (
       return load(marioAnimationsUrl);
     case 'Dr. Mario':
       return load(doctorMarioAnimationsUrl);
+    case 'Donkey Kong':
+      return load(donkeyKongAnimationsUrl);
     default:
       throw new Error(`Unsupported character id: ${charId}`);
   }
