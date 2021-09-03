@@ -2,7 +2,7 @@
 
 ## Character
 
-- Peach/Pikachu/Samus/Luigi/Mario calculate shield origin
+- Peach/Pikachu/Samus/Luigi/Mario/Dr. Mario calculate shield origin
 - Luigi upB is rotated
 - Samus downB doesn't use ball model
 - Spacies calculate shine origin
@@ -10,7 +10,16 @@
 - Show Shield tilting (original visualiser reads inputs and checks for stun)
 - Bubble view when off camera / near blastzone?
 - correct laser & fly guy sizes
-- show needles, pika jolts, turnips, etc.
+- show projectiles:
+  - needles
+  - jolt
+  - thunder
+  - turnips
+  - fireballs
+  - pills
+  - missiles
+  - charge shot
+  - samus bombs
 - Powershield animation
   - 0x0b6: 'GUARD', //GuardReflect (182 decimal)
 - Lightshield

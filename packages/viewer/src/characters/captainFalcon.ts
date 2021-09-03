@@ -1,7 +1,7 @@
 import type { Character } from '../common';
 import { Vector } from '../vector';
 import type { ActionName } from '../animations/actions';
-export const falcon: Character = {
+export const captainFalcon: Character = {
   scale: 0.97,
   shieldOffset: new Vector(0.2, 10.447),
   shieldSize: 0.97 * 15,

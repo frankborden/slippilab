@@ -5,7 +5,7 @@ import foxAnimationsUrl from './zips/fox.zip';
 // @ts-ignore
 import falcoAnimationsUrl from './zips/falco.zip';
 // @ts-ignore
-import falconAnimationsUrl from './zips/falcon.zip';
+import captainFalconAnimationsUrl from './zips/captainFalcon.zip';
 // @ts-ignore
 import jigglypuffAnimationsUrl from './zips/jigglypuff.zip';
 // @ts-ignore
@@ -22,6 +22,8 @@ import samusAnimationsUrl from './zips/samus.zip';
 import luigiAnimationsUrl from './zips/luigi.zip';
 // @ts-ignore
 import marioAnimationsUrl from './zips/mario.zip';
+// @ts-ignore
+import doctorMarioAnimationsUrl from './zips/doctorMario.zip';
 import { characterNamesById } from '../common';
 export { isOneIndexed } from './oneIndexed';
 export { animationNameByActionId } from './actions';
@@ -55,7 +57,7 @@ const importAnimation = async (
     case 'Falco':
       return load(falcoAnimationsUrl);
     case 'Captain Falcon':
-      return load(falconAnimationsUrl);
+      return load(captainFalconAnimationsUrl);
     case 'Marth':
       return load(marthAnimationsUrl);
     case 'Jigglypuff':
@@ -68,6 +70,8 @@ const importAnimation = async (
       return load(luigiAnimationsUrl);
     case 'Mario':
       return load(marioAnimationsUrl);
+    case 'Dr. Mario':
+      return load(doctorMarioAnimationsUrl);
     default:
       throw new Error(`Unsupported character id: ${charId}`);
   }
