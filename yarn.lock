@@ -98,18 +98,18 @@ __metadata:
     "@slippilab/parser": 0.0.1
     "@slippilab/search": 0.0.1
     "@slippilab/viewer": 0.0.1
-    "@spectrum-web-components/action-button": ^0.5.5
+    "@spectrum-web-components/action-button": ^0.5.6
     "@spectrum-web-components/icon": ^0.9.10
-    "@spectrum-web-components/icons": ^0.7.7
-    "@spectrum-web-components/switch": ^0.7.12
-    "@spectrum-web-components/tabs": ^0.6.6
-    "@spectrum-web-components/theme": ^0.8.12
-    lit: ^2.0.0-rc.3
+    "@spectrum-web-components/icons": ^0.7.8
+    "@spectrum-web-components/switch": ^0.7.13
+    "@spectrum-web-components/tabs": ^0.6.7
+    "@spectrum-web-components/theme": ^0.8.13
+    lit: ^2.0.0-rc.4
     prettier: ^2.3.2
     rxjs: ^7.3.0
-    svgo: ^2.4.0
-    typescript: ^4.3.5
-    vite: ^2.5.1
+    svgo: ^2.5.0
+    typescript: ^4.4.2
+    vite: ^2.5.3
   languageName: unknown
   linkType: soft
 
@@ -119,22 +119,22 @@ __metadata:
   dependencies:
     "@slippilab/common": 0.0.1
     "@slippilab/parser": 0.0.1
-    "@spectrum-web-components/slider": ^0.10.5
-    "@zip.js/zip.js": ^2.3.8
-    lit: ^2.0.0-rc.3
+    "@spectrum-web-components/slider": ^0.10.6
+    "@zip.js/zip.js": ^2.3.11
+    lit: ^2.0.0-rc.4
   languageName: unknown
   linkType: soft
 
-"@spectrum-web-components/action-button@npm:^0.5.5":
-  version: 0.5.5
-  resolution: "@spectrum-web-components/action-button@npm:0.5.5"
+"@spectrum-web-components/action-button@npm:^0.5.6":
+  version: 0.5.6
+  resolution: "@spectrum-web-components/action-button@npm:0.5.6"
   dependencies:
     "@spectrum-web-components/base": ^0.4.5
-    "@spectrum-web-components/button": ^0.14.5
-    "@spectrum-web-components/icon": ^0.9.9
-    "@spectrum-web-components/icons-ui": ^0.6.9
+    "@spectrum-web-components/button": ^0.14.6
+    "@spectrum-web-components/icon": ^0.9.10
+    "@spectrum-web-components/icons-ui": ^0.6.10
     tslib: ^2.0.0
-  checksum: 1ace7558cbbcbb243488ad6a1d0dd8cb4b72441f118693e9f67c31a4d4e457161c55405accc01faaeca09440f4068f798d43cfa59ebb78140eafac2a85835347
+  checksum: dca29a97b1183486e8566f7faca4ca46bc7fec9629575f493404d8915eaad5a86395fd251da8d77481e52124f389ba050eaa2228844b12812124767393555443
   languageName: node
   linkType: hard
 
@@ -149,42 +149,42 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@spectrum-web-components/button@npm:^0.14.5":
-  version: 0.14.5
-  resolution: "@spectrum-web-components/button@npm:0.14.5"
+"@spectrum-web-components/button@npm:^0.14.6":
+  version: 0.14.6
+  resolution: "@spectrum-web-components/button@npm:0.14.6"
   dependencies:
     "@spectrum-web-components/base": ^0.4.5
-    "@spectrum-web-components/icon": ^0.9.9
-    "@spectrum-web-components/icons-ui": ^0.6.9
+    "@spectrum-web-components/icon": ^0.9.10
+    "@spectrum-web-components/icons-ui": ^0.6.10
     "@spectrum-web-components/shared": ^0.12.7
     tslib: ^2.0.0
-  checksum: 37c764684f0dffd5bb737030fa68803d34918d5981feeb1e4154d2d1a6f0d4b3491faa759668992feea916c90ae4451752c7194269e722e51a3ae33df550b44c
+  checksum: 93e3c496bea21450eedd357603d3820984272c6f26ab6c525abc107f24e5ff4d8d136ffd7559aaf211e44c32226ed0a6ccb9c48ec59f1a405d4baf8874c431a4
   languageName: node
   linkType: hard
 
-"@spectrum-web-components/checkbox@npm:^0.10.5":
-  version: 0.10.5
-  resolution: "@spectrum-web-components/checkbox@npm:0.10.5"
+"@spectrum-web-components/checkbox@npm:^0.10.6":
+  version: 0.10.6
+  resolution: "@spectrum-web-components/checkbox@npm:0.10.6"
   dependencies:
     "@spectrum-web-components/base": ^0.4.5
-    "@spectrum-web-components/icon": ^0.9.9
-    "@spectrum-web-components/icons-ui": ^0.6.9
+    "@spectrum-web-components/icon": ^0.9.10
+    "@spectrum-web-components/icons-ui": ^0.6.10
     "@spectrum-web-components/shared": ^0.12.7
     tslib: ^2.0.0
-  checksum: 5f7954c30e5cac403920406700e073ed2bcad37f4b05698a0f670f186d70155a02e7ef6db6ac0fe74e0a92c1a1da24443fd24e761a321f43b5da7eb241b3b0bf
+  checksum: a9b5c3e7d9c7cd8c3221cbf994c8da0bf4104f37c6a7e298262ca658a097c53d6c8afc04fc73e2f90e8330adc2fd38661c0a43393d6d91c1937042a1302f32f4
   languageName: node
   linkType: hard
 
-"@spectrum-web-components/field-label@npm:^0.5.5":
-  version: 0.5.5
-  resolution: "@spectrum-web-components/field-label@npm:0.5.5"
+"@spectrum-web-components/field-label@npm:^0.5.6":
+  version: 0.5.6
+  resolution: "@spectrum-web-components/field-label@npm:0.5.6"
   dependencies:
     "@spectrum-web-components/base": ^0.4.5
-    "@spectrum-web-components/icon": ^0.9.9
-    "@spectrum-web-components/icons-ui": ^0.6.9
+    "@spectrum-web-components/icon": ^0.9.10
+    "@spectrum-web-components/icons-ui": ^0.6.10
     "@spectrum-web-components/shared": ^0.12.7
     tslib: ^2.0.0
-  checksum: 23f6a9a02bcf59be9aef0e0d496638e663fdbed6e9a5fee7fe449cfa99749350ae9333f19a1596817f75ddd639cdfd6221a90cb8627751f2a426c9b7f6cc98f4
+  checksum: e200d47f093f79bde61a569b7b4891bdccbdf1e87b0e0328b4b2233d28038caf17b79f91b9a44cca8fe143cbda4da817f70e249fbc72a6a1faca5f05ca56bfd4
   languageName: node
   linkType: hard
 
@@ -199,48 +199,37 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@spectrum-web-components/icon@npm:^0.9.9":
-  version: 0.9.9
-  resolution: "@spectrum-web-components/icon@npm:0.9.9"
+"@spectrum-web-components/icons-ui@npm:^0.6.10":
+  version: 0.6.10
+  resolution: "@spectrum-web-components/icons-ui@npm:0.6.10"
+  dependencies:
+    "@spectrum-web-components/base": ^0.4.5
+    "@spectrum-web-components/icon": ^0.9.10
+    "@spectrum-web-components/iconset": ^0.5.7
+    tslib: ^2.0.0
+  checksum: a6acfe7023d6b881c4be031392385dfb806791f55dfb8354a045e64c5613c6868794ff52035434660a7a20adfe2d055b8a346bf586d4508ea65764d9b6160ff5
+  languageName: node
+  linkType: hard
+
+"@spectrum-web-components/icons-workflow@npm:^0.6.10":
+  version: 0.6.10
+  resolution: "@spectrum-web-components/icons-workflow@npm:0.6.10"
+  dependencies:
+    "@spectrum-web-components/base": ^0.4.5
+    "@spectrum-web-components/icon": ^0.9.10
+    tslib: ^2.0.0
+  checksum: 0d1bf0d427152ec5ab182df7538cc61414ac6f4a12b05af1e64b60cf40fc1e3b8d4e96a8ecaa74bfa0d508ef4a6d87d0b6286558c6e8af782a2fc9157d112f7a
+  languageName: node
+  linkType: hard
+
+"@spectrum-web-components/icons@npm:^0.7.8":
+  version: 0.7.8
+  resolution: "@spectrum-web-components/icons@npm:0.7.8"
   dependencies:
     "@spectrum-web-components/base": ^0.4.5
     "@spectrum-web-components/iconset": ^0.5.7
     tslib: ^2.0.0
-  checksum: e62a7d84816b9ccc1513fbac24949bdfd62fed8e24ff99d8f0411c5a2940cb0d203d45ac2adc570f5149b47ffd8a6abfc2bbbee9b84088c66d46be485e22cea1
-  languageName: node
-  linkType: hard
-
-"@spectrum-web-components/icons-ui@npm:^0.6.9":
-  version: 0.6.9
-  resolution: "@spectrum-web-components/icons-ui@npm:0.6.9"
-  dependencies:
-    "@spectrum-web-components/base": ^0.4.5
-    "@spectrum-web-components/icon": ^0.9.9
-    "@spectrum-web-components/iconset": ^0.5.7
-    tslib: ^2.0.0
-  checksum: 2bef77a8229dea7d2fa777fac6395c1405675c78ec629e55778ed79733e3a34ad801e3ab3d9f9a201a7b6f2be0861f795cb907e5780175fa939078092f2539e9
-  languageName: node
-  linkType: hard
-
-"@spectrum-web-components/icons-workflow@npm:^0.6.9":
-  version: 0.6.9
-  resolution: "@spectrum-web-components/icons-workflow@npm:0.6.9"
-  dependencies:
-    "@spectrum-web-components/base": ^0.4.5
-    "@spectrum-web-components/icon": ^0.9.9
-    tslib: ^2.0.0
-  checksum: 2ea7f8d1b3025bb6c640059cc34ed3ba4ebf0f9f8781d3376b7255c8896c05cefe02c01900527764e1d8bade3caf6b1b9bb3b237a23db4fae070a2366aa0bd84
-  languageName: node
-  linkType: hard
-
-"@spectrum-web-components/icons@npm:^0.7.7":
-  version: 0.7.7
-  resolution: "@spectrum-web-components/icons@npm:0.7.7"
-  dependencies:
-    "@spectrum-web-components/base": ^0.4.5
-    "@spectrum-web-components/iconset": ^0.5.7
-    tslib: ^2.0.0
-  checksum: 234f7412b0b8c1b301380a258e7929eceebecbc20494f017eb0b8de2a5fd3405f57b77daf0cf8db2417b92f2a33fada16fd2a9046ffb0e279e114f5054abd49f
+  checksum: 1a6e48762b13f1383bb9ec87da228df65f88310b5ff50b76cda76e1b488c74fee488119b40061b4c9a6f375ccdd03574bdc5e1c15a908367e9336a4a5977274b
   languageName: node
   linkType: hard
 
@@ -254,18 +243,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@spectrum-web-components/number-field@npm:^0.1.6":
-  version: 0.1.6
-  resolution: "@spectrum-web-components/number-field@npm:0.1.6"
+"@spectrum-web-components/number-field@npm:^0.1.7":
+  version: 0.1.7
+  resolution: "@spectrum-web-components/number-field@npm:0.1.7"
   dependencies:
     "@internationalized/number": ^3.0.0
-    "@spectrum-web-components/action-button": ^0.5.5
+    "@spectrum-web-components/action-button": ^0.5.6
     "@spectrum-web-components/base": ^0.4.5
-    "@spectrum-web-components/icon": ^0.9.9
-    "@spectrum-web-components/icons-ui": ^0.6.9
-    "@spectrum-web-components/textfield": ^0.8.12
+    "@spectrum-web-components/icon": ^0.9.10
+    "@spectrum-web-components/icons-ui": ^0.6.10
+    "@spectrum-web-components/textfield": ^0.8.13
     tslib: ^2.0.0
-  checksum: 8c29dfa4c1cbb93163bbd546a44757185afc4f98d1b2c977ec80fa1b1a306970f56f486e8b48791050bc63ee83dce89cf8c530cebb6e4b3868ddce3a01332f33
+  checksum: 0f421b72144054f04c028617a4c02e32fe83e85a2a309693b21e85cae2672fa95e105f3d2097e34af7f225b34ff529483f5916744a2abbc128209e4fe14bf87c
   languageName: node
   linkType: hard
 
@@ -280,18 +269,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@spectrum-web-components/slider@npm:^0.10.5":
-  version: 0.10.5
-  resolution: "@spectrum-web-components/slider@npm:0.10.5"
+"@spectrum-web-components/slider@npm:^0.10.6":
+  version: 0.10.6
+  resolution: "@spectrum-web-components/slider@npm:0.10.6"
   dependencies:
     "@internationalized/number": ^3.0.0
     "@spectrum-web-components/base": ^0.4.5
-    "@spectrum-web-components/field-label": ^0.5.5
-    "@spectrum-web-components/number-field": ^0.1.6
+    "@spectrum-web-components/field-label": ^0.5.6
+    "@spectrum-web-components/number-field": ^0.1.7
     "@spectrum-web-components/shared": ^0.12.7
-    "@spectrum-web-components/theme": ^0.8.12
+    "@spectrum-web-components/theme": ^0.8.13
     tslib: ^2.0.0
-  checksum: 255ec33c91a6c9bb24ed4f211b42fdb9af71f45188b0f725f3d4c4d46b8c7fa84258bd0070e0ea2a5817b400ca50b97cdc0029415dd512334a962fda74fce2a0
+  checksum: cfe4ea868df28569854c7ea01ee7766f07aa01782704f73c547245a743a6dc80738eaf47a0170baa3a091098d5592e371022dd030f59998e45c2d1df96e9516e
   languageName: node
   linkType: hard
 
@@ -304,50 +293,50 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@spectrum-web-components/switch@npm:^0.7.12":
-  version: 0.7.12
-  resolution: "@spectrum-web-components/switch@npm:0.7.12"
+"@spectrum-web-components/switch@npm:^0.7.13":
+  version: 0.7.13
+  resolution: "@spectrum-web-components/switch@npm:0.7.13"
   dependencies:
     "@spectrum-web-components/base": ^0.4.5
-    "@spectrum-web-components/checkbox": ^0.10.5
+    "@spectrum-web-components/checkbox": ^0.10.6
     tslib: ^2.0.0
-  checksum: 8abd0f92fa70bcf9ac72a116963f513e4714e722721270d28265fae8ac2f4072cb4d24e330b1b5a707a4134055a69a5e54535a55b13415db3eafc92f62b384ca
+  checksum: d59cdc91f9e8eade472355fe399b1a43d66647a14d31eff7ffc23226bce23c15943186d0cb8d2b90064688f55fe80fd931d8ea1d2bff9d1b8ca9c657d483930f
   languageName: node
   linkType: hard
 
-"@spectrum-web-components/tabs@npm:^0.6.6":
-  version: 0.6.6
-  resolution: "@spectrum-web-components/tabs@npm:0.6.6"
+"@spectrum-web-components/tabs@npm:^0.6.7":
+  version: 0.6.7
+  resolution: "@spectrum-web-components/tabs@npm:0.6.7"
   dependencies:
     "@spectrum-web-components/base": ^0.4.5
     "@spectrum-web-components/shared": ^0.12.7
     tslib: ^2.0.0
-  checksum: bbff98a30413fc6876f5f975f6f56e2b8a3a1c3323e0d7f27ac1a78c7ac9a0980c422111b7b1da7a86c576b0a2aa20f5f0a6f324b7592eff69ea74f819eb9604
+  checksum: d3a3ac30330c3aac600f78bac4fe0c17ba43032660ab178a69c2f2699ab5f8c6b450cd447781fff41de3a51cf7f565cf3eb12b709e8caa78fb78dec4a15181ca
   languageName: node
   linkType: hard
 
-"@spectrum-web-components/textfield@npm:^0.8.12":
-  version: 0.8.12
-  resolution: "@spectrum-web-components/textfield@npm:0.8.12"
+"@spectrum-web-components/textfield@npm:^0.8.13":
+  version: 0.8.13
+  resolution: "@spectrum-web-components/textfield@npm:0.8.13"
   dependencies:
     "@spectrum-web-components/base": ^0.4.5
-    "@spectrum-web-components/icon": ^0.9.9
-    "@spectrum-web-components/icons-ui": ^0.6.9
-    "@spectrum-web-components/icons-workflow": ^0.6.9
+    "@spectrum-web-components/icon": ^0.9.10
+    "@spectrum-web-components/icons-ui": ^0.6.10
+    "@spectrum-web-components/icons-workflow": ^0.6.10
     "@spectrum-web-components/shared": ^0.12.7
     tslib: ^2.0.0
-  checksum: 614c93bb36fbac60a5da6597777d606cde3bc146282b13bad834d5cc0cad3d0f1eee0cd35de856723194ddc88e79e58b3eeec15b27d105cb5a95bca3a7a2810d
+  checksum: fc4916a6cef055295a5d8c1d5d5b17e50596fe3d02496e1a7be55a04f47616d038768dccbd9f726f00d8dc474c80e02c37d90095913c0cb0e484c71ed377e3da
   languageName: node
   linkType: hard
 
-"@spectrum-web-components/theme@npm:^0.8.12":
-  version: 0.8.12
-  resolution: "@spectrum-web-components/theme@npm:0.8.12"
+"@spectrum-web-components/theme@npm:^0.8.13":
+  version: 0.8.13
+  resolution: "@spectrum-web-components/theme@npm:0.8.13"
   dependencies:
     "@spectrum-web-components/base": ^0.4.5
     "@spectrum-web-components/styles": ^0.9.10
     tslib: ^2.0.0
-  checksum: 2cd11c776bbd54b3679e3d68b3a545f443a9211ba844e19cc8a8e6c031fe49c14015fb25fdeeeb648e58a0069e087b446bfc549d5e59dab66069a8f0eee9b92e
+  checksum: 7c5c2487180fa8671a0729bd2b4d9795f6c226a2081ca827dc63f9a6c1c6bf95340e9e2867138a3f1d0e48320de3f16dcd9d95aefcb5c0862a5b210c2f50ced8
   languageName: node
   linkType: hard
 
@@ -372,10 +361,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@zip.js/zip.js@npm:^2.3.8":
-  version: 2.3.8
-  resolution: "@zip.js/zip.js@npm:2.3.8"
-  checksum: 89824a92a1211d22a3d85d151c1b876d4d2c2a6ba01f9dd2801a409f846804141876ef07e34707ed39303bbfdc0046a22262c1017807b22ff0a3a12d4037c618
+"@zip.js/zip.js@npm:^2.3.11":
+  version: 2.3.11
+  resolution: "@zip.js/zip.js@npm:2.3.11"
+  checksum: 31436df8472315b945bd3247eae203b31f2dc88008940174697e42ac4947e2aa9ab2372403f78402e7f6b542c20fe7e20e30c088b3429c3f36b2f928a94d8922
   languageName: node
   linkType: hard
 
@@ -518,14 +507,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"colorette@npm:^1.2.2":
+"colorette@npm:^1.2.2, colorette@npm:^1.3.0":
   version: 1.3.0
   resolution: "colorette@npm:1.3.0"
   checksum: bda403dfba4d032bee4169f2a6436a83ae3da488a53bcb3be92dc44ace056518245cc614b12429d7529493d6b090a119b2523b0d55e8cd6b81ad939a3003c008
   languageName: node
   linkType: hard
 
-"commander@npm:^7.1.0":
+"commander@npm:^7.2.0":
   version: 7.2.0
   resolution: "commander@npm:7.2.0"
   checksum: 53501cbeee61d5157546c0bef0fedb6cdfc763a882136284bed9a07225f09a14b82d2a84e7637edfd1a679fb35ed9502fd58ef1d091e6287f60d790147f68ddc
@@ -566,7 +555,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"css-tree@npm:^1.1.2":
+"css-tree@npm:^1.1.2, css-tree@npm:^1.1.3":
   version: 1.1.3
   resolution: "css-tree@npm:1.1.3"
   dependencies:
@@ -977,14 +966,14 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
-"lit@npm:^2.0.0-rc.3":
-  version: 2.0.0-rc.3
-  resolution: "lit@npm:2.0.0-rc.3"
+"lit@npm:^2.0.0-rc.4":
+  version: 2.0.0-rc.4
+  resolution: "lit@npm:2.0.0-rc.4"
   dependencies:
     "@lit/reactive-element": ^1.0.0-rc.2
     lit-element: ^3.0.0-rc.2
     lit-html: ^2.0.0-rc.4
-  checksum: 505c39a35aa088b2e29b761f64c2422c6635516f028564a130433d9d6c5f4273f5e460da1ff06c27e2318b36f8c81e58b70457f529bc9ebb88daae0a0af4dc12
+  checksum: 61a5e86576fa42fb6840ef6fb4bb25b6be0b31970182e8b6e1892db61d6043d0d2f01bfce0d1842e232aa30eba381e16951a2b53aedaa178b307e24ceb479974
   languageName: node
   linkType: hard
 
@@ -1508,20 +1497,20 @@ resolve@^1.20.0:
   languageName: node
   linkType: hard
 
-"svgo@npm:^2.4.0":
-  version: 2.4.0
-  resolution: "svgo@npm:2.4.0"
+"svgo@npm:^2.5.0":
+  version: 2.5.0
+  resolution: "svgo@npm:2.5.0"
   dependencies:
     "@trysound/sax": 0.1.1
-    colorette: ^1.2.2
-    commander: ^7.1.0
+    colorette: ^1.3.0
+    commander: ^7.2.0
     css-select: ^4.1.3
-    css-tree: ^1.1.2
+    css-tree: ^1.1.3
     csso: ^4.2.0
     stable: ^0.1.8
   bin:
     svgo: bin/svgo
-  checksum: 0e78a2ce64619df5c5403e8e1e7fbcd5d9aa7dd3cbd892e6b4423ce3b8f2e55d35ea9beb487da71a414f205af88fdef5ae5944f922e34b5b8440567a55e5f9d7
+  checksum: 9a07a0e7fceef3a2ca9e3977f0b847749493701368397002ede973699d08afc19780a91fffcf161eacaadeeb082f4c67eb2d6bd1351def81165369e376f6834d
   languageName: node
   linkType: hard
 
@@ -1553,16 +1542,6 @@ resolve@^1.20.0:
   languageName: node
   linkType: hard
 
-typescript@^4.3.5:
-  version: 4.3.5
-  resolution: "typescript@npm:4.3.5"
-  bin:
-    tsc: bin/tsc
-    tsserver: bin/tsserver
-  checksum: bab033b5e2b0790dd35b77fd005df976ef80b8d84fd2c6e63cc31808151875beae9216e5a315fe7068e8499905c3c354248fe83272cdfc13b7705635f0c66c97
-  languageName: node
-  linkType: hard
-
 typescript@^4.4.2:
   version: 4.4.2
   resolution: "typescript@npm:4.4.2"
@@ -1570,16 +1549,6 @@ typescript@^4.4.2:
     tsc: bin/tsc
     tsserver: bin/tsserver
   checksum: 194e08e9d1971d667d6fd1a0554616b7022312a2319d70e81a64e502a265992061ee7817ed9a69b52bbabe7a9b85e7938cb8c11c433e40a516b277f8c4dacd51
-  languageName: node
-  linkType: hard
-
-"typescript@patch:typescript@^4.3.5#~builtin<compat/typescript>":
-  version: 4.3.5
-  resolution: "typescript@patch:typescript@npm%3A4.3.5#~builtin<compat/typescript>::version=4.3.5&hash=d8b4e7"
-  bin:
-    tsc: bin/tsc
-    tsserver: bin/tsserver
-  checksum: bc2c4fdf0f1557fdafe4ef74848c72ebd9c8c60829568248f869121aea2bb20e16649a252431d0acb185ec118143be22bed73d08f64379557810d82756afedde
   languageName: node
   linkType: hard
 
@@ -1618,9 +1587,9 @@ typescript@^4.4.2:
   languageName: node
   linkType: hard
 
-"vite@npm:^2.5.1":
-  version: 2.5.1
-  resolution: "vite@npm:2.5.1"
+"vite@npm:^2.5.3":
+  version: 2.5.3
+  resolution: "vite@npm:2.5.3"
   dependencies:
     esbuild: ^0.12.17
     fsevents: ~2.3.2
@@ -1632,7 +1601,7 @@ typescript@^4.4.2:
       optional: true
   bin:
     vite: bin/vite.js
-  checksum: 31dfd00615143f79b30a95bd709951646448ddc552a1de3da0c3151f93e1de5ded9ddc97704d75518bf06f111e51cb37c547c4c84b598be45bc566d1e41cb599
+  checksum: 118beba819a72af9d7ccf674583837d44794a08694f3a99ee5760add9e8df221d3db36f430db5e88d43fd4b094e213aa0d09998aef91b861e17ed0544b8a1864
   languageName: node
   linkType: hard
 

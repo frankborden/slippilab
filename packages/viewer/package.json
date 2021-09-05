@@ -5,8 +5,8 @@
   "dependencies": {
     "@slippilab/common": "0.0.1",
     "@slippilab/parser": "0.0.1",
-    "@spectrum-web-components/slider": "^0.10.5",
-    "@zip.js/zip.js": "^2.3.8",
-    "lit": "^2.0.0-rc.3"
+    "@spectrum-web-components/slider": "^0.10.6",
+    "@zip.js/zip.js": "^2.3.11",
+    "lit": "^2.0.0-rc.4"
   }
 }

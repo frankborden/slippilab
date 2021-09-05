@@ -80,6 +80,7 @@
 # @slippilab/slippilab
 
 - Tests
+- Site to packages/slippilab?
 - Webworkers?
 - list supported characters / stages
 - publish subpackages
