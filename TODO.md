@@ -4,7 +4,7 @@
 
 - Peach/Pikachu/Samus/Luigi/Mario/Dr. Mario/DK/Roy calculate shield origin
 - Luigi upB is rotated
-- Samus downB doesn't use ball model
+- Samus downB/roll doesn't use ball model
 - Spacies calculate shine origin
 - Shield put up / take down animation
 - Show Shield tilting (original visualiser reads inputs and checks for stun)
@@ -26,30 +26,35 @@
   - Read pre.trigger, do some math?
 - Death animation
 - Hit effect
-- Electric effect for knee/shine
+- Electric effect for knee/shine/pika
 - Fire effect for spacie upB, falcon specials
 - Color by costume instead of port (first attempt = ugly)
 - Optional state-dependent colors? (hitstun, shieldstun, actionable)
-- Marth sideB colors
+- Marth sideB colors / sword swings in general
 - spacie sideB clones
-- support more characters
+- support more characters, 13/26 done
 - combine all of a character's jsons into one?
 
 ## Stage
 
 - Background visuals (grid?)
-- Fountain platforms (infeasible until it's added to .slp spec)
-- Wispy (infeasible until it's added to .slp spec)
+- Better stage coloring
+- Fountain platforms
+  - infeasible until it's added to .slp spec
+- Wispy
+  - infeasible until it's added to .slp spec
 
 ## Game UI / Viewer UI
 
 - Game timer
+  - Convert seekbar too?
 - Higher % = darker text
 - % dances when hit
-- % resets immediately on death
+- % hidden immediately on death until respawn
 - Stock icons that look like the character
+  - First letter?
 - Actionstate/frame below % as option (stun/lag remaining too)
-- Play/Pause button, other GUI controls..
+- Play/Pause button, other GUI controls
 - Input display?
 
 ## Other
@@ -80,10 +85,10 @@
 # @slippilab/slippilab
 
 - Tests
+- Save settings
 - Site to packages/slippilab?
 - Webworkers?
 - list supported characters / stages
 - publish subpackages
 - git submodules?
 - about page / link to source
-- npm org
