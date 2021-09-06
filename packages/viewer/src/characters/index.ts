@@ -12,6 +12,7 @@ import { luigi } from './luigi';
 import { mario } from './mario';
 import { doctorMario } from './doctorMario';
 import { donkeyKong } from './donkeyKong';
+import { roy } from './roy';
 
 export { createPlayerRender } from './render';
 export const supportedCharactersById: { [characterId: number]: Character } = {
@@ -28,4 +29,5 @@ export const supportedCharactersById: { [characterId: number]: Character } = {
   19: sheik,
   20: falco,
   22: doctorMario,
+  23: roy,
 };
