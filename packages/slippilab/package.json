@@ -1,0 +1,18 @@
+{
+    "name": "@slippilab/slippilab",
+    "version": "0.0.1",
+    "dependencies": {
+        "@slippilab/common": "0.0.1",
+        "@slippilab/parser": "0.0.1",
+        "@slippilab/search": "0.0.1",
+        "@slippilab/viewer": "0.0.1",
+        "@spectrum-web-components/action-button": "^0.5.6",
+        "@spectrum-web-components/icon": "^0.9.10",
+        "@spectrum-web-components/icons": "^0.7.8",
+        "@spectrum-web-components/switch": "^0.7.13",
+        "@spectrum-web-components/tabs": "^0.6.7",
+        "@spectrum-web-components/theme": "^0.8.13",
+        "lit": "^2.0.0-rc.4",
+        "rxjs": "^7.3.0"
+    }
+}

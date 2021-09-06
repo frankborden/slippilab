@@ -72,6 +72,17 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@slippilab/monorepo@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "@slippilab/monorepo@workspace:."
+  dependencies:
+    prettier: ^2.3.2
+    svgo: ^2.5.0
+    typescript: ^4.4.2
+    vite: ^2.5.3
+  languageName: unknown
+  linkType: soft
+
 "@slippilab/parser@0.0.1, @slippilab/parser@workspace:packages/parser":
   version: 0.0.0-use.local
   resolution: "@slippilab/parser@workspace:packages/parser"
@@ -90,9 +101,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@slippilab/slippilab@workspace:.":
+"@slippilab/slippilab@workspace:packages/slippilab":
   version: 0.0.0-use.local
-  resolution: "@slippilab/slippilab@workspace:."
+  resolution: "@slippilab/slippilab@workspace:packages/slippilab"
   dependencies:
     "@slippilab/common": 0.0.1
     "@slippilab/parser": 0.0.1
@@ -105,11 +116,7 @@ __metadata:
     "@spectrum-web-components/tabs": ^0.6.7
     "@spectrum-web-components/theme": ^0.8.13
     lit: ^2.0.0-rc.4
-    prettier: ^2.3.2
     rxjs: ^7.3.0
-    svgo: ^2.5.0
-    typescript: ^4.4.2
-    vite: ^2.5.3
   languageName: unknown
   linkType: soft
 
