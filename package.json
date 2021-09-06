@@ -10,14 +10,9 @@
     "start": "vite",
     "build": "tsc && vite build",
     "format": "prettier --write \"./**/*.ts\"",
-    "buildAnimations": "yarn clearAnimationBuild && yarn copyMaya && yarn svgo && yarn compress && yarn zip && yarn copyFinished",
     "clearAnimationBuild": "rm -r tools/output/maya/* tools/output/svgo/* tools/output/compression/* tools/output/zip/*",
-    "copyMaya": "cp -r /media/psf/Home/Downloads/Animation_Pack/Textured_Models/Falco/output/* ./tools/output/maya",
-    "potrace": "echo TODO",
-    "svgo": "svgo -f tools/output/maya/ -o tools/output/svgo/ -p 1 --multipass --config tools/svgo.config.js",
     "compress": "deno run -A --unstable tools/compressSvgs.ts",
-    "zip": "zip -r9j tools/output/zip/animations.zip tools/output/compression/",
-    "copyFinished": "mkdir src/viewer/animations/falco; cp -r tools/output/zip/* src/viewer/animations/falco"
+    "zip": "zip -r9j tools/output/zip/animations.zip tools/output/compression/"
   },
   "dependencies": {
     "@slippilab/common": "0.0.1",
