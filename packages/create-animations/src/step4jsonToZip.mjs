@@ -3,7 +3,7 @@
 /**
  * This step uses zip to combine all the .json files. Install it with
  * 
- * $ npm install -g zip
+ * $ sudo apt install zip
  * 
  * The input structure is expected to be:
  * 
