@@ -13,12 +13,14 @@ import { mario } from './mario';
 import { doctorMario } from './doctorMario';
 import { donkeyKong } from './donkeyKong';
 import { roy } from './roy';
+import { link } from './link';
 
 export { createPlayerRender } from './render';
 export const supportedCharactersById: { [characterId: number]: Character } = {
   0: captainFalcon,
   1: donkeyKong,
   2: fox,
+  6: link,
   7: luigi,
   8: mario,
   9: marth,

@@ -7,6 +7,6 @@
 !.yarn/sdks
 !.yarn/versions
 .pnp.*
-tools/output/
+.out/
 dist/
 types/

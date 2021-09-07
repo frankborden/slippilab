@@ -1,0 +1,11 @@
+{
+  "name": "@slippilab/create-animations",
+  "version": "0.0.1",
+  "scripts": {
+    "step0": "echo Step 0 is done by manually running a script in Maya. See docs/README.md",
+    "step1": "zx src/step1bmpToSvg.mjs /mnt/d/Output .out/step1",
+    "step2": "zx src/step2optimizeSvg.mjs .out/step1 .out/step2",
+    "step3": "zx src/step3svgToJson.mjs .out/step2 .out/step3",
+    "step4": "zx src/step4jsonToZip.mjs .out/step3 .out/step4"
+  }
+}
