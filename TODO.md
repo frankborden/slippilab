@@ -2,7 +2,7 @@
 
 ## Character
 
-- Peach/Pikachu/Samus/Luigi/Mario/Dr. Mario/DK/Roy calculate shield origin
+- Peach/Pikachu/Samus/Luigi/Mario/Dr. Mario/DK/Roy/Link/YLink calculate shield origin
 - Luigi upB is rotated
 - Samus downB/roll doesn't use ball model
 - Spacies calculate shine origin
@@ -20,6 +20,10 @@
   - missiles
   - charge shot
   - samus bombs
+  - (y)link arrow
+  - (y)link boomerang
+  - (y)link bomb
+- tether grabs / air tethers
 - Powershield animation
   - 0x0b6: 'GUARD', //GuardReflect (182 decimal)
 - Lightshield
@@ -28,11 +32,11 @@
 - Hit effect
 - Electric effect for knee/shine/pika
 - Fire effect for spacie upB, falcon specials
-- Color by costume instead of port (first attempt = ugly)
+- Color by costume instead of port
 - Optional state-dependent colors? (hitstun, shieldstun, actionable)
 - Marth sideB colors / sword swings in general
 - spacie sideB clones
-- support more characters, 13/26 done
+- support more characters, 15/26 done
 - combine all of a character's jsons into one?
 
 ## Stage
@@ -86,7 +90,6 @@
 
 - Tests
 - Save settings
-- Site to packages/slippilab?
 - Webworkers?
 - list supported characters / stages
 - publish subpackages

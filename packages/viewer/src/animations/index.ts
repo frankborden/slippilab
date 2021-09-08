@@ -30,6 +30,8 @@ import donkeyKongAnimationsUrl from './zips/donkeyKong.zip';
 import royAnimationsUrl from './zips/roy.zip';
 // @ts-ignore
 import linkAnimationsUrl from './zips/link.zip';
+// @ts-ignore
+import youngLinkAnimationsUrl from './zips/youngLink.zip';
 import { characterNamesById } from '../common';
 export { isOneIndexed } from './oneIndexed';
 export { animationNameByActionId } from './actions';
@@ -84,6 +86,8 @@ const importAnimation = async (
       return load(royAnimationsUrl);
     case 'Link':
       return load(linkAnimationsUrl);
+    case 'Young Link':
+      return load(youngLinkAnimationsUrl);
     default:
       throw new Error(`Unsupported character id: ${charId}`);
   }

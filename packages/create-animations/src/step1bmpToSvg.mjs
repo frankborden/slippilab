@@ -1,8 +1,6 @@
 #!/usr/bin/env zx
 
 /**
- * TODO: this is only hitting ~2 QPS and using ~10% CPU
- * 
  * This step uses potrace to trace the .bmp files into .svg files.
  * Maya can output .svg's directly but potrace does a better job.
  * I installed potrace from apt:
@@ -36,13 +34,13 @@
  * ----...
  * --...
  * 
- * Runtime for me: 6.84 hours
+ * Runtime for me: 3.5 hours
  */
 const inputRoot = process.argv[3];
 const outputRoot = process.argv[4];
 if (inputRoot === undefined || outputRoot === undefined) {
   console.log('please provide input and output roots');
-  return;
+  process.exit(1);
 }
 
 await fs.emptyDir(outputRoot);
@@ -54,7 +52,7 @@ for (const animationName of animationDirectories) {
   await fs.ensureDir(animationOutputDirectory);
 
   const animationBmps = await fs.readdir(animationInputDirectory);
-  for (const animationBmp of animationBmps) {
+  await Promise.all(animationBmps.map((animationBmp) => {
     const frameNumber = Number(
       animationBmp.match(/.*_figatree_([0-9]+)_tmp.bmp/)[1],
     );
@@ -66,7 +64,6 @@ for (const animationName of animationDirectories) {
       animationOutputDirectory,
       `${frameNumber}.svg`,
     );
-
-    await $`potrace --svg --opaque ${animationBmpInputPath} -o ${animationSvgOutputPath}`;
-  }
+    return $`potrace --svg --opaque ${animationBmpInputPath} -o ${animationSvgOutputPath}`;
+  }))
 }
