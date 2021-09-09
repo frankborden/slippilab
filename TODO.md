@@ -2,7 +2,9 @@
 
 ## Character
 
-- Peach/Pikachu/Samus/Luigi/Mario/Dr. Mario/DK/Roy/Link/YLink calculate shield origin
+- Calculate shield origin
+  - Peach/Pikachu/Samus/Luigi/Mario/Dr. Mario/DK/Roy/Link/YLink/ICs/Yoshi/Pichu
+- Yoshi shield
 - Luigi upB is rotated
 - Samus downB/roll doesn't use ball model
 - Spacies calculate shine origin
@@ -12,8 +14,8 @@
 - correct laser & fly guy sizes
 - show projectiles:
   - needles
-  - jolt
-  - thunder
+  - pika/pichu jolt
+  - pika/pichu thunder
   - turnips
   - fireballs
   - pills
@@ -23,6 +25,10 @@
   - (y)link arrow
   - (y)link boomerang
   - (y)link bomb
+  - yoshi egg
+  - yoshi downB star?
+  - ICs blizzard
+  - ICs ice block
 - tether grabs / air tethers
 - Powershield animation
   - 0x0b6: 'GUARD', //GuardReflect (182 decimal)
@@ -36,7 +42,7 @@
 - Optional state-dependent colors? (hitstun, shieldstun, actionable)
 - Marth sideB colors / sword swings in general
 - spacie sideB clones
-- support more characters, 15/26 done
+- support more characters, 18/26 done
 - combine all of a character's jsons into one?
 
 ## Stage

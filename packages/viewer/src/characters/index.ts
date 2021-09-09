@@ -17,6 +17,7 @@ import { link } from './link';
 import { youngLink } from './youngLink';
 import { iceClimbers } from './iceClimbers';
 import { yoshi } from './yoshi';
+import { pichu } from './pichu';
 
 export { createPlayerRender } from './render';
 export const supportedCharactersById: { [characterId: number]: Character } = {
@@ -38,4 +39,5 @@ export const supportedCharactersById: { [characterId: number]: Character } = {
   21: youngLink,
   22: doctorMario,
   23: roy,
+  24: pichu,
 };
