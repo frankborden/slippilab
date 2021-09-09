@@ -17,16 +17,18 @@ export const getFirstFrameOfAnimation = (
 ): PostFrameUpdateEvent => {
   let frameIndex = playerFrame.frameNumber - 1;
   let pastConfirmedFrame = playerFrame;
-  let pastFrameToCheck =
-    frames[frameIndex]?.players?.[playerFrame.playerIndex]?.post;
+  let pastFrameToCheck = frames[frameIndex]?.players?.[
+    playerFrame.playerIndex
+  ]?.post.filter((post) => post.isFollower === playerFrame.isFollower)[0];
   while (
     pastFrameToCheck &&
     pastFrameToCheck.actionStateId === playerFrame.actionStateId
   ) {
     pastConfirmedFrame = pastFrameToCheck;
     frameIndex--;
-    pastFrameToCheck =
-      frames[frameIndex]?.players?.[playerFrame.playerIndex]?.post;
+    pastFrameToCheck = frames[frameIndex]?.players?.[
+      playerFrame.playerIndex
+    ]?.post.filter((post) => post.isFollower === playerFrame.isFollower)[0];
   }
   return pastConfirmedFrame;
 };
@@ -94,27 +96,29 @@ export const getThrowerName = (
     if (!otherPlayerFrame) {
       continue;
     }
-    // this could be wrong if there's multiple of the same throw happening. I
-    // don't know if replay data can connect thrower to throwee for doubles.
-    if (
-      animationNameByActionId[otherPlayerFrame.post.actionStateId] ===
-      throwerAnimationName
-    ) {
-      const throwerName =
-        characterNamesByInternalId[otherPlayerFrame.post.internalCharacterId];
-      switch (throwerName) {
-        case 'Fox':
-          return 'Fox';
-        case 'Captain Falcon':
-          return 'Captain';
-        case 'Falco':
-          return 'Falco';
-        case 'Jigglypuff':
-          return 'Mars';
-        case 'Marth':
-          return 'Mars';
-        case 'Sheik':
-          return 'Seak';
+    for (const otherPlayerPostFrame of otherPlayerFrame.post) {
+      // this could be wrong if there's multiple of the same throw happening. I
+      // don't know if replay data can connect thrower to throwee for doubles.
+      if (
+        animationNameByActionId[otherPlayerPostFrame.actionStateId] ===
+        throwerAnimationName
+      ) {
+        const throwerName =
+          characterNamesByInternalId[otherPlayerPostFrame.internalCharacterId];
+        switch (throwerName) {
+          case 'Fox':
+            return 'Fox';
+          case 'Captain Falcon':
+            return 'Captain';
+          case 'Falco':
+            return 'Falco';
+          case 'Jigglypuff':
+            return 'Mars';
+          case 'Marth':
+            return 'Mars';
+          case 'Sheik':
+            return 'Seak';
+        }
       }
     }
   }

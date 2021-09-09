@@ -212,15 +212,16 @@ export class Game {
     ) {
       const frameToConsider = game.frames[frameIndex];
       for (let playerIndex = 0; playerIndex < 4; playerIndex++) {
-        const playerFrame = frameToConsider.players[playerIndex]?.post;
-        if (
-          !playerFrame ||
-          playerFrame.actionStateId <= 0x00a /* dead */ ||
-          playerFrame.actionStateId === 0x00c /* respawn dropping in */
-        ) {
-          continue;
+        for (const playerFrame of frameToConsider.players[playerIndex]?.post ?? []) {
+          if (
+            !playerFrame ||
+            playerFrame.actionStateId <= 0x00a /* dead */ ||
+            playerFrame.actionStateId === 0x00c /* respawn dropping in */
+          ) {
+            continue;
+          }
+          subjects.push(new Vector(playerFrame.xPosition, playerFrame.yPosition));
         }
-        subjects.push(new Vector(playerFrame.xPosition, playerFrame.yPosition));
       }
     }
     if (subjects.length === 0) {

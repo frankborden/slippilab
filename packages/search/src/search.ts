@@ -84,7 +84,8 @@ export class Search {
 
   private sendFrame(): void {
     const frame =
-      this.game!.frames[this.currentFrameIndex].players[this.playerIndex]?.post;
+      this.game!.frames[this.currentFrameIndex].players[this.playerIndex]
+        ?.post[0]; // TODO
     if (frame) {
       const group = this.groupStack[this.groupStack.length - 1];
       group.step(this.game!, frame);

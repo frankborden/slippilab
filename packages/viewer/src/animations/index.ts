@@ -32,6 +32,10 @@ import royAnimationsUrl from './zips/roy.zip';
 import linkAnimationsUrl from './zips/link.zip';
 // @ts-ignore
 import youngLinkAnimationsUrl from './zips/youngLink.zip';
+// @ts-ignore
+import iceClimbersAnimationsUrl from './zips/iceClimbers.zip';
+// @ts-ignore
+import yoshiAnimationsUrl from './zips/yoshi.zip';
 import { characterNamesById } from '../common';
 export { isOneIndexed } from './oneIndexed';
 export { animationNameByActionId } from './actions';
@@ -88,6 +92,10 @@ const importAnimation = async (
       return load(linkAnimationsUrl);
     case 'Young Link':
       return load(youngLinkAnimationsUrl);
+    case 'Ice Climbers':
+      return load(iceClimbersAnimationsUrl);
+    case 'Yoshi':
+      return load(yoshiAnimationsUrl);
     default:
       throw new Error(`Unsupported character id: ${charId}`);
   }

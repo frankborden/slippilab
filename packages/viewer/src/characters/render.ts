@@ -103,7 +103,9 @@ const renderStocks = (
   isDarkMode: boolean,
 ): void => {
   // TODO: Handle stock count >4 or non-stock modes
-  const playerFrame = frame.players[player.playerIndex].post;
+  const playerFrame = frame.players[player.playerIndex].post.filter(
+    (post) => !post.isFollower,
+  )[0];
   const stockCount = playerFrame.stocksRemaining;
   screenLayer.context.save();
   screenLayer.context.fillStyle = getPrimaryColor(player, players, isDoubles);
@@ -129,7 +131,9 @@ const renderPercent = (
   isDoubles: boolean,
   isDarkMode: boolean,
 ): void => {
-  const playerFrame = frame.players[player.playerIndex].post;
+  const playerFrame = frame.players[player.playerIndex].post.filter(
+    (post) => !post.isFollower,
+  )[0];
   const characterData = supportedCharactersById[player.externalCharacterId];
   const actionName = animationNameByActionId[playerFrame.actionStateId];
   const animationName =
@@ -162,7 +166,7 @@ const renderPlayerDetails = (
   isDoubles: boolean,
   isDarkMode: boolean,
 ): void => {
-  // const playerFrame = _frame.players[player.playerIndex].post;
+  // const playerFrame = _frame.players[player.playerIndex].post[0];
   const character = characterNamesById[player.externalCharacterId];
   screenLayer.context.save();
   const fontSize = screenLayer.canvas.height / 30;
@@ -257,9 +261,12 @@ const getAnimationFrame = (
     const rotationYOffset = 10;
     let referenceFrame = isSpacieUpBMovementAction
       ? getFirstFrameOfAnimation(playerFrame, frames)
-      : frames[playerFrame.frameNumber - 1].players[player.playerIndex].post;
-    let deltaFrame =
-      frames[referenceFrame.frameNumber + 1].players[player.playerIndex].post;
+      : frames[playerFrame.frameNumber - 1].players[
+          player.playerIndex
+        ].post.filter((post) => post.isFollower === playerFrame.isFollower)[0];
+    let deltaFrame = frames[referenceFrame.frameNumber + 1].players[
+      player.playerIndex
+    ].post.filter((post) => post.isFollower === playerFrame.isFollower)[0];
     const xDiff = deltaFrame.xPosition - referenceFrame.xPosition;
     const yDiff = deltaFrame.yPosition - referenceFrame.yPosition;
     const rawAngle = Math.atan2(yDiff, facingDirection * xDiff);
@@ -289,44 +296,45 @@ const renderCharacter = (
   isDarkMode: boolean,
   animations: CharacterAnimations,
 ): void => {
-  const playerFrame = frame.players[player.playerIndex].post;
-  const characterData = supportedCharactersById[player.externalCharacterId];
-  worldContext.save();
-  worldContext.lineWidth *= isDarkMode ? 6 : 2;
+  for (const playerFrame of frame.players[player.playerIndex].post) {
+    worldContext.save();
+    const characterData = supportedCharactersById[player.externalCharacterId];
+    worldContext.lineWidth *= isDarkMode ? 6 : 2;
 
-  const lCancelStatus = getFirstFrameOfAnimation(
-    playerFrame,
-    frames,
-  ).lCancelStatus;
-  const primaryColor = getPrimaryColor(player, players, isDoubles);
-  const secondaryColor = getSecondaryColor(playerFrame, lCancelStatus);
-  worldContext.strokeStyle = isDarkMode ? primaryColor : secondaryColor;
-  worldContext.fillStyle = isDarkMode ? secondaryColor : primaryColor;
-  worldContext.translate(playerFrame.xPosition, playerFrame.yPosition);
-  worldContext.scale(characterData.scale, characterData.scale);
-  worldContext.lineWidth /= characterData.scale;
-  const animationFrame = getAnimationFrame(
-    player,
-    playerFrame,
-    frames,
-    frame,
-    animations,
-    characterData,
-    worldContext,
-  );
-  if (!animationFrame) {
+    const lCancelStatus = getFirstFrameOfAnimation(
+      playerFrame,
+      frames,
+    ).lCancelStatus;
+    const primaryColor = getPrimaryColor(player, players, isDoubles);
+    const secondaryColor = getSecondaryColor(playerFrame, lCancelStatus);
+    worldContext.strokeStyle = isDarkMode ? primaryColor : secondaryColor;
+    worldContext.fillStyle = isDarkMode ? secondaryColor : primaryColor;
+    worldContext.translate(playerFrame.xPosition, playerFrame.yPosition);
+    worldContext.scale(characterData.scale, characterData.scale);
+    worldContext.lineWidth /= characterData.scale;
+    const animationFrame = getAnimationFrame(
+      player,
+      playerFrame,
+      frames,
+      frame,
+      animations,
+      characterData,
+      worldContext,
+    );
+    if (!animationFrame) {
+      worldContext.restore();
+      continue;
+    }
+    const path = new Path2D(animationFrame);
+    // SVG data is 10x too big, offset by 500, and needs to be flipped
+    worldContext.scale(0.1, 0.1);
+    worldContext.lineWidth /= 0.1;
+    worldContext.translate(-500, 500);
+    worldContext.scale(1, -1);
+    worldContext.stroke(path);
+    worldContext.fill(path);
     worldContext.restore();
-    return;
   }
-  const path = new Path2D(animationFrame);
-  // SVG data is 10x too big, offset by 500, and needs to be flipped
-  worldContext.scale(0.1, 0.1);
-  worldContext.lineWidth /= 0.1;
-  worldContext.translate(-500, 500);
-  worldContext.scale(1, -1);
-  worldContext.stroke(path);
-  worldContext.fill(path);
-  worldContext.restore();
 };
 
 const renderShield = (
@@ -337,34 +345,38 @@ const renderShield = (
   isDoubles: boolean,
   isDarkMode: boolean,
 ): void => {
-  const playerFrame = frame.players[player.playerIndex].post;
-  const characterData = supportedCharactersById[player.externalCharacterId];
-  if (playerFrame.actionStateId < 0x0b2 || playerFrame.actionStateId > 0x0b6) {
-    return;
+  for (const playerFrame of frame.players[player.playerIndex].post) {
+    const characterData = supportedCharactersById[player.externalCharacterId];
+    if (
+      playerFrame.actionStateId < 0x0b2 ||
+      playerFrame.actionStateId > 0x0b6
+    ) {
+      continue;
+    }
+    worldContext.save();
+    worldContext.globalAlpha = 0.75;
+    worldContext.fillStyle = getPrimaryColor(player, players, isDoubles);
+    worldContext.strokeStyle = isDarkMode ? 'white' : 'black';
+    const shieldHealthPercent = playerFrame.shieldSize / 60;
+    worldContext.translate(playerFrame.xPosition, playerFrame.yPosition);
+    worldContext.scale(playerFrame.facingDirection, 1);
+    worldContext.scale(characterData.scale, characterData.scale);
+    worldContext.lineWidth /= characterData.scale;
+    worldContext.translate(
+      characterData.shieldOffset.x,
+      characterData.shieldOffset.y,
+    );
+    // TODO: Seems to be some constant added because shield break happens before
+    // radius 0.
+    // Guessing shield size attribute is diameter so divide by 2
+    const shieldRadius = (characterData.shieldSize * shieldHealthPercent) / 2;
+    worldContext.beginPath();
+    worldContext.arc(0, 0, shieldRadius, 0, 2 * Math.PI);
+    worldContext.closePath();
+    worldContext.fill();
+    worldContext.stroke();
+    worldContext.restore();
   }
-  worldContext.save();
-  worldContext.globalAlpha = 0.75;
-  worldContext.fillStyle = getPrimaryColor(player, players, isDoubles);
-  worldContext.strokeStyle = isDarkMode ? 'white' : 'black';
-  const shieldHealthPercent = playerFrame.shieldSize / 60;
-  worldContext.translate(playerFrame.xPosition, playerFrame.yPosition);
-  worldContext.scale(playerFrame.facingDirection, 1);
-  worldContext.scale(characterData.scale, characterData.scale);
-  worldContext.lineWidth /= characterData.scale;
-  worldContext.translate(
-    characterData.shieldOffset.x,
-    characterData.shieldOffset.y,
-  );
-  // TODO: Seems to be some constant added because shield break happens before
-  // radius 0.
-  // Guessing shield size attribute is diameter so divide by 2
-  const shieldRadius = (characterData.shieldSize * shieldHealthPercent) / 2;
-  worldContext.beginPath();
-  worldContext.arc(0, 0, shieldRadius, 0, 2 * Math.PI);
-  worldContext.closePath();
-  worldContext.fill();
-  worldContext.stroke();
-  worldContext.restore();
 };
 
 const renderShine = (
@@ -372,7 +384,7 @@ const renderShine = (
   frame: Frame,
   player: PlayerSettings,
 ): void => {
-  const playerFrame = frame.players[player.playerIndex].post;
+  const playerFrame = frame.players[player.playerIndex].post[0];
   const character = characterNamesById[player.externalCharacterId];
   const characterData = supportedCharactersById[player.externalCharacterId];
   if (

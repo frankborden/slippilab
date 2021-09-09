@@ -135,7 +135,7 @@ export interface Frame {
   frameNumber: number;
   start: FrameStartEvent;
   end: FrameBookendEvent;
-  players: { pre: PreFrameUpdateEvent; post: PostFrameUpdateEvent }[];
+  players: { pre: PreFrameUpdateEvent[]; post: PostFrameUpdateEvent[] }[];
   items: ItemUpdateEvent[];
 }
 
@@ -172,27 +172,17 @@ export class Game {
           break;
         case 0x37:
           event = this.parsePreFrameUpdateEvent(offset);
-          if (!this.frames[event.frameNumber]) {
-            this.frames[event.frameNumber] = {
-              frameNumber: event.frameNumber,
-              //@ts-ignore
-              start: undefined,
-              //@ts-ignore
-              end: undefined,
-              players: [],
-              items: [],
-            };
-          }
-          this.frames[event.frameNumber].players[event.playerIndex] = {
-            pre: event,
-            //@ts-ignore
-            post: undefined,
-          };
+          this.initFrameIfNeeded(event.frameNumber);
+          this.initPlayerIfNeeded(event.frameNumber, event.playerIndex);
+          this.frames[event.frameNumber].players[event.playerIndex].pre.push(
+            event,
+          );
           break;
         case 0x38:
           event = this.parsePostFrameUpdateEvent(offset);
-          this.frames[event.frameNumber].players[event.playerIndex].post =
-            event;
+          this.frames[event.frameNumber].players[event.playerIndex].post.push(
+            event,
+          );
           break;
         case 0x39:
           event = this.parseGameEndEvent(offset);
@@ -200,14 +190,8 @@ export class Game {
           break;
         case 0x3a:
           event = this.parseFrameStartEvent(offset);
-          this.frames[event.frameNumber] = {
-            frameNumber: event.frameNumber,
-            start: event,
-            //@ts-ignore
-            end: undefined,
-            players: [],
-            items: [],
-          };
+          this.initFrameIfNeeded(event.frameNumber);
+          this.frames[event.frameNumber].start = event;
           break;
         case 0x3b:
           event = this.parseItemUpdateEvent(offset);
@@ -228,6 +212,29 @@ export class Game {
       }
       size = this.commandPayloadSizes[command];
       offset = offset + size + 0x01;
+    }
+  }
+
+  private initFrameIfNeeded(frameNumber: number) {
+    if (!this.frames[frameNumber]) {
+      this.frames[frameNumber] = {
+        frameNumber: frameNumber,
+        //@ts-ignore
+        start: undefined,
+        //@ts-ignore
+        end: undefined,
+        players: [],
+        items: [],
+      };
+    }
+  }
+
+  private initPlayerIfNeeded(frameNumber: number, playerIndex: number) {
+    if (!this.frames[frameNumber].players[playerIndex]) {
+      this.frames[frameNumber].players[playerIndex] = {
+        pre: [],
+        post: [],
+      };
     }
   }
 

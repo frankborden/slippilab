@@ -15,6 +15,8 @@ import { donkeyKong } from './donkeyKong';
 import { roy } from './roy';
 import { link } from './link';
 import { youngLink } from './youngLink';
+import { iceClimbers } from './iceClimbers';
+import { yoshi } from './yoshi';
 
 export { createPlayerRender } from './render';
 export const supportedCharactersById: { [characterId: number]: Character } = {
@@ -27,8 +29,10 @@ export const supportedCharactersById: { [characterId: number]: Character } = {
   9: marth,
   12: peach,
   13: pikachu,
+  14: iceClimbers,
   15: jigglypuff,
   16: samus,
+  17: yoshi,
   19: sheik,
   20: falco,
   21: youngLink,

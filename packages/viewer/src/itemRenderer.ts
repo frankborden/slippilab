@@ -21,7 +21,7 @@ const renderItem = (
     case 54:
     case 55:
       // Laser
-      const owner = frame.players[item.owner]?.post;
+      const owner = frame.players[item.owner]?.post?.[0];
       if (!owner) {
         return;
       }
