@@ -38,6 +38,8 @@ import iceClimbersAnimationsUrl from './zips/iceClimbers.zip';
 import yoshiAnimationsUrl from './zips/yoshi.zip';
 // @ts-ignore
 import pichuAnimationsUrl from './zips/pichu.zip';
+// @ts-ignore
+import zeldaAnimationsUrl from './zips/zelda.zip';
 import { characterNamesById } from '../common';
 export { isOneIndexed } from './oneIndexed';
 export { animationNameByActionId } from './actions';
@@ -100,6 +102,8 @@ const importAnimation = async (
       return load(yoshiAnimationsUrl);
     case 'Pichu':
       return load(pichuAnimationsUrl);
+    case 'Zelda':
+      return load(zeldaAnimationsUrl);
     default:
       throw new Error(`Unsupported character id: ${charId}`);
   }

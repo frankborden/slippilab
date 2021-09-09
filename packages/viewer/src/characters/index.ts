@@ -18,6 +18,7 @@ import { youngLink } from './youngLink';
 import { iceClimbers } from './iceClimbers';
 import { yoshi } from './yoshi';
 import { pichu } from './pichu';
+import { zelda } from './zelda';
 
 export { createPlayerRender } from './render';
 export const supportedCharactersById: { [characterId: number]: Character } = {
@@ -34,6 +35,7 @@ export const supportedCharactersById: { [characterId: number]: Character } = {
   15: jigglypuff,
   16: samus,
   17: yoshi,
+  18: zelda,
   19: sheik,
   20: falco,
   21: youngLink,

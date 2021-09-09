@@ -3,7 +3,11 @@
 ## Character
 
 - Calculate shield origin
-  - Peach/Pikachu/Samus/Luigi/Mario/Dr. Mario/DK/Roy/Link/YLink/ICs/Yoshi/Pichu
+  - Peach/Pikachu/Samus/Luigi/Mario
+  - Dr. Mario/DK/Roy/Link/YLink/ICs
+  - Yoshi/Pichu/Zelda
+- Zelda/Sheik transformations
+- Zelda/Sheik invisible upBs
 - Yoshi shield
 - Luigi upB is rotated
 - Samus downB/roll doesn't use ball model
@@ -29,6 +33,8 @@
   - yoshi downB star?
   - ICs blizzard
   - ICs ice block
+  - Zelda sideB
+  - Zelda neutralB
 - tether grabs / air tethers
 - Powershield animation
   - 0x0b6: 'GUARD', //GuardReflect (182 decimal)
