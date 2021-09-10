@@ -5,12 +5,14 @@
 - Calculate shield origin
   - Peach/Pikachu/Samus/Luigi/Mario
   - Dr. Mario/DK/Roy/Link/YLink/ICs
-  - Yoshi/Pichu/Zelda
+  - Yoshi/Pichu/Zelda/Bowser
 - Zelda/Sheik transformations
 - Zelda/Sheik invisible upBs
+- Bowser upsmash needs to translate up
 - Yoshi shield
+- Camera freaks out on some replays.. almost all my IC replays
 - Luigi upB is rotated
-- Samus downB/roll doesn't use ball model
+- Samus downB/roll should use ball model
 - Spacies calculate shine origin
 - Shield put up / take down animation
 - Show Shield tilting (original visualiser reads inputs and checks for stun)
@@ -35,7 +37,14 @@
   - ICs ice block
   - Zelda sideB
   - Zelda neutralB
+  - Bowser flame
 - tether grabs / air tethers
+- many animations are backwards if they turn you around
+  - rolls
+  - some bairs
+  - run turn
+- dynamic model parts are stuck in t-pose (bowser hair, dresses, capes)
+- does shield break use item blind? what about mewtwo downB?
 - Powershield animation
   - 0x0b6: 'GUARD', //GuardReflect (182 decimal)
 - Lightshield
@@ -48,7 +57,9 @@
 - Optional state-dependent colors? (hitstun, shieldstun, actionable)
 - Marth sideB colors / sword swings in general
 - spacie sideB clones
-- support more characters, 18/26 done
+- support more characters, 21/26 done
+  - G&W, Ganon, Kirby, Ness, Mew2 left
+  - Redo Falcon/Falco/Marth/Puff (Sheik/Peach?) to use potrace pipeline
 - combine all of a character's jsons into one?
 
 ## Stage
@@ -88,8 +99,6 @@
 
 # @slippilab/parser
 
-- Support older replay formats that do not have all current fields.
-
 # Export Highlight
 
 - re-enable
@@ -107,3 +116,4 @@
 - publish subpackages
 - git submodules?
 - about page / link to source
+- fix tsconfigs 

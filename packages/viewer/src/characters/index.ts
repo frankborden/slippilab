@@ -19,12 +19,14 @@ import { iceClimbers } from './iceClimbers';
 import { yoshi } from './yoshi';
 import { pichu } from './pichu';
 import { zelda } from './zelda';
+import {bowser} from './bowser';
 
 export { createPlayerRender } from './render';
 export const supportedCharactersById: { [characterId: number]: Character } = {
   0: captainFalcon,
   1: donkeyKong,
   2: fox,
+  5: bowser,
   6: link,
   7: luigi,
   8: mario,
