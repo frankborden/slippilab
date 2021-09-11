@@ -1,19 +1,4 @@
 {
-  "include": ["src"],
-  "compilerOptions": {
-    "module": "ESNext",
-    "target": "ESNext",
-    "declaration": true,
-    "emitDeclarationOnly": true,
-    "outDir": "./types",
-    "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "importsNotUsedAsValues": "error",
-    "allowSyntheticDefaultImports": true,
-    "forceConsistentCasingInFileNames": true,
-    "moduleResolution": "node"
-  }
+  "include": ["src/**/*.ts"],
+  "extends": "../../tsconfig-base.json"
 }

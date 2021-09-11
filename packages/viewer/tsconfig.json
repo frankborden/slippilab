@@ -1,22 +1,4 @@
 {
-  "include": ["src"],
-  "compilerOptions": {
-    "module": "ESNext",
-    "target": "ESNext",
-    "lib": ["ESNext", "DOM", "DOM.Iterable"],
-    "declaration": true,
-    "emitDeclarationOnly": true,
-    "outDir": "./types",
-    "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "importsNotUsedAsValues": "error",
-    "allowSyntheticDefaultImports": true,
-    "forceConsistentCasingInFileNames": true,
-    "moduleResolution": "node",
-    "experimentalDecorators": true,
-    "useDefineForClassFields": false,
-  }
+  "include": ["src/**/*.ts"],
+  "extends": "../../tsconfig-base.json"
 }

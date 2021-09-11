@@ -42,6 +42,8 @@ import pichuAnimationsUrl from './zips/pichu.zip';
 import zeldaAnimationsUrl from './zips/zelda.zip';
 // @ts-ignore
 import bowserAnimationsUrl from './zips/bowser.zip';
+// @ts-ignore
+import nessAnimationsUrl from './zips/ness.zip';
 import { characterNamesById } from '../common';
 export { isOneIndexed } from './oneIndexed';
 export { animationNameByActionId } from './actions';
@@ -108,6 +110,8 @@ const importAnimation = async (
       return load(zeldaAnimationsUrl);
     case 'Bowser':
       return load(bowserAnimationsUrl);
+    case 'Ness':
+      return load(nessAnimationsUrl);
     default:
       throw new Error(`Unsupported character id: ${charId}`);
   }
