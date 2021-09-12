@@ -165,7 +165,7 @@ export class ReplayViewer extends LitElement {
           baseContext.font = `${this.canvas.height / 80}px Verdana`;
           baseContext.textAlign = 'center';
           baseContext?.fillText(
-            'Loading animations',
+            'Loading and caching animations',
             this.canvas.width / 2,
             this.canvas.height / 2,
           );
@@ -210,7 +210,7 @@ export class ReplayViewer extends LitElement {
       baseContext.font = `${this.canvas.height / 80}px Verdana`;
       baseContext.textAlign = 'center';
       baseContext?.fillText(
-        'Loading animations',
+        'Loading and caching animations',
         this.canvas.width / 2,
         this.canvas.height / 2,
       );

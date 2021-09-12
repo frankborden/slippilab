@@ -46,6 +46,8 @@ import bowserAnimationsUrl from './zips/bowser.zip';
 import nessAnimationsUrl from './zips/ness.zip';
 // @ts-ignore
 import mewtwoAnimationsUrl from './zips/mewtwo.zip';
+// @ts-ignore
+import ganondorfAnimationsUrl from './zips/ganondorf.zip';
 import { characterNamesById } from '../common';
 export { isOneIndexed } from './oneIndexed';
 export { animationNameByActionId } from './actions';
@@ -116,6 +118,8 @@ const importAnimation = async (
       return load(nessAnimationsUrl);
     case 'Mewtwo':
       return load(mewtwoAnimationsUrl);
+    case 'Ganondorf':
+      return load(ganondorfAnimationsUrl);
     default:
       throw new Error(`Unsupported character id: ${charId}`);
   }

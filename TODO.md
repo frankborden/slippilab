@@ -35,8 +35,8 @@
 - Optional state-dependent colors? (hitstun, shieldstun, actionable)
 - Marth sideB colors / sword swings in general
 - spacie sideB clones
-- support more characters, 23/26 done
-  - G&W, Ganon, Kirby left
+- support more characters, 24/26 done
+  - G&W, Kirby left
   - Redo Falcon/Falco/Marth/Puff (Sheik/Peach?) to use potrace pipeline
 - combine all of a character's jsons into one?
 

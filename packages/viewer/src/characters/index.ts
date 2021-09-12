@@ -22,6 +22,7 @@ import { zelda } from './zelda';
 import { bowser } from './bowser';
 import { ness } from './ness';
 import { mewtwo } from './mewtwo';
+import { ganondorf } from './ganondorf';
 
 export { createPlayerRender } from './render';
 export const supportedCharactersById: { [characterId: number]: Character } = {
@@ -48,4 +49,5 @@ export const supportedCharactersById: { [characterId: number]: Character } = {
   22: doctorMario,
   23: roy,
   24: pichu,
+  25: ganondorf,
 };
