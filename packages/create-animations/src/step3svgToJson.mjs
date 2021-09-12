@@ -44,7 +44,8 @@ for (const animationName of animationDirectories) {
   for (const animationSvg of animationSvgs) {
     const animationSvgPath = path.join(animationInputDirectory, animationSvg);
     const animationSvgContents = await fs.readFile(animationSvgPath, 'utf8');
-    paths.push(animationSvgContents.match(/d="([^"]*)"/)[1]);
+    const pathMatch = animationSvgContents.match(/d="([^"]*)"/);
+    paths.push(pathMatch?.[1] ?? '');
   }
   const dedupedPaths = paths.map((path, index) => {
     const firstIndex = paths.indexOf(path);

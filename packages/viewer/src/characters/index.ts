@@ -21,6 +21,7 @@ import { pichu } from './pichu';
 import { zelda } from './zelda';
 import { bowser } from './bowser';
 import { ness } from './ness';
+import { mewtwo } from './mewtwo';
 
 export { createPlayerRender } from './render';
 export const supportedCharactersById: { [characterId: number]: Character } = {
@@ -32,6 +33,7 @@ export const supportedCharactersById: { [characterId: number]: Character } = {
   7: luigi,
   8: mario,
   9: marth,
+  10: mewtwo,
   11: ness,
   12: peach,
   13: pikachu,

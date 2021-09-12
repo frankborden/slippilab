@@ -3,11 +3,8 @@
 ## Character
 
 - Calculate shield origin
-  - Peach/Pikachu/Samus/Luigi/Mario
-  - Dr. Mario/DK/Roy/Link/YLink/ICs
-  - Yoshi/Pichu/Zelda/Bowser/Ness
 - Zelda/Sheik transformations
-- Zelda/Sheik invisible upBs
+- Invisible upBs
 - Bowser upsmash needs to translate up
 - Yoshi shield
 - Camera freaks out on some replays.. almost all my IC replays
@@ -18,31 +15,7 @@
 - Show Shield tilting (original visualiser reads inputs and checks for stun)
 - Bubble view when off camera / near blastzone?
 - correct laser & fly guy sizes
-- show objects/projectiles:
-  - needles
-  - pika/pichu jolt
-  - pika/pichu thunder
-  - turnips
-  - fireballs
-  - pills
-  - missiles
-  - charge shot
-  - samus bombs
-  - (y)link arrow
-  - (y)link boomerang
-  - (y)link bomb
-  - yoshi egg
-  - yoshi downB stars?
-  - ICs blizzard
-  - ICs ice block
-  - Zelda sideB
-  - Zelda neutralB
-  - Bowser flame
-  - Ness upB
-  - Ness sideB
-  - Ness neutralB
-  - Ness downB
-  - Ness Bat/Yoyo
+- show objects/projectiles
 - tether grabs / air tethers
 - many animations are backwards if they turn you around
   - rolls
@@ -62,8 +35,8 @@
 - Optional state-dependent colors? (hitstun, shieldstun, actionable)
 - Marth sideB colors / sword swings in general
 - spacie sideB clones
-- support more characters, 22/26 done
-  - G&W, Ganon, Kirby, Mew2 left
+- support more characters, 23/26 done
+  - G&W, Ganon, Kirby left
   - Redo Falcon/Falco/Marth/Puff (Sheik/Peach?) to use potrace pipeline
 - combine all of a character's jsons into one?
 
