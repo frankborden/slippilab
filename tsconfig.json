@@ -1,12 +1,11 @@
 {
+  "include": ["packages/**/*.ts"],
   "compilerOptions": {
     "module": "ESNext",
     "target": "ESNext",
     "lib": ["ESNext", "dom", "dom.iterable"],
-    "declaration": true,
-    "emitDeclarationOnly": true,
-    "outDir": "./types",
     "strict": true,
+    "noEmit": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,

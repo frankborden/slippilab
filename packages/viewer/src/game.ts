@@ -212,7 +212,8 @@ export class Game {
     ) {
       const frameToConsider = game.frames[frameIndex];
       for (let playerIndex = 0; playerIndex < 4; playerIndex++) {
-        for (const playerFrame of frameToConsider.players[playerIndex]?.post ?? []) {
+        for (const playerFrame of frameToConsider.players[playerIndex]?.post ??
+          []) {
           if (
             !playerFrame ||
             playerFrame.actionStateId <= 0x00a /* dead */ ||
@@ -220,7 +221,9 @@ export class Game {
           ) {
             continue;
           }
-          subjects.push(new Vector(playerFrame.xPosition, playerFrame.yPosition));
+          subjects.push(
+            new Vector(playerFrame.xPosition, playerFrame.yPosition),
+          );
         }
       }
     }

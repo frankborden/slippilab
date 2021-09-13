@@ -137,7 +137,7 @@ export const mrGameAndWatch: Character = {
     [353, 'SpecialN'],
     [354, 'SpecialAirN'],
     [355, 'SpecialS'], // 1
-    [356, 'SpecialS'], // 2 
+    [356, 'SpecialS'], // 2
     [357, 'SpecialS'], // 3
     [358, 'SpecialS'], // 4
     [359, 'SpecialS'], // 5
