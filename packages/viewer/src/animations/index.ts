@@ -50,6 +50,8 @@ import mewtwoAnimationsUrl from './zips/mewtwo.zip';
 import ganondorfAnimationsUrl from './zips/ganondorf.zip';
 // @ts-ignore
 import kirbyAnimationsUrl from './zips/kirby.zip';
+// @ts-ignore
+import mrGameAndWatchAnimationsUrl from './zips/mrGameAndWatch.zip';
 import { characterNamesById } from '../common';
 export { isOneIndexed } from './oneIndexed';
 export { animationNameByActionId } from './actions';
@@ -124,6 +126,8 @@ const importAnimation = async (
       return load(ganondorfAnimationsUrl);
     case 'Kirby':
       return load(kirbyAnimationsUrl);
+    case 'Mr. Game & Watch':
+      return load(mrGameAndWatchAnimationsUrl);
     default:
       throw new Error(`Unsupported character id: ${charId}`);
   }

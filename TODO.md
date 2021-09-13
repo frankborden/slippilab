@@ -7,8 +7,9 @@
 - Invisible upBs
 - Bowser upsmash needs to translate up
 - Yoshi shield
-- Camera freaks out on some replays.. almost all my IC replays
-- Luigi upB is rotated
+- Camera freaks out on some replays.. almost all my IC replays. maybe just old ones?
+- Some attacks are rotated or flipped
+  - Luigi upB, falcon upB release, kirby bair, etc
 - Samus downB/roll should use ball model
 - Spacies calculate shine origin
 - Shield put up / take down animation
@@ -37,9 +38,8 @@
 - spacie sideB clones
 - Use kirby hat stuff or trim their animations
   - dynamically load those?
-- support more characters, 25/26 done
-  - G&W left
-  - Redo Falcon/Falco/Marth/Puff (Sheik/Peach?) to use potrace pipeline
+- Redo Falcon/Falco/Marth/Puff (Sheik/Peach?) to use potrace pipeline
+- G&W props
 - combine all of a character's jsons into one?
 
 ## Stage

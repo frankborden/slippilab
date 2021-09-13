@@ -24,12 +24,14 @@ import { ness } from './ness';
 import { mewtwo } from './mewtwo';
 import { ganondorf } from './ganondorf';
 import { kirby } from './kirby';
+import { mrGameAndWatch } from './mrGameAndWatch';
 
 export { createPlayerRender } from './render';
 export const supportedCharactersById: { [characterId: number]: Character } = {
   0: captainFalcon,
   1: donkeyKong,
   2: fox,
+  3: mrGameAndWatch,
   4: kirby,
   5: bowser,
   6: link,
