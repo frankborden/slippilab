@@ -1,12 +1,12 @@
+.out/
 .vscode/
 .vite/
 .yarn/*
 !.yarn/patches
-!.yarn/releases
 !.yarn/plugins
+!.yarn/releases
 !.yarn/sdks
 !.yarn/versions
-.pnp.*
-.out/
 dist/
+node_modules/
 types/

@@ -73,15 +73,14 @@ export class FileList extends LitElement {
         <select size="30" @change=${this.selected}>
           ${this.files.map(
             (file, index) =>
-              html`<option
-                value=${index}
-                ?selected=${this.currentFileIndex === index}
-              >
-                ${
-                  // @ts-expect-error
-                  file.webkitRelativePath ?? file.name
-                }
-              </option>`,
+              html`
+                <option
+                  value=${index}
+                  ?selected=${this.currentFileIndex === index}
+                >
+                  ${file.webkitRelativePath ?? file.name}
+                </option>
+              `,
           )}
         </select>
       </div>
