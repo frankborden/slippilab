@@ -6,7 +6,7 @@
 - Show objects/projectiles
 - Use kirby hat stuff or trim their animations
   - dynamically load those?
-- Redo Falcon/Falco/Marth/Puff (Sheik/Peach?) to use potrace pipeline
+- Redo Falcon/Falco/Marth/Puff (Sheik/Peach?) to use potrace pipeline. It should shrink their .zip files a bit
 - G&W needs all his props
 - Samus downB/roll should use ball model
 - Dynamic model parts are stuck in t-pose (bowser hair, dresses, capes)
@@ -28,7 +28,7 @@
 - Correct laser & fly guy sizes
 - Tether grabs / air tethers
 - Many animations are backwards if they turn you around
-  - rolls/some bairs/run turn/others?
+  - rolls/some bairs/run turn/some throws/others?
 - Powershield animation 0x0b6: 'GUARD', //GuardReflect (182 decimal)
 - Lightshield: Read pre.trigger, do some math?
 - Death animation
@@ -77,21 +77,19 @@
 
 # @slippilab/parser
 
+- Output missing data that is present in .slp (Marked as TODOs)
+
 # Export Highlight
 
 - Re-enable
 - Export to other formats better than gif? apng, webp, mp4?
   - Discord doesn't like .apng and .webp. Will it allow embeded mp4 from url?
 - Upload gif to some host (example project with imgur: https://github.com/eirikb/gifie)
-- Adjust start/end clip
+- Able to adjust start/end clip
 
 # @slippilab/slippilab
 
 - Tests
 - Save settings
 - Webworkers?
-- List supported characters / stages
 - Publish subpackages
-- Git submodules?
-- About page / link to source
-- Fix tsconfigs 

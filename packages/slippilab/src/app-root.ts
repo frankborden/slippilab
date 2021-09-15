@@ -6,6 +6,7 @@ import '@spectrum-web-components/theme/theme-dark';
 import '@spectrum-web-components/theme/theme-light';
 import '@spectrum-web-components/theme/scale-large';
 import '@spectrum-web-components/action-button/sp-action-button';
+import '@spectrum-web-components/link/sp-link';
 import '@spectrum-web-components/tabs/sp-tab';
 import '@spectrum-web-components/tabs/sp-tabs';
 import '@spectrum-web-components/tabs/sp-tab-panel';
@@ -69,6 +70,11 @@ export class AppRoot extends LitElement {
         flex-direction: column;
         justify-content: space-between;
       }
+      .bottom {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+      }
       replay-viewer {
         width: 100%;
         height: 100%;
@@ -112,7 +118,16 @@ export class AppRoot extends LitElement {
                 <sl-settings></sl-settings>
               </sp-tab-panel>
             </sp-tabs>
-            <replay-select></replay-select>
+            <div class="bottom">
+              <sp-link
+                size="xl"
+                href="https://github.com/frankborden/slippilab"
+                target="_blank"
+                rel="noopener noreferrer"
+                >Source</sp-link
+              >
+              <replay-select></replay-select>
+            </div>
           </div>
           <div class="main">
             <replay-viewer

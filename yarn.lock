@@ -131,7 +131,6 @@ __metadata:
   resolution: "@slippilab/parser@workspace:packages/parser"
   dependencies:
     "@shelacek/ubjson": ^1.1.0
-    typescript: ^4.4.3
   languageName: unknown
   linkType: soft
 
@@ -155,6 +154,7 @@ __metadata:
     "@spectrum-web-components/action-button": ^0.5.7
     "@spectrum-web-components/icon": ^0.9.10
     "@spectrum-web-components/icons": ^0.7.8
+    "@spectrum-web-components/link": ^0.9.6
     "@spectrum-web-components/switch": ^0.7.14
     "@spectrum-web-components/tabs": ^0.6.8
     "@spectrum-web-components/theme": ^0.8.13
@@ -290,6 +290,17 @@ __metadata:
     "@spectrum-web-components/base": ^0.4.5
     tslib: ^2.0.0
   checksum: 54353ea4c3e60140466dd14aefc9103f4e181ca97d18e1c79da4f3453f78f1a9edfbb9a002a0881e1cd6ba0085b9bc7bedc68d2c5069abd36ec31d15b8330483
+  languageName: node
+  linkType: hard
+
+"@spectrum-web-components/link@npm:^0.9.6":
+  version: 0.9.6
+  resolution: "@spectrum-web-components/link@npm:0.9.6"
+  dependencies:
+    "@spectrum-web-components/base": ^0.4.5
+    "@spectrum-web-components/shared": ^0.12.8
+    tslib: ^2.0.0
+  checksum: 5c5e6bea6347ed5c8bbeaa09ec268e15626f5d6fd76aec4527d5722c88f4977f681d1da00c41c11869028a386ed33104b6ce4788d684c269eaff462d4a6441a1
   languageName: node
   linkType: hard
 

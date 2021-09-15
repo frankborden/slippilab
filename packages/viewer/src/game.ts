@@ -8,7 +8,7 @@ import type { Layers } from './layer';
 import { Vector } from './vector';
 import type { Replay } from '@slippilab/common';
 
-// TODO: frames and settings should just go into generators
+// TODO: frames should just go into generators
 export type Render = (
   layers: Layers,
   frame: Frame,

@@ -5,8 +5,6 @@ import { decode } from '@shelacek/ubjson';
  * It is based off of the replay format spec up to 3.9.0.0.
  * It is incomplete, I have left out things I don't need right now.
  * slippi-js can work too if your build tool de-node-ifies it enough.
- * TODO: don't crash on old format versions, just skip the missing
- * fields.
  */
 
 interface EventPayloadsEvent {

@@ -407,7 +407,7 @@ const renderShine = (
     characterData.shieldOffset.y,
   );
   // world space --> shine space
-  // shine is 0.9 * shield size
+  // shine is just 0.9 * shield size
   // TODO: spacies have different sized shines
   // not as big as shield because we have linewidth
   const shineScale = (characterData.shieldSize / 2) * 0.9;

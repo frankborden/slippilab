@@ -1,6 +1,7 @@
 import { css, html, LitElement } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import { model } from './model';
+import '@spectrum-web-components/switch';
 
 @customElement('sl-settings')
 export class SlippiLabSettings extends LitElement {
