@@ -9,7 +9,7 @@
   "scripts": {
     "check": "tsc",
     "start": "vite",
-    "build": "tsc && vite build",
+    "build": "vite build",
     "format": "prettier --write \"./**/*.ts\""
   },
   "devDependencies": {
