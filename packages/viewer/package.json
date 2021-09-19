@@ -1,12 +1,25 @@
 {
   "name": "@slippilab/viewer",
-  "version": "0.0.1",
-  "main": "src/index.ts",
+  "version": "0.0.2",
+  "description": "Replay .slp files in the browser",
+  "author": {"name": "Frank Borden"},
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/frankborden/slippilab"
+  },
+  "type": "module",
+  "browser": "dist/index.js",
+  "types": "dist/index.d.ts",
   "dependencies": {
-    "@slippilab/common": "0.0.1",
-    "@slippilab/parser": "0.0.1",
+    "@slippilab/common": "workspace:*",
+    "@slippilab/parser": "workspace:*",
     "@spectrum-web-components/slider": "^0.10.7",
-    "@zip.js/zip.js": "^2.3.15",
+    "@zip.js/zip.js": "^2.3.16",
     "lit": "^2.0.0-rc.4"
+  },
+  "scripts": {
+    "build": "tsc && cp -rf src/animations/zips dist/animations/",
+    "prepublish": "yarn build"
   }
 }

@@ -1,6 +1,14 @@
 {
   "name": "@slippilab/create-animations",
-  "version": "0.0.1",
+  "version": "0.0.2",
+  "description": "Create .svg paths for ssbm character animations",
+  "author": {"name": "Frank Borden"},
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/frankborden/slippilab"
+  },
+  "type": "module",
   "scripts": {
     "step0": "echo Step 0 is done by manually running a script in Maya. See docs/README.md",
     "step1": "zx src/step1bmpToSvg.mjs /mnt/d/Output .out/step1",

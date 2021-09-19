@@ -1,19 +1,32 @@
 {
-    "name": "@slippilab/slippilab",
-    "version": "0.0.1",
-    "dependencies": {
-        "@slippilab/common": "0.0.1",
-        "@slippilab/parser": "0.0.1",
-        "@slippilab/search": "0.0.1",
-        "@slippilab/viewer": "0.0.1",
-        "@spectrum-web-components/action-button": "^0.5.7",
-        "@spectrum-web-components/icon": "^0.9.10",
-        "@spectrum-web-components/icons": "^0.7.8",
-        "@spectrum-web-components/link": "^0.9.6",
-        "@spectrum-web-components/switch": "^0.7.14",
-        "@spectrum-web-components/tabs": "^0.6.8",
-        "@spectrum-web-components/theme": "^0.8.13",
-        "lit": "^2.0.0-rc.4",
-        "rxjs": "^7.3.0"
-    }
+  "name": "@slippilab/slippilab",
+  "private": "true",
+  "description": "https://slippilab.com",
+  "author": {"name": "Frank Borden"},
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/frankborden/slippilab"
+  },
+  "type": "module",
+  "browser": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "dependencies": {
+    "@slippilab/common": "workspace:*",
+    "@slippilab/parser": "workspace:*",
+    "@slippilab/search": "workspace:*",
+    "@slippilab/viewer": "workspace:*",
+    "@spectrum-web-components/action-button": "^0.5.7",
+    "@spectrum-web-components/icon": "^0.9.10",
+    "@spectrum-web-components/icons": "^0.7.8",
+    "@spectrum-web-components/link": "^0.9.6",
+    "@spectrum-web-components/switch": "^0.7.14",
+    "@spectrum-web-components/tabs": "^0.6.8",
+    "@spectrum-web-components/theme": "^0.8.13",
+    "lit": "^2.0.0-rc.4",
+    "rxjs": "^7.3.0"
+  },
+  "scripts": {
+    "build": "tsc"
+  }
 }

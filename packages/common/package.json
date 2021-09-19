@@ -1,8 +1,21 @@
 {
   "name": "@slippilab/common",
-  "version": "0.0.1",
-  "main": "src/index.ts",
+  "version": "0.0.2",
+  "description": "Shared types for @slippilab packages",
+  "author": {"name": "Frank Borden"},
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/frankborden/slippilab"
+  },
+  "type": "module",
+  "browser": "dist/index.js",
+  "types": "dist/index.d.ts",
   "dependencies": {
-    "@slippilab/parser": "0.0.1"
+    "@slippilab/parser": "workspace:*"
+  },
+  "scripts": {
+    "build": "tsc",
+    "prepublish": "yarn build"
   }
 }
