@@ -487,7 +487,7 @@ export class Game {
     do {
       shiftJisBytes[charNum] = this.raw.getUint8(offset + charNum * 0x01);
       charNum++;
-    } while (shiftJisBytes[charNum - 1] !== 0x00);
+    } while (charNum < maxLength && shiftJisBytes[charNum - 1] !== 0x00);
     if (shiftJisBytes[0] !== 0x00) {
       const decoder = new TextDecoder('shift-jis');
       return decoder.decode(shiftJisBytes.subarray(0, charNum - 1));
