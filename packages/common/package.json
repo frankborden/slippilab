@@ -1,6 +1,6 @@
 {
   "name": "@slippilab/common",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Shared types for @slippilab packages",
   "author": {"name": "Frank Borden"},
   "license": "MIT",
