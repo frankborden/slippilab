@@ -8,9 +8,7 @@ export type FramePredicate = (
 export const isGrabbed: FramePredicate = (
   frame: PostFrameUpdateEvent,
   _game: Game,
-) => {
-  return frame.actionStateId >= 0xdf && frame.actionStateId <= 0xe8;
-};
+) => frame.actionStateId >= 0xdf && frame.actionStateId <= 0xe8;
 
 export const isInGroundedControl: FramePredicate = (
   frame: PostFrameUpdateEvent,
@@ -27,40 +25,29 @@ export const isInGroundedControl: FramePredicate = (
 export const isNotInGroundedControl: FramePredicate = (
   frame: PostFrameUpdateEvent,
   game: Game,
-) => {
-  return !isInGroundedControl(frame, game);
-};
+) => !isInGroundedControl(frame, game);
 
 export const isInHitstun: FramePredicate = (
   frame: PostFrameUpdateEvent,
   _game: Game,
-) => {
-  return (
-    (frame.actionStateId >= 0x4b && frame.actionStateId <= 0x5b) ||
-    frame.actionStateId === 0x26
-  );
-};
+) =>
+  (frame.actionStateId >= 0x4b && frame.actionStateId <= 0x5b) ||
+  frame.actionStateId === 0x26;
 
 export const isInBeginningOfHitstun: FramePredicate = (
   frame: PostFrameUpdateEvent,
   game: Game,
-) => {
-  return isInHitstun(frame, game) && frame.actionStateFrameCounter === 1;
-};
+) => isInHitstun(frame, game) && frame.actionStateFrameCounter === 1;
 
 export const isInNotBeginningOfHitstun: FramePredicate = (
   frame: PostFrameUpdateEvent,
   game: Game,
-) => {
-  return isInHitstun(frame, game) && frame.actionStateFrameCounter === 2;
-};
+) => isInHitstun(frame, game) && frame.actionStateFrameCounter === 2;
 
 export const isDead: FramePredicate = (
   frame: PostFrameUpdateEvent,
   _game: Game,
-) => {
-  return frame.actionStateId >= 0x00 && frame.actionStateId <= 0x0a;
-};
+) => frame.actionStateId >= 0x00 && frame.actionStateId <= 0x0a;
 
 interface StageData {
   name: string;
