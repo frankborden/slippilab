@@ -9,7 +9,7 @@
   "scripts": {
     "check": "tsc",
     "start": "vite",
-    "build": "yarn workspaces foreach run build && vite build",
+    "build": "yarn packages/parser build; yarn packages/common build; yarn packages/viewer build; yarn packages/search build; yarn packages/slippilab build; vite build",
     "format": "prettier --write \"./**/*.ts\""
   },
   "devDependencies": {
