@@ -179,7 +179,7 @@ const renderPlayerDetails = (
   // flip text back right-side after global flip
   screenLayer.context.scale(1, -1);
 
-  const debug = false;
+  const debug = true;
   let name: string;
   if (!debug) {
     name =
@@ -189,15 +189,16 @@ const renderPlayerDetails = (
       (player.playerType === 1 ? 'CPU' : character);
   } else {
     const playerFrame = frame.players[player.playerIndex].post[0];
-    const characterData = supportedCharactersById[player.externalCharacterId];
-    let animationName;
-    const actionName = animationNameByActionId[playerFrame.actionStateId];
-    if (characterData.specialsMap.has(playerFrame.actionStateId)) {
-      animationName = characterData.specialsMap.get(playerFrame.actionStateId);
-    } else if (actionName) {
-      animationName = characterData.animationMap.get(actionName) ?? actionName;
-    }
-    name = `${playerFrame.actionStateId},${animationName},${playerFrame.actionStateFrameCounter}`;
+    // const characterData = supportedCharactersById[player.externalCharacterId];
+    // let animationName;
+    // const actionName = animationNameByActionId[playerFrame.actionStateId];
+    // if (characterData.specialsMap.has(playerFrame.actionStateId)) {
+    //   animationName = characterData.specialsMap.get(playerFrame.actionStateId);
+    // } else if (actionName) {
+    //   animationName = characterData.animationMap.get(actionName) ?? actionName;
+    // }
+    // name = `${playerFrame.actionStateId},${animationName},${playerFrame.actionStateFrameCounter}`;
+    name = `${playerFrame.lastHitBy}`;
   }
 
   screenLayer.context.fillText(name, 0, 0);
