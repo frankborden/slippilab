@@ -1,8 +1,9 @@
 {
   "name": "@slippilab/slippilab",
-  "private": "true",
   "description": "https://slippilab.com",
-  "author": {"name": "Frank Borden"},
+  "author": {
+    "name": "Frank Borden"
+  },
   "license": "MIT",
   "repository": {
     "type": "git",

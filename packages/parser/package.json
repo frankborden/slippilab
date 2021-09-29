@@ -2,7 +2,9 @@
   "name": "@slippilab/parser",
   "version": "0.0.3",
   "description": "A browser friendly .slp file parser",
-  "author": {"name": "Frank Borden"},
+  "author": {
+    "name": "Frank Borden"
+  },
   "license": "MIT",
   "repository": {
     "type": "git",

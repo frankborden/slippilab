@@ -2,7 +2,9 @@
   "name": "@slippilab/create-animations",
   "version": "0.0.3",
   "description": "Create .svg paths for ssbm character animations",
-  "author": {"name": "Frank Borden"},
+  "author": {
+    "name": "Frank Borden"
+  },
   "license": "MIT",
   "repository": {
     "type": "git",

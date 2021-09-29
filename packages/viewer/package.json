@@ -2,7 +2,9 @@
   "name": "@slippilab/viewer",
   "version": "0.0.3",
   "description": "Replay .slp files in the browser",
-  "author": {"name": "Frank Borden"},
+  "author": {
+    "name": "Frank Borden"
+  },
   "license": "MIT",
   "repository": {
     "type": "git",
