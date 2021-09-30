@@ -33,7 +33,6 @@ export const createPlayerRender = async (
     animations[19] = await fetchAnimations(18); // Zelda
     animations[7] = await fetchAnimations(19); // Sheik
   } else if (character === 'Ice Climbers') {
-    console.log('fetching ice climbers');
     animations[10] = await fetchAnimations(14); // Popo
     animations[11] = await fetchAnimations(14); // Nana
   } else {
