@@ -26,31 +26,32 @@ import { youngLink } from './youngLink';
 import { zelda } from './zelda';
 
 export { createPlayerRender } from './render';
-export const supportedCharactersById = [
+export const supportedCharactersByInternalId = [
+  mario,
+  fox,
   captainFalcon,
   donkeyKong,
-  fox,
-  mrGameAndWatch,
   kirby,
   bowser,
   link,
-  luigi,
-  mario,
-  marth,
-  mewtwo,
+  sheik,
   ness,
   peach,
+  iceClimbers, // Popo
+  iceClimbers, // Nana
   pikachu,
-  iceClimbers,
-  jigglypuff,
   samus,
   yoshi,
+  jigglypuff,
+  mewtwo,
+  luigi,
+  marth,
   zelda,
-  sheik,
-  falco,
   youngLink,
   doctorMario,
-  roy,
+  falco,
   pichu,
+  mrGameAndWatch,
   ganondorf,
+  roy,
 ];

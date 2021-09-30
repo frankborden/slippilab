@@ -21,6 +21,7 @@
     "lit": "^2.0.0"
   },
   "scripts": {
+    "tsc": "tsc",
     "build": "tsc && cp -rf src/animations/zips dist/animations/",
     "prepublish": "yarn build"
   }

@@ -9,8 +9,8 @@ import {
   animationNameByActionId,
 } from '../animations';
 import type { CharacterAnimations } from '../animations';
-import { supportedCharactersById } from '../characters';
-import { characterNamesById } from '../common';
+import { supportedCharactersByInternalId } from '../characters';
+import { characterNamesById, characterNamesByInternalId } from '../common';
 import type { Character } from '../common';
 import type { Render } from '../game';
 import type { Layer, Layers } from '../layer';
@@ -27,7 +27,20 @@ export const createPlayerRender = async (
   players: PlayerSettings[],
   isDoubles: boolean,
 ): Promise<Render> => {
-  const animations = await fetchAnimations(player.externalCharacterId);
+  const character = characterNamesById[player.externalCharacterId];
+  const animations: { [internalCharacterId: number]: CharacterAnimations } = {};
+  if (character === 'Zelda' || character === 'Sheik') {
+    animations[19] = await fetchAnimations(18); // Zelda
+    animations[7] = await fetchAnimations(19); // Sheik
+  } else if (character === 'Ice Climbers') {
+    console.log('fetching ice climbers');
+    animations[10] = await fetchAnimations(14); // Popo
+    animations[11] = await fetchAnimations(14); // Nana
+  } else {
+    animations[characterNamesByInternalId.indexOf(character)] =
+      await fetchAnimations(player.externalCharacterId);
+  }
+
   return (
     layers: Layers,
     frame: Frame,
@@ -134,7 +147,8 @@ const renderPercent = (
   const playerFrame = frame.players[player.playerIndex].post.filter(
     (post) => !post.isFollower,
   )[0];
-  const characterData = supportedCharactersById[player.externalCharacterId];
+  const characterData =
+    supportedCharactersByInternalId[playerFrame.internalCharacterId];
   const actionName = animationNameByActionId[playerFrame.actionStateId];
   const animationName =
     characterData.animationMap.get(actionName) ?? actionName;
@@ -166,7 +180,8 @@ const renderPlayerDetails = (
   isDoubles: boolean,
   isDarkMode: boolean,
 ): void => {
-  const character = characterNamesById[player.externalCharacterId];
+  const playerFrame = frame.players[player.playerIndex].post[0];
+  const character = characterNamesByInternalId[playerFrame.internalCharacterId];
   screenLayer.context.save();
   const fontSize = screenLayer.canvas.height / 30;
   screenLayer.context.font = `900 ${fontSize}px Verdana`;
@@ -188,8 +203,7 @@ const renderPlayerDetails = (
       player.nametag ??
       (player.playerType === 1 ? 'CPU' : character);
   } else {
-    const playerFrame = frame.players[player.playerIndex].post[0];
-    // const characterData = supportedCharactersById[player.externalCharacterId];
+    // const characterData = supportedCharactersByInternalId[playerFrame.internalCharacterId];
     // let animationName;
     // const actionName = animationNameByActionId[playerFrame.actionStateId];
     // if (characterData.specialsMap.has(playerFrame.actionStateId)) {
@@ -211,12 +225,12 @@ const getAnimationFrame = (
   playerFrame: PostFrameUpdateEvent,
   frames: Frame[],
   frame: Frame,
-  animations: CharacterAnimations,
+  animations: { [internalCharacterId: number]: CharacterAnimations },
   characterData: Character,
   worldContext: CanvasRenderingContext2D,
 ): string | undefined => {
   const character = characterNamesById[player.externalCharacterId];
-
+  const characterAnimations = animations[playerFrame.internalCharacterId];
   // Determine animation
   let animationName;
   const actionName = animationNameByActionId[playerFrame.actionStateId];
@@ -238,8 +252,10 @@ const getAnimationFrame = (
         1
       : 0;
   const animationFrames = animationName
-    ? animations[animationName] ?? animations['Appeal'] ?? animations['AppealL']
-    : animations['Appeal'] ?? animations['AppealL'];
+    ? characterAnimations[animationName] ??
+      characterAnimations['Appeal'] ??
+      characterAnimations['AppealL']
+    : characterAnimations['Appeal'] ?? characterAnimations['AppealL'];
   const animationIndex =
     Math.max(Math.floor(playerFrame.actionStateFrameCounter + firstIndex), 0) %
     animationFrames.length;
@@ -296,11 +312,12 @@ const renderCharacter = (
   players: PlayerSettings[],
   isDoubles: boolean,
   isDarkMode: boolean,
-  animations: CharacterAnimations,
+  animations: { [internalCharacterId: number]: CharacterAnimations },
 ): void => {
   for (const playerFrame of frame.players[player.playerIndex].post) {
     worldContext.save();
-    const characterData = supportedCharactersById[player.externalCharacterId];
+    const characterData =
+      supportedCharactersByInternalId[playerFrame.internalCharacterId];
     worldContext.lineWidth *= isDarkMode ? 6 : 2;
 
     const lCancelStatus = getFirstFrameOfAnimation(
@@ -348,7 +365,8 @@ const renderShield = (
   isDarkMode: boolean,
 ): void => {
   for (const playerFrame of frame.players[player.playerIndex].post) {
-    const characterData = supportedCharactersById[player.externalCharacterId];
+    const characterData =
+      supportedCharactersByInternalId[playerFrame.internalCharacterId];
     if (
       playerFrame.actionStateId < 0x0b2 ||
       playerFrame.actionStateId > 0x0b6
@@ -387,8 +405,9 @@ const renderShine = (
   player: PlayerSettings,
 ): void => {
   const playerFrame = frame.players[player.playerIndex].post[0];
-  const character = characterNamesById[player.externalCharacterId];
-  const characterData = supportedCharactersById[player.externalCharacterId];
+  const character =characterNamesByInternalId[playerFrame.internalCharacterId];
+  const characterData =
+    supportedCharactersByInternalId[playerFrame.internalCharacterId];
   if (
     (character !== 'Fox' && character !== 'Falco') ||
     playerFrame.actionStateId < 360 ||

@@ -76,4 +76,5 @@ export const characterNamesByInternalId = [
   'Pichu',
   'Mr. Game & Watch',
   'Ganondorf',
+  'Roy',
 ] as const;

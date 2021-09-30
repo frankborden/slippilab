@@ -2,10 +2,7 @@ import { Game } from '@slippilab/parser';
 import { Subject } from 'rxjs';
 import { FramePredicates, Search } from '@slippilab/search';
 import type { SearchSpec } from '@slippilab/search';
-import {
-  supportedCharactersById,
-  supportedStagesById,
-} from '@slippilab/viewer';
+import { supportedStagesById } from '@slippilab/viewer';
 import type { Highlight, Replay } from '@slippilab/common';
 
 export interface State {
@@ -148,19 +145,10 @@ export class Model {
 
   private isSupported(game: Game): boolean {
     const stageId = game.gameStart.stageId;
-    const characterIds = game.gameStart?.playerSettings.map(
-      (player) => player.externalCharacterId,
-    );
-    if (!stageId || !characterIds) {
+    if (!stageId) {
       return false;
     }
-    const stageSupported = Boolean(supportedStagesById[stageId]);
-    const charactersSupported = characterIds.every(
-      (characterId) =>
-        characterId !== null && Boolean(supportedCharactersById[characterId]),
-    );
-    return stageSupported && charactersSupported;
-    return true;
+    return Boolean(supportedStagesById[stageId]);
   }
 }
 

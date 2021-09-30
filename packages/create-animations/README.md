@@ -57,7 +57,7 @@ If an animation cannot be found it will use Appeal, so play some replays to iden
 mappings.
 
 ## Step 7: Add the character to be usable:
-packages/viewer/src/characters/index.ts supportedCharactersById function
+packages/viewer/src/characters/index.ts supportedCharactersByInternalId function
 packages/viewer/src/animations/index.ts importAnimation function
 
 External character ID list:
