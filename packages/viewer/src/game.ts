@@ -14,6 +14,7 @@ export type Render = (
   frame: Frame,
   frames: Frame[],
   isDarkMode: boolean,
+  isDebugMode: boolean,
 ) => void;
 
 interface Camera {
@@ -42,6 +43,7 @@ export class Game {
     replay: Replay,
     baseCanvas: HTMLCanvasElement,
     isDarkMode: boolean,
+    isDebugMode: boolean,
     startFrame: number,
   ): Promise<Game> {
     return new Game(
@@ -63,6 +65,7 @@ export class Game {
         createItemRender(),
       ],
       isDarkMode,
+      isDebugMode,
       startFrame,
     );
   }
@@ -72,6 +75,7 @@ export class Game {
     private layers: Layers,
     private renders: Render[],
     private isDarkMode: boolean,
+    private isDebugMode: boolean,
     startFrame: number,
   ) {
     this.stage = supportedStagesById[replay.game.gameStart.stageId];
@@ -126,6 +130,12 @@ export class Game {
 
   public setDarkMode(dark: boolean) {
     this.isDarkMode = dark;
+    this.currentFrameNumber--;
+    this.tick();
+  }
+
+  public setDebugMode(debug: boolean) {
+    this.isDebugMode = debug;
     this.currentFrameNumber--;
     this.tick();
   }
@@ -191,7 +201,7 @@ export class Game {
     clearLayers(this.layers, this.isDarkMode);
     this.updateCamera(frame, this.replay.game);
     this.renders.forEach((render) =>
-      render(this.layers, frame, frames, this.isDarkMode),
+      render(this.layers, frame, frames, this.isDarkMode, this.isDebugMode),
     );
     drawToBase(this.layers);
     this.currentFrameNumber++;

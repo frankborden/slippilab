@@ -45,11 +45,20 @@ export const createPlayerRender = async (
     frame: Frame,
     frames: Frame[],
     isDarkMode: boolean,
+    isDebugMode: boolean,
   ) => {
     if (!isInFrame(frame, player)) {
       return;
     }
-    renderUi(layers.screenSpace, frame, player, players, isDoubles, isDarkMode);
+    renderUi(
+      layers.screenSpace,
+      frame,
+      player,
+      players,
+      isDoubles,
+      isDarkMode,
+      isDebugMode,
+    );
     renderCharacter(
       layers.worldSpace.context,
       frame,
@@ -171,6 +180,44 @@ const renderPercent = (
   screenLayer.context.restore();
 };
 
+const renderDebugText = (
+  screenLayer: Layer,
+  frame: Frame,
+  player: PlayerSettings,
+  players: PlayerSettings[],
+  isDoubles: boolean,
+  isDarkMode: boolean,
+  isDebugMode: boolean,
+) => {
+  if (!isDebugMode) {
+    return;
+  }
+  screenLayer.context.save();
+  const fontSize = screenLayer.canvas.height / 30;
+  const debugFontSize = fontSize / 2;
+  const x = (screenLayer.canvas.width * player.playerIndex) / 4;
+  const y = -screenLayer.canvas.height + debugFontSize;
+  screenLayer.context.scale(1, -1);
+  screenLayer.context.translate(x, y);
+  const playerFrame = frame.players[player.playerIndex].post[0];
+  screenLayer.context.strokeStyle = isDarkMode ? 'white' : 'black';
+  screenLayer.context.fillStyle = getPrimaryColor(player, players, isDoubles);
+  screenLayer.context.font = `900 ${debugFontSize}px Verdana`;
+  screenLayer.context.textAlign = 'start';
+  const debugTexts = [
+    `actionStateId: ${playerFrame.actionStateId}`,
+    `actionStateCounter: ${playerFrame.actionStateFrameCounter}`,
+    `xPosition: ${playerFrame.xPosition}`,
+    `yPosition: ${playerFrame.yPosition}`,
+  ];
+  for (const debugText of debugTexts) {
+    screenLayer.context.fillText(debugText, 0, 0);
+    screenLayer.context.strokeText(debugText, 0, 0);
+    screenLayer.context.translate(0, debugFontSize);
+  }
+  screenLayer.context.restore();
+};
+
 const renderPlayerDetails = (
   screenLayer: Layer,
   frame: Frame,
@@ -193,27 +240,11 @@ const renderPlayerDetails = (
   // flip text back right-side after global flip
   screenLayer.context.scale(1, -1);
 
-  const debug = true;
-  let name: string;
-  if (!debug) {
-    name =
-      player.displayName ??
-      player.connectCode ??
-      player.nametag ??
-      (player.playerType === 1 ? 'CPU' : character);
-  } else {
-    // const characterData = supportedCharactersByInternalId[playerFrame.internalCharacterId];
-    // let animationName;
-    // const actionName = animationNameByActionId[playerFrame.actionStateId];
-    // if (characterData.specialsMap.has(playerFrame.actionStateId)) {
-    //   animationName = characterData.specialsMap.get(playerFrame.actionStateId);
-    // } else if (actionName) {
-    //   animationName = characterData.animationMap.get(actionName) ?? actionName;
-    // }
-    // name = `${playerFrame.actionStateId},${animationName},${playerFrame.actionStateFrameCounter}`;
-    name = `${playerFrame.lastHitBy}`;
-  }
-
+  const name =
+    player.displayName ??
+    player.connectCode ??
+    player.nametag ??
+    (player.playerType === 1 ? 'CPU' : character);
   screenLayer.context.fillText(name, 0, 0);
   screenLayer.context.strokeText(name, 0, 0);
   screenLayer.context.restore();
@@ -404,7 +435,7 @@ const renderShine = (
   player: PlayerSettings,
 ): void => {
   const playerFrame = frame.players[player.playerIndex].post[0];
-  const character =characterNamesByInternalId[playerFrame.internalCharacterId];
+  const character = characterNamesByInternalId[playerFrame.internalCharacterId];
   const characterData =
     supportedCharactersByInternalId[playerFrame.internalCharacterId];
   if (
@@ -462,8 +493,19 @@ const renderUi = (
   players: PlayerSettings[],
   isDoubles: boolean,
   isDarkMode: boolean,
+  isDebugMode: boolean,
 ): void => {
   screenLayer.context.save();
+  renderDebugText(
+    screenLayer,
+    frame,
+    player,
+    players,
+    isDoubles,
+    isDarkMode,
+    isDebugMode,
+  );
+
   const playerUiX = screenLayer.canvas.width * 0.2 * (player.playerIndex + 1);
   const playerUiY = screenLayer.canvas.height / 4;
   screenLayer.context.translate(playerUiX, playerUiY);
@@ -477,5 +519,6 @@ const renderUi = (
     isDoubles,
     isDarkMode,
   );
+
   screenLayer.context.restore();
 };

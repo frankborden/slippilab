@@ -43,6 +43,9 @@ export class ReplayViewer extends LitElement {
   @property({ type: Boolean })
   dark = false;
 
+  @property({ type: Boolean })
+  debug = false;
+
   @state()
   private currentFrame = -123;
 
@@ -180,6 +183,9 @@ export class ReplayViewer extends LitElement {
     if (oldValues.has('dark')) {
       this.game?.setDarkMode(this.dark);
     }
+    if (oldValues.has('debug')) {
+      this.game?.setDebugMode(this.debug);
+    }
     if (oldValues.has('replay')) {
       if (oldValues.get('replay')) {
         this.game?.stop();
@@ -216,7 +222,13 @@ export class ReplayViewer extends LitElement {
       );
     }
     this.highestFrame = highestFrame;
-    this.game = await Game.create(this.replay, this.canvas, this.dark, -123);
+    this.game = await Game.create(
+      this.replay,
+      this.canvas,
+      this.dark,
+      this.debug,
+      -123,
+    );
     this.game.resize(this.canvas.width, this.canvas.height);
     this.game.onTick(
       (currentFrameNumber: number) => (this.currentFrame = currentFrameNumber),

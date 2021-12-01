@@ -25,6 +25,7 @@ export class AppRoot extends LitElement {
     super();
     model.state$.subscribe(async (state) => {
       this.darkMode = state.darkMode;
+      this.debugMode = state.debugMode;
       document.body.style.backgroundColor = state.darkMode ? 'black' : 'white';
 
       if (this.replay !== state.replay) {
@@ -95,6 +96,9 @@ export class AppRoot extends LitElement {
   @state()
   private darkMode = false;
 
+  @state()
+  private debugMode = false;
+
   render() {
     return html`
       <sp-theme
@@ -132,6 +136,7 @@ export class AppRoot extends LitElement {
           <div class="main">
             <replay-viewer
               .dark=${this.darkMode}
+              .debug=${this.debugMode}
               .replay=${this.replay}
               .highlight=${this.highlight}
             ></replay-viewer>

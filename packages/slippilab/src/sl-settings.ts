@@ -27,6 +27,7 @@ export class SlippiLabSettings extends LitElement {
     super();
     model.state$.subscribe((state) => {
       this.darkMode = state.darkMode;
+      this.debugMode = state.debugMode;
     });
   }
 
@@ -34,13 +35,23 @@ export class SlippiLabSettings extends LitElement {
     model.setDarkMode(!this.darkMode);
   }
 
+  private toggleDebugMode(): void {
+    model.setDebugMode(!this.debugMode);
+  }
+
   @state()
   private darkMode = false;
+
+  @state()
+  private debugMode = false;
 
   override render() {
     return html`
       <sp-switch @change=${this.toggleDarkMode} ?checked=${this.darkMode}>
         Dark Mode
+      </sp-switch>
+      <sp-switch @change=${this.toggleDebugMode} ?checked=${this.debugMode}>
+        Debug Mode
       </sp-switch>
       <div>
         <kbd>K</kbd>/<kbd>Space</kbd>/<kbd>Click</kbd> Toggle pause

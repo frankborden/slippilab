@@ -10,6 +10,7 @@ export const createStageRender = (stage: Stage): Render => {
     frame: Frame,
     _frames: Frame[],
     isDarkMode: boolean,
+    _isDebugMode: boolean,
   ) => {
     renderStageLines(layers.worldSpace.context, frame, stage, isDarkMode);
     renderBlastzones(layers.worldSpace.context, frame, stage, isDarkMode);
