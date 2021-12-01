@@ -199,22 +199,29 @@ const renderDebugText = (
   const y = -screenLayer.canvas.height + debugFontSize;
   screenLayer.context.scale(1, -1);
   screenLayer.context.translate(x, y);
-  const playerFrame = frame.players[player.playerIndex].post[0];
-  screenLayer.context.strokeStyle = isDarkMode ? 'white' : 'black';
-  screenLayer.context.fillStyle = getPrimaryColor(player, players, isDoubles);
-  screenLayer.context.font = `900 ${debugFontSize}px Verdana`;
-  screenLayer.context.textAlign = 'start';
-  const debugTexts = [
-    `actionStateId: ${playerFrame.actionStateId}`,
-    `actionStateCounter: ${playerFrame.actionStateFrameCounter}`,
-    `xPosition: ${playerFrame.xPosition}`,
-    `yPosition: ${playerFrame.yPosition}`,
-  ];
+  const debugTexts = [];
+  for (const playerFrame of frame.players[player.playerIndex].post) {
+    screenLayer.context.strokeStyle = isDarkMode ? 'white' : 'black';
+    screenLayer.context.fillStyle = getPrimaryColor(player, players, isDoubles);
+    screenLayer.context.font = `900 ${debugFontSize}px Verdana`;
+    screenLayer.context.textAlign = 'start';
+    if (frame.players[player.playerIndex].post.length > 1) {
+      debugTexts.push(`isFollower: ${playerFrame.isFollower}`);
+    }
+    debugTexts.push(
+      `actionStateId: ${playerFrame.actionStateId}`,
+      `actionStateCounter: ${playerFrame.actionStateFrameCounter}`,
+      `xPosition: ${playerFrame.xPosition}`,
+      `yPosition: ${playerFrame.yPosition}`,
+      '',
+    );
+  }
   for (const debugText of debugTexts) {
     screenLayer.context.fillText(debugText, 0, 0);
     screenLayer.context.strokeText(debugText, 0, 0);
     screenLayer.context.translate(0, debugFontSize);
   }
+  
   screenLayer.context.restore();
 };
 
