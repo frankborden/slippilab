@@ -1,6 +1,6 @@
 {
   "name": "@slippilab/search",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "A state machine search for .slp files",
   "author": {
     "name": "Frank Borden"
