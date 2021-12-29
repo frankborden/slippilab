@@ -156,7 +156,7 @@ export class Game {
   private commandPayloadSizes: EventPayloadsEvent = {};
   public gameStart!: GameStartEvent;
   public gameEnd!: GameEndEvent;
-  public frames: Frame[] = [];
+  public frames: Frame[] = []; // Actually fills in -123 to 0 as well
   constructor(fileBuffer: ArrayBuffer) {
     const baseJson = decode(fileBuffer, { useTypedArrays: true });
     this.metadata = baseJson.metadata;
