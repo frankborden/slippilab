@@ -131,6 +131,8 @@ export interface PlayerMetadata {
   characters: PlayerCharacters;
   names: PlayerNames;
 }
+// TODO: this is wrong. Currently we are just exposing the spec metadata
+// as-is.
 export interface Metadata {
   startAt: string;
   lastFrame: number;
