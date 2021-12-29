@@ -31,7 +31,7 @@ export interface PlayerSettings {
   offenseRatio: number;
   defenseRatio: number;
   modelScale: number;
-  controllerFix: string;
+  controllerFix: 'None' | 'UCF' | 'Dween' | 'Mixed';
   nametag: string;
   displayName: string;
   connectCode: string;
@@ -281,29 +281,23 @@ export class Game {
     };
     this.formatVersion = event.replayFormatVersion;
     for (let playerIndex = 0; playerIndex < 4; playerIndex++) {
+      const playerType = this.getUint(
+        8,
+        Game.baseVersion,
+        offset + 0x66 + 0x24 * playerIndex,
+      );
+      if (playerType === 3) continue;
 
-      
       const dashbackFix = this.getUint(
         32,
         Game.baseVersion,
-        offset + 0x141 + 0x24 * playerIndex,
+        offset + 0x141 + 0x8 * playerIndex,
       );
       const shieldDropFix = this.getUint(
         32,
         Game.baseVersion,
-        offset + 0x145 + 0x24 * playerIndex,
+        offset + 0x145 + 0x8 * playerIndex,
       );
-
-      let cfOption = "None";
-      if (dashbackFix !== shieldDropFix) {
-        cfOption = "Mixed";
-      }
-      else if (dashbackFix === 1) {
-        cfOption = "UCF";
-      } 
-      else if (dashbackFix === 2) {
-        cfOption = "Dween";
-      }
 
       event.playerSettings[playerIndex] = {
         playerIndex: playerIndex,
@@ -313,11 +307,7 @@ export class Game {
           Game.baseVersion,
           offset + 0x65 + 0x24 * playerIndex,
         ),
-        playerType: this.getUint(
-          8,
-          Game.baseVersion,
-          offset + 0x66 + 0x24 * playerIndex,
-        ),
+        playerType: playerType,
         startStocks: this.getUint(
           8,
           Game.baseVersion,
@@ -368,7 +358,15 @@ export class Game {
           Game.baseVersion,
           offset + 0x85 + 0x24 * playerIndex,
         ),
-        controllerFix: cfOption,
+        controllerFix:
+          dashbackFix === shieldDropFix
+            ? dashbackFix === 1
+              ? 'UCF'
+              : dashbackFix === 2
+              ? 'Dween'
+              : 'None'
+            : 'Mixed',
+        // TODO verify
         nametag: this.readShiftJisString(
           '1.3.0.0',
           offset + 0x161 + 0x10 * playerIndex,
