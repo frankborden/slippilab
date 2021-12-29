@@ -379,7 +379,6 @@ export class Game {
           offset + 0x1a5 + 0x1f * playerIndex,
           16,
         ),
-        // TODO replace double width # with single width #
         connectCode: this.readShiftJisString(
           '3.9.0.0',
           offset + 0x221 + 0x0a * playerIndex,
@@ -555,7 +554,9 @@ export class Game {
     } while (charNum < maxLength && shiftJisBytes[charNum - 1] !== 0x00);
     if (shiftJisBytes[0] !== 0x00) {
       const decoder = new TextDecoder('shift-jis');
-      return decoder.decode(shiftJisBytes.subarray(0, charNum - 1));
+      return decoder
+        .decode(shiftJisBytes.subarray(0, charNum - 1))
+        .replaceAll('＃', '#');
     }
     return '';
   }

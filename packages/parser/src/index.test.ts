@@ -14,7 +14,7 @@ describe('parser', () => {
     expect(replay.gameStart.isTeams).toBe(true);
     expect(replay.gameStart.playerSettings).toHaveLength(4);
     expect(replay.gameStart.playerSettings[1]).toStrictEqual({
-      connectCode: 'CROU＃224',
+      connectCode: 'CROU#224',
       controllerFix: 'UCF',
       costumeIndex: 4,
       cpuLevel: 1,
