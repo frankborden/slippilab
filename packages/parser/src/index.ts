@@ -18,14 +18,23 @@ export interface GameStartEvent {
 }
 export interface PlayerSettings {
   playerIndex: number;
-  connectCode: string;
-  costumeIndex: number;
-  displayName: string;
+  port: number;
   externalCharacterId: number;
-  nametag: string;
   playerType: number;
-  teamId: number;
+  startStocks: number;
+  costumeIndex: number;
   teamShade: number;
+  handicap: number;
+  teamId: number;
+  playerBitfield: number;
+  cpuLevel: number;
+  offenseRatio: number;
+  defenseRatio: number;
+  modelScale: number;
+  controllerFix: string;
+  nametag: string;
+  displayName: string;
+  connectCode: string;
 }
 export interface PreFrameUpdateEvent {
   frameNumber: number;
@@ -272,53 +281,109 @@ export class Game {
     };
     this.formatVersion = event.replayFormatVersion;
     for (let playerIndex = 0; playerIndex < 4; playerIndex++) {
-      const playerType = this.getUint(
-        8,
+
+      
+      const dashbackFix = this.getUint(
+        32,
         Game.baseVersion,
-        offset + 0x66 + 0x24 * playerIndex,
+        offset + 0x141 + 0x24 * playerIndex,
       );
-      if (playerType === 3) {
-        continue;
+      const shieldDropFix = this.getUint(
+        32,
+        Game.baseVersion,
+        offset + 0x145 + 0x24 * playerIndex,
+      );
+
+      let cfOption = "None";
+      if (dashbackFix !== shieldDropFix) {
+        cfOption = "Mixed";
       }
+      else if (dashbackFix === 1) {
+        cfOption = "UCF";
+      } 
+      else if (dashbackFix === 2) {
+        cfOption = "Dween";
+      }
+
       event.playerSettings[playerIndex] = {
         playerIndex: playerIndex,
-        // TODO replace double width # with single width #
-        connectCode: this.readShiftJisString(
-          '3.9.0.0',
-          offset + 0x221 + 0x0a * playerIndex,
-          10,
+        port: playerIndex + 1,
+        externalCharacterId: this.getUint(
+          8,
+          Game.baseVersion,
+          offset + 0x65 + 0x24 * playerIndex,
+        ),
+        playerType: this.getUint(
+          8,
+          Game.baseVersion,
+          offset + 0x66 + 0x24 * playerIndex,
+        ),
+        startStocks: this.getUint(
+          8,
+          Game.baseVersion,
+          offset + 0x67 + 0x24 * playerIndex,
         ),
         costumeIndex: this.getUint(
           8,
           Game.baseVersion,
           offset + 0x68 + 0x24 * playerIndex,
         ),
-        displayName: this.readShiftJisString(
-          '3.9.0.0',
-          offset + 0x1a5 + 0x1f * playerIndex,
-          16,
-        ),
-        externalCharacterId: this.getUint(
+        teamShade: this.getUint(
           8,
           Game.baseVersion,
-          offset + 0x65 + 0x24 * playerIndex,
+          offset + 0x6c + 0x24 * playerIndex,
         ),
-        // TODO verify
-        nametag: this.readShiftJisString(
-          '1.3.0.0',
-          offset + 0x161 + 0x10 * playerIndex,
-          9,
+        handicap: this.getUint(
+          8,
+          Game.baseVersion,
+          offset + 0x6d + 0x24 * playerIndex,
         ),
-        playerType,
         teamId: this.getUint(
           8,
           Game.baseVersion,
           offset + 0x6e + 0x24 * playerIndex,
         ),
-        teamShade: this.getUint(
+        playerBitfield: this.getUint(
           8,
           Game.baseVersion,
-          offset + 0x6c + 0x24 * playerIndex,
+          offset + 0x71 + 0x24 * playerIndex,
+        ),
+        cpuLevel: this.getUint(
+          8,
+          Game.baseVersion,
+          offset + 0x74 + 0x24 * playerIndex,
+        ),
+        offenseRatio: this.getFloat(
+          32,
+          Game.baseVersion,
+          offset + 0x7d + 0x24 * playerIndex,
+        ),
+        defenseRatio: this.getFloat(
+          32,
+          Game.baseVersion,
+          offset + 0x81 + 0x24 * playerIndex,
+        ),
+        modelScale: this.getFloat(
+          32,
+          Game.baseVersion,
+          offset + 0x85 + 0x24 * playerIndex,
+        ),
+        controllerFix: cfOption,
+        nametag: this.readShiftJisString(
+          '1.3.0.0',
+          offset + 0x161 + 0x10 * playerIndex,
+          9,
+        ),
+        displayName: this.readShiftJisString(
+          '3.9.0.0',
+          offset + 0x1a5 + 0x1f * playerIndex,
+          16,
+        ),
+        // TODO replace double width # with single width #
+        connectCode: this.readShiftJisString(
+          '3.9.0.0',
+          offset + 0x221 + 0x0a * playerIndex,
+          10,
         ),
       };
     }
