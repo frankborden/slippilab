@@ -10,12 +10,14 @@ import { decode } from '@shelacek/ubjson';
 interface EventPayloadsEvent {
   [commandByte: number]: number;
 }
+
 export interface GameStartEvent {
   isTeams: boolean;
   playerSettings: PlayerSettings[];
   replayFormatVersion: string;
   stageId: number;
 }
+
 export interface PlayerSettings {
   playerIndex: number;
   port: number;
@@ -36,6 +38,7 @@ export interface PlayerSettings {
   displayName: string;
   connectCode: string;
 }
+
 export interface PreFrameUpdateEvent {
   frameNumber: number;
   playerIndex: number;
@@ -113,33 +116,6 @@ export interface FrameBookendEvent {
   frameNumber: number;
   latestFinalizedFrame: number;
 }
-// interface GeckoListEvent {}
-// interface MessageSplitterEvent {
-//   actualSize: number;
-//   fixedSizeBlock: any;
-//   internalCommand: number;
-//   lastMessage: true;
-// }
-export interface PlayerNames {
-  displayName: string;
-  connectCode: string;
-}
-export interface PlayerCharacters {
-  [internalCharacterId: number]: number;
-}
-export interface PlayerMetadata {
-  characters: PlayerCharacters;
-  names: PlayerNames;
-}
-// TODO: this is wrong. Currently we are just exposing the spec metadata
-// as-is.
-export interface Metadata {
-  startAt: string;
-  lastFrame: number;
-  players: { [playerIndex: number]: PlayerMetadata };
-  playedOn: string;
-  consoleNick: string;
-}
 export interface Frame {
   frameNumber: number;
   start: FrameStartEvent;
@@ -148,15 +124,26 @@ export interface Frame {
   items: ItemUpdateEvent[];
 }
 
+const allVersions = '0.0.0.0';
+
 export class Game {
-  static readonly baseVersion = '0.0.0.0';
-  private formatVersion = Game.baseVersion;
-  public metadata: Metadata;
-  private raw: DataView;
-  private commandPayloadSizes: EventPayloadsEvent = {};
-  public gameStart!: GameStartEvent;
+  public metadata: any;
+  public gameStart: GameStartEvent;
   public gameEnd!: GameEndEvent;
-  public frames: Frame[] = []; // Actually fills in -123 to 0 as well
+
+  // Frames begins at index -123.
+  // Players get control at -39.
+  // Timer starts counting at 0.
+  public frames: Frame[] = [];
+
+  // Not used after parsing. This gets populated once we parse enough of the
+  // replay to determine the version. It's used to decide what fields we should
+  // expect to find in the file.
+  private formatVersion: string;
+
+  // Not used after parsing. Array buffer of the 'raw' element in the .slp spec.
+  private raw: DataView;
+
   constructor(fileBuffer: ArrayBuffer) {
     const baseJson = decode(fileBuffer, { useTypedArrays: true });
     this.metadata = baseJson.metadata;
@@ -167,20 +154,23 @@ export class Game {
     );
 
     // The first two events are always Event Payloads and Game Start.
-
-    let offset = 0x00;
-    let command, size, event;
+    let commandPayloadSizes = this.parseEventPayloadsEvent(0x00);
+    this.gameStart = this.parseGameStartEvent(0x01 + commandPayloadSizes[0x35]);
+    this.formatVersion = this.gameStart.replayFormatVersion;
+    let offset =
+      0x00 +
+      commandPayloadSizes[0x35] +
+      0x01 +
+      commandPayloadSizes[0x36] +
+      0x01;
     while (offset < this.raw.byteLength) {
-      command = this.getUint(8, Game.baseVersion, offset);
+      const command = this.getUint(8, allVersions, offset);
+      let event;
       switch (command) {
-        case 0x35:
-          this.commandPayloadSizes = this.parseEventPayloadsEvent(offset);
-          break;
-        case 0x36:
-          this.gameStart = this.parseGameStartEvent(offset);
-          break;
         case 0x37:
           event = this.parsePreFrameUpdateEvent(offset);
+          // Some older versions don't have the Frame Start Event so we have to
+          // potentially initialize the frame in both places.
           this.initFrameIfNeeded(event.frameNumber);
           this.initPlayerIfNeeded(event.frameNumber, event.playerIndex);
           this.frames[event.frameNumber].players[event.playerIndex].pre.push(
@@ -194,8 +184,7 @@ export class Game {
           );
           break;
         case 0x39:
-          event = this.parseGameEndEvent(offset);
-          this.gameEnd = event;
+          this.gameEnd = this.parseGameEndEvent(offset);
           break;
         case 0x3a:
           event = this.parseFrameStartEvent(offset);
@@ -219,8 +208,7 @@ export class Game {
           // TODO
           break;
       }
-      size = this.commandPayloadSizes[command];
-      offset = offset + size + 0x01;
+      offset = offset + commandPayloadSizes[command] + 0x01;
     }
   }
 
@@ -248,11 +236,11 @@ export class Game {
   }
 
   private parseEventPayloadsEvent(offset: number): EventPayloadsEvent {
-    const commandByte = this.getUint(8, Game.baseVersion, offset + 0x00);
+    const commandByte = this.getUint(8, allVersions, offset + 0x00);
     const commandPayloadSizes: { [commandByte: number]: number } = {};
     const eventPayloadsPayloadSize = this.getUint(
       8,
-      Game.baseVersion,
+      allVersions,
       offset + 0x01,
     );
     commandPayloadSizes[commandByte] = eventPayloadsPayloadSize;
@@ -262,8 +250,8 @@ export class Game {
       i < eventPayloadsPayloadSize + listOffset - 0x01;
       i += 0x03
     ) {
-      const commandByte = this.getUint(8, Game.baseVersion, i + 0x00);
-      const payloadSize = this.getUint(16, Game.baseVersion, i + 0x01);
+      const commandByte = this.getUint(8, allVersions, i + 0x00);
+      const payloadSize = this.getUint(16, allVersions, i + 0x01);
       commandPayloadSizes[commandByte] = payloadSize;
     }
     return commandPayloadSizes;
@@ -271,33 +259,32 @@ export class Game {
 
   private parseGameStartEvent(offset: number): GameStartEvent {
     const event: GameStartEvent = {
-      isTeams: Boolean(this.getUint(8, Game.baseVersion, offset + 0x0d)),
+      isTeams: Boolean(this.getUint(8, allVersions, offset + 0x0d)),
       playerSettings: [],
       replayFormatVersion: [
-        this.getUint(8, Game.baseVersion, offset + 0x01),
-        this.getUint(8, Game.baseVersion, offset + 0x02),
-        this.getUint(8, Game.baseVersion, offset + 0x03),
-        this.getUint(8, Game.baseVersion, offset + 0x04),
+        this.getUint(8, allVersions, offset + 0x01),
+        this.getUint(8, allVersions, offset + 0x02),
+        this.getUint(8, allVersions, offset + 0x03),
+        this.getUint(8, allVersions, offset + 0x04),
       ].join('.'),
-      stageId: this.getUint(16, Game.baseVersion, offset + 0x13),
+      stageId: this.getUint(16, allVersions, offset + 0x13),
     };
-    this.formatVersion = event.replayFormatVersion;
     for (let playerIndex = 0; playerIndex < 4; playerIndex++) {
       const playerType = this.getUint(
         8,
-        Game.baseVersion,
+        allVersions,
         offset + 0x66 + 0x24 * playerIndex,
       );
       if (playerType === 3) continue;
 
       const dashbackFix = this.getUint(
         32,
-        Game.baseVersion,
+        allVersions,
         offset + 0x141 + 0x8 * playerIndex,
       );
       const shieldDropFix = this.getUint(
         32,
-        Game.baseVersion,
+        allVersions,
         offset + 0x145 + 0x8 * playerIndex,
       );
 
@@ -306,58 +293,58 @@ export class Game {
         port: playerIndex + 1,
         externalCharacterId: this.getUint(
           8,
-          Game.baseVersion,
+          allVersions,
           offset + 0x65 + 0x24 * playerIndex,
         ),
         playerType: playerType,
         startStocks: this.getUint(
           8,
-          Game.baseVersion,
+          allVersions,
           offset + 0x67 + 0x24 * playerIndex,
         ),
         costumeIndex: this.getUint(
           8,
-          Game.baseVersion,
+          allVersions,
           offset + 0x68 + 0x24 * playerIndex,
         ),
         teamShade: this.getUint(
           8,
-          Game.baseVersion,
+          allVersions,
           offset + 0x6c + 0x24 * playerIndex,
         ),
         handicap: this.getUint(
           8,
-          Game.baseVersion,
+          allVersions,
           offset + 0x6d + 0x24 * playerIndex,
         ),
         teamId: this.getUint(
           8,
-          Game.baseVersion,
+          allVersions,
           offset + 0x6e + 0x24 * playerIndex,
         ),
         playerBitfield: this.getUint(
           8,
-          Game.baseVersion,
+          allVersions,
           offset + 0x71 + 0x24 * playerIndex,
         ),
         cpuLevel: this.getUint(
           8,
-          Game.baseVersion,
+          allVersions,
           offset + 0x74 + 0x24 * playerIndex,
         ),
         offenseRatio: this.getFloat(
           32,
-          Game.baseVersion,
+          allVersions,
           offset + 0x7d + 0x24 * playerIndex,
         ),
         defenseRatio: this.getFloat(
           32,
-          Game.baseVersion,
+          allVersions,
           offset + 0x81 + 0x24 * playerIndex,
         ),
         modelScale: this.getFloat(
           32,
-          Game.baseVersion,
+          allVersions,
           offset + 0x85 + 0x24 * playerIndex,
         ),
         controllerFix:
