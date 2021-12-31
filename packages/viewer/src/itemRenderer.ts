@@ -1,4 +1,4 @@
-import type { Frame, ItemUpdateEvent } from '@slippilab/parser';
+import type { Frame, ItemUpdate } from '@slippilab/parser';
 import type { Render } from './game';
 import type { Layers } from './layer';
 
@@ -10,7 +10,7 @@ const supportedItems = [
 
 const renderItem = (
   worldContext: CanvasRenderingContext2D,
-  item: ItemUpdateEvent,
+  item: ItemUpdate,
   frame: Frame,
 ): void => {
   worldContext.save();
@@ -21,7 +21,7 @@ const renderItem = (
     case 54:
     case 55:
       // Laser
-      const owner = frame.players[item.owner]?.post?.[0];
+      const owner = frame.players[item.owner]?.state;
       if (!owner) {
         return;
       }

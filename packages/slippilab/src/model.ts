@@ -1,4 +1,5 @@
-import { Game } from '@slippilab/parser';
+import { parseReplay } from '@slippilab/parser';
+import type { Replay as ReplayData } from '@slippilab/parser';
 import { Subject } from 'rxjs';
 import { FramePredicates, Search } from '@slippilab/search';
 import type { SearchSpec } from '@slippilab/search';
@@ -133,10 +134,10 @@ export class Model {
   private async parseFile(file: File): Promise<Replay | undefined> {
     try {
       if (file.name.endsWith('.slp')) {
-        const game = new Game(await file.arrayBuffer());
+        const game = parseReplay(await file.arrayBuffer());
         if (this.isSupported(game)) {
           let highlights: Highlight[] = [];
-          if (game.gameStart.playerSettings.length === 2) {
+          if (game.settings.playerSettings.length === 2) {
             highlights = this.currentState.searches
               .map((searchSpec) => new Search(searchSpec))
               .flatMap((search) => search.searchFile(game));
@@ -155,8 +156,8 @@ export class Model {
     return undefined;
   }
 
-  private isSupported(game: Game): boolean {
-    const stageId = game.gameStart.stageId;
+  private isSupported(game: ReplayData): boolean {
+    const stageId = game.settings.stageId;
     if (!stageId) {
       return false;
     }

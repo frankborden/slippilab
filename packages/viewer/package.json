@@ -24,5 +24,8 @@
     "tsc": "tsc",
     "build": "tsc && cp -rf src/animations/zips dist/animations/",
     "prepublish": "yarn build"
+  },
+  "devDependencies": {
+    "typescript": "^4.5.4"
   }
 }

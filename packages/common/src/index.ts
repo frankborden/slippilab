@@ -1,4 +1,4 @@
-import type { Game } from '@slippilab/parser';
+import type { Replay as ReplayData } from '@slippilab/parser';
 
 export interface Highlight {
   startFrame: number;
@@ -7,6 +7,6 @@ export interface Highlight {
 
 export interface Replay {
   fileName: string;
-  game: Game;
+  game: ReplayData;
   highlights: Highlight[];
 }

@@ -1,4 +1,4 @@
-import type { Frame, Game as ParsedGame } from '@slippilab/parser';
+import type { Frame, Replay as ParsedGame } from '@slippilab/parser';
 import type { Stage } from './common';
 import { createItemRender } from './itemRenderer';
 import { createPlayerRender } from './characters';
@@ -50,15 +50,15 @@ export class Game {
       replay,
       setupLayers(baseCanvas),
       [
-        createStageRender(supportedStagesById[replay.game.gameStart.stageId]),
+        createStageRender(supportedStagesById[replay.game.settings.stageId]),
         ...(await Promise.all(
-          replay.game.gameStart.playerSettings
+          replay.game.settings.playerSettings
             .filter((player) => Boolean(player))
             .map((player) =>
               createPlayerRender(
                 player,
-                replay.game.gameStart.playerSettings,
-                replay.game.gameStart.isTeams,
+                replay.game.settings.playerSettings,
+                replay.game.settings.isTeams,
               ),
             ),
         )),
@@ -78,7 +78,7 @@ export class Game {
     private isDebugMode: boolean,
     startFrame: number,
   ) {
-    this.stage = supportedStagesById[replay.game.gameStart.stageId];
+    this.stage = supportedStagesById[replay.game.settings.stageId];
     this.intervalSpeed = this.normalSpeed;
     this.intervalId = window.setInterval(
       () => this.maybeTick(),
@@ -212,7 +212,7 @@ export class Game {
     const subjects: Vector[] = [];
     const lookaheadTime = 5;
     const lastFrameIndex = Math.min(
-      game.metadata.lastFrame,
+      game.frames.length - 1,
       currentFrame.frameNumber + lookaheadTime,
     );
     for (
@@ -222,8 +222,14 @@ export class Game {
     ) {
       const frameToConsider = game.frames[frameIndex];
       for (let playerIndex = 0; playerIndex < 4; playerIndex++) {
-        for (const playerFrame of frameToConsider.players[playerIndex]?.post ??
-          []) {
+        const frames = [];
+        if (frameToConsider.players[playerIndex]?.state) {
+          frames.push(frameToConsider.players[playerIndex]?.state!);
+        }
+        if (frameToConsider.players[playerIndex]?.nanaState) {
+          frames.push(frameToConsider.players[playerIndex]?.nanaState!);
+        }
+        for (const playerFrame of frames) {
           if (
             !playerFrame ||
             playerFrame.actionStateId <= 0x00a /* dead */ ||

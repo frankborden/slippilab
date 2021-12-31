@@ -1,6 +1,6 @@
-import type { Game } from '@slippilab/parser';
+import type { Replay } from '@slippilab/parser';
 
-export type GamePredicate = (game: Game, playerIndex: number) => boolean;
+export type GamePredicate = (game: Replay, playerIndex: number) => boolean;
 
 export type Character = typeof characters[number];
 
@@ -9,14 +9,14 @@ export type Matchup = `${Character} vs ${Character}`;
 export const isMatchup = (matchup: Matchup) => {
   const self = isCharacter(matchup.split(' vs ')[0] as Character);
   const opponent = vsCharacter(matchup.split(' vs ')[1] as Character);
-  return (game: Game, playerIndex: number) =>
+  return (game: Replay, playerIndex: number) =>
     self(game, playerIndex) && opponent(game, playerIndex);
 };
 
 export const isCharacter =
   (character: Character): GamePredicate =>
-  (game: Game, playerIndex: number) =>
-    game.gameStart.playerSettings.some(
+  (game: Replay, playerIndex: number) =>
+    game.settings.playerSettings.some(
       (playerSettings) =>
         playerSettings.playerIndex === playerIndex &&
         playerSettings.externalCharacterId === characters.indexOf(character),
@@ -24,8 +24,8 @@ export const isCharacter =
 
 export const vsCharacter =
   (character: Character): GamePredicate =>
-  (game: Game, playerIndex: number) =>
-    game.gameStart.playerSettings.some(
+  (game: Replay, playerIndex: number) =>
+    game.settings.playerSettings.some(
       (playerSettings) =>
         playerSettings.playerIndex !== playerIndex &&
         playerSettings.externalCharacterId === characters.indexOf(character),
@@ -64,8 +64,8 @@ const characters = [
 
 export type Stage = typeof stages[number];
 
-export const isStage = (stage: Stage) => (game: Game, _playerIndex: number) =>
-  game.gameStart.stageId === stages.indexOf(stage);
+export const isStage = (stage: Stage) => (game: Replay, _playerIndex: number) =>
+  game.settings.stageId === stages.indexOf(stage);
 
 const tournamentStages: Stage[] = [
   'Battlefield',
@@ -75,10 +75,10 @@ const tournamentStages: Stage[] = [
   'Pokémon Stadium',
   "Yoshi's Story",
 ];
-export const isTournamentStage = (game: Game, _playerIndex: number) =>
+export const isTournamentStage = (game: Replay, _playerIndex: number) =>
   tournamentStages
     .map((stage) => stages.indexOf(stage))
-    .filter((stageId) => stageId === game.gameStart.stageId).length > 0;
+    .filter((stageId) => stageId === game.settings.stageId).length > 0;
 
 // These are indexed by external ID. IDs are from
 // https://github.com/project-slippi/slippi-wiki/blob/master/SPEC.md#melee-ids
@@ -120,8 +120,8 @@ const stages = [
 
 export const hasConnectCode =
   (connectCode: string) =>
-  (game: Game, playerIndex: number): boolean =>
-    game.gameStart.playerSettings.some(
+  (game: Replay, playerIndex: number): boolean =>
+    game.settings.playerSettings.some(
       (playerSettings) =>
         playerSettings.playerIndex === playerIndex &&
         playerSettings.connectCode === connectCode,

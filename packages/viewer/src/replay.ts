@@ -1,8 +1,4 @@
-import type {
-  Frame,
-  PlayerSettings,
-  PostFrameUpdateEvent,
-} from '@slippilab/parser';
+import type { Frame, PlayerSettings, PlayerState } from '@slippilab/parser';
 import { isOneIndexed, animationNameByActionId } from './animations';
 import { characterNamesByInternalId } from './common';
 import type { CharacterName } from './common';
@@ -12,29 +8,29 @@ export const isInFrame = (frame: Frame, player: PlayerSettings): boolean => {
 };
 
 export const getFirstFrameOfAnimation = (
-  playerFrame: PostFrameUpdateEvent,
+  playerFrame: PlayerState,
   frames: Frame[],
-): PostFrameUpdateEvent => {
+): PlayerState => {
   let frameIndex = playerFrame.frameNumber - 1;
   let pastConfirmedFrame = playerFrame;
-  let pastFrameToCheck = frames[frameIndex]?.players?.[
-    playerFrame.playerIndex
-  ]?.post.filter((post) => post.isFollower === playerFrame.isFollower)[0];
+  let pastFrameToCheck = playerFrame.isNana
+    ? frames[frameIndex]?.players?.[playerFrame.playerIndex]?.nanaState
+    : frames[frameIndex]?.players?.[playerFrame.playerIndex]?.state;
   while (
     pastFrameToCheck &&
     pastFrameToCheck.actionStateId === playerFrame.actionStateId
   ) {
     pastConfirmedFrame = pastFrameToCheck;
     frameIndex--;
-    pastFrameToCheck = frames[frameIndex]?.players?.[
-      playerFrame.playerIndex
-    ]?.post.filter((post) => post.isFollower === playerFrame.isFollower)[0];
+    pastFrameToCheck = playerFrame.isNana
+      ? frames[frameIndex]?.players?.[playerFrame.playerIndex]?.nanaState
+      : frames[frameIndex]?.players?.[playerFrame.playerIndex]?.state;
   }
   return pastConfirmedFrame;
 };
 
 export const getFrameIndexFromDuration = (
-  playerFrame: PostFrameUpdateEvent,
+  playerFrame: PlayerState,
   frames: Frame[],
   player: PlayerSettings,
 ): number => {
@@ -96,15 +92,19 @@ export const getThrowerName = (
     if (!otherPlayerFrame) {
       continue;
     }
-    for (const otherPlayerPostFrame of otherPlayerFrame.post) {
+    const otherPlayerStates = [otherPlayerFrame.state];
+    if (otherPlayerFrame.nanaState) {
+      otherPlayerStates.push(otherPlayerFrame.nanaState);
+    }
+    for (const otherPlayerState of otherPlayerStates) {
       // this could be wrong if there's multiple of the same throw happening. I
       // don't know if replay data can connect thrower to throwee for doubles.
       if (
-        animationNameByActionId[otherPlayerPostFrame.actionStateId] ===
+        animationNameByActionId[otherPlayerState.actionStateId] ===
         throwerAnimationName
       ) {
         const throwerName =
-          characterNamesByInternalId[otherPlayerPostFrame.internalCharacterId];
+          characterNamesByInternalId[otherPlayerState.internalCharacterId];
         switch (throwerName) {
           case 'Fox':
             return 'Fox';

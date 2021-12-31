@@ -769,6 +769,7 @@ __metadata:
   dependencies:
     "@slippilab/common": "workspace:*"
     "@slippilab/parser": "workspace:*"
+    typescript: ^4.5.4
   languageName: unknown
   linkType: soft
 
@@ -801,6 +802,7 @@ __metadata:
     "@spectrum-web-components/slider": ^0.10.8
     "@zip.js/zip.js": ^2.3.17
     lit: ^2.0.0
+    typescript: ^4.5.4
   languageName: unknown
   linkType: soft
 

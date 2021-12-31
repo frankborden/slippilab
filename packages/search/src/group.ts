@@ -1,4 +1,4 @@
-import type { Game, PostFrameUpdateEvent } from '@slippilab/parser';
+import type { Replay, PlayerState } from '@slippilab/parser';
 import { Unit } from './unit';
 import type { Spec as UnitSpec } from './unit';
 
@@ -40,7 +40,7 @@ export class Group {
       .forEach((unit) => this.units.add(unit));
   }
 
-  step(game: Game, frame: PostFrameUpdateEvent): void {
+  step(game: Replay, frame: PlayerState): void {
     this.units.forEach((unit) => unit.step(game, frame));
     this.result =
       this.spec.options.requiredUnits === 'all'

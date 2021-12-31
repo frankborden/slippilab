@@ -1,18 +1,13 @@
-import type { Game, PostFrameUpdateEvent } from '@slippilab/parser';
+import type { Replay, PlayerState } from '@slippilab/parser';
 
-export type FramePredicate = (
-  frame: PostFrameUpdateEvent,
-  game: Game,
-) => boolean;
+export type FramePredicate = (frame: PlayerState, game: Replay) => boolean;
 
-export const isGrabbed: FramePredicate = (
-  frame: PostFrameUpdateEvent,
-  _game: Game,
-) => frame.actionStateId >= 0xdf && frame.actionStateId <= 0xe8;
+export const isGrabbed: FramePredicate = (frame: PlayerState, _game: Replay) =>
+  frame.actionStateId >= 0xdf && frame.actionStateId <= 0xe8;
 
 export const isInGroundedControl: FramePredicate = (
-  frame: PostFrameUpdateEvent,
-  _game: Game,
+  frame: PlayerState,
+  _game: Replay,
 ) => {
   const id = frame.actionStateId;
   const ground = id >= 0x0e && id <= 0x18;
@@ -23,31 +18,29 @@ export const isInGroundedControl: FramePredicate = (
 };
 
 export const isNotInGroundedControl: FramePredicate = (
-  frame: PostFrameUpdateEvent,
-  game: Game,
+  frame: PlayerState,
+  game: Replay,
 ) => !isInGroundedControl(frame, game);
 
 export const isInHitstun: FramePredicate = (
-  frame: PostFrameUpdateEvent,
-  _game: Game,
+  frame: PlayerState,
+  _game: Replay,
 ) =>
   (frame.actionStateId >= 0x4b && frame.actionStateId <= 0x5b) ||
   frame.actionStateId === 0x26;
 
 export const isInBeginningOfHitstun: FramePredicate = (
-  frame: PostFrameUpdateEvent,
-  game: Game,
+  frame: PlayerState,
+  game: Replay,
 ) => isInHitstun(frame, game) && frame.actionStateFrameCounter === 1;
 
 export const isInNotBeginningOfHitstun: FramePredicate = (
-  frame: PostFrameUpdateEvent,
-  game: Game,
+  frame: PlayerState,
+  game: Replay,
 ) => isInHitstun(frame, game) && frame.actionStateFrameCounter === 2;
 
-export const isDead: FramePredicate = (
-  frame: PostFrameUpdateEvent,
-  _game: Game,
-) => frame.actionStateId >= 0x00 && frame.actionStateId <= 0x0a;
+export const isDead: FramePredicate = (frame: PlayerState, _game: Replay) =>
+  frame.actionStateId >= 0x00 && frame.actionStateId <= 0x0a;
 
 interface StageData {
   name: string;
@@ -136,10 +129,10 @@ const stageData: { [stageId: number]: StageData } = {
 };
 
 export const isOffstage: FramePredicate = (
-  frame: PostFrameUpdateEvent,
-  _game: Game,
+  frame: PlayerState,
+  _game: Replay,
 ) => {
-  const currentStageData = stageData[_game.gameStart.stageId!];
+  const currentStageData = stageData[_game.settings.stageId!];
   if (currentStageData === undefined) {
     return false;
   }
