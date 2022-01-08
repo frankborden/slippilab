@@ -259,9 +259,15 @@ export function parseReplay(fileBuffer: ArrayBuffer): Replay {
           playerInputs.frameNumber,
           playerInputs.playerIndex,
         );
-        frames[playerInputs.frameNumber].players[
-          playerInputs.playerIndex
-        ].inputs = playerInputs;
+        if (playerInputs.isNana) {
+          frames[playerInputs.frameNumber].players[
+            playerInputs.playerIndex
+          ].nanaInputs = playerInputs;
+        } else {
+          frames[playerInputs.frameNumber].players[
+            playerInputs.playerIndex
+          ].inputs = playerInputs;
+        }
         break;
       case 0x38:
         const playerState = parsePostFrameUpdateEvent(
@@ -269,8 +275,15 @@ export function parseReplay(fileBuffer: ArrayBuffer): Replay {
           offset,
           replayVersion,
         );
-        frames[playerState.frameNumber].players[playerState.playerIndex].state =
-          playerState;
+        if (playerState.isNana) {
+          frames[playerState.frameNumber].players[
+            playerState.playerIndex
+          ].nanaState = playerState;
+        } else {
+          frames[playerState.frameNumber].players[
+            playerState.playerIndex
+          ].state = playerState;
+        }
         break;
       case 0x39:
         gameEnding = parseGameEndEvent(rawData, offset, replayVersion);
