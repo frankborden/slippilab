@@ -1,4 +1,4 @@
-import { parseReplay, Replay } from './index';
+import { parseReplay, Replay } from './parser';
 import * as fs from 'fs';
 
 // TODO: singles test, especially for matches with port 1 or 2 missing
