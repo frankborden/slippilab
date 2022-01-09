@@ -1,8 +1,4 @@
-import type {
-  Frame,
-  PlayerSettings,
-  PostFrameUpdateEvent,
-} from '@slippilab/parser';
+import type { Frame, PlayerSettings, PlayerState } from '@slippilab/parser';
 import {
   fetchAnimations,
   //isOneIndexed,
@@ -105,7 +101,7 @@ const getPrimaryColor = (
 };
 
 const getSecondaryColor = (
-  playerFrame: PostFrameUpdateEvent,
+  playerFrame: PlayerState,
   lCancelStatus: number,
 ): string => {
   return playerFrame.hurtboxCollisionState > 0
@@ -124,9 +120,7 @@ const renderStocks = (
   isDarkMode: boolean,
 ): void => {
   // TODO: Handle stock count >4 or non-stock modes
-  const playerFrame = frame.players[player.playerIndex].post.filter(
-    (post) => !post.isFollower,
-  )[0];
+  const playerFrame = frame.players[player.playerIndex].state;
   const stockCount = playerFrame.stocksRemaining;
   screenLayer.context.save();
   screenLayer.context.fillStyle = getPrimaryColor(player, players, isDoubles);
@@ -152,9 +146,7 @@ const renderPercent = (
   isDoubles: boolean,
   isDarkMode: boolean,
 ): void => {
-  const playerFrame = frame.players[player.playerIndex].post.filter(
-    (post) => !post.isFollower,
-  )[0];
+  const playerFrame = frame.players[player.playerIndex].state;
   const characterData =
     supportedCharactersByInternalId[playerFrame.internalCharacterId];
   const actionName = animationNameByActionId[playerFrame.actionStateId];
@@ -199,14 +191,14 @@ const renderDebugText = (
   const y = -screenLayer.canvas.height + debugFontSize;
   screenLayer.context.scale(1, -1);
   screenLayer.context.translate(x, y);
-  const debugTexts = [];
-  for (const playerFrame of frame.players[player.playerIndex].post) {
+  const debugTexts: string[] = [];
+  function drawPlayerStateDebugText(playerFrame: PlayerState) {
     screenLayer.context.strokeStyle = isDarkMode ? 'white' : 'black';
     screenLayer.context.fillStyle = getPrimaryColor(player, players, isDoubles);
     screenLayer.context.font = `900 ${debugFontSize}px Verdana`;
     screenLayer.context.textAlign = 'start';
-    if (frame.players[player.playerIndex].post.length > 1) {
-      debugTexts.push(`isFollower: ${playerFrame.isFollower}`);
+    if (playerFrame.isNana) {
+      debugTexts.push(`isFollower: ${playerFrame.isNana}`);
     }
     debugTexts.push(
       `actionStateId: ${playerFrame.actionStateId}`,
@@ -215,6 +207,10 @@ const renderDebugText = (
       `yPosition: ${playerFrame.yPosition}`,
       '',
     );
+  }
+  drawPlayerStateDebugText(frame.players[player.playerIndex].state);
+  if (frame.players[player.playerIndex].nanaState) {
+    drawPlayerStateDebugText(frame.players[player.playerIndex].nanaState!);
   }
   for (const debugText of debugTexts) {
     screenLayer.context.fillText(debugText, 0, 0);
@@ -233,7 +229,7 @@ const renderPlayerDetails = (
   isDoubles: boolean,
   isDarkMode: boolean,
 ): void => {
-  const playerFrame = frame.players[player.playerIndex].post[0];
+  const playerFrame = frame.players[player.playerIndex].state;
   const character = characterNamesByInternalId[playerFrame.internalCharacterId];
   screenLayer.context.save();
   const fontSize = screenLayer.canvas.height / 30;
@@ -259,7 +255,7 @@ const renderPlayerDetails = (
 
 const getAnimationFrame = (
   player: PlayerSettings,
-  playerFrame: PostFrameUpdateEvent,
+  playerFrame: PlayerState,
   frames: Frame[],
   frame: Frame,
   animations: { [internalCharacterId: number]: CharacterAnimations },
@@ -316,12 +312,16 @@ const getAnimationFrame = (
     const rotationYOffset = 10;
     let referenceFrame = isSpacieUpBMovementAction
       ? getFirstFrameOfAnimation(playerFrame, frames)
-      : frames[playerFrame.frameNumber - 1].players[
-          player.playerIndex
-        ].post.filter((post) => post.isFollower === playerFrame.isFollower)[0];
-    let deltaFrame = frames[referenceFrame.frameNumber + 1].players[
-      player.playerIndex
-    ].post.filter((post) => post.isFollower === playerFrame.isFollower)[0];
+      : playerFrame.isNana
+      ? frames[playerFrame.frameNumber - 1].players[playerFrame.playerIndex]
+          .nanaState!
+      : frames[playerFrame.frameNumber - 1].players[playerFrame.playerIndex]
+          .state;
+    let deltaFrame = playerFrame.isNana
+      ? frames[referenceFrame.frameNumber + 1].players[player.playerIndex]
+          .nanaState!
+      : frames[referenceFrame.frameNumber + 1].players[player.playerIndex]
+          .state;
     const xDiff = deltaFrame.xPosition - referenceFrame.xPosition;
     const yDiff = deltaFrame.yPosition - referenceFrame.yPosition;
     const rawAngle = Math.atan2(yDiff, facingDirection * xDiff);
@@ -351,7 +351,7 @@ const renderCharacter = (
   isDarkMode: boolean,
   animations: { [internalCharacterId: number]: CharacterAnimations },
 ): void => {
-  for (const playerFrame of frame.players[player.playerIndex].post) {
+  function drawPlayerFrame(playerFrame: PlayerState) {
     worldContext.save();
     const characterData =
       supportedCharactersByInternalId[playerFrame.internalCharacterId];
@@ -379,7 +379,7 @@ const renderCharacter = (
     );
     if (!animationFrame) {
       worldContext.restore();
-      continue;
+      return;
     }
     const path = new Path2D(animationFrame);
     // SVG data is 10x too big, offset by 500, and needs to be flipped
@@ -391,6 +391,10 @@ const renderCharacter = (
     worldContext.fill(path);
     worldContext.restore();
   }
+  drawPlayerFrame(frame.players[player.playerIndex].state);
+  if (frame.players[player.playerIndex].nanaState) {
+    drawPlayerFrame(frame.players[player.playerIndex].nanaState!);
+  }
 };
 
 const renderShield = (
@@ -401,14 +405,14 @@ const renderShield = (
   isDoubles: boolean,
   isDarkMode: boolean,
 ): void => {
-  for (const playerFrame of frame.players[player.playerIndex].post) {
+  function drawPlayerFrame(playerFrame: PlayerState) {
     const characterData =
       supportedCharactersByInternalId[playerFrame.internalCharacterId];
     if (
       playerFrame.actionStateId < 0x0b2 ||
       playerFrame.actionStateId > 0x0b6
     ) {
-      continue;
+      return;
     }
     worldContext.save();
     worldContext.globalAlpha = 0.75;
@@ -434,6 +438,10 @@ const renderShield = (
     worldContext.stroke();
     worldContext.restore();
   }
+  drawPlayerFrame(frame.players[player.playerIndex].state);
+  if (frame.players[player.playerIndex].nanaState) {
+    drawPlayerFrame(frame.players[player.playerIndex].nanaState!);
+  }
 };
 
 const renderShine = (
@@ -441,7 +449,7 @@ const renderShine = (
   frame: Frame,
   player: PlayerSettings,
 ): void => {
-  const playerFrame = frame.players[player.playerIndex].post[0];
+  const playerFrame = frame.players[player.playerIndex].state;
   const character = characterNamesByInternalId[playerFrame.internalCharacterId];
   const characterData =
     supportedCharactersByInternalId[playerFrame.internalCharacterId];

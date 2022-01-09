@@ -2,7 +2,7 @@ import { Group } from './group';
 import type { Spec as GroupSpec } from './group';
 import type { GamePredicate } from './game-predicate';
 import type { Highlight } from '@slippilab/common';
-import type { Game, PlayerSettings } from '@slippilab/parser';
+import type { Replay, PlayerSettings } from '@slippilab/parser';
 
 export interface ClipBuilder {
   path: string;
@@ -19,7 +19,7 @@ export interface Spec {
 export class Search {
   private spec: Spec;
   private playerIndex = 0;
-  private game?: Game;
+  private game?: Replay;
   private clipBuilder?: Highlight;
   private groupStack: Group[] = [];
   private permanentGroup?: Group;
@@ -32,9 +32,9 @@ export class Search {
     this.spec = spec;
   }
 
-  public searchFile(game: Game): Highlight[] {
+  public searchFile(game: Replay): Highlight[] {
     this.game = game;
-    return this.game.gameStart.playerSettings
+    return this.game.settings.playerSettings
       .map((player: PlayerSettings) => player.playerIndex)
       .flatMap((playerIndex) => this.searchPlayer(playerIndex))
       .filter(
@@ -85,7 +85,7 @@ export class Search {
   private sendFrame(): void {
     const frame =
       this.game!.frames[this.currentFrameIndex].players[this.playerIndex]
-        ?.post[0]; // TODO: Nana
+        ?.state; // TODO: Nana
     if (frame) {
       const group = this.groupStack[this.groupStack.length - 1];
       group.step(this.game!, frame);

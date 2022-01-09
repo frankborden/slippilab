@@ -201,13 +201,7 @@ export class ReplayViewer extends LitElement {
 
   private async setup() {
     const context = this.canvas?.getContext('2d');
-    const highestFrame = this.replay?.game.metadata.lastFrame;
-    if (
-      !this.canvas ||
-      !context ||
-      !this.replay ||
-      highestFrame === undefined
-    ) {
+    if (!this.canvas || !context || !this.replay) {
       return;
     }
     const baseContext = this.canvas.getContext('2d');
@@ -221,7 +215,7 @@ export class ReplayViewer extends LitElement {
         this.canvas.height / 2,
       );
     }
-    this.highestFrame = highestFrame;
+    this.highestFrame = this.replay.game.frames.length - 1;
     this.game = await Game.create(
       this.replay,
       this.canvas,
