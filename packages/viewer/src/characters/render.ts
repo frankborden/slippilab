@@ -221,7 +221,7 @@ const renderDebugText = (
     screenLayer.context.strokeText(debugText, 0, 0);
     screenLayer.context.translate(0, debugFontSize);
   }
-  
+
   screenLayer.context.restore();
 };
 
