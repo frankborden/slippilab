@@ -83,7 +83,7 @@ describe('parser', () => {
       isReflectActive: false,
       isShieldActive: false,
       jumpsRemaining: 1,
-      lCancelStatus: 0,
+      lCancelStatus: undefined,
       lastGroundId: 0,
       lastHitBy: 6,
       lastHittingAttackId: 14,

@@ -159,7 +159,7 @@ export interface PlayerState {
   isGrounded: boolean;
   lastGroundId: number;
   jumpsRemaining: number;
-  lCancelStatus: number;
+  lCancelStatus: 'successful' | 'missed' | undefined;
   hurtboxCollisionState: 'vulnerable' | 'invulnerable' | 'intangible';
   selfInducedAirXSpeed: number;
   selfInducedAirYSpeed: number;
@@ -772,12 +772,19 @@ function parsePostFrameUpdateEvent(
   offset: number,
   replayVersion: string,
 ): PlayerState {
-  const hurtboxCollisionState = readUint(
+  const hurtboxCollisionStateCode = readUint(
     rawData,
     8,
     replayVersion,
     '2.1.0.0',
     offset + 0x34,
+  );
+  const lCancelStatusCode = readUint(
+    rawData,
+    8,
+    replayVersion,
+    '2.0.0.0',
+    offset + 0x33,
   );
   const stateBitfield1 = readUint(
     rawData,
@@ -885,17 +892,16 @@ function parsePostFrameUpdateEvent(
       '2.0.0.0',
       offset + 0x32,
     ),
-    lCancelStatus: readUint(
-      rawData,
-      8,
-      replayVersion,
-      '2.0.0.0',
-      offset + 0x33,
-    ),
+    lCancelStatus:
+      lCancelStatusCode === 1
+        ? 'successful'
+        : lCancelStatusCode === 2
+        ? 'missed'
+        : undefined,
     hurtboxCollisionState:
-      hurtboxCollisionState === 0
+      hurtboxCollisionStateCode === 0 || hurtboxCollisionStateCode === undefined
         ? 'vulnerable'
-        : hurtboxCollisionState === 1
+        : hurtboxCollisionStateCode === 1
         ? 'invulnerable'
         : 'intangible',
     selfInducedAirXSpeed: readFloat(

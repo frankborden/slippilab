@@ -22,7 +22,7 @@
   },
   "scripts": {
     "tsc": "tsc",
-    "build": "tsc && cp -rf src/animations/zips dist/animations/",
+    "build": "tsc",
     "prepublish": "yarn build"
   },
   "devDependencies": {

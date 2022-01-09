@@ -43,7 +43,8 @@ export const getFrameIndexFromDuration = (
   const firstFrame = getFirstFrameOfAnimation(playerFrame, frames);
   const framesInAnimation = playerFrame.frameNumber - firstFrame.frameNumber;
   return (
-    framesInAnimation * (firstFrame.lCancelStatus === 1 ? 2 : 1) - firstIndex
+    framesInAnimation * (firstFrame.lCancelStatus === 'successful' ? 2 : 1) -
+    firstIndex
   );
 };
 
