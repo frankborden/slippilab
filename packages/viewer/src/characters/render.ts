@@ -104,7 +104,7 @@ const getSecondaryColor = (
   playerFrame: PlayerState,
   lCancelStatus: number,
 ): string => {
-  return playerFrame.hurtboxCollisionState > 0
+  return playerFrame.hurtboxCollisionState !== 'vulnerable'
     ? 'blue' // invinc / invuln
     : lCancelStatus === 2
     ? 'red' // missed lcanc

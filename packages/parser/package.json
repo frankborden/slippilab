@@ -14,7 +14,7 @@
   "browser": "dist/index.js",
   "types": "dist/index.d.ts",
   "dependencies": {
-    "@shelacek/ubjson": "^1.1.0"
+    "@shelacek/ubjson": "^1.1.1"
   },
   "scripts": {
     "build": "tsc",
@@ -22,8 +22,8 @@
     "prepublish": "yarn build"
   },
   "devDependencies": {
-    "@types/jest": "^27.0.3",
-    "jest": "^27.4.5",
+    "@types/jest": "^27.4.0",
+    "jest": "^27.4.7",
     "ts-jest": "^27.1.2",
     "typescript": "^4.5.4"
   }
