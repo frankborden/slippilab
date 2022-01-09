@@ -3,7 +3,9 @@
   "compilerOptions": {
     "module": "ESNext",
     "target": "ESNext",
-    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "lib": ["ESNext", "DOM", "DOM.Iterable"], 
+    "types": ["vite/client"],
+    "skipLibCheck": true,
     "strict": true,
     "declaration": true,
     "outDir": "dist",
