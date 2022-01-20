@@ -1,9 +1,8 @@
 import { decode } from '@shelacek/ubjson';
 
-// This is a quick-n-dirty parser for use in the browser.
-// It is based off of the replay format spec up to 3.9.0.0.
-// It is incomplete, I have left out things I don't need right now.
-// slippi-js can work in the broser too if your build tool
+// This is a basic parser for use in the browser. It is based off of the replay
+// format spec up to 3.9.0.0. It is incomplete, I have left out things I don't
+// need right now. slippi-js can work in the broser too if your build tool
 // de-node-ifies it enough.
 
 export interface Replay {
