@@ -1,8 +1,7 @@
 import { Group } from './group';
 import type { Spec as GroupSpec } from './group';
 import type { GamePredicate } from './game-predicate';
-import type { Highlight } from '@slippilab/common';
-import type { Replay, PlayerSettings } from '@slippilab/parser';
+import type { Highlight, ReplayData, PlayerSettings } from '@slippilab/common';
 
 export interface ClipBuilder {
   path: string;
@@ -19,7 +18,7 @@ export interface Spec {
 export class Search {
   private spec: Spec;
   private playerIndex = 0;
-  private game?: Replay;
+  private game?: ReplayData;
   private clipBuilder?: Highlight;
   private groupStack: Group[] = [];
   private permanentGroup?: Group;
@@ -32,7 +31,7 @@ export class Search {
     this.spec = spec;
   }
 
-  public searchFile(game: Replay): Highlight[] {
+  public searchFile(game: ReplayData): Highlight[] {
     this.game = game;
     return this.game.settings.playerSettings
       .map((player: PlayerSettings) => player.playerIndex)

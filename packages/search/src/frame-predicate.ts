@@ -1,13 +1,15 @@
-import type { Replay, PlayerState } from '@slippilab/parser';
+import type { ReplayData, PlayerState } from '@slippilab/common';
 
-export type FramePredicate = (frame: PlayerState, game: Replay) => boolean;
+export type FramePredicate = (frame: PlayerState, game: ReplayData) => boolean;
 
-export const isGrabbed: FramePredicate = (frame: PlayerState, _game: Replay) =>
-  frame.actionStateId >= 0xdf && frame.actionStateId <= 0xe8;
+export const isGrabbed: FramePredicate = (
+  frame: PlayerState,
+  _game: ReplayData,
+) => frame.actionStateId >= 0xdf && frame.actionStateId <= 0xe8;
 
 export const isInGroundedControl: FramePredicate = (
   frame: PlayerState,
-  _game: Replay,
+  _game: ReplayData,
 ) => {
   const id = frame.actionStateId;
   const ground = id >= 0x0e && id <= 0x18;
@@ -19,27 +21,27 @@ export const isInGroundedControl: FramePredicate = (
 
 export const isNotInGroundedControl: FramePredicate = (
   frame: PlayerState,
-  game: Replay,
+  game: ReplayData,
 ) => !isInGroundedControl(frame, game);
 
 export const isInHitstun: FramePredicate = (
   frame: PlayerState,
-  _game: Replay,
+  _game: ReplayData,
 ) =>
   (frame.actionStateId >= 0x4b && frame.actionStateId <= 0x5b) ||
   frame.actionStateId === 0x26;
 
 export const isInBeginningOfHitstun: FramePredicate = (
   frame: PlayerState,
-  game: Replay,
+  game: ReplayData,
 ) => isInHitstun(frame, game) && frame.actionStateFrameCounter === 1;
 
 export const isInNotBeginningOfHitstun: FramePredicate = (
   frame: PlayerState,
-  game: Replay,
+  game: ReplayData,
 ) => isInHitstun(frame, game) && frame.actionStateFrameCounter === 2;
 
-export const isDead: FramePredicate = (frame: PlayerState, _game: Replay) =>
+export const isDead: FramePredicate = (frame: PlayerState, _game: ReplayData) =>
   frame.actionStateId >= 0x00 && frame.actionStateId <= 0x0a;
 
 interface StageData {
@@ -130,7 +132,7 @@ const stageData: { [stageId: number]: StageData } = {
 
 export const isOffstage: FramePredicate = (
   frame: PlayerState,
-  _game: Replay,
+  _game: ReplayData,
 ) => {
   const currentStageData = stageData[_game.settings.stageId!];
   if (currentStageData === undefined) {

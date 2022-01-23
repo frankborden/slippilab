@@ -13,6 +13,7 @@
     "format": "prettier --write \"./**/*.ts\""
   },
   "devDependencies": {
+    "esbuild": "^0.14.13",
     "prettier": "^2.5.1",
     "svgo": "^2.8.0",
     "typescript": "^4.5.4",

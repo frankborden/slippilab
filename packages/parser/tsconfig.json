@@ -1,5 +1,6 @@
 {
   "include": ["src/**/*.ts"],
+  "exclude": ["**/*.test.ts"],
   "compilerOptions": {
     "module": "ESNext",
     "target": "ESNext",
@@ -7,6 +8,7 @@
     "strict": true,
     "declaration": true,
     "outDir": "dist",
+    "emitDeclarationOnly": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,

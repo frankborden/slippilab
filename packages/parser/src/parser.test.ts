@@ -1,20 +1,26 @@
-import { parseReplay, Replay } from './parser';
+import { parseReplay, ReplayData } from './parser';
 import * as fs from 'fs';
 
 // TODO: singles test, especially for matches with port 1 or 2 missing
 // TODO: test ice climbers having nanaState.
 
 describe('parser', () => {
-  let replay: Replay;
+  let replay: ReplayData;
 
   beforeAll(() => {
     replay = parseReplay(fs.readFileSync('doubles_test.slp'));
   });
 
   test('frames includes negative frames', () => {
+    // .length doesn't find frame indexes -123 to -1
+    // Really there are 7382 in total
     expect(replay.frames).toHaveLength(7259);
+    expect(replay.frames[-124]).toBeUndefined();
     expect(replay.frames[-123].frameNumber).toBe(-123);
+    expect(replay.frames[-1].frameNumber).toBe(-1);
+    expect(replay.frames[0].frameNumber).toBe(0);
     expect(replay.frames[7258].frameNumber).toBe(7258);
+    expect(replay.frames[7259]).toBeUndefined();
   });
 
   test('player inputs', () => {

@@ -13,9 +13,6 @@
   "type": "module",
   "browser": "dist/index.js",
   "types": "dist/index.d.ts",
-  "dependencies": {
-    "@slippilab/parser": "workspace:*"
-  },
   "scripts": {
     "build": "tsc",
     "prepublish": "yarn build"

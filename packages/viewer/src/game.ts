@@ -1,4 +1,3 @@
-import type { Frame, Replay as ParsedGame } from '@slippilab/parser';
 import type { Stage } from './common';
 import { createItemRender } from './itemRenderer';
 import { createPlayerRender } from './characters';
@@ -6,7 +5,7 @@ import { supportedStagesById, createStageRender } from './stages';
 import { clearLayers, drawToBase, setupLayers } from './layer';
 import type { Layers } from './layer';
 import { Vector } from './vector';
-import type { Replay } from '@slippilab/common';
+import type { Frame, Replay, ReplayData } from '@slippilab/common';
 
 // TODO: frames should just go into generators
 export type Render = (
@@ -208,7 +207,7 @@ export class Game {
   }
 
   // TODO: move out of game file
-  private updateCamera(currentFrame: Frame, game: ParsedGame): void {
+  private updateCamera(currentFrame: Frame, game: ReplayData): void {
     const subjects: Vector[] = [];
     const lookaheadTime = 5;
     const lastFrameIndex = Math.min(

@@ -1,4 +1,4 @@
-import type { Frame, PlayerSettings, PlayerState } from '@slippilab/parser';
+import type { Frame, PlayerSettings, PlayerState } from '@slippilab/common';
 import {
   fetchAnimations,
   //isOneIndexed,

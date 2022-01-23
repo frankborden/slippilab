@@ -14,14 +14,14 @@
   "browser": "dist/index.js",
   "types": "dist/index.d.ts",
   "dependencies": {
-    "@slippilab/common": "workspace:*",
-    "@slippilab/parser": "workspace:*"
+    "@slippilab/common": "workspace:*"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && esbuild --bundle src/index.ts --outdir=dist --platform=node --format=esm --minify",
     "prepublish": "yarn build"
   },
   "devDependencies": {
+    "esbuild": "^0.14.13",
     "typescript": "^4.5.4"
   }
 }

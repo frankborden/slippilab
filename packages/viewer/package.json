@@ -15,17 +15,16 @@
   "types": "dist/index.d.ts",
   "dependencies": {
     "@slippilab/common": "workspace:*",
-    "@slippilab/parser": "workspace:*",
     "@spectrum-web-components/slider": "^0.12.2",
     "@zip.js/zip.js": "^2.3.23",
     "lit": "^2.1.1"
   },
   "scripts": {
-    "tsc": "tsc",
-    "build": "tsc",
+    "build": "tsc && esbuild --bundle src/index.ts --outdir=dist --platform=node --format=esm --minify",
     "prepublish": "yarn build"
   },
   "devDependencies": {
+    "esbuild": "^0.14.13",
     "typescript": "^4.5.4"
   }
 }

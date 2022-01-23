@@ -1,4 +1,4 @@
-import type { Replay, PlayerState } from '@slippilab/parser';
+import type { ReplayData, PlayerState } from '@slippilab/common';
 import type { FramePredicate } from './frame-predicate';
 
 export interface Options {
@@ -44,7 +44,7 @@ export class Unit {
     };
   }
 
-  step(game: Replay, frame: PlayerState): void {
+  step(game: ReplayData, frame: PlayerState): void {
     if (this.spec.predicate(frame, game)) {
       // increment streak, maximize leniency
       this.inARow++;
