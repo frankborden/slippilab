@@ -17,7 +17,7 @@
     "@slippilab/common": "workspace:*"
   },
   "scripts": {
-    "build": "tsc && node esbuild.js",
+    "build": "tsc && node esbuild.mjs",
     "prepublish": "yarn build"
   },
   "devDependencies": {

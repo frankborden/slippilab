@@ -19,7 +19,7 @@
   },
   "scripts": {
     "test": "jest",
-    "build": "tsc && node esbuild.js",
+    "build": "tsc && node esbuild.mjs",
     "prepublish": "tsc && yarn test && yarn build"
   },
   "devDependencies": {

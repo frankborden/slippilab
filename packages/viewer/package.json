@@ -20,7 +20,7 @@
     "lit": "^2.1.1"
   },
   "scripts": {
-    "build": "tsc && node esbuild.js",
+    "build": "tsc && node esbuild.mjs",
     "prepublish": "yarn build"
   },
   "devDependencies": {
