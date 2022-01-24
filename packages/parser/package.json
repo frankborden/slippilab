@@ -15,11 +15,11 @@
   "types": "dist/index.d.ts",
   "dependencies": {
     "@shelacek/ubjson": "^1.1.1",
-    "@slippilab/parser": "workspace:*"
+    "@slippilab/common": "workspace:*"
   },
   "scripts": {
     "test": "jest",
-    "build": "tsc && esbuild --bundle src/index.ts --outdir=dist --platform=node --format=esm --minify",
+    "build": "tsc && esbuild --bundle src/index.ts --outdir=dist --platform=node --format=esm --minify --sourcemap",
     "prepublish": "tsc && yarn test && yarn build"
   },
   "devDependencies": {

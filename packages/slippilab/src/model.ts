@@ -1,10 +1,9 @@
 import { parseReplay } from '@slippilab/parser';
-import type { Replay as ReplayData } from '@slippilab/parser';
 import { Subject } from 'rxjs';
 import { FramePredicates, Search } from '@slippilab/search';
 import type { SearchSpec } from '@slippilab/search';
 import { supportedStagesById } from '@slippilab/viewer';
-import type { Highlight, Replay } from '@slippilab/common';
+import type { Highlight, Replay, ReplayData } from '@slippilab/common';
 
 export interface State {
   darkMode: boolean;
@@ -137,7 +136,7 @@ export class Model {
         const game = parseReplay(await file.arrayBuffer());
         if (this.isSupported(game)) {
           let highlights: Highlight[] = [];
-          if (game.settings.playerSettings.length === 2) {
+          if (game.settings.playerSettings.filter((ps) => ps).length === 2) {
             highlights = this.currentState.searches
               .map((searchSpec) => new Search(searchSpec))
               .flatMap((search) => search.searchFile(game));

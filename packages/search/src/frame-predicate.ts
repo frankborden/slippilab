@@ -56,8 +56,9 @@ interface StageData {
   leftLedgeX: number;
   rightLedgeX: number;
 }
-// credit: magus for data/tool, posted by StrongBad in smashboards thread:
-// "Stage blast zones via debug mode"
+/**
+ * Source: http://smashboards.com/posts/18643652, spot checked using HSDraw
+ */
 const stageData: { [stageId: number]: StageData } = {
   2: {
     name: 'Fountain of Dreams',

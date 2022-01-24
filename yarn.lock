@@ -957,6 +957,8 @@ __metadata:
 "@slippilab/common@workspace:*, @slippilab/common@workspace:packages/common":
   version: 0.0.0-use.local
   resolution: "@slippilab/common@workspace:packages/common"
+  dependencies:
+    esbuild: ^0.14.13
   languageName: unknown
   linkType: soft
 
@@ -984,7 +986,7 @@ __metadata:
   resolution: "@slippilab/parser@workspace:packages/parser"
   dependencies:
     "@shelacek/ubjson": ^1.1.1
-    "@slippilab/parser": "workspace:*"
+    "@slippilab/common": "workspace:*"
     "@types/jest": ^27.4.0
     esbuild: ^0.14.13
     jest: ^27.4.7

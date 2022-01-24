@@ -17,7 +17,7 @@
     "@slippilab/common": "workspace:*"
   },
   "scripts": {
-    "build": "tsc && esbuild --bundle src/index.ts --outdir=dist --platform=node --format=esm --minify",
+    "build": "tsc && node esbuild.js",
     "prepublish": "yarn build"
   },
   "devDependencies": {
