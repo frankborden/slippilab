@@ -20,7 +20,7 @@
     "lit": "^2.1.1"
   },
   "scripts": {
-    "build": "tsc && esbuild --bundle src/index.ts --outdir=dist --platform=node --format=esm --minify --sourcemap",
+    "build": "tsc && node esbuild.js",
     "prepublish": "yarn build"
   },
   "devDependencies": {

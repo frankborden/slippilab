@@ -14,7 +14,7 @@
   "browser": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsc && esbuild --bundle src/index.ts --outdir=dist --platform=node --format=esm --minify --sourcemap",
+    "build": "tsc && node esbuild.js",
     "prepublish": "yarn build"
   },
   "devDependencies": {

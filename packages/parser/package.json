@@ -19,7 +19,7 @@
   },
   "scripts": {
     "test": "jest",
-    "build": "tsc && esbuild --bundle src/index.ts --outdir=dist --platform=node --format=esm --minify --sourcemap",
+    "build": "tsc && node esbuild.js",
     "prepublish": "tsc && yarn test && yarn build"
   },
   "devDependencies": {
