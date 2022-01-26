@@ -1,6 +1,4 @@
-export { Search } from './search';
-export type { Spec as SearchSpec, Highlight } from './search';
-export type { Spec as GroupSpec } from './group';
-export type { Spec as UnitSpec } from './unit';
+export { run } from './search';
+export type { Highlight, Query, Bounds } from './search';
 export * as GamePredicates from './game-predicate';
 export * as FramePredicates from './frame-predicate';

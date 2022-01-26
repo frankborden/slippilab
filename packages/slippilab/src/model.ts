@@ -1,7 +1,7 @@
 import { parseReplay } from '@slippilab/parser';
 import { Subject } from 'rxjs';
-import { FramePredicates, Search } from '@slippilab/search';
-import type { Highlight, SearchSpec } from '@slippilab/search';
+import { FramePredicates, run } from '@slippilab/search';
+import type { Highlight, Query } from '@slippilab/search';
 import { supportedStagesById } from '@slippilab/viewer';
 import type { ReplayData } from '@slippilab/common';
 
@@ -18,7 +18,7 @@ export interface State {
   currentFileIndex?: number;
   currentHighlightIndex?: number;
   files: File[];
-  searches: SearchSpec[];
+  searches: Query[];
 }
 
 export class Model {
@@ -54,7 +54,7 @@ export class Model {
     this.next();
   }
 
-  setSearches(searches: SearchSpec[]) {
+  setSearches(searches: Query[]) {
     const newState = { ...this.currentState, searches };
     this.currentState = newState;
     this.stateSubject$.next(newState);
@@ -143,9 +143,20 @@ export class Model {
         if (this.isSupported(game)) {
           let highlights: Highlight[] = [];
           if (game.settings.playerSettings.filter((ps) => ps).length === 2) {
-            highlights = this.currentState.searches
-              .map((searchSpec) => new Search(searchSpec))
-              .flatMap((search) => search.searchFile(game));
+            highlights = this.currentState.searches.flatMap((query) =>
+              run(
+                game,
+                query,
+                FramePredicates.either(
+                  FramePredicates.isOffstage,
+                  FramePredicates.isInHitstun,
+                  FramePredicates.isDead,
+                ),
+              ).map((bounds) => ({
+                startFrame: bounds[0],
+                endFrame: bounds[1],
+              })),
+            );
           }
           return {
             fileName: file.name,
@@ -172,61 +183,11 @@ export class Model {
 
 export const model = new Model();
 
-// const successfulEdgeguardSpec: SearchSpec = {
-//   permanentGroupSpec: {
-//     unitSpecs: [{ predicate: FramePredicates.isOffstage }],
-//   },
-//   groupSpecs: [
-//     {
-//       unitSpecs: [
-//         {
-//           options: { minimumLength: 30 },
-//           predicate: FramePredicates.isOffstage,
-//         },
-//       ],
-//     },
-//     {
-//       unitSpecs: [
-//         {
-//           predicate: (frame, game) => !FramePredicates.isInHitstun(frame, game),
-//         },
-//       ],
-//     },
-//     { unitSpecs: [{ predicate: FramePredicates.isInHitstun }] },
-//     { unitSpecs: [{ predicate: FramePredicates.isDead }] },
-//   ],
-// };
-const successfulComboSpec: SearchSpec = {
-  permanentGroupSpec: {
-    unitSpecs: [{ predicate: FramePredicates.isNotInGroundedControl }],
+const comboQuery: Query = [
+  {
+    predicate: FramePredicates.isInHitstun,
+    minimumLength: 1,
   },
-  groupSpecs: [
-    { unitSpecs: [{ predicate: FramePredicates.isInBeginningOfHitstun }] },
-    {
-      unitSpecs: [{ predicate: FramePredicates.isInNotBeginningOfHitstun }],
-    },
-    {
-      options: { allowDelayed: true },
-      unitSpecs: [{ predicate: FramePredicates.isInBeginningOfHitstun }],
-    },
-    {
-      unitSpecs: [{ predicate: FramePredicates.isInNotBeginningOfHitstun }],
-    },
-    {
-      options: { allowDelayed: true },
-      unitSpecs: [{ predicate: FramePredicates.isInBeginningOfHitstun }],
-    },
-    {
-      unitSpecs: [{ predicate: FramePredicates.isInNotBeginningOfHitstun }],
-    },
-    {
-      options: { allowDelayed: true },
-      unitSpecs: [{ predicate: FramePredicates.isInBeginningOfHitstun }],
-    },
-    {
-      options: { allowDelayed: true },
-      unitSpecs: [{ predicate: FramePredicates.isDead }],
-    },
-  ],
-};
-model.setSearches([successfulComboSpec]);
+  { predicate: FramePredicates.isDead, minimumLength: 1, delayed: true },
+];
+model.setSearches([comboQuery]);

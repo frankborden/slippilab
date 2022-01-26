@@ -1,49 +1,50 @@
-import type { ReplayData, PlayerState } from '@slippilab/common';
+import type { Predicate } from './search';
 
-export type FramePredicate = (frame: PlayerState, game: ReplayData) => boolean;
+export const isGrabbed: Predicate = (playerIndex, frameNumber, replay) => {
+  const state = replay.frames[frameNumber].players[playerIndex]?.state;
+  if (state === undefined) {
+    return true;
+  }
+  const actionStateId = state.actionStateId;
+  return actionStateId >= 0xdf && actionStateId <= 0xe8;
+};
 
-export const isGrabbed: FramePredicate = (
-  frame: PlayerState,
-  _game: ReplayData,
-) => frame.actionStateId >= 0xdf && frame.actionStateId <= 0xe8;
-
-export const isInGroundedControl: FramePredicate = (
-  frame: PlayerState,
-  _game: ReplayData,
+export const isInGroundedControl: Predicate = (
+  playerIndex,
+  frameNumber,
+  replay,
 ) => {
-  const id = frame.actionStateId;
-  const ground = id >= 0x0e && id <= 0x18;
-  const squat = id >= 0x27 && id <= 0x29;
-  const groundAttack = id >= 0x2c && id <= 0x40;
-  const grab = id === 0xd4;
+  const state = replay.frames[frameNumber].players[playerIndex]?.state;
+  if (state === undefined) {
+    return true;
+  }
+  const actionStateId = state.actionStateId;
+  const ground = actionStateId >= 0x0e && actionStateId <= 0x18;
+  const squat = actionStateId >= 0x27 && actionStateId <= 0x29;
+  const groundAttack = actionStateId >= 0x2c && actionStateId <= 0x40;
+  const grab = actionStateId === 0xd4;
   return ground || squat || groundAttack || grab;
 };
 
-export const isNotInGroundedControl: FramePredicate = (
-  frame: PlayerState,
-  game: ReplayData,
-) => !isInGroundedControl(frame, game);
+export const isInHitstun: Predicate = (playerIndex, frameNumber, replay) => {
+  const state = replay.frames[frameNumber].players[playerIndex]?.state;
+  if (state === undefined) {
+    return false;
+  }
+  const actionStateId = state.actionStateId;
+  return (
+    (actionStateId >= 0x4b && actionStateId <= 0x5b) || actionStateId === 0x26
+  );
+};
 
-export const isInHitstun: FramePredicate = (
-  frame: PlayerState,
-  _game: ReplayData,
-) =>
-  (frame.actionStateId >= 0x4b && frame.actionStateId <= 0x5b) ||
-  frame.actionStateId === 0x26;
-
-export const isInBeginningOfHitstun: FramePredicate = (
-  frame: PlayerState,
-  game: ReplayData,
-) => isInHitstun(frame, game) && frame.actionStateFrameCounter === 1;
-
-export const isInNotBeginningOfHitstun: FramePredicate = (
-  frame: PlayerState,
-  game: ReplayData,
-) => isInHitstun(frame, game) && frame.actionStateFrameCounter === 2;
-
-export const isDead: FramePredicate = (frame: PlayerState, _game: ReplayData) =>
-  frame.actionStateId >= 0x00 && frame.actionStateId <= 0x0a;
-
+export const isDead: Predicate = (playerIndex, frameNumber, replay) => {
+  const state = replay.frames[frameNumber].players[playerIndex]?.state;
+  if (state === undefined) {
+    return true;
+  }
+  const actionStateId = state.actionStateId;
+  return actionStateId >= 0x00 && actionStateId <= 0x0a;
+};
 interface StageData {
   name: string;
   leftXBoundary: number;
@@ -131,17 +132,42 @@ const stageData: { [stageId: number]: StageData } = {
   },
 };
 
-export const isOffstage: FramePredicate = (
-  frame: PlayerState,
-  _game: ReplayData,
-) => {
-  const currentStageData = stageData[_game.settings.stageId!];
+export const isOffstage: Predicate = (playerIndex, frameNumber, replay) => {
+  const currentStageData = stageData[replay.settings.stageId];
   if (currentStageData === undefined) {
     return false;
   }
+  const state = replay.frames[frameNumber].players[playerIndex]?.state;
+  if (state === undefined) {
+    return false;
+  }
   return (
-    frame.yPosition! < currentStageData.mainPlatformHeight ||
-    frame.xPosition! < currentStageData.leftLedgeX ||
-    frame.xPosition! > currentStageData.rightLedgeX
+    state.yPosition! < currentStageData.mainPlatformHeight ||
+    state.xPosition! < currentStageData.leftLedgeX ||
+    state.xPosition! > currentStageData.rightLedgeX
   );
+};
+
+export const either = (...predicates: Predicate[]): Predicate => {
+  return (playerIndex, frameNumber, replay) => {
+    return predicates.some((predicate) =>
+      predicate(playerIndex, frameNumber, replay),
+    );
+  };
+};
+
+export const all = (...predicates: Predicate[]): Predicate => {
+  return (playerIndex, frameNumber, replay) => {
+    return predicates.every((predicate) =>
+      predicate(playerIndex, frameNumber, replay),
+    );
+  };
+};
+
+export const not = (...predicates: Predicate[]): Predicate => {
+  return (playerIndex, frameNumber, replay) => {
+    return !predicates.some((predicate) =>
+      predicate(playerIndex, frameNumber, replay),
+    );
+  };
 };
