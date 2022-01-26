@@ -4,6 +4,7 @@
     "module": "ESNext",
     "target": "ESNext",
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "skipLibCheck": true,
     "strict": true,
     "declaration": true,
     "outDir": "dist",

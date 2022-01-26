@@ -5,7 +5,8 @@ import { customElement, property, query, state } from 'lit/decorators.js';
 import '@spectrum-web-components/slider/sp-slider';
 import type { Slider } from '@spectrum-web-components/slider';
 
-import type { Highlight, Replay } from '@slippilab/common';
+import type { ReplayData } from '@slippilab/common';
+import type { Highlight } from '@slippilab/search';
 import { Game } from './game';
 
 @customElement('replay-viewer')
@@ -35,7 +36,7 @@ export class ReplayViewer extends LitElement {
     `;
   }
   @property({ type: Object })
-  replay?: Replay;
+  replay?: ReplayData;
 
   @property({ type: Object })
   highlight?: Highlight;
@@ -215,7 +216,7 @@ export class ReplayViewer extends LitElement {
         this.canvas.height / 2,
       );
     }
-    this.highestFrame = this.replay.game.frames.length - 1;
+    this.highestFrame = this.replay.frames.length - 1;
     this.game = await Game.create(
       this.replay,
       this.canvas,

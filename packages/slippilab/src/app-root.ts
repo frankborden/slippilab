@@ -12,12 +12,13 @@ import '@spectrum-web-components/tabs/sp-tabs';
 import '@spectrum-web-components/tabs/sp-tab-panel';
 
 import { model } from './model';
+import type { Replay } from './model';
 import { fetchAnimation } from '@slippilab/viewer';
 import './replay-select';
 import './file-list';
 import './highlight-list';
 import './sl-settings';
-import type { Highlight, Replay } from '@slippilab/common';
+import type { Highlight } from '@slippilab/search';
 
 @customElement('app-root')
 export class AppRoot extends LitElement {
@@ -49,7 +50,8 @@ export class AppRoot extends LitElement {
           break;
       }
     });
-    // prefetch the most popular characters
+    // Prefetch the most popular characters. It's 16 mb already, but at least
+    // users will cache them and they rarely change.
     fetchAnimation(20); // falco
     fetchAnimation(2); // fox
     fetchAnimation(0); // falcon
@@ -137,7 +139,7 @@ export class AppRoot extends LitElement {
             <replay-viewer
               .dark=${this.darkMode}
               .debug=${this.debugMode}
-              .replay=${this.replay}
+              .replay=${this.replay?.game}
               .highlight=${this.highlight}
             ></replay-viewer>
           </div>

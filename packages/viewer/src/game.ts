@@ -5,7 +5,7 @@ import { supportedStagesById, createStageRender } from './stages';
 import { clearLayers, drawToBase, setupLayers } from './layer';
 import type { Layers } from './layer';
 import { Vector } from './vector';
-import type { Frame, Replay, ReplayData } from '@slippilab/common';
+import type { Frame, ReplayData } from '@slippilab/common';
 
 // TODO: frames should just go into generators
 export type Render = (
@@ -39,7 +39,7 @@ export class Game {
 
   // You can't have an async constructor so I have to introduce a factory
   public static async create(
-    replay: Replay,
+    replay: ReplayData,
     baseCanvas: HTMLCanvasElement,
     isDarkMode: boolean,
     isDebugMode: boolean,
@@ -49,15 +49,15 @@ export class Game {
       replay,
       setupLayers(baseCanvas),
       [
-        createStageRender(supportedStagesById[replay.game.settings.stageId]),
+        createStageRender(supportedStagesById[replay.settings.stageId]),
         ...(await Promise.all(
-          replay.game.settings.playerSettings
+          replay.settings.playerSettings
             .filter((player) => Boolean(player))
             .map((player) =>
               createPlayerRender(
                 player,
-                replay.game.settings.playerSettings,
-                replay.game.settings.isTeams,
+                replay.settings.playerSettings,
+                replay.settings.isTeams,
               ),
             ),
         )),
@@ -70,14 +70,14 @@ export class Game {
   }
 
   constructor(
-    private replay: Replay,
+    private replay: ReplayData,
     private layers: Layers,
     private renders: Render[],
     private isDarkMode: boolean,
     private isDebugMode: boolean,
     startFrame: number,
   ) {
-    this.stage = supportedStagesById[replay.game.settings.stageId];
+    this.stage = supportedStagesById[replay.settings.stageId];
     this.intervalSpeed = this.normalSpeed;
     this.intervalId = window.setInterval(
       () => this.maybeTick(),
@@ -190,7 +190,7 @@ export class Game {
   }
 
   public tick(): void {
-    const frames = this.replay.game.frames;
+    const frames = this.replay.frames;
     const frame = frames[this.currentFrameNumber];
     if (!frame) {
       window.clearInterval(this.intervalId);
@@ -198,7 +198,7 @@ export class Game {
     }
     this.tickHandler?.(this.currentFrameNumber);
     clearLayers(this.layers, this.isDarkMode);
-    this.updateCamera(frame, this.replay.game);
+    this.updateCamera(frame, this.replay);
     this.renders.forEach((render) =>
       render(this.layers, frame, frames, this.isDarkMode, this.isDebugMode),
     );

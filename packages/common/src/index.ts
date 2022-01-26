@@ -1,14 +1,3 @@
-export interface Highlight {
-  startFrame: number;
-  endFrame: number;
-}
-
-export interface Replay {
-  fileName: string;
-  game: ReplayData;
-  highlights: Highlight[];
-}
-
 /** */
 export interface ReplayData {
   settings: GameSettings;

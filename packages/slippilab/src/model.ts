@@ -1,9 +1,15 @@
 import { parseReplay } from '@slippilab/parser';
 import { Subject } from 'rxjs';
 import { FramePredicates, Search } from '@slippilab/search';
-import type { SearchSpec } from '@slippilab/search';
+import type { Highlight, SearchSpec } from '@slippilab/search';
 import { supportedStagesById } from '@slippilab/viewer';
-import type { Highlight, Replay, ReplayData } from '@slippilab/common';
+import type { ReplayData } from '@slippilab/common';
+
+export interface Replay {
+  fileName: string;
+  game: ReplayData;
+  highlights: Highlight[];
+}
 
 export interface State {
   darkMode: boolean;

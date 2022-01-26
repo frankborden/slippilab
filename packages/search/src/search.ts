@@ -1,10 +1,98 @@
 import { Group } from './group';
 import type { Spec as GroupSpec } from './group';
 import type { GamePredicate } from './game-predicate';
-import type { Highlight, ReplayData, PlayerSettings } from '@slippilab/common';
+import type { ReplayData, PlayerSettings } from '@slippilab/common';
 
-export interface ClipBuilder {
-  path: string;
+// type Predicate = (
+//   playerIndex: number,
+//   frameNumber: number,
+//   replay: ReplayData,
+// ) => boolean;
+// interface QueryPart {
+//   predicate: Predicate;
+//   minimumLength: number;
+// }
+// type Query = QueryPart[];
+// type Bounds = [number, number];
+// type Streak = [number, number, number];
+
+// // Array.prototype.forEach except it will start from index -123 instead of 0.
+// function framesLoop<T, U>(framesLike: T[], fn: (t: T, i: number) => U): void {
+//   for (let i = -123; i < framesLike.length; i++) {
+//     fn(framesLike[i], i);
+//   }
+// }
+
+// // Array.prototype.map except it will start from index -123 instead of 0.
+// function framesMap<T, U>(framesLike: T[], map: (t: T, i: number) => U): U[] {
+//   const mapped: U[] = [];
+//   framesLoop(framesLike, (f, i) => (mapped[i] = map(f, i)));
+//   return mapped;
+// }
+
+// // [start, minimumReached, failed]
+// function getStreaks(framesLike: boolean[], minimumLength: number): Streak[] {
+//   const streaks: Streak[] = [];
+//   let startAt: number | undefined;
+//   let minimumReachedAt: number | undefined;
+//   framesLoop(framesLike, (value, i) => {
+//     if (value) {
+//       startAt = startAt !== undefined ? startAt : i;
+//       if (i - startAt + 1 >= minimumLength) {
+//         minimumReachedAt =
+//           minimumReachedAt !== undefined ? minimumReachedAt : i;
+//       }
+//     } else if (startAt !== undefined) {
+//       if (minimumReachedAt !== undefined) {
+//         streaks.push([startAt, minimumReachedAt, i]);
+//       }
+//       startAt = undefined;
+//       minimumReachedAt = undefined;
+//     }
+//   });
+//   if (minimumReachedAt !== undefined && startAt !== undefined) {
+//     streaks.push([startAt, minimumReachedAt, framesLike.length]);
+//   }
+//   return streaks;
+// }
+
+// function combineStreaks(
+//   firstStreakSet: Streak[],
+//   secondStreakSet: Streak[],
+// ): Streak[] {
+//   return (
+//     firstStreakSet
+//       // cross product
+//       .flatMap((f) => secondStreakSet.map((s): [Streak, Streak] => [f, s]))
+//       // second streak must start during (or immediately after) first streak
+//       .filter(
+//         ([[_, aMinimum, aFail], [bStart, _1, _2]]) =>
+//           bStart > aMinimum && bStart <= aFail,
+//       )
+//       // combined streak lasts from first streak to end of second streak
+//       .map(([[aStart, _1, _2], [_3, bMinimum, bFail]]) => [
+//         aStart,
+//         bMinimum,
+//         bFail,
+//       ])
+//   );
+// }
+
+// export function run(replay: ReplayData, query: Query): Bounds[] {
+//   const playerIndex = 0;
+//   const predicateResults = query.map((queryPart) =>
+//     framesMap(replay.frames, (frame) =>
+//       queryPart.predicate(playerIndex, frame.frameNumber, replay),
+//     ),
+//   );
+//   const streaks = predicateResults.map((resultSequence, i) =>
+//     getStreaks(resultSequence, query[i].minimumLength),
+//   );
+//   const matches = streaks.reduce(combineStreaks);
+//   return matches.map(([start, _, end]) => [start, end]);
+// }
+
+export interface Highlight {
   startFrame: number;
   endFrame: number;
 }
