@@ -22,7 +22,7 @@ type Streak = [number, number, number];
 
 // Array.prototype.forEach except it will start from index -123 instead of 0.
 function framesLoop<T, U>(framesLike: T[], fn: (t: T, i: number) => U): void {
-  for (let i = -123; i < framesLike.length; i++) {
+  for (let i = /*-123*/ 0; i < framesLike.length; i++) {
     fn(framesLike[i], i);
   }
 }

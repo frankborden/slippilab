@@ -488,7 +488,8 @@ function parseFrameStartEvent(
   replayVersion: string,
 ): { frameNumber: number; randomSeed: number } {
   return {
-    frameNumber: readInt(rawData, 32, replayVersion, '2.2.0.0', offset + 0x01),
+    frameNumber:
+      readInt(rawData, 32, replayVersion, '2.2.0.0', offset + 0x01) + 123,
     randomSeed: readUint(rawData, 32, replayVersion, '2.2.0.0', offset + 0x05),
   };
 }
@@ -513,7 +514,8 @@ function parsePreFrameUpdateEvent(
     offset + 0x31,
   );
   return {
-    frameNumber: readInt(rawData, 32, replayVersion, '0.1.0.0', offset + 0x01),
+    frameNumber:
+      readInt(rawData, 32, replayVersion, '0.1.0.0', offset + 0x01) + 123,
     playerIndex: readUint(rawData, 8, replayVersion, '0.1.0.0', offset + 0x05),
     isNana: Boolean(
       readUint(rawData, 8, replayVersion, '0.1.0.0', offset + 0x06),
@@ -641,7 +643,8 @@ function parsePostFrameUpdateEvent(
     offset + 0x2a,
   );
   return {
-    frameNumber: readInt(rawData, 32, replayVersion, '0.1.0.0', offset + 0x01),
+    frameNumber:
+      readInt(rawData, 32, replayVersion, '0.1.0.0', offset + 0x01) + 123,
     playerIndex: readUint(rawData, 8, replayVersion, '0.1.0.0', offset + 0x05),
     isNana: Boolean(
       readUint(rawData, 8, replayVersion, '0.1.0.0', offset + 0x06),
@@ -782,7 +785,8 @@ function parseItemUpdateEvent(
   replayVersion: string,
 ): ItemUpdate {
   return {
-    frameNumber: readInt(rawData, 32, replayVersion, '3.0.0.0', offset + 0x01),
+    frameNumber:
+      readInt(rawData, 32, replayVersion, '3.0.0.0', offset + 0x01) + 123,
     typeId: readUint(rawData, 16, replayVersion, '3.0.0.0', offset + 0x05),
     state: readUint(rawData, 8, replayVersion, '3.0.0.0', offset + 0x07),
     facingDirection: readFloat(

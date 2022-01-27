@@ -48,7 +48,7 @@ export class ReplayViewer extends LitElement {
   debug = false;
 
   @state()
-  private currentFrame = -123;
+  private currentFrame = /*-123*/ 0;
 
   @state()
   private highestFrame = 400;
@@ -79,7 +79,7 @@ export class ReplayViewer extends LitElement {
           break;
         case 'j':
         case 'ArrowLeft':
-          this.game?.setFrame(Math.max(-123, this.currentFrame - 120));
+          this.game?.setFrame(Math.max(/*-123*/ 0, this.currentFrame - 120));
           break;
         case 'l':
         case 'ArrowRight':
@@ -101,7 +101,7 @@ export class ReplayViewer extends LitElement {
           break;
         case ',':
           this.game?.setPause();
-          this.game?.setFrame(Math.max(-123, this.currentFrame - 1));
+          this.game?.setFrame(Math.max(/*-123*/ 0, this.currentFrame - 1));
           break;
         case '+':
         case '=':
@@ -127,7 +127,7 @@ export class ReplayViewer extends LitElement {
           const num = Number(e.key);
           if (!isNaN(num)) {
             const percent = (num * 10) / 100;
-            const frame = Math.round((this.highestFrame + 123) * percent) - 123;
+            const frame = Math.round((this.highestFrame + 1) * percent);
             this.game?.setFrame(frame);
           }
           break;
@@ -222,7 +222,7 @@ export class ReplayViewer extends LitElement {
       this.canvas,
       this.dark,
       this.debug,
-      -123,
+      0, // -123,
     );
     this.game.resize(this.canvas.width, this.canvas.height);
     this.game.onTick(
@@ -232,7 +232,7 @@ export class ReplayViewer extends LitElement {
 
   private clicked() {
     if (this.slider) {
-      this.game?.setFrame(this.slider.value);
+      this.game?.setFrame(this.slider.value + 123);
     }
   }
 
@@ -275,12 +275,12 @@ export class ReplayViewer extends LitElement {
         ></canvas>
         <sp-slider
           hide-value-label
-          label="${this.currentFrame}/${this.highestFrame}"
+          label="${this.currentFrame - 123}/${this.highestFrame - 123}"
           ?hidden="${!this.replay}"
           variant="filled"
-          min="-123"
-          max=${this.highestFrame}
-          .value=${this.currentFrame}
+          min="0"
+          max=${this.highestFrame - 123}
+          .value=${this.currentFrame - 123}
           @change=${this.clicked}
           @input=${this.clicked}
         ></sp-slider>

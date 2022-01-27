@@ -22,7 +22,7 @@ interface Camera {
 }
 
 export class Game {
-  public currentFrameNumber = -123;
+  public currentFrameNumber = /*-123*/ 0;
 
   private camera: Camera = {
     scale: 1,
