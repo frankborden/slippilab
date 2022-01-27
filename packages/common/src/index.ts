@@ -2,10 +2,7 @@
 export interface ReplayData {
   settings: GameSettings;
   /**
-   * Starts at index -123. Player control starts at -39. Timer starts at 0.
-   * TODO: Consider re-indexing to be 0-indexed, Array methods and iteration
-   * will assume 0-indexing. frameNumber properties and UI could still map back
-   * to be -123 indexed.
+   * Player control starts at 84. Timer starts at 123.
    */
   frames: Frame[];
   /** Cause of game end. To determine winner you must examine the last frame. */

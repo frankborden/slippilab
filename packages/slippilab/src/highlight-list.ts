@@ -48,7 +48,7 @@ export class HighlightList extends LitElement {
           ${this.highlights.map(
             (highlight, index) =>
               html`<option value=${index}>
-                ${highlight.startFrame}-${highlight.endFrame}
+                ${highlight.startFrame - 123}-${highlight.endFrame - 123}
               </option>`,
           )}
         </select>

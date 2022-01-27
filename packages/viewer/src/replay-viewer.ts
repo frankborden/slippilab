@@ -48,7 +48,7 @@ export class ReplayViewer extends LitElement {
   debug = false;
 
   @state()
-  private currentFrame = /*-123*/ 0;
+  private currentFrame = 0;
 
   @state()
   private highestFrame = 400;
@@ -79,7 +79,7 @@ export class ReplayViewer extends LitElement {
           break;
         case 'j':
         case 'ArrowLeft':
-          this.game?.setFrame(Math.max(/*-123*/ 0, this.currentFrame - 120));
+          this.game?.setFrame(Math.max(0, this.currentFrame - 120));
           break;
         case 'l':
         case 'ArrowRight':
@@ -101,7 +101,7 @@ export class ReplayViewer extends LitElement {
           break;
         case ',':
           this.game?.setPause();
-          this.game?.setFrame(Math.max(/*-123*/ 0, this.currentFrame - 1));
+          this.game?.setFrame(Math.max(0, this.currentFrame - 1));
           break;
         case '+':
         case '=':
@@ -195,7 +195,8 @@ export class ReplayViewer extends LitElement {
     }
     if (oldValues.has('highlight')) {
       if (this.highlight) {
-        this.game?.setFrame(this.highlight.startFrame);
+        // Start 30 frames early for context
+        this.game?.setFrame(Math.max(0, this.highlight.startFrame - 30));
       }
     }
   }
@@ -222,7 +223,7 @@ export class ReplayViewer extends LitElement {
       this.canvas,
       this.dark,
       this.debug,
-      0, // -123,
+      0,
     );
     this.game.resize(this.canvas.width, this.canvas.height);
     this.game.onTick(

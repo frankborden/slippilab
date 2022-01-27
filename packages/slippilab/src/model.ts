@@ -148,14 +148,11 @@ export class Model {
                 game,
                 query,
                 FramePredicates.either(
-                  FramePredicates.isOffstage,
-                  FramePredicates.isInHitstun,
+                  // FramePredicates.isOffstage,
+                  FramePredicates.not(FramePredicates.isInGroundedControl),
                   FramePredicates.isDead,
                 ),
-              ).map((bounds) => ({
-                startFrame: bounds[0],
-                endFrame: bounds[1],
-              })),
+              ),
             );
           }
           return {

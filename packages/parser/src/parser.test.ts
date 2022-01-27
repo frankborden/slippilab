@@ -11,21 +11,13 @@ describe('parser', () => {
     replay = parseReplay(fs.readFileSync('doubles_test.slp'));
   });
 
-  test('frames includes negative frames', () => {
-    // .length doesn't find frame indexes -123 to -1
-    // Really there are 7382 in total
-    expect(replay.frames).toHaveLength(7259);
-    expect(replay.frames[-124]).toBeUndefined();
-    expect(replay.frames[-123].frameNumber).toBe(-123);
-    expect(replay.frames[-1].frameNumber).toBe(-1);
-    expect(replay.frames[0].frameNumber).toBe(0);
-    expect(replay.frames[7258].frameNumber).toBe(7258);
-    expect(replay.frames[7259]).toBeUndefined();
+  test('frames indexes match frameNumber', () => {
+    expect(replay.frames[77].frameNumber).toBe(77);
   });
 
   test('player inputs', () => {
-    expect(replay.frames[200].players[1].inputs).toStrictEqual({
-      frameNumber: 200,
+    expect(replay.frames[323].players[1].inputs).toStrictEqual({
+      frameNumber: 323,
       isNana: false,
       physical: {
         a: true,
@@ -67,14 +59,14 @@ describe('parser', () => {
   });
 
   test('character state', () => {
-    expect(replay.frames[200].players[1].state).toStrictEqual({
+    expect(replay.frames[323].players[1].state).toStrictEqual({
       actionStateFrameCounter: 10,
       actionStateId: 66,
       attackBasedXSpeed: 0,
       attackBasedYSpeed: 0,
       currentComboCount: 1,
       facingDirection: 1,
-      frameNumber: 200,
+      frameNumber: 323,
       hitlagRemaining: 0,
       hurtboxCollisionState: 'vulnerable',
       internalCharacterId: 2,
@@ -106,7 +98,7 @@ describe('parser', () => {
   });
 
   test('item frame', () => {
-    const frameNumber = 1752;
+    const frameNumber = 1875;
     expect(replay.frames[frameNumber].items[0]).toStrictEqual({
       damageTaken: 0,
       expirationTimer: 3,
