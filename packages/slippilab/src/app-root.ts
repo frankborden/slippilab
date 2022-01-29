@@ -43,10 +43,16 @@ export class AppRoot extends LitElement {
           model.setDarkMode(!this.darkMode);
           break;
         case '[':
-          model.prev();
+          model.prevFile();
           break;
         case ']':
-          model.next();
+          model.nextFile();
+          break;
+        case ';':
+          model.prevHighlight();
+          break;
+        case "'":
+          model.nextHighlight();
           break;
       }
     });

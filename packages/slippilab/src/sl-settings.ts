@@ -70,6 +70,10 @@ export class SlippiLabSettings extends LitElement {
         <br />
         <kbd>[</kbd> Previous replay
         <br />
+        <kbd>'</kbd> Next clip
+        <br />
+        <kbd>;</kbd> Previous clip
+        <br />
         <kbd>Up</kbd> Speed up (hold)
         <br />
         <kbd>Down</kbd> Slow down (hold)

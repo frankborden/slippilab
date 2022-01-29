@@ -1,12 +1,9 @@
 import type { ReplayData } from '@slippilab/common';
-import {
-  characterNameByExternalId,
-  stageNameByExternalId,
-} from '@slippilab/common';
+import { ids } from '@slippilab/common';
 
 export type GamePredicate = (game: ReplayData, playerIndex: number) => boolean;
 
-export type Character = typeof characterNameByExternalId[number];
+export type Character = typeof ids.characterNameByExternalId[number];
 
 export type Matchup = `${Character} vs ${Character}`;
 
@@ -24,7 +21,7 @@ export const isCharacter =
       (playerSettings) =>
         playerSettings.playerIndex === playerIndex &&
         playerSettings.externalCharacterId ===
-          characterNameByExternalId.indexOf(character),
+          ids.characterNameByExternalId.indexOf(character),
     ) ?? false;
 
 export const vsCharacter =
@@ -34,14 +31,14 @@ export const vsCharacter =
       (playerSettings) =>
         playerSettings.playerIndex !== playerIndex &&
         playerSettings.externalCharacterId ===
-          characterNameByExternalId.indexOf(character),
+          ids.characterNameByExternalId.indexOf(character),
     ) ?? false;
 
-export type Stage = typeof stageNameByExternalId[number];
+export type Stage = typeof ids.stageNameByExternalId[number];
 
 export const isStage =
   (stage: Stage) => (game: ReplayData, _playerIndex: number) =>
-    game.settings.stageId === stageNameByExternalId.indexOf(stage);
+    game.settings.stageId === ids.stageNameByExternalId.indexOf(stage);
 
 const tournamentStages: Stage[] = [
   'Battlefield',
@@ -53,7 +50,7 @@ const tournamentStages: Stage[] = [
 ];
 export const isTournamentStage = (game: ReplayData, _playerIndex: number) =>
   tournamentStages
-    .map((stage) => stageNameByExternalId.indexOf(stage))
+    .map((stage) => ids.stageNameByExternalId.indexOf(stage))
     .filter((stageId) => stageId === game.settings.stageId).length > 0;
 
 export const hasConnectCode =

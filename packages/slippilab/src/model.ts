@@ -1,9 +1,10 @@
 import { parseReplay } from '@slippilab/parser';
 import { Subject } from 'rxjs';
-import { FramePredicates, run } from '@slippilab/search';
+import { run } from '@slippilab/search';
 import type { Highlight, Query } from '@slippilab/search';
 import { supportedStagesById } from '@slippilab/viewer';
-import type { ReplayData } from '@slippilab/common';
+import { framePredicates } from '@slippilab/common';
+import type { Predicate, ReplayData } from '@slippilab/common';
 
 export interface Replay {
   fileName: string;
@@ -18,7 +19,7 @@ export interface State {
   currentFileIndex?: number;
   currentHighlightIndex?: number;
   files: File[];
-  searches: Query[];
+  searches: [Query, Predicate?][];
 }
 
 export class Model {
@@ -51,16 +52,16 @@ export class Model {
     const newState = { ...this.currentState, files };
     this.currentState = newState;
     this.stateSubject$.next(newState);
-    this.next();
+    this.nextFile();
   }
 
-  setSearches(searches: Query[]) {
+  setSearches(searches: [Query, Predicate?][]) {
     const newState = { ...this.currentState, searches };
     this.currentState = newState;
     this.stateSubject$.next(newState);
   }
 
-  async jumpTo(file: File) {
+  async jumpToFile(file: File) {
     const index = this.currentState.files.indexOf(file);
     if (this.currentState.currentFileIndex === index) {
       return;
@@ -89,7 +90,7 @@ export class Model {
     this.stateSubject$.next(newState);
   }
 
-  async next() {
+  async nextFile() {
     const initialFileIndex = this.currentState.currentFileIndex ?? -1;
     let currentFileIndex = initialFileIndex;
     let nextReplay: Replay | undefined;
@@ -112,7 +113,7 @@ export class Model {
     }
   }
 
-  async prev() {
+  async prevFile() {
     const initialFileIndex = this.currentState.currentFileIndex ?? -1;
     let currentFileIndex = initialFileIndex;
     let prevReplay: Replay | undefined;
@@ -136,6 +137,33 @@ export class Model {
     }
   }
 
+  async nextHighlight() {
+    if (!this.currentState.replay) {
+      return;
+    }
+    const initialHighlightIndex = this.currentState.currentHighlightIndex ?? -1;
+    this.jumpToHighlight(
+      this.currentState.replay.highlights[
+        (initialHighlightIndex + 1) % this.currentState.replay.highlights.length
+      ],
+    );
+  }
+
+  async prevHighlight() {
+    if (!this.currentState.replay) {
+      return;
+    }
+    const initialHighlightIndex = this.currentState.currentHighlightIndex ?? 0;
+    this.jumpToHighlight(
+      this.currentState.replay.highlights[
+        (initialHighlightIndex -
+          1 +
+          this.currentState.replay.highlights.length) %
+          this.currentState.replay.highlights.length
+      ],
+    );
+  }
+
   private async parseFile(file: File): Promise<Replay | undefined> {
     try {
       if (file.name.endsWith('.slp')) {
@@ -144,15 +172,7 @@ export class Model {
           let highlights: Highlight[] = [];
           if (game.settings.playerSettings.filter((ps) => ps).length === 2) {
             highlights = this.currentState.searches.flatMap((query) =>
-              run(
-                game,
-                query,
-                FramePredicates.either(
-                  // FramePredicates.isOffstage,
-                  FramePredicates.not(FramePredicates.isInGroundedControl),
-                  FramePredicates.isDead,
-                ),
-              ),
+              run(game, ...query),
             );
           }
           return {
@@ -180,11 +200,25 @@ export class Model {
 
 export const model = new Model();
 
-const comboQuery: Query = [
-  {
-    predicate: FramePredicates.isInHitstun,
-    minimumLength: 1,
-  },
-  { predicate: FramePredicates.isDead, minimumLength: 1, delayed: true },
+// // In hitstun and then eventually dies without regaining grounded control.
+// // It could be a 1 hit "combo" though... :(
+// const comboQuery: [Query, Predicate] = [
+//   [
+//     { predicate: framePredicates.isInHitstun },
+//     { predicate: framePredicates.isDead, delayed: true },
+//   ],
+//   framePredicates.not(framePredicates.isInGroundedControl),
+// ];
+// model.setSearches([comboQuery]);
+const grabPunishQuery: [Query, Predicate?] = [
+  [
+    { predicate: framePredicates.isGrabbed },
+    {
+      predicate: framePredicates.not(framePredicates.isInGroundedControl),
+      delayed: true,
+    },
+    { predicate: framePredicates.isInGroundedControl },
+  ],
+  // framePredicates.not(framePredicates.isInGroundedControl),
 ];
-model.setSearches([comboQuery]);
+model.setSearches([grabPunishQuery]);

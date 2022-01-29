@@ -24,19 +24,19 @@ export class FileList extends LitElement {
 
   private selected(e: Event) {
     const select = e.currentTarget as HTMLSelectElement;
-    model.jumpTo(this.files[Number(select.value)]);
+    model.jumpToFile(this.files[Number(select.value)]);
     select.blur();
   }
 
   private next(e: Event) {
     const arrow = e.currentTarget as HTMLElement;
-    model.next();
+    model.nextFile();
     arrow.blur();
   }
 
   private prev(e: Event) {
     const arrow = e.currentTarget as HTMLElement;
-    model.prev();
+    model.prevFile();
     arrow.blur();
   }
 

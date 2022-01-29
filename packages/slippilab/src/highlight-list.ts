@@ -1,5 +1,5 @@
 import { css, html, LitElement } from 'lit';
-import { customElement, query, state } from 'lit/decorators.js';
+import { customElement, state } from 'lit/decorators.js';
 import type { Highlight } from '@slippilab/search';
 
 import { model } from './model';
@@ -9,18 +9,16 @@ export class HighlightList extends LitElement {
   @state()
   private highlights: Highlight[] = [];
 
-  @query('select')
-  private select?: HTMLSelectElement;
+  @state()
+  private currentHighlightIndex?: number;
 
   constructor() {
     super();
     model.state$.subscribe((state) => {
       if (this.highlights !== state.replay?.highlights) {
         this.highlights = state.replay?.highlights ?? [];
-        if (this.select) {
-          this.select.value = '-1';
-        }
       }
+      this.currentHighlightIndex = state.currentHighlightIndex;
     });
   }
 
@@ -47,7 +45,10 @@ export class HighlightList extends LitElement {
         <select size="30" @change=${this.selected}>
           ${this.highlights.map(
             (highlight, index) =>
-              html`<option value=${index}>
+              html`<option
+                value=${index}
+                ?selected=${this.currentHighlightIndex === index}
+              >
                 ${highlight.startFrame - 123}-${highlight.endFrame - 123}
               </option>`,
           )}

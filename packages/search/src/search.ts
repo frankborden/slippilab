@@ -1,16 +1,9 @@
-import type { ReplayData } from '@slippilab/common';
+import type { Predicate, ReplayData } from '@slippilab/common';
 
 export interface Highlight {
   startFrame: number;
   endFrame: number;
 }
-
-/** */
-export type Predicate = (
-  playerIndex: number,
-  frameNumber: number,
-  replay: ReplayData,
-) => boolean;
 
 /** */
 export interface QueryPart {
@@ -135,8 +128,9 @@ function combineStreaks(
       // unless delayed is true and always streak covers the difference or is
       // absent.
       .filter(
-        ([[_, aMinimum, aFail], [bStart, _1, _2]]) =>
-          bStart > aMinimum &&
+        ([[_1, aMinimum, aFail], [bStart, bMinimum, bFail]]) =>
+          (bStart > aMinimum ||
+            aMinimum - bStart <= bFail - (bMinimum - bStart)) &&
           (bStart <= aFail ||
             (delayed &&
               (alwaysStreaks === undefined ||
