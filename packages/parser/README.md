@@ -25,7 +25,7 @@ npm install @slippilab/parser
 ### URL import from a CDN
 
 ```
-import { Game } from 'https://cdn.skypack.dev/@slippilab/parser';
+import { parseReplay } from 'https://cdn.skypack.dev/@slippilab/parser';
 ```
 
 ## Example
@@ -33,10 +33,10 @@ import { Game } from 'https://cdn.skypack.dev/@slippilab/parser';
 ```
 <html>
   <script type="module">
-    import { Game } from 'https://cdn.skypack.dev/@slippilab/parser';
+    import { parseReplay } from 'https://cdn.skypack.dev/@slippilab/parser';
     const input = document.querySelector('#replayInput');
     input.onchange = async () =>
-      console.log(new Game(await input.files[0].arrayBuffer()));
+      console.log(parseReplay(await input.files[0].arrayBuffer()));
   </script>
   <input id="replayInput" type="file"/>
 </html>
@@ -45,6 +45,3 @@ import { Game } from 'https://cdn.skypack.dev/@slippilab/parser';
 ## Future work ideas
 
 1. Finish exposing various fields from the file. There are a lot of less important fields are still left as TODOs.
-1. Add unit test coverage.
-1. Re-organize the data structures to be more convenient. Right now it more or less follows the spec format.
-1. Offer enums/helpers for working with the IDs.

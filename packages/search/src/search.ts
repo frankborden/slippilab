@@ -129,8 +129,7 @@ function combineStreaks(
       // absent.
       .filter(
         ([[_1, aMinimum, aFail], [bStart, bMinimum, bFail]]) =>
-          (bStart > aMinimum ||
-            aMinimum - bStart <= bFail - (bMinimum - bStart)) &&
+          (bStart > aMinimum || aMinimum < bFail - (bMinimum - bStart)) &&
           (bStart <= aFail ||
             (delayed &&
               (alwaysStreaks === undefined ||

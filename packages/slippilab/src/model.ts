@@ -213,12 +213,7 @@ export const model = new Model();
 const grabPunishQuery: [Query, Predicate?] = [
   [
     { predicate: framePredicates.isGrabbed },
-    {
-      predicate: framePredicates.not(framePredicates.isInGroundedControl),
-      delayed: true,
-    },
-    { predicate: framePredicates.isInGroundedControl },
+    { predicate: framePredicates.not(framePredicates.isInGroundedControl) },
   ],
-  // framePredicates.not(framePredicates.isInGroundedControl),
 ];
 model.setSearches([grabPunishQuery]);

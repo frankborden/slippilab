@@ -186,7 +186,7 @@ const renderDebugText = (
   }
   screenLayer.context.save();
   const fontSize = screenLayer.canvas.height / 30;
-  const debugFontSize = fontSize / 2;
+  const debugFontSize = fontSize / 1.5;
   const x = (screenLayer.canvas.width * player.playerIndex) / 4;
   const y = -screenLayer.canvas.height + debugFontSize;
   screenLayer.context.scale(1, -1);
