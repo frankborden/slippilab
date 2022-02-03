@@ -214,18 +214,22 @@ export const model = new Model();
 
 // // In hitstun and then eventually dies without regaining grounded control.
 // // It could be a 1 hit "combo" though... :(
-// const comboQuery: [Query, Predicate] = [
-//   [
-//     { predicate: framePredicates.isInHitstun },
-//     { predicate: framePredicates.isDead, delayed: true },
-//   ],
-//   framePredicates.not(framePredicates.isInGroundedControl),
-// ];
-// model.setSearches([comboQuery]);
+const killComboQuery: [Query, Predicate] = [
+  [
+    { predicate: framePredicates.isInHitstun },
+    { predicate: framePredicates.isDead, delayed: true },
+  ],
+  framePredicates.not(framePredicates.isInGroundedControl),
+];
 const grabPunishQuery: [Query, Predicate?] = [
   [
     { predicate: framePredicates.isGrabbed },
     { predicate: framePredicates.not(framePredicates.isInGroundedControl) },
   ],
 ];
-model.setSearches(new Map([['grab punish', grabPunishQuery]]));
+model.setSearches(
+  new Map([
+    ['kill', killComboQuery],
+    ['grab punish', grabPunishQuery],
+  ]),
+);
