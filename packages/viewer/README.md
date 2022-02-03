@@ -18,7 +18,7 @@ someElementOnYourPage.appendChild(viewer);
 or however your framework lets you make a html template:
 
 ```
-<replay-viewer replay=myReplayObject></replay-viewer>
+<replay-viewer replay={myReplayObject}></replay-viewer>
 ```
 
 ## Controls

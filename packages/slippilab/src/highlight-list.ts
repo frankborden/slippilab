@@ -7,7 +7,7 @@ import { model } from './model';
 @customElement('highlight-list')
 export class HighlightList extends LitElement {
   @state()
-  private highlights: Highlight[] = [];
+  private highlights: [string, number, Highlight][] = [];
 
   @state()
   private currentHighlightIndex?: number;
@@ -15,16 +15,22 @@ export class HighlightList extends LitElement {
   constructor() {
     super();
     model.state$.subscribe((state) => {
-      if (this.highlights !== state.replay?.highlights) {
-        this.highlights = state.replay?.highlights ?? [];
-      }
+      this.highlights = [
+        ...(state.replay?.highlights?.entries() ?? []),
+      ].flatMap(([name, highlights]) =>
+        highlights.map((highlight): [string, number, Highlight] => [
+          name,
+          highlight.playerIndex,
+          highlight,
+        ]),
+      );
       this.currentHighlightIndex = state.currentHighlightIndex;
     });
   }
 
   private selected(e: Event) {
     const select = e.currentTarget as HTMLSelectElement;
-    model.jumpToHighlight(this.highlights[Number(select.value)]);
+    model.jumpToHighlight(this.highlights[Number(select.value)][2]);
     select.blur();
   }
 
@@ -44,11 +50,12 @@ export class HighlightList extends LitElement {
       <div class="container">
         <select size="30" @change=${this.selected}>
           ${this.highlights.map(
-            (highlight, index) =>
+            ([name, playerIndex, highlight], index) =>
               html`<option
                 value=${index}
                 ?selected=${this.currentHighlightIndex === index}
               >
+                ${name}: P${playerIndex + 1} -
                 ${highlight.startFrame - 123}-${highlight.endFrame - 123}
               </option>`,
           )}

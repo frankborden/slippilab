@@ -35,7 +35,9 @@ export class AppRoot extends LitElement {
       this.highlight =
         state.currentHighlightIndex === undefined
           ? undefined
-          : state.replay?.highlights[state.currentHighlightIndex];
+          : [...(state.replay?.highlights?.entries() ?? [])].flatMap(
+              (x) => x[1],
+            )[state.currentHighlightIndex];
     });
     window.addEventListener('keydown', (e: KeyboardEvent) => {
       switch (e.key) {

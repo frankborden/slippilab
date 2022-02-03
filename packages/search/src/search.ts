@@ -1,6 +1,7 @@
 import type { Predicate, ReplayData } from '@slippilab/common';
 
 export interface Highlight {
+  playerIndex: number;
   startFrame: number;
   endFrame: number;
 }
@@ -67,6 +68,7 @@ export function run(
         // toss the extra metadata
         .map(
           ([start, _, end]): Highlight => ({
+            playerIndex: playerSettings.playerIndex,
             startFrame: start,
             endFrame: end,
           }),

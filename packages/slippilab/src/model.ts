@@ -9,7 +9,7 @@ import type { Predicate, ReplayData } from '@slippilab/common';
 export interface Replay {
   fileName: string;
   game: ReplayData;
-  highlights: Highlight[];
+  highlights: Map<string, Highlight[]>;
 }
 
 export interface State {
@@ -19,7 +19,7 @@ export interface State {
   currentFileIndex?: number;
   currentHighlightIndex?: number;
   files: File[];
-  searches: [Query, Predicate?][];
+  searches: Map<string, [Query, Predicate?]>;
 }
 
 export class Model {
@@ -27,7 +27,7 @@ export class Model {
     darkMode: false,
     debugMode: false,
     files: [],
-    searches: [],
+    searches: new Map(),
   };
   private stateSubject$: Subject<State> = new Subject<State>();
   state$ = this.stateSubject$.asObservable();
@@ -55,7 +55,7 @@ export class Model {
     this.nextFile();
   }
 
-  setSearches(searches: [Query, Predicate?][]) {
+  setSearches(searches: Map<string, [Query, Predicate?]>) {
     const newState = { ...this.currentState, searches };
     this.currentState = newState;
     this.stateSubject$.next(newState);
@@ -81,7 +81,16 @@ export class Model {
   }
 
   async jumpToHighlight(highlight: Highlight) {
-    const index = this.currentState.replay?.highlights.indexOf(highlight);
+    console.log(highlight);
+    if (!this.currentState.replay?.highlights) {
+      return;
+    }
+    const highlightsList = [
+      ...this.currentState.replay.highlights.values(),
+    ].flatMap((x) => x);
+    const index = highlightsList.indexOf(highlight);
+    console.log(highlightsList);
+    console.log(index);
     if (index === undefined || index === -1) {
       return;
     }
@@ -142,10 +151,11 @@ export class Model {
       return;
     }
     const initialHighlightIndex = this.currentState.currentHighlightIndex ?? -1;
+    const highlightsList = [
+      ...this.currentState.replay.highlights.values(),
+    ].flatMap((x) => x);
     this.jumpToHighlight(
-      this.currentState.replay.highlights[
-        (initialHighlightIndex + 1) % this.currentState.replay.highlights.length
-      ],
+      highlightsList[(initialHighlightIndex + 1) % highlightsList.length],
     );
   }
 
@@ -154,12 +164,13 @@ export class Model {
       return;
     }
     const initialHighlightIndex = this.currentState.currentHighlightIndex ?? 0;
+    const highlightsList = [
+      ...this.currentState.replay.highlights.values(),
+    ].flatMap((x) => x);
     this.jumpToHighlight(
-      this.currentState.replay.highlights[
-        (initialHighlightIndex -
-          1 +
-          this.currentState.replay.highlights.length) %
-          this.currentState.replay.highlights.length
+      highlightsList[
+        (initialHighlightIndex - 1 + highlightsList.length) %
+          highlightsList.length
       ],
     );
   }
@@ -169,10 +180,11 @@ export class Model {
       if (file.name.endsWith('.slp')) {
         const game = parseReplay(await file.arrayBuffer());
         if (this.isSupported(game)) {
-          let highlights: Highlight[] = [];
+          let highlights: Map<string, Highlight[]> = new Map();
           if (game.settings.playerSettings.filter((ps) => ps).length === 2) {
-            highlights = this.currentState.searches.flatMap((query) =>
-              run(game, ...query),
+            [...this.currentState.searches.entries()].forEach(
+              ([name, queryParams]) =>
+                highlights.set(name, run(game, ...queryParams)),
             );
           }
           return {
@@ -216,4 +228,4 @@ const grabPunishQuery: [Query, Predicate?] = [
     { predicate: framePredicates.not(framePredicates.isInGroundedControl) },
   ],
 ];
-model.setSearches([grabPunishQuery]);
+model.setSearches(new Map([['grab punish', grabPunishQuery]]));
