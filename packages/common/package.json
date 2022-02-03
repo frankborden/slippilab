@@ -14,6 +14,7 @@
   "browser": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
+    "watch": "tsc --watch --preserveWatchOutput & node esbuild.mjs --watch",
     "build": "tsc && node esbuild.mjs",
     "prepublish": "yarn build"
   },

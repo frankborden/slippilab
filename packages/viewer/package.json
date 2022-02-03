@@ -20,6 +20,7 @@
     "lit": "^2.1.1"
   },
   "scripts": {
+    "watch": "tsc --watch --preserveWatchOutput & node esbuild.mjs --watch",
     "build": "tsc && node esbuild.mjs",
     "prepublish": "yarn build"
   },

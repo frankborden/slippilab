@@ -19,6 +19,7 @@
   },
   "scripts": {
     "test": "jest",
+    "watch": "tsc --watch --preserveWatchOutput & node esbuild.mjs --watch",
     "build": "tsc && node esbuild.mjs",
     "prepublish": "tsc && yarn test && yarn build"
   },
