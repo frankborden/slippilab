@@ -42,6 +42,7 @@
 
 - combine all of a character's jsons into one?
 - Render loop problems on windows firefox
+- truncate SVG path values
 
 ## Stage
 
@@ -72,12 +73,7 @@
 # @slippilab/search
 
 - Other filters (matchup, date, player, stage)
-- Opponent frame available to frame predicates (at least in singles)
 - Fix doubles
-
-# @slippilab/parser
-
-- Output missing data that is present in .slp (Marked as TODOs)
 
 # Export Highlight
 
@@ -92,4 +88,3 @@
 - Tests
 - Save settings
 - Webworkers?
-- Publish subpackages
