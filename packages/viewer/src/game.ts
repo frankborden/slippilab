@@ -29,13 +29,15 @@ export class Game {
     offset: new Vector(0, 0),
   };
   private stage: Stage;
-  private intervalId: number;
-  private intervalSpeed: number;
-  private fastSpeed = 1000 / 60 / 2.5;
-  private slowSpeed = (1000 / 60) * 3;
-  private normalSpeed = 1000 / 60;
+  private renderInterval = 1000 / 60; // 60fps
+  private framesPerRender = 1;
+  private lastRenderTime;
+  private tickOnceEvenIfPaused = false;
+  private normalSpeedRenderInterval = 1000 / 60;
+  private slowSpeedRenderInterval = this.normalSpeedRenderInterval * 3; // 20fps
   private tickHandler?: (currentFrameNumber: number) => any;
   private isPaused = false;
+  private isStopped = false;
 
   // You can't have an async constructor so I have to introduce a factory
   public static async create(
@@ -78,12 +80,9 @@ export class Game {
     startFrame: number,
   ) {
     this.stage = supportedStagesById[replay.settings.stageId];
-    this.intervalSpeed = this.normalSpeed;
-    this.intervalId = window.setInterval(
-      () => this.maybeTick(),
-      this.intervalSpeed,
-    );
     this.currentFrameNumber = startFrame;
+    this.lastRenderTime = Date.now();
+    this.tick();
   }
 
   public resize(newWidth: number, newHeight: number) {
@@ -98,7 +97,7 @@ export class Game {
   }
 
   public stop() {
-    window.clearInterval(this.intervalId);
+    this.isStopped = true;
     this.layers.base.context.resetTransform();
     this.tickHandler = undefined;
   }
@@ -118,92 +117,86 @@ export class Game {
   public zoomIn(): void {
     this.layers.worldSpace.context.scale(1.1, 1.1);
     this.currentFrameNumber--;
-    this.tick();
+    this.tickOnceEvenIfPaused = true;
   }
 
   public zoomOut(): void {
     this.layers.worldSpace.context.scale(1 / 1.1, 1 / 1.1);
     this.currentFrameNumber--;
-    this.tick();
+    this.tickOnceEvenIfPaused = true;
   }
 
   public setDarkMode(dark: boolean) {
     this.isDarkMode = dark;
     this.currentFrameNumber--;
-    this.tick();
+    this.tickOnceEvenIfPaused = true;
   }
 
   public setDebugMode(debug: boolean) {
     this.isDebugMode = debug;
     this.currentFrameNumber--;
-    this.tick();
+    this.tickOnceEvenIfPaused = true;
+    // this.tick();
   }
 
   public setFastSpeed(): void {
-    if (this.intervalSpeed === this.fastSpeed) {
-      return;
-    }
-    window.clearInterval(this.intervalId);
-    this.intervalSpeed = this.fastSpeed;
-    this.intervalId = window.setInterval(
-      () => this.maybeTick(),
-      this.intervalSpeed,
-    );
+    this.framesPerRender = 3;
   }
 
   public setSlowSpeed(): void {
-    if (this.intervalSpeed === this.slowSpeed) {
-      return;
-    }
-    window.clearInterval(this.intervalId);
-    this.intervalSpeed = this.slowSpeed;
-    this.intervalId = window.setInterval(
-      () => this.maybeTick(),
-      this.intervalSpeed,
-    );
+    this.renderInterval = this.slowSpeedRenderInterval;
+    this.framesPerRender = 1;
   }
 
   public setNormalSpeed(): void {
-    if (this.intervalSpeed === this.normalSpeed) {
-      return;
-    }
-    window.clearInterval(this.intervalId);
-    this.intervalSpeed = this.normalSpeed;
-    this.intervalId = window.setInterval(
-      () => this.maybeTick(),
-      this.intervalSpeed,
-    );
+    this.renderInterval = this.normalSpeedRenderInterval;
+    this.framesPerRender = 1;
   }
 
   public setFrame(newFrameNumber: number): void {
-    window.clearInterval(this.intervalId);
     this.currentFrameNumber = newFrameNumber;
-    this.tick();
-    this.intervalId = window.setInterval(() => this.maybeTick(), 1000 / 60);
-  }
-
-  private maybeTick(): void {
-    if (this.isPaused) {
-      return;
-    }
-    this.tick();
+    this.renderInterval = this.normalSpeedRenderInterval;
   }
 
   public tick(): void {
-    const frames = this.replay.frames;
-    const frame = frames[this.currentFrameNumber];
-    if (!frame) {
-      window.clearInterval(this.intervalId);
+    if (this.isStopped) {
       return;
     }
+    window.requestAnimationFrame(() => this.tick());
+    const now = Date.now();
+    const elapsed = now - this.lastRenderTime;
+    if (elapsed <= this.renderInterval) {
+      return;
+    }
+    this.lastRenderTime = now - (elapsed % this.renderInterval);
+
+    const frame = this.replay.frames[this.currentFrameNumber];
+    // Ignore pause if fastforward or slowmo
+    if (
+      !frame ||
+      (this.renderInterval === this.normalSpeedRenderInterval &&
+        this.framesPerRender === 1 &&
+        this.isPaused &&
+        !this.tickOnceEvenIfPaused)
+    ) {
+      return;
+    }
+    this.tickOnceEvenIfPaused = false;
+
     this.tickHandler?.(this.currentFrameNumber);
     clearLayers(this.layers, this.isDarkMode);
     this.updateCamera(frame, this.replay);
     this.renders.forEach((render) =>
-      render(this.layers, frame, frames, this.isDarkMode, this.isDebugMode),
+      render(
+        this.layers,
+        frame,
+        this.replay.frames,
+        this.isDarkMode,
+        this.isDebugMode,
+      ),
     );
     drawToBase(this.layers);
-    this.currentFrameNumber++;
+    this.currentFrameNumber += this.framesPerRender;
   }
 
   // TODO: move out of game file
