@@ -3,7 +3,17 @@ import { Subject } from 'rxjs';
 import { run } from '@slippilab/search';
 import type { Highlight, Query } from '@slippilab/search';
 import { supportedStagesById } from '@slippilab/viewer';
-import { framePredicates } from '@slippilab/common';
+import {
+  either,
+  isOffstage,
+  isDead,
+  isInHitstun,
+  isGrabbed,
+  isInGroundedControl,
+  isCrouching,
+  not,
+  opponent,
+} from '@slippilab/common';
 import type { Predicate, ReplayData } from '@slippilab/common';
 
 export interface Replay {
@@ -81,7 +91,6 @@ export class Model {
   }
 
   async jumpToHighlight(highlight: Highlight) {
-    console.log(highlight);
     if (!this.currentState.replay?.highlights) {
       return;
     }
@@ -89,8 +98,6 @@ export class Model {
       ...this.currentState.replay.highlights.values(),
     ].flatMap((x) => x);
     const index = highlightsList.indexOf(highlight);
-    console.log(highlightsList);
-    console.log(index);
     if (index === undefined || index === -1) {
       return;
     }
@@ -212,23 +219,35 @@ export class Model {
 
 export const model = new Model();
 
-// // In hitstun and then eventually dies without regaining grounded control.
-// // It could be a 1 hit "combo" though... :(
-const killComboQuery: [Query, Predicate] = [
+const killComboQuery: [Query, Predicate?] = [
   [
-    { predicate: framePredicates.isInHitstun },
-    { predicate: framePredicates.isDead, delayed: true },
+    { predicate: opponent(isInHitstun) },
+    { predicate: opponent(isDead), delayed: true },
   ],
-  framePredicates.not(framePredicates.isInGroundedControl),
+  not(opponent(isInGroundedControl)),
 ];
 const grabPunishQuery: [Query, Predicate?] = [
   [
-    { predicate: framePredicates.isGrabbed },
-    { predicate: framePredicates.not(framePredicates.isInGroundedControl) },
+    { predicate: opponent(isGrabbed) },
+    { predicate: not(opponent(isInGroundedControl)) },
   ],
+];
+const edgeugardQuery: [Query, Predicate?] = [
+  [
+    { predicate: opponent(isOffstage) },
+    { predicate: not(opponent(isInHitstun)), delayed: true },
+    { predicate: opponent(isInHitstun), delayed: true },
+    { predicate: opponent(isDead), delayed: true },
+  ],
+  either(opponent(isOffstage), not(opponent(isInGroundedControl))),
+];
+const crouchCancelQuery: [Query, Predicate?] = [
+  [{ predicate: isCrouching }, { predicate: isInHitstun }],
 ];
 model.setSearches(
   new Map([
+    ['crouch cancels', crouchCancelQuery],
+    ['edgeguard', edgeugardQuery],
     ['kill', killComboQuery],
     ['grab punish', grabPunishQuery],
   ]),

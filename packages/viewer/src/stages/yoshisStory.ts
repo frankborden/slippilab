@@ -56,8 +56,9 @@ export const yoshisStory: Stage = {
   ],
   topRightBlastzone: new Vector(173.6, 169),
   bottomLeftBlastzone: new Vector(-175.7, -91),
-  getMovingPlatforms: (frame: number) => {
-    const frameInLap = frame % 1200;
+  getMovingPlatforms: (frameNumber: number) => {
+    // return frameNumber to -123 based.
+    const frameInLap = (frameNumber - 123 + 1200) % 1200;
     const randallWidth = 11.9;
 
     if (476 < frameInLap && frameInLap < 1016) {

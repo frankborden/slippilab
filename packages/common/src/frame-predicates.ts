@@ -93,97 +93,129 @@ const stageData: { [stageId: number]: StageData } = {
   },
 };
 
-export const framePredicates = {
-  isGrabbed: (playerIndex: number, frameNumber: number, replay: ReplayData) => {
-    const state = replay.frames[frameNumber].players[playerIndex]?.state;
-    if (state === undefined) {
-      return true;
-    }
-    const actionStateId = state.actionStateId;
-    return actionStateId >= 0xdf && actionStateId <= 0xe8;
-  },
+export function isGrabbed(
+  playerIndex: number,
+  frameNumber: number,
+  replay: ReplayData,
+) {
+  const state = replay.frames[frameNumber].players[playerIndex]?.state;
+  if (state === undefined) {
+    return true;
+  }
+  const actionStateId = state.actionStateId;
+  return actionStateId >= 0xdf && actionStateId <= 0xe8;
+}
 
-  isInGroundedControl: (
-    playerIndex: number,
-    frameNumber: number,
-    replay: ReplayData,
-  ) => {
-    const state = replay.frames[frameNumber].players[playerIndex]?.state;
-    if (state === undefined) {
-      return true;
-    }
-    const actionStateId = state.actionStateId;
-    const ground = actionStateId >= 0x0e && actionStateId <= 0x18;
-    const squat = actionStateId >= 0x27 && actionStateId <= 0x29;
-    const groundAttack = actionStateId >= 0x2c && actionStateId <= 0x40;
-    const grab = actionStateId === 0xd4;
-    return ground || squat || groundAttack || grab;
-  },
+export function isInGroundedControl(
+  playerIndex: number,
+  frameNumber: number,
+  replay: ReplayData,
+) {
+  const state = replay.frames[frameNumber].players[playerIndex]?.state;
+  if (state === undefined) {
+    return true;
+  }
+  const actionStateId = state.actionStateId;
+  const ground = actionStateId >= 0x0e && actionStateId <= 0x18;
+  const squat = actionStateId >= 0x27 && actionStateId <= 0x29;
+  const groundAttack = actionStateId >= 0x2c && actionStateId <= 0x40;
+  const grab = actionStateId === 0xd4;
+  return ground || squat || groundAttack || grab;
+}
 
-  isInHitstun: (
-    playerIndex: number,
-    frameNumber: number,
-    replay: ReplayData,
-  ) => {
-    const state = replay.frames[frameNumber].players[playerIndex]?.state;
-    if (state === undefined) {
+export function isInHitstun(
+  playerIndex: number,
+  frameNumber: number,
+  replay: ReplayData,
+) {
+  const state = replay.frames[frameNumber].players[playerIndex]?.state;
+  if (state === undefined) {
+    return false;
+  }
+  const actionStateId = state.actionStateId;
+  return (
+    (actionStateId >= 0x4b && actionStateId <= 0x5b) || actionStateId === 0x26
+  );
+}
+
+export function isCrouching(
+  playerIndex: number,
+  frameNumber: number,
+  replay: ReplayData,
+) {
+  const state = replay.frames[frameNumber].players[playerIndex]?.state;
+  if (state === undefined) {
+    return false;
+  }
+  const actionStateId = state.actionStateId;
+  return actionStateId === 40;
+}
+
+export function isDead(
+  playerIndex: number,
+  frameNumber: number,
+  replay: ReplayData,
+) {
+  const state = replay.frames[frameNumber].players[playerIndex]?.state;
+  if (state === undefined) {
+    return true;
+  }
+  const actionStateId = state.actionStateId;
+  return actionStateId >= 0x00 && actionStateId <= 0x0a;
+}
+export function isOffstage(
+  playerIndex: number,
+  frameNumber: number,
+  replay: ReplayData,
+) {
+  const currentStageData = stageData[replay.settings.stageId];
+  if (currentStageData === undefined) {
+    return false;
+  }
+  const state = replay.frames[frameNumber].players[playerIndex]?.state;
+  if (state === undefined) {
+    return false;
+  }
+  return (
+    state.yPosition! < currentStageData.mainPlatformHeight ||
+    state.xPosition! < currentStageData.leftLedgeX ||
+    state.xPosition! > currentStageData.rightLedgeX
+  );
+}
+
+// TODO: work in doubles
+export function opponent(predicate: Predicate): Predicate {
+  return (playerIndex: number, frameNumber: number, replay: ReplayData) => {
+    const otherPlayerIndex = replay.frames[frameNumber].players
+      .filter((p) => p)
+      .find((p) => p.playerIndex !== playerIndex)?.playerIndex;
+    if (otherPlayerIndex === undefined) {
       return false;
     }
-    const actionStateId = state.actionStateId;
-    return (
-      (actionStateId >= 0x4b && actionStateId <= 0x5b) || actionStateId === 0x26
+    return predicate(otherPlayerIndex, frameNumber, replay);
+  };
+}
+
+export function either(...predicates: Predicate[]): Predicate {
+  return (playerIndex: number, frameNumber: number, replay: ReplayData) => {
+    return predicates.some((predicate) =>
+      predicate(playerIndex, frameNumber, replay),
     );
-  },
+  };
+}
 
-  isDead: (playerIndex: number, frameNumber: number, replay: ReplayData) => {
-    const state = replay.frames[frameNumber].players[playerIndex]?.state;
-    if (state === undefined) {
-      return true;
-    }
-    const actionStateId = state.actionStateId;
-    return actionStateId >= 0x00 && actionStateId <= 0x0a;
-  },
-  isOffstage: (
-    playerIndex: number,
-    frameNumber: number,
-    replay: ReplayData,
-  ) => {
-    const currentStageData = stageData[replay.settings.stageId];
-    if (currentStageData === undefined) {
-      return false;
-    }
-    const state = replay.frames[frameNumber].players[playerIndex]?.state;
-    if (state === undefined) {
-      return false;
-    }
-    return (
-      state.yPosition! < currentStageData.mainPlatformHeight ||
-      state.xPosition! < currentStageData.leftLedgeX ||
-      state.xPosition! > currentStageData.rightLedgeX
+export function all(...predicates: Predicate[]): Predicate {
+  return (playerIndex: number, frameNumber: number, replay: ReplayData) => {
+    return predicates.every((predicate) =>
+      predicate(playerIndex, frameNumber, replay),
     );
-  },
+  };
+}
 
-  either: (...predicates: Predicate[]): Predicate => {
-    return (playerIndex: number, frameNumber: number, replay: ReplayData) => {
-      return predicates.some((predicate) =>
-        predicate(playerIndex, frameNumber, replay),
-      );
-    };
-  },
-
-  all: (...predicates: Predicate[]): Predicate => {
-    return (playerIndex: number, frameNumber: number, replay: ReplayData) => {
-      return predicates.every((predicate) =>
-        predicate(playerIndex, frameNumber, replay),
-      );
-    };
-  },
-
-  not: (...predicates: Predicate[]): Predicate => {
-    return (playerIndex: number, frameNumber: number, replay: ReplayData) => {
-      return !predicates.some((predicate) =>
-        predicate(playerIndex, frameNumber, replay),
-      );
-    };
-  },
-};
+export function not(...predicates: Predicate[]): Predicate {
+  return (playerIndex: number, frameNumber: number, replay: ReplayData) => {
+    return !predicates.some((predicate) =>
+      predicate(playerIndex, frameNumber, replay),
+    );
+  };
+}
