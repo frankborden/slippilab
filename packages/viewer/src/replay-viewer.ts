@@ -4,7 +4,6 @@ import type { PropertyValues } from 'lit';
 import { customElement, property, query, state } from 'lit/decorators.js';
 import '@spectrum-web-components/slider/sp-slider';
 import type { Slider } from '@spectrum-web-components/slider';
-
 import type { ReplayData } from '@slippilab/common';
 import type { Highlight } from '@slippilab/search';
 import { Game } from './game';

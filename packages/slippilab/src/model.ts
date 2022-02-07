@@ -4,6 +4,7 @@ import { run } from '@slippilab/search';
 import type { Highlight, Query } from '@slippilab/search';
 import { supportedStagesById } from '@slippilab/viewer';
 import {
+  all,
   either,
   isOffstage,
   isDead,
@@ -229,7 +230,12 @@ const killComboQuery: [Query, Predicate?] = [
 const grabPunishQuery: [Query, Predicate?] = [
   [
     { predicate: opponent(isGrabbed) },
-    { predicate: not(opponent(isInGroundedControl)) },
+    {
+      predicate: all(
+        not(opponent(isDead)),
+        either(not(opponent(isInGroundedControl)), opponent(isOffstage)),
+      ),
+    },
   ],
 ];
 const edgeugardQuery: [Query, Predicate?] = [
