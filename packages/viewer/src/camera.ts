@@ -7,6 +7,15 @@ export class Camera {
   private scale = 1;
   private offset = new Vector(0, 0);
 
+  public resetCamera(layers: Layers): void {
+    // Return to scale = 1 (excluding zoom), stage(0,0) in center of screen
+    layers.worldSpace.context.translate(this.offset.x, this.offset.y);
+    layers.worldSpace.context.scale(1 / this.scale, 1 / this.scale);
+    layers.worldSpace.context.lineWidth *= this.scale;
+    this.scale = 1;
+    this.offset = new Vector(0, 0);
+  }
+
   public updateCamera(
     currentFrame: Frame,
     game: ReplayData,

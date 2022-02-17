@@ -2,7 +2,7 @@ import type { Stage } from './common';
 import { createItemRender } from './itemRenderer';
 import { createPlayerRender } from './characters';
 import { supportedStagesById, createStageRender } from './stages';
-import { clearLayers, drawToBase, setupLayers } from './layer';
+import { clearLayers, drawToBase, resizeLayers, setupLayers } from './layer';
 import type { Layers } from './layer';
 import { Camera } from './camera';
 import type { Frame, ReplayData } from '@slippilab/common';
@@ -20,9 +20,9 @@ export class Game {
   public currentFrameNumber = 0;
 
   private camera = new Camera();
-  private stage: Stage;
+  private stage?: Stage;
   private renderInterval = 1000 / 60; // 60fps
-  private lastRenderTime;
+  private lastRenderTime = 0;
   private tickOnceEvenIfPaused = false;
   private framesPerRender = 1; // used for fast-forwarding
   private normalSpeedRenderInterval = 1000 / 60;
@@ -30,60 +30,70 @@ export class Game {
   private tickHandler?: (currentFrameNumber: number) => any;
   private isPaused = false;
   private isStopped = false;
-
-  // You can't have an async constructor so I have to introduce a factory
-  public static async create(
-    replay: ReplayData,
-    baseCanvas: HTMLCanvasElement,
-    isDarkMode: boolean,
-    isDebugMode: boolean,
-    startFrame: number,
-  ): Promise<Game> {
-    return new Game(
-      replay,
-      setupLayers(baseCanvas),
-      [
-        createStageRender(supportedStagesById[replay.settings.stageId]),
-        ...(await Promise.all(
-          replay.settings.playerSettings
-            .filter((player) => Boolean(player))
-            .map((player) =>
-              createPlayerRender(
-                player,
-                replay.settings.playerSettings,
-                replay.settings.isTeams,
-              ),
-            ),
-        )),
-        createItemRender(),
-      ],
-      isDarkMode,
-      isDebugMode,
-      startFrame,
-    );
-  }
+  private layers: Layers;
+  private renders: Render[] = [];
+  private replay?: ReplayData;
+  private animationFrame?: number;
 
   constructor(
-    private replay: ReplayData,
-    private layers: Layers,
-    private renders: Render[],
+    baseCanvas: HTMLCanvasElement,
     private isDarkMode: boolean,
     private isDebugMode: boolean,
-    startFrame: number,
   ) {
-    this.stage = supportedStagesById[replay.settings.stageId];
-    this.currentFrameNumber = startFrame;
-    this.lastRenderTime = Date.now();
-    this.tick();
+    this.layers = setupLayers(baseCanvas);
   }
 
   public resize(newWidth: number, newHeight: number) {
     this.layers.base.canvas.width = newWidth;
     this.layers.base.canvas.height = newHeight;
-    this.layers = setupLayers(this.layers.base.canvas);
     // TODO: maintain zoomed amount somehow?
-    this.camera = new Camera();
+    this.camera.resetCamera(this.layers);
+    resizeLayers(this.layers);
   }
+
+  public loadReplay(replay: ReplayData, startFrame: number): void {
+    if (this.animationFrame) {
+      window.cancelAnimationFrame(this.animationFrame);
+    }
+    this.layers.base.context.save();
+    this.layers.base.context.fillStyle = 'black';
+    this.layers.base.context.font = `${
+      this.layers.base.canvas.height / 80
+    }px Verdana`;
+    this.layers.base.context.textAlign = 'center';
+    this.layers.base.context?.fillText(
+      'Loading and caching animations',
+      this.layers.base.canvas.width / 2,
+      this.layers.base.canvas.height / 2,
+    );
+    this.layers.base.context.restore();
+    this.replay = replay;
+    this.camera.resetCamera(this.layers);
+    this.stage = supportedStagesById[replay.settings.stageId];
+    this.currentFrameNumber = startFrame;
+    this.lastRenderTime = Date.now();
+    Promise.all(
+      replay.settings.playerSettings
+        .filter((player) => Boolean(player))
+        .map((player) =>
+          createPlayerRender(
+            player,
+            replay.settings.playerSettings,
+            replay.settings.isTeams,
+          ),
+        ),
+    ).then((playerRenders) => {
+      this.renders = [
+        createStageRender(supportedStagesById[replay.settings.stageId]),
+        ...playerRenders,
+        createItemRender(),
+      ];
+      this.isPaused = false;
+      this.tick();
+    });
+  }
+
+  public playHighlight(): void {}
 
   public stop() {
     this.isStopped = true;
@@ -91,8 +101,8 @@ export class Game {
     this.tickHandler = undefined;
   }
 
-  public onTick(tickHandler: (currentFrameNumber: number) => any) {
-    this.tickHandler = tickHandler;
+  public onTick(handler: (currentFrameNumber: number) => void) {
+    this.tickHandler = handler;
   }
 
   public togglePause(): void {
@@ -128,7 +138,7 @@ export class Game {
   }
 
   public setFastSpeed(): void {
-    this.framesPerRender = 3; // 150 fps
+    this.framesPerRender = 3; // 180 fps
   }
 
   public setSlowSpeed(): void {
@@ -151,7 +161,7 @@ export class Game {
     if (this.isStopped) {
       return;
     }
-    window.requestAnimationFrame(() => this.tick());
+    this.animationFrame = window.requestAnimationFrame(() => this.tick());
     const now = Date.now();
     const elapsed = now - this.lastRenderTime;
     if (elapsed <= this.renderInterval) {
@@ -159,10 +169,14 @@ export class Game {
     }
     this.lastRenderTime = now - (elapsed % this.renderInterval);
 
-    const frame = this.replay.frames[this.currentFrameNumber];
+    const frames = this.replay?.frames;
+    const frame = frames?.[this.currentFrameNumber];
     // Ignore pause if fastforward or slowmo
     if (
+      !this.replay ||
+      !frames ||
       !frame ||
+      !this.stage ||
       (this.renderInterval === this.normalSpeedRenderInterval &&
         this.framesPerRender === 1 &&
         this.isPaused &&
@@ -176,17 +190,9 @@ export class Game {
     clearLayers(this.layers, this.isDarkMode);
     this.camera.updateCamera(frame, this.replay, this.stage, this.layers);
     this.renders.forEach((render) =>
-      render(
-        this.layers,
-        frame,
-        this.replay.frames,
-        this.isDarkMode,
-        this.isDebugMode,
-      ),
+      render(this.layers, frame, frames, this.isDarkMode, this.isDebugMode),
     );
     drawToBase(this.layers);
     this.currentFrameNumber += this.framesPerRender;
   }
-
-  // TODO: move out of game file
 }

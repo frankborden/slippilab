@@ -26,6 +26,23 @@ export const setupLayers = (canvas: HTMLCanvasElement): Layers => {
   };
 };
 
+export const resizeLayers = (layers: Layers): void => {
+  const width = layers.base.canvas.width;
+  const height = layers.base.canvas.height;
+  layers.screenSpace.canvas.width = width;
+  layers.screenSpace.canvas.height = height;
+  layers.screenSpace.context.resetTransform();
+  layers.screenSpace.context.translate(0, height);
+  layers.worldSpace.context.scale(1, -1);
+  layers.worldSpace.canvas.width = width;
+  layers.worldSpace.canvas.height = height;
+  layers.worldSpace.context.resetTransform();
+  layers.worldSpace.context.translate(0, height);
+  layers.worldSpace.context.scale(1, -1);
+
+  layers.worldSpace.context.translate(width / 2, height / 2);
+};
+
 export const drawToBase = (layers: Layers): void => {
   layers.base.context.drawImage(layers.worldSpace.canvas, 0, 0);
   layers.base.context.drawImage(layers.screenSpace.canvas, 0, 0);
@@ -35,7 +52,6 @@ export const clearLayers = (layers: Layers, isDarkMode: boolean): void => {
   clearLayer(layers.base);
   clearLayer(layers.worldSpace);
   clearLayer(layers.screenSpace);
-  // workaround for GIF background not working
   layers.base.context.save();
   layers.base.context.resetTransform();
   layers.base.context.fillStyle = isDarkMode ? 'black' : '#EEEEEE';

@@ -1,4 +1,3 @@
-//import GIF from 'gif.js';
 import { css, html, LitElement } from 'lit';
 import type { PropertyValues } from 'lit';
 import { customElement, property, query, state } from 'lit/decorators.js';
@@ -47,10 +46,7 @@ export class ReplayViewer extends LitElement {
   debug = false;
 
   @state()
-  private currentFrame = 0;
-
-  @state()
-  private highestFrame = 400;
+  private currentFrame = 123;
 
   @query('canvas')
   private canvas?: HTMLCanvasElement;
@@ -59,79 +55,101 @@ export class ReplayViewer extends LitElement {
   private slider?: Slider;
 
   private game?: Game;
+  private keyUpListener?: (e: KeyboardEvent) => void;
+  private keyDownListener?: (e: KeyboardEvent) => void;
 
-  constructor() {
-    super();
-    window.addEventListener('keyup', (e: KeyboardEvent) => {
-      switch (e.key) {
-        case 'ArrowUp':
-        case 'ArrowDown':
-          this.game?.setNormalSpeed();
-          break;
-      }
-    });
-    window.addEventListener('keydown', (e: KeyboardEvent) => {
-      switch (e.key) {
-        case ' ':
-        case 'k':
-          this.game?.togglePause();
-          break;
-        case 'j':
-        case 'ArrowLeft':
-          this.game?.setFrame(Math.max(0, this.currentFrame - 120));
-          break;
-        case 'l':
-        case 'ArrowRight':
-          this.game?.setFrame(
-            Math.min(this.highestFrame, this.currentFrame + 120),
-          );
-          break;
-        case 'ArrowUp':
-          this.game?.setFastSpeed();
-          break;
-        case 'ArrowDown':
-          this.game?.setSlowSpeed();
-          break;
-        case '.':
-          this.game?.setPause();
-          this.game?.setFrame(
-            Math.min(this.highestFrame, this.currentFrame + 1),
-          );
-          break;
-        case ',':
-          this.game?.setPause();
-          this.game?.setFrame(Math.max(0, this.currentFrame - 1));
-          break;
-        case '+':
-        case '=':
-          this.game?.zoomIn();
-          break;
-        case '-':
-        case '_':
-          this.game?.zoomOut();
-          break;
-        case 'g':
-          this.captureGif();
-          break;
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-          const num = Number(e.key);
-          if (!isNaN(num)) {
-            const percent = (num * 10) / 100;
-            const frame = Math.round((this.highestFrame + 1) * percent);
-            this.game?.setFrame(frame);
-          }
-          break;
-      }
-    });
+  private onKeyUp(e: KeyboardEvent): void {
+    switch (e.key) {
+      case 'ArrowUp':
+      case 'ArrowDown':
+        this.game?.setNormalSpeed();
+        break;
+    }
+  }
+
+  private onKeyDown(e: KeyboardEvent): void {
+    if (!this.replay) {
+      return;
+    }
+    switch (e.key) {
+      case ' ':
+      case 'k':
+        this.game?.togglePause();
+        break;
+      case 'j':
+      case 'ArrowLeft':
+        this.game?.setFrame(Math.max(0, this.currentFrame - 120));
+        break;
+      case 'l':
+      case 'ArrowRight':
+        this.game?.setFrame(
+          Math.min(this.replay.frames.length - 1, this.currentFrame + 120),
+        );
+        break;
+      case 'ArrowUp':
+        this.game?.setFastSpeed();
+        break;
+      case 'ArrowDown':
+        this.game?.setSlowSpeed();
+        break;
+      case '.':
+        this.game?.setPause();
+        this.game?.setFrame(
+          Math.min(this.replay.frames.length - 1, this.currentFrame + 1),
+        );
+        break;
+      case ',':
+        this.game?.setPause();
+        this.game?.setFrame(Math.max(0, this.currentFrame - 1));
+        break;
+      case '+':
+      case '=':
+        this.game?.zoomIn();
+        break;
+      case '-':
+      case '_':
+        this.game?.zoomOut();
+        break;
+      case '0':
+      case '1':
+      case '2':
+      case '3':
+      case '4':
+      case '5':
+      case '6':
+      case '7':
+      case '8':
+      case '9':
+        const num = Number(e.key);
+        if (!isNaN(num)) {
+          const percent = (num * 10) / 100;
+          const frame = Math.round(this.replay.frames.length * percent);
+          this.game?.setFrame(frame);
+        }
+        break;
+    }
+  }
+
+  override connectedCallback(): void {
+    super.connectedCallback();
+    window.addEventListener(
+      'keyup',
+      (this.keyUpListener = (e) => this.onKeyUp(e)),
+    );
+    window.addEventListener(
+      'keydown',
+      (this.keyDownListener = (e) => this.onKeyDown(e)),
+    );
+  }
+
+  override disconnectedCallback(): void {
+    super.disconnectedCallback();
+    if (this.keyUpListener) {
+      window.removeEventListener('keyup', this.keyUpListener);
+    }
+    if (this.keyDownListener) {
+      window.removeEventListener('keydown', this.keyDownListener);
+    }
   }
 
   firstUpdated() {
@@ -187,9 +205,6 @@ export class ReplayViewer extends LitElement {
       this.game?.setDebugMode(this.debug);
     }
     if (oldValues.has('replay')) {
-      if (oldValues.get('replay')) {
-        this.game?.stop();
-      }
       await this.setup();
     }
     if (oldValues.has('highlight')) {
@@ -201,32 +216,15 @@ export class ReplayViewer extends LitElement {
   }
 
   private async setup() {
-    const context = this.canvas?.getContext('2d');
-    if (!this.canvas || !context || !this.replay) {
+    if (!this.canvas || !this.replay) {
       return;
     }
-    const baseContext = this.canvas.getContext('2d');
-    if (baseContext) {
-      baseContext.fillStyle = 'black';
-      baseContext.font = `${this.canvas.height / 80}px Verdana`;
-      baseContext.textAlign = 'center';
-      baseContext?.fillText(
-        'Loading and caching animations',
-        this.canvas.width / 2,
-        this.canvas.height / 2,
-      );
-    }
-    this.highestFrame = this.replay.frames.length - 1;
-    this.game = await Game.create(
-      this.replay,
-      this.canvas,
-      this.dark,
-      this.debug,
-      0,
-    );
+    this.currentFrame = 0;
+    this.game ??= new Game(this.canvas, this.dark, this.debug);
+    this.game.loadReplay(this.replay, 0);
     this.game.resize(this.canvas.width, this.canvas.height);
     this.game.onTick(
-      (currentFrameNumber: number) => (this.currentFrame = currentFrameNumber),
+      (currentFrameNumber) => (this.currentFrame = currentFrameNumber),
     );
   }
 
@@ -236,35 +234,10 @@ export class ReplayViewer extends LitElement {
     }
   }
 
-  private captureGif() {
-    // const context = this.canvas?.getContext('2d');
-    // if (!context || !this.canvas || !this.game) {
-    //   return;
-    // }
-    // this.game.setPause();
-    // this.game.resize(960, 720);
-    // const gif = new GIF({
-    //   workers: 4,
-    //   quality: 10,
-    //   width: this.canvas.width,
-    //   height: this.canvas.height,
-    //   background: '#fff',
-    // });
-    // gif.on('finished', (blob: Blob, _data: Uint8Array) => {
-    //   window.open(URL.createObjectURL(blob));
-    // });
-    // for (let i = 0; i < 600; i = i + 3) {
-    //   // TODO: this is a little sped up. The GIF renders 2 frames in
-    //   // 30ms while game advances 32ms, becausethe gif spec only stores
-    //   // framerate in centiseconds, which doesn't line up =[
-    //   gif.addFrame(context, { copy: true, delay: 33 });
-    //   this.game.tick();
-    //   this.game.tick();
-    // }
-    // gif.render();
-  }
-
   render() {
+    const currentFrame = `${this.currentFrame - 123}`;
+    const lastFrame = (this.replay?.frames?.length ?? 124) - 1 - 123;
+    const progress = `${currentFrame}/${lastFrame}`;
     return html`
       <div class="container">
         <canvas
@@ -275,12 +248,12 @@ export class ReplayViewer extends LitElement {
         ></canvas>
         <sp-slider
           hide-value-label
-          label="${this.currentFrame - 123}/${this.highestFrame - 123}"
+          label="${progress}"
           ?hidden="${!this.replay}"
           variant="filled"
           min="0"
-          max=${this.highestFrame - 123}
-          .value=${this.currentFrame - 123}
+          max=${lastFrame}
+          .value=${currentFrame}
           @change=${this.clicked}
           @input=${this.clicked}
         ></sp-slider>
