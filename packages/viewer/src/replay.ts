@@ -3,14 +3,14 @@ import { isOneIndexed, animationNameByActionId } from './animations';
 import { characterNamesByInternalId } from './common';
 import type { CharacterName } from './common';
 
-export const isInFrame = (frame: Frame, player: PlayerSettings): boolean => {
+export function isInFrame(frame: Frame, player: PlayerSettings): boolean {
   return Boolean(frame.players[player.playerIndex]);
-};
+}
 
-export const getFirstFrameOfAnimation = (
+export function getFirstFrameOfAnimation(
   playerFrame: PlayerState,
   frames: Frame[],
-): PlayerState => {
+): PlayerState {
   let frameIndex = playerFrame.frameNumber - 1;
   let pastConfirmedFrame = playerFrame;
   let pastFrameToCheck = playerFrame.isNana
@@ -27,13 +27,13 @@ export const getFirstFrameOfAnimation = (
       : frames[frameIndex]?.players?.[playerFrame.playerIndex]?.state;
   }
   return pastConfirmedFrame;
-};
+}
 
-export const getFrameIndexFromDuration = (
+export function getFrameIndexFromDuration(
   playerFrame: PlayerState,
   frames: Frame[],
   player: PlayerSettings,
-): number => {
+): number {
   const firstIndex = isOneIndexed(
     player.externalCharacterId,
     playerFrame.actionStateId,
@@ -46,14 +46,14 @@ export const getFrameIndexFromDuration = (
     framesInAnimation * (firstFrame.lCancelStatus === 'successful' ? 2 : 1) -
     firstIndex
   );
-};
+}
 
-export const getFacingDirection = (
+export function getFacingDirection(
   frameFacing: number,
   animationName: string,
   character: CharacterName,
   animationFrameIndex: number,
-): number => {
+): number {
   const isBackItemToss =
     [
       'LightThrowB',
@@ -77,13 +77,13 @@ export const getFacingDirection = (
     isStandingTurnaround
     ? -frameFacing
     : frameFacing;
-};
+}
 
-export const getThrowerName = (
+export function getThrowerName(
   player: PlayerSettings,
   throwDirection: string,
   frame: Frame,
-): string => {
+): string {
   const throwerAnimationName = `Throw${throwDirection}`;
   for (let i = 0; i < 4; i++) {
     if (i === player.playerIndex) {
@@ -125,16 +125,16 @@ export const getThrowerName = (
   }
   console.log('Failed to find thrower', player.playerIndex, throwDirection);
   return 'FOX';
-};
+}
 
-export const getShade = (
+export function getShade(
   playerIndex: number,
   players: PlayerSettings[],
-): number => {
+): number {
   return players.filter(
     (player) =>
       player.playerIndex < playerIndex &&
       player.externalCharacterId === players[playerIndex].externalCharacterId &&
       player.teamId === players[playerIndex].teamId,
   ).length;
-};
+}

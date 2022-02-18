@@ -6,7 +6,7 @@ import { pokemonStadium } from './pokemonStadium';
 import { fountain } from './fountain';
 import type { Stage } from '../common';
 
-export { createStageRender } from './render';
+export { renderStage } from './render';
 export const supportedStagesById: { [stageId: number]: Stage } = {
   2: fountain,
   3: pokemonStadium,

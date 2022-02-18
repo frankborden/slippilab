@@ -1,6 +1,13 @@
 import type { Frame, ItemUpdate } from '@slippilab/common';
-import type { Render } from './game';
 import type { Layers } from './layer';
+
+export function renderItems(layers: Layers, frame: Frame) {
+  frame.items
+    ?.filter((item) => supportedItems.includes(item.typeId))
+    ?.forEach((item) => {
+      renderItem(layers.worldSpace.context, item, frame);
+    });
+}
 
 const supportedItems = [
   54, // Fox Laser
@@ -8,11 +15,11 @@ const supportedItems = [
   210, // Fly guy
 ];
 
-const renderItem = (
+function renderItem(
   worldContext: CanvasRenderingContext2D,
   item: ItemUpdate,
   frame: Frame,
-): void => {
+): void {
   worldContext.save();
   worldContext.strokeStyle = 'red';
   worldContext.fillStyle = 'red';
@@ -54,14 +61,4 @@ const renderItem = (
       break;
   }
   worldContext.restore();
-};
-
-export const createItemRender = (): Render => {
-  return (layers: Layers, frame: Frame, _frames: Frame[]) => {
-    frame.items
-      ?.filter((item) => supportedItems.includes(item.typeId))
-      ?.forEach((item) => {
-        renderItem(layers.worldSpace.context, item, frame);
-      });
-  };
-};
+}

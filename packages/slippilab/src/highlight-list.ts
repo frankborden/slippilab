@@ -10,7 +10,7 @@ export class HighlightList extends LitElement {
   private highlights: [string, number, Highlight][] = [];
 
   @state()
-  private currentHighlightIndex?: number;
+  private currentHighlightIndex = -1;
 
   constructor() {
     super();
@@ -24,7 +24,7 @@ export class HighlightList extends LitElement {
           highlight,
         ]),
       );
-      this.currentHighlightIndex = state.currentHighlightIndex;
+      this.currentHighlightIndex = state.currentHighlightIndex ?? -1;
     });
   }
 
@@ -48,7 +48,11 @@ export class HighlightList extends LitElement {
   render() {
     return html`
       <div class="container">
-        <select size="30" @change=${this.selected}>
+        <select
+          size="30"
+          .selectedIndex=${this.currentHighlightIndex ?? 0}
+          @change=${this.selected}
+        >
           ${this.highlights.map(
             ([name, playerIndex, highlight], index) =>
               html`<option

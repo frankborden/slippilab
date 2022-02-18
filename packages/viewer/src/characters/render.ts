@@ -84,11 +84,11 @@ const teamColors = [
   ['#66BB22', '#AAFF66', '#79740E'],
 ];
 
-const getPrimaryColor = (
+function getPrimaryColor(
   player: PlayerSettings,
   players: PlayerSettings[],
   isDoubles: boolean,
-): string => {
+): string {
   // CPU
   if (player.playerType === 1) {
     return 'grey';
@@ -98,27 +98,27 @@ const getPrimaryColor = (
   } else {
     return colors[player.playerIndex];
   }
-};
+}
 
-const getSecondaryColor = (
+function getSecondaryColor(
   playerFrame: PlayerState,
   lCancelStatus: 'successful' | 'missed' | undefined,
-): string => {
+): string {
   return playerFrame.hurtboxCollisionState !== 'vulnerable'
     ? 'blue' // invinc / invuln
     : lCancelStatus === 'missed'
     ? 'red' // missed lcanc
     : 'black';
-};
+}
 
-const renderStocks = (
+function renderStocks(
   screenLayer: Layer,
   frame: Frame,
   player: PlayerSettings,
   players: PlayerSettings[],
   isDoubles: boolean,
   isDarkMode: boolean,
-): void => {
+): void {
   // TODO: Handle stock count >4 or non-stock modes
   const playerFrame = frame.players[player.playerIndex].state;
   const stockCount = playerFrame.stocksRemaining;
@@ -136,16 +136,16 @@ const renderStocks = (
     screenLayer.context.stroke();
   }
   screenLayer.context.restore();
-};
+}
 
-const renderPercent = (
+function renderPercent(
   screenLayer: Layer,
   frame: Frame,
   player: PlayerSettings,
   players: PlayerSettings[],
   isDoubles: boolean,
   isDarkMode: boolean,
-): void => {
+): void {
   const playerFrame = frame.players[player.playerIndex].state;
   const characterData =
     supportedCharactersByInternalId[playerFrame.internalCharacterId];
@@ -170,9 +170,9 @@ const renderPercent = (
   screenLayer.context.fillText(percent, 0, 0);
   screenLayer.context.strokeText(percent, 0, 0);
   screenLayer.context.restore();
-};
+}
 
-const renderDebugText = (
+function renderDebugText(
   screenLayer: Layer,
   frame: Frame,
   player: PlayerSettings,
@@ -180,7 +180,7 @@ const renderDebugText = (
   isDoubles: boolean,
   isDarkMode: boolean,
   isDebugMode: boolean,
-) => {
+) {
   if (!isDebugMode) {
     return;
   }
@@ -219,16 +219,16 @@ const renderDebugText = (
   }
 
   screenLayer.context.restore();
-};
+}
 
-const renderPlayerDetails = (
+function renderPlayerDetails(
   screenLayer: Layer,
   frame: Frame,
   player: PlayerSettings,
   players: PlayerSettings[],
   isDoubles: boolean,
   isDarkMode: boolean,
-): void => {
+): void {
   const playerFrame = frame.players[player.playerIndex].state;
   const character = characterNamesByInternalId[playerFrame.internalCharacterId];
   screenLayer.context.save();
@@ -251,9 +251,9 @@ const renderPlayerDetails = (
   screenLayer.context.fillText(name, 0, 0);
   screenLayer.context.strokeText(name, 0, 0);
   screenLayer.context.restore();
-};
+}
 
-const getAnimationFrame = (
+function getAnimationFrame(
   player: PlayerSettings,
   playerFrame: PlayerState,
   frames: Frame[],
@@ -261,7 +261,7 @@ const getAnimationFrame = (
   animations: { [internalCharacterId: number]: CharacterAnimations },
   characterData: Character,
   worldContext: CanvasRenderingContext2D,
-): string | undefined => {
+): string | undefined {
   const character = characterNamesById[player.externalCharacterId];
   const characterAnimations = animations[playerFrame.internalCharacterId];
   // Determine animation
@@ -339,9 +339,9 @@ const getAnimationFrame = (
     return animationFrames[referencedFrameIndex];
   }
   return animationString;
-};
+}
 
-const renderCharacter = (
+function renderCharacter(
   worldContext: CanvasRenderingContext2D,
   frame: Frame,
   frames: Frame[],
@@ -350,7 +350,7 @@ const renderCharacter = (
   isDoubles: boolean,
   isDarkMode: boolean,
   animations: { [internalCharacterId: number]: CharacterAnimations },
-): void => {
+): void {
   function drawPlayerFrame(playerFrame: PlayerState) {
     worldContext.save();
     const characterData =
@@ -395,16 +395,16 @@ const renderCharacter = (
   if (frame.players[player.playerIndex].nanaState) {
     drawPlayerFrame(frame.players[player.playerIndex].nanaState!);
   }
-};
+}
 
-const renderShield = (
+function renderShield(
   worldContext: CanvasRenderingContext2D,
   frame: Frame,
   player: PlayerSettings,
   players: PlayerSettings[],
   isDoubles: boolean,
   isDarkMode: boolean,
-): void => {
+): void {
   function drawPlayerFrame(playerFrame: PlayerState) {
     const characterData =
       supportedCharactersByInternalId[playerFrame.internalCharacterId];
@@ -442,13 +442,13 @@ const renderShield = (
   if (frame.players[player.playerIndex].nanaState) {
     drawPlayerFrame(frame.players[player.playerIndex].nanaState!);
   }
-};
+}
 
-const renderShine = (
+function renderShine(
   worldContext: CanvasRenderingContext2D,
   frame: Frame,
   player: PlayerSettings,
-): void => {
+): void {
   const playerFrame = frame.players[player.playerIndex].state;
   const character = characterNamesByInternalId[playerFrame.internalCharacterId];
   const characterData =
@@ -482,12 +482,9 @@ const renderShine = (
   drawHexagon(1, worldContext);
   drawHexagon(0.5, worldContext);
   worldContext.restore();
-};
+}
 
-const drawHexagon = (
-  radius: number,
-  worldContext: CanvasRenderingContext2D,
-) => {
+function drawHexagon(radius: number, worldContext: CanvasRenderingContext2D) {
   worldContext.beginPath();
   const sixths = (2 * Math.PI) / 6;
   worldContext.moveTo(0, radius);
@@ -499,9 +496,9 @@ const drawHexagon = (
   }
   worldContext.closePath();
   worldContext.stroke();
-};
+}
 
-const renderUi = (
+function renderUi(
   screenLayer: Layer,
   frame: Frame,
   player: PlayerSettings,
@@ -509,7 +506,7 @@ const renderUi = (
   isDoubles: boolean,
   isDarkMode: boolean,
   isDebugMode: boolean,
-): void => {
+): void {
   screenLayer.context.save();
   renderDebugText(
     screenLayer,
@@ -520,7 +517,6 @@ const renderUi = (
     isDarkMode,
     isDebugMode,
   );
-
   const playerUiX = screenLayer.canvas.width * 0.2 * (player.playerIndex + 1);
   const playerUiY = screenLayer.canvas.height / 4;
   screenLayer.context.translate(playerUiX, playerUiY);
@@ -536,4 +532,4 @@ const renderUi = (
   );
 
   screenLayer.context.restore();
-};
+}

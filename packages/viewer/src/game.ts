@@ -1,11 +1,12 @@
 import type { Stage } from './common';
-import { createItemRender } from './itemRenderer';
+import { renderItems } from './itemRenderer';
 import { createPlayerRender } from './characters';
-import { supportedStagesById, createStageRender } from './stages';
+import { supportedStagesById } from './stages';
 import { clearLayers, drawToBase, resizeLayers, setupLayers } from './layer';
 import type { Layers } from './layer';
 import { Camera } from './camera';
 import type { Frame, ReplayData } from '@slippilab/common';
+import { renderStage } from './stages/render';
 
 // TODO: frames should just go into generators
 export type Render = (
@@ -83,17 +84,11 @@ export class Game {
           ),
         ),
     ).then((playerRenders) => {
-      this.renders = [
-        createStageRender(supportedStagesById[replay.settings.stageId]),
-        ...playerRenders,
-        createItemRender(),
-      ];
+      this.renders = playerRenders;
       this.isPaused = false;
       this.tick();
     });
   }
-
-  public playHighlight(): void {}
 
   public stop() {
     this.isStopped = true;
@@ -189,9 +184,11 @@ export class Game {
     this.tickHandler?.(this.currentFrameNumber);
     clearLayers(this.layers, this.isDarkMode);
     this.camera.updateCamera(frame, this.replay, this.stage, this.layers);
+    renderStage(this.stage, this.layers, frame, this.isDarkMode);
     this.renders.forEach((render) =>
       render(this.layers, frame, frames, this.isDarkMode, this.isDebugMode),
     );
+    renderItems(this.layers, frame);
     drawToBase(this.layers);
     this.currentFrameNumber += this.framesPerRender;
   }

@@ -1,28 +1,24 @@
 import type { Frame } from '@slippilab/common';
 import type { Line, Stage } from '../common';
-import type { Render } from '../game';
 import type { Layers } from '../layer';
 import type { Vector } from '../vector';
 
-export const createStageRender = (stage: Stage): Render => {
-  return (
-    layers: Layers,
-    frame: Frame,
-    _frames: Frame[],
-    isDarkMode: boolean,
-    _isDebugMode: boolean,
-  ) => {
-    renderStageLines(layers.worldSpace.context, frame, stage, isDarkMode);
-    renderBlastzones(layers.worldSpace.context, frame, stage, isDarkMode);
-  };
-};
+export function renderStage(
+  stage: Stage,
+  layers: Layers,
+  frame: Frame,
+  isDarkMode: boolean,
+) {
+  renderStageLines(layers.worldSpace.context, frame, stage, isDarkMode);
+  renderBlastzones(layers.worldSpace.context, frame, stage, isDarkMode);
+}
 
-const renderStageLines = (
+function renderStageLines(
   worldContext: CanvasRenderingContext2D,
   frame: Frame,
   stage: Stage,
   isDarkMode: boolean,
-): void => {
+): void {
   worldContext.save();
   worldContext.lineWidth *= 2;
   stage.parts.forEach(([color, vectors]) => {
@@ -47,14 +43,14 @@ const renderStageLines = (
     worldContext.stroke();
   });
   worldContext.restore();
-};
+}
 
-const renderBlastzones = (
+function renderBlastzones(
   worldContext: CanvasRenderingContext2D,
   _frame: Frame,
   stage: Stage,
   isDarkMode: boolean,
-): void => {
+): void {
   worldContext.save();
   worldContext.lineWidth *= isDarkMode ? 3 : 2;
   worldContext.strokeStyle = isDarkMode ? 'white' : 'black';
@@ -65,4 +61,4 @@ const renderBlastzones = (
     stage.topRightBlastzone.y - stage.bottomLeftBlastzone.y,
   );
   worldContext.restore();
-};
+}

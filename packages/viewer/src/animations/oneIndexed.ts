@@ -87,9 +87,9 @@ const oneIndexedAnimationsByCharacterId: { [characterId: number]: number[] } = {
   ],
 };
 
-export const isOneIndexed = (
+export function isOneIndexed(
   characterId: number,
   animationId: number,
-): boolean => {
+): boolean {
   return oneIndexedAnimationsByCharacterId[characterId]?.includes(animationId);
-};
+}

@@ -143,13 +143,15 @@ export class ReplayViewer extends LitElement {
   }
 
   override disconnectedCallback(): void {
-    super.disconnectedCallback();
+    this.game?.stop();
+    this.game = undefined;
     if (this.keyUpListener) {
       window.removeEventListener('keyup', this.keyUpListener);
     }
     if (this.keyDownListener) {
       window.removeEventListener('keydown', this.keyDownListener);
     }
+    super.disconnectedCallback();
   }
 
   firstUpdated() {

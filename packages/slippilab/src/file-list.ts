@@ -12,13 +12,13 @@ export class FileList extends LitElement {
   private files: File[] = [];
 
   @state()
-  private currentFileIndex?: number;
+  private currentFileIndex = 0;
 
   constructor() {
     super();
     model.state$.subscribe((state) => {
       this.files = state.files;
-      this.currentFileIndex = state.currentFileIndex;
+      this.currentFileIndex = state.currentFileIndex ?? 0;
     });
   }
 
@@ -70,7 +70,11 @@ export class FileList extends LitElement {
             <sp-icon name="ui:Arrow100"></sp-icon>
           </sp-action-button>
         </div>
-        <select size="30" @change=${this.selected}>
+        <select
+          size="30"
+          .selectedIndex=${this.currentFileIndex}
+          @change=${this.selected}
+        >
           ${this.files.map(
             (file, index) =>
               html`
