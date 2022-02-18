@@ -1031,6 +1031,7 @@ __metadata:
   resolution: "@slippilab/viewer@workspace:packages/viewer"
   dependencies:
     "@slippilab/common": "workspace:*"
+    "@slippilab/search": "workspace:*"
     "@spectrum-web-components/slider": ^0.12.2
     "@zip.js/zip.js": ^2.3.23
     esbuild: ^0.14.13
