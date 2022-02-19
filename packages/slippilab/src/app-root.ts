@@ -116,7 +116,7 @@ export class AppRoot extends LitElement {
       const url = decodeURIComponent(urlMatch[1]);
       fetch(url)
         .then((response) => response.blob())
-        .then((blob) => new File([blob], url))
+        .then((blob) => new File([blob], url.split('/').at(-1) ?? 'url.slp'))
         .then((file) => model.setFiles([file]));
     }
   }

@@ -82,7 +82,9 @@ export class FileList extends LitElement {
                   value=${index}
                   ?selected=${this.currentFileIndex === index}
                 >
-                  ${file.webkitRelativePath ?? file.name}
+                  ${file.webkitRelativePath
+                    ? file.webkitRelativePath
+                    : file.name}
                 </option>
               `,
           )}
