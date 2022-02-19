@@ -10,7 +10,7 @@
     "check": "tsc",
     "watch": "yarn packages/common watch & yarn packages/parser watch & yarn packages/search watch & yarn packages/viewer watch",
     "start": "yarn watch & vite --clearScreen false",
-    "build": "yarn packages/common build && yarn packages/parser build && yarn packages/viewer build && yarn packages/search build && yarn packages/slippilab build && vite build",
+    "build": "yarn packages/common build && yarn packages/parser build && yarn packages/search build && yarn packages/viewer build && yarn packages/slippilab build && vite build",
     "format": "prettier --write \"./**/*.ts\""
   },
   "devDependencies": {

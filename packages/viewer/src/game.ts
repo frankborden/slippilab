@@ -50,6 +50,7 @@ export class Game {
     // TODO: maintain zoomed amount somehow?
     this.camera.resetCamera(this.layers);
     resizeLayers(this.layers);
+    this.tickOnceEvenIfPaused = true;
   }
 
   public loadReplay(replay: ReplayData, startFrame: number): void {
