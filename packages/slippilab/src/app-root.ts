@@ -109,7 +109,19 @@ export class AppRoot extends LitElement {
   @state()
   private debugMode = false;
 
-  render() {
+  override connectedCallback(): void {
+    super.connectedCallback();
+    const urlMatch = window.location.search.match(/\?replayUrl=(.*\.slp)$/);
+    if (urlMatch?.[1]) {
+      const url = decodeURIComponent(urlMatch[1]);
+      fetch(url)
+        .then((response) => response.blob())
+        .then((blob) => new File([blob], url))
+        .then((file) => model.setFiles([file]));
+    }
+  }
+
+  override render() {
     return html`
       <sp-theme
         scale="large"
