@@ -243,15 +243,10 @@ function renderPlayerDetails(
   // flip text back right-side after global flip
   screenLayer.context.scale(1, -1);
 
-  const name = player.displayName
-    ? player.displayName
-    : player.connectCode
-    ? player.connectCode
-    : player.nametag
-    ? player.nametag
-    : player.playerType === 1
-    ? 'CPU'
-    : character;
+  const fallbackName = player.playerType === 1 ? 'CPU' : character;
+  const name =
+    [player.displayName, player.connectCode, player.nametag].find(Boolean) ??
+    fallbackName;
   screenLayer.context.fillText(name, 0, 0);
   screenLayer.context.strokeText(name, 0, 0);
   screenLayer.context.restore();
@@ -302,10 +297,10 @@ function getAnimationFrame(
 
   // Other work
   const facingDirection = getFacingDirection(
-    playerFrame.facingDirection,
+    playerFrame,
+    frames,
     animationName,
     character,
-    animationIndex,
   );
   worldContext.scale(facingDirection, 1);
   const isSpacieUpBMovementAction =

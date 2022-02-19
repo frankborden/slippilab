@@ -238,23 +238,23 @@ const grabPunishQuery: [Query, Predicate?] = [
     },
   ],
 ];
-const edgeugardQuery: [Query, Predicate?] = [
+const edgeguardQuery: [Query, Predicate?] = [
   [
     { predicate: opponent(isOffstage) },
     { predicate: not(opponent(isInHitstun)), delayed: true },
     { predicate: opponent(isInHitstun), delayed: true },
     { predicate: opponent(isDead), delayed: true },
   ],
-  either(opponent(isOffstage), not(opponent(isInGroundedControl))),
+  not(opponent(isInGroundedControl)),
 ];
 const crouchCancelQuery: [Query, Predicate?] = [
   [{ predicate: isCrouching }, { predicate: isInHitstun }],
 ];
 model.setSearches(
   new Map([
-    ['crouch cancels', crouchCancelQuery],
-    ['edgeguard', edgeugardQuery],
     ['kill', killComboQuery],
+    ['edgeguard', edgeguardQuery],
     ['grab punish', grabPunishQuery],
+    ['crouch cancels', crouchCancelQuery],
   ]),
 );

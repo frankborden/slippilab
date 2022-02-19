@@ -28,7 +28,7 @@ const stageData: { [stageId: number]: StageData } = {
     rightXBoundary: 198.75,
     upperYBoundary: 202.5,
     lowerYBoundary: -146.25,
-    mainPlatformHeight: 0.6214, // grassy sides are raised
+    mainPlatformHeight: 0, // grassy sides are raised at 0.6214
     sidePlatformHeight: 27.375, // moves up and down
     topPlatformHeight: 42.75,
     leftLedgeX: -63.35,

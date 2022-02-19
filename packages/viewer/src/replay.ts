@@ -49,34 +49,26 @@ export function getFrameIndexFromDuration(
 }
 
 export function getFacingDirection(
-  frameFacing: number,
+  playerFrame: PlayerState,
+  frames: Frame[],
   animationName: string,
   character: CharacterName,
-  animationFrameIndex: number,
 ): number {
-  const isBackItemToss =
-    [
-      'LightThrowB',
-      'LightThrowB4',
-      'LightThrowAirB',
-      'LightThrowAirB4',
-    ].includes(animationName) && animationFrameIndex > 7;
-  const isMarthBairTurnaround =
-    animationName === 'AttackAirB' &&
-    character === 'Marth' &&
-    animationFrameIndex > 31;
-  const isSpacieBthrowTurnaround =
-    animationName === 'ThrowB' &&
-    (character === 'Falco' || character === 'Fox') &&
-    animationFrameIndex > 8;
-  const isStandingTurnaround =
-    animationName === 'Turn' && animationFrameIndex > 5;
-  return isBackItemToss ||
-    isMarthBairTurnaround ||
-    isSpacieBthrowTurnaround ||
-    isStandingTurnaround
-    ? -frameFacing
-    : frameFacing;
+  // By default we want to use the facingDirection from the start of the
+  // animation because some moves will update facingDirection partway through
+  // and the animation should not compensate for it. For example Marth's back
+  // air. However, some animations -optionally- turn you around and the
+  // animation needs to compensate for it. In those cases we need to respect the
+  // -current- facingDirection.
+  const maybeMidairJumpTurnaround =
+    ['Jigglypuff', 'Kirby', 'Yoshi'].includes(character) &&
+    animationName.includes('Jump');
+  const maybeUpBTurnaround =
+    animationName === 'SpecialHi' || animationName === 'SpecialAirHi';
+  if (maybeUpBTurnaround || maybeMidairJumpTurnaround) {
+    return playerFrame.facingDirection;
+  }
+  return getFirstFrameOfAnimation(playerFrame, frames).facingDirection;
 }
 
 export function getThrowerName(
