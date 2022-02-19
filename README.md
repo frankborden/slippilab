@@ -3,6 +3,7 @@
 Replay your .slp files in the browser. SlippiLab is still in development.
 [slippilab.com](https://www.slippilab.com)
 
+See a [real sample from slippi.gg](<https://www.slippilab.com/?replayUrl=https://storage.googleapis.com/slippi.appspot.com/replays/115097/NA%20Final%20Bracket-201122_2005_Fox_vs_Falco_(PS).slp>)
 ![Example](screenshot.png)
 
 Background: https://github.com/project-slippi/project-slippi
