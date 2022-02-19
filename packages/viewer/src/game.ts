@@ -72,7 +72,7 @@ export class Game {
     this.camera.resetCamera(this.layers);
     this.stage = supportedStagesById[replay.settings.stageId];
     this.currentFrameNumber = startFrame;
-    this.lastRenderTime = Date.now();
+    this.lastRenderTime = 0;
     Promise.all(
       replay.settings.playerSettings
         .filter((player) => Boolean(player))
@@ -152,26 +152,32 @@ export class Game {
     this.tickOnceEvenIfPaused = true;
   }
 
-  public tick(): void {
+  // starting call will use `Date.now()` later calls will receive high precision
+  // time from `requestAnimationFrame()`.
+  public tick(timestamp: DOMHighResTimeStamp = 0): void {
+    // Break animation loop if requested.
     if (this.isStopped) {
       return;
     }
-    this.animationFrame = window.requestAnimationFrame(() => this.tick());
-    const now = Date.now();
-    const elapsed = now - this.lastRenderTime;
+    // Register to continue loop.
+    this.animationFrame = window.requestAnimationFrame(this.tick.bind(this));
+    const elapsed = timestamp - this.lastRenderTime;
+    // Don't render if not enough time has passed.
     if (elapsed <= this.renderInterval) {
       return;
     }
-    this.lastRenderTime = now - (elapsed % this.renderInterval);
+    // Base the next frame's timing off of when the current frame was supposed
+    // to start, not when it actually started.
+    this.lastRenderTime = timestamp - (elapsed % this.renderInterval);
 
     const frames = this.replay?.frames;
     const frame = frames?.[this.currentFrameNumber];
-    // Ignore pause if fastforward or slowmo
     if (
       !this.replay ||
       !frames ||
       !frame ||
       !this.stage ||
+      // Ignore pause if fastforward, slowmo mode, or we need one tick
       (this.renderInterval === this.normalSpeedRenderInterval &&
         this.framesPerRender === 1 &&
         this.isPaused &&

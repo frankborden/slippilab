@@ -5,6 +5,7 @@ import '@spectrum-web-components/slider/sp-slider';
 import type { Slider } from '@spectrum-web-components/slider';
 import type { ReplayData } from '@slippilab/common';
 import type { Highlight } from '@slippilab/search';
+import { parseReplay } from '@slippilab/parser';
 import { Game } from './game';
 
 @customElement('replay-viewer')
@@ -34,7 +35,13 @@ export class ReplayViewer extends LitElement {
     `;
   }
   @property({ type: Object })
-  replay?: ReplayData;
+  replayData?: ReplayData;
+
+  @property({ type: Object })
+  replayFile?: File;
+
+  @property({ type: String })
+  replayUrl?: string;
 
   @property({ type: Object })
   highlight?: Highlight;
@@ -68,7 +75,7 @@ export class ReplayViewer extends LitElement {
   }
 
   private onKeyDown(e: KeyboardEvent): void {
-    if (!this.replay) {
+    if (!this.replayData) {
       return;
     }
     switch (e.key) {
@@ -83,7 +90,7 @@ export class ReplayViewer extends LitElement {
       case 'l':
       case 'ArrowRight':
         this.game?.setFrame(
-          Math.min(this.replay.frames.length - 1, this.currentFrame + 120),
+          Math.min(this.replayData.frames.length - 1, this.currentFrame + 120),
         );
         break;
       case 'ArrowUp':
@@ -95,7 +102,7 @@ export class ReplayViewer extends LitElement {
       case '.':
         this.game?.setPause();
         this.game?.setFrame(
-          Math.min(this.replay.frames.length - 1, this.currentFrame + 1),
+          Math.min(this.replayData.frames.length - 1, this.currentFrame + 1),
         );
         break;
       case ',':
@@ -123,7 +130,7 @@ export class ReplayViewer extends LitElement {
         const num = Number(e.key);
         if (!isNaN(num)) {
           const percent = (num * 10) / 100;
-          const frame = Math.round(this.replay.frames.length * percent);
+          const frame = Math.round(this.replayData.frames.length * percent);
           this.game?.setFrame(frame);
         }
         break;
@@ -154,7 +161,7 @@ export class ReplayViewer extends LitElement {
     super.disconnectedCallback();
   }
 
-  firstUpdated() {
+  override firstUpdated() {
     if (!this.canvas) {
       return;
     }
@@ -184,6 +191,7 @@ export class ReplayViewer extends LitElement {
         this.slider.requestUpdate();
         const baseContext = this.canvas.getContext('2d');
         if (baseContext) {
+          baseContext.save();
           baseContext.fillStyle = 'black';
           baseContext.font = `${this.canvas.height / 80}px Verdana`;
           baseContext.textAlign = 'center';
@@ -192,6 +200,7 @@ export class ReplayViewer extends LitElement {
             this.canvas.width / 2,
             this.canvas.height / 2,
           );
+          baseContext.restore();
         }
       }
     });
@@ -206,7 +215,11 @@ export class ReplayViewer extends LitElement {
     if (oldValues.has('debug')) {
       this.game?.setDebugMode(this.debug);
     }
-    if (oldValues.has('replay')) {
+    if (
+      oldValues.has('replayData') ||
+      oldValues.has('replayFile') ||
+      oldValues.has('replayUrl')
+    ) {
       await this.setup();
     }
     if (oldValues.has('highlight')) {
@@ -218,12 +231,27 @@ export class ReplayViewer extends LitElement {
   }
 
   private async setup() {
-    if (!this.canvas || !this.replay) {
+    if (
+      !this.canvas ||
+      (!this.replayData && !this.replayUrl && !this.replayFile)
+    ) {
       return;
+    }
+    if (!this.replayData) {
+      if (this.replayFile) {
+        this.replayData = parseReplay(await this.replayFile.arrayBuffer());
+      } else if (this.replayUrl) {
+        const response = await fetch(this.replayUrl);
+        this.replayData = parseReplay(
+          await (await response.blob()).arrayBuffer(),
+        );
+      } else {
+        return;
+      }
     }
     this.currentFrame = 0;
     this.game ??= new Game(this.canvas, this.dark, this.debug);
-    this.game.loadReplay(this.replay, 0);
+    this.game.loadReplay(this.replayData, 0);
     this.game.resize(this.canvas.width, this.canvas.height);
     this.game.onTick(
       (currentFrameNumber) => (this.currentFrame = currentFrameNumber),
@@ -238,20 +266,20 @@ export class ReplayViewer extends LitElement {
 
   render() {
     const currentFrame = `${this.currentFrame - 123}`;
-    const lastFrame = (this.replay?.frames?.length ?? 124) - 1 - 123;
+    const lastFrame = (this.replayData?.frames?.length ?? 124) - 1 - 123;
     const progress = `${currentFrame}/${lastFrame}`;
     return html`
       <div class="container">
         <canvas
           width="400"
           height="200"
-          ?hidden="${!this.replay}"
+          ?hidden="${!this.replayData}"
           @click=${() => this.game?.togglePause()}
         ></canvas>
         <sp-slider
           hide-value-label
           label="${progress}"
-          ?hidden="${!this.replay}"
+          ?hidden="${!this.replayData}"
           variant="filled"
           min="0"
           max=${lastFrame}
@@ -259,7 +287,7 @@ export class ReplayViewer extends LitElement {
           @change=${this.clicked}
           @input=${this.clicked}
         ></sp-slider>
-        <div ?hidden="${Boolean(this.replay)}">Waiting for game...</div>
+        <div ?hidden="${Boolean(this.replayData)}">Waiting for game...</div>
       </div>
     `;
   }

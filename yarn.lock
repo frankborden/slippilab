@@ -982,7 +982,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@slippilab/parser@workspace:*, @slippilab/parser@workspace:packages/parser":
+"@slippilab/parser@workspace:*, @slippilab/parser@workspace:^, @slippilab/parser@workspace:packages/parser":
   version: 0.0.0-use.local
   resolution: "@slippilab/parser@workspace:packages/parser"
   dependencies:
@@ -1031,6 +1031,7 @@ __metadata:
   resolution: "@slippilab/viewer@workspace:packages/viewer"
   dependencies:
     "@slippilab/common": "workspace:*"
+    "@slippilab/parser": "workspace:^"
     "@slippilab/search": "workspace:*"
     "@spectrum-web-components/slider": ^0.12.2
     "@zip.js/zip.js": ^2.3.23

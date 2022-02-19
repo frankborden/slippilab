@@ -147,7 +147,7 @@ export class AppRoot extends LitElement {
             <replay-viewer
               .dark=${this.darkMode}
               .debug=${this.debugMode}
-              .replay=${this.replay?.game}
+              .replayData=${this.replay?.game}
               .highlight=${this.highlight}
             ></replay-viewer>
           </div>
