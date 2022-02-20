@@ -121,6 +121,17 @@ export class AppRoot extends LitElement {
     }
   }
 
+  private dragged(e: DragEvent) {
+    e.preventDefault();
+  }
+
+  private dropped(e: DragEvent) {
+    e.preventDefault();
+    if (e.dataTransfer?.files) {
+      model.setFiles(Array.from(e.dataTransfer.files));
+    }
+  }
+
   override render() {
     return html`
       <sp-theme
@@ -128,7 +139,7 @@ export class AppRoot extends LitElement {
         color=${this.darkMode ? 'dark' : 'light'}
         class=${this.darkMode ? 'dark' : ''}
       >
-        <div class="container">
+        <div class="container" @drop=${this.dropped} @dragover=${this.dragged}>
           <div class="sidebar">
             <sp-tabs selected="1">
               <sp-tab label="Replays" value="1"></sp-tab>

@@ -51,6 +51,7 @@ export class ReplaySelect extends LitElement {
   private openFolder() {
     this.dirInput?.click();
   }
+
   render() {
     return html`
       <div class="container">

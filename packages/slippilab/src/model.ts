@@ -60,7 +60,12 @@ export class Model {
   }
 
   setFiles(files: File[]) {
-    const newState = { ...this.currentState, files };
+    const newState = {
+      ...this.currentState,
+      files,
+      currentFileIndex: undefined,
+      currentHighlightIndex: undefined,
+    };
     this.currentState = newState;
     this.stateSubject$.next(newState);
     this.nextFile();
