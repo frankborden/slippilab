@@ -98,6 +98,9 @@ export class AppRoot extends LitElement {
       highlight-list {
         width: 100%;
       }
+      sp-tab-panel {
+        width: 25vw;
+      }
     `;
   }
 
