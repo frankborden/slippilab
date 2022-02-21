@@ -250,12 +250,14 @@ export class ReplayViewer extends LitElement {
       }
     }
     this.currentFrame = 0;
-    this.game ??= new Game(this.canvas, this.dark, this.debug);
+    if (!this.game) {
+      this.game = new Game(this.canvas, this.dark, this.debug);
+      this.game.resize(this.canvas.width, this.canvas.height);
+      this.game.onTick(
+        (currentFrameNumber) => (this.currentFrame = currentFrameNumber),
+      );
+    }
     this.game.loadReplay(this.replayData, 0);
-    this.game.resize(this.canvas.width, this.canvas.height);
-    this.game.onTick(
-      (currentFrameNumber) => (this.currentFrame = currentFrameNumber),
-    );
   }
 
   private clicked() {

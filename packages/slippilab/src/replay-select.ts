@@ -24,27 +24,25 @@ export class ReplaySelect extends LitElement {
   @query('#replay-input-dir')
   private dirInput?: HTMLInputElement;
 
-  @queryAll('input')
-  private inputs?: NodeListOf<HTMLInputElement>;
-
   @queryAll('sp-action-button')
   private actionButtons?: NodeListOf<ActionButton>;
 
+  private async directorySelected() {
+    this.selectFiles(this.dirInput);
+  }
+
   private async filesSelected() {
-    if (!this.inputs) {
+    this.selectFiles(this.filesInput);
+  }
+
+  private async selectFiles(input?: HTMLInputElement) {
+    if (!input?.files) {
       return;
     }
-    // TODO: clear selections. input.value='' did weird stuff.
-    const files = Array.from(this.inputs)
-      .map((input) => input.files)
-      .filter((fileList): fileList is FileList => fileList !== null)
-      .flatMap((fileList) => Array.from(fileList));
-    this.inputs.forEach((input) => input.blur());
+    if (input.files.length > 0) {
+      model.setFiles(Array.from(input.files));
+    }
     this.actionButtons?.forEach((actionButton) => actionButton.blur());
-    if (!files || files.length === 0) {
-      return;
-    }
-    model.setFiles(files);
   }
 
   private openFile() {
@@ -77,7 +75,7 @@ export class ReplaySelect extends LitElement {
           name="replay-input-dir"
           type="file"
           webkitdirectory
-          @change=${this.filesSelected}
+          @change=${this.directorySelected}
         />
       </div>
     `;

@@ -53,10 +53,23 @@ export class Game {
     this.tickOnceEvenIfPaused = true;
   }
 
-  public loadReplay(replay: ReplayData, startFrame: number): void {
-    if (this.animationFrame) {
-      window.cancelAnimationFrame(this.animationFrame);
-    }
+  public async loadReplay(
+    replay: ReplayData,
+    startFrame: number,
+  ): Promise<void> {
+    const playerRenders = await Promise.all(
+      replay.settings.playerSettings
+        .filter((player) => Boolean(player))
+        .map((player) =>
+          createPlayerRender(
+            player,
+            replay.settings.playerSettings,
+            replay.settings.isTeams,
+          ),
+        ),
+    );
+    this.renders = playerRenders;
+    this.isPaused = false;
     this.layers.base.context.save();
     this.layers.base.context.fillStyle = 'black';
     this.layers.base.context.font = `${
@@ -74,21 +87,9 @@ export class Game {
     this.stage = supportedStagesById[replay.settings.stageId];
     this.currentFrameNumber = startFrame;
     this.lastRenderTime = 0;
-    Promise.all(
-      replay.settings.playerSettings
-        .filter((player) => Boolean(player))
-        .map((player) =>
-          createPlayerRender(
-            player,
-            replay.settings.playerSettings,
-            replay.settings.isTeams,
-          ),
-        ),
-    ).then((playerRenders) => {
-      this.renders = playerRenders;
-      this.isPaused = false;
+    if (this.animationFrame === undefined) {
       this.tick();
-    });
+    }
   }
 
   public stop() {

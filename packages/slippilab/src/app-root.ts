@@ -77,6 +77,7 @@ export class AppRoot extends LitElement {
         grid-template: 1fr / 1fr 3fr;
       }
       .sidebar {
+        height: 100vh;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
