@@ -31,12 +31,15 @@ export class ReplaySelect extends LitElement {
   private actionButtons?: NodeListOf<ActionButton>;
 
   private async filesSelected() {
-    // TODO: clear selections
-    const files = Array.from(this.inputs ?? [])
-      ?.map((input) => input.files)
-      ?.filter((fileList): fileList is FileList => fileList !== null)
-      ?.flatMap((fileList) => Array.from(fileList));
-    this.inputs?.forEach((input) => input.blur());
+    if (!this.inputs) {
+      return;
+    }
+    // TODO: clear selections. input.value='' did weird stuff.
+    const files = Array.from(this.inputs)
+      .map((input) => input.files)
+      .filter((fileList): fileList is FileList => fileList !== null)
+      .flatMap((fileList) => Array.from(fileList));
+    this.inputs.forEach((input) => input.blur());
     this.actionButtons?.forEach((actionButton) => actionButton.blur());
     if (!files || files.length === 0) {
       return;

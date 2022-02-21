@@ -27,9 +27,7 @@
 - Shield put up / take down animation
 - Correct laser & fly guy sizes
 - Tether grabs / air tethers
-- Many animations are backwards if they turn you around
-  - rolls/some bairs/run turn/some throws/others?
-- Powershield animation 0x0b6: 'GUARD', //GuardReflect (182 decimal)
+  Powershield animation 0x0b6: 'GUARD', //GuardReflect (182 decimal)
 - Lightshield: Read pre.trigger, do some math?
 - Death animation
 - Effects for hits/electric/fire/darkness
@@ -86,5 +84,5 @@
 # @slippilab/slippilab
 
 - Tests
-- Save settings
-- Webworkers?
+- Save settings, localstorage?
+- Webworkers for parsing?
