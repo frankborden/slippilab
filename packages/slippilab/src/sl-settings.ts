@@ -32,10 +32,12 @@ export class SlippiLabSettings extends LitElement {
   }
 
   private toggleDarkMode(): void {
+    localStorage.setItem('darkMode', String(!this.darkMode));
     model.setDarkMode(!this.darkMode);
   }
 
   private toggleDebugMode(): void {
+    localStorage.setItem('debugMode', String(!this.debugMode));
     model.setDebugMode(!this.debugMode);
   }
 
