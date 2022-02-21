@@ -62,7 +62,7 @@ export class Model {
   setFiles(files: File[]) {
     const newState = {
       ...this.currentState,
-      files,
+      files: files.filter((file) => file.name.endsWith('.slp')),
       currentFileIndex: undefined,
       currentHighlightIndex: undefined,
     };
