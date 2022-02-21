@@ -1,5 +1,6 @@
 import { parseReplay } from '@slippilab/parser';
 import { Subject } from 'rxjs';
+import { BlobReader, BlobWriter, ZipReader } from '@zip.js/zip.js';
 import { run } from '@slippilab/search';
 import type { Highlight, Query } from '@slippilab/search';
 import { supportedStagesById } from '@slippilab/viewer';
@@ -59,10 +60,15 @@ export class Model {
     this.stateSubject$.next(newState);
   }
 
-  setFiles(files: File[]) {
+  async setFiles(files: File[]) {
+    const slps = files.filter((file) => file.name.endsWith('.slp'));
+    const zips = files.filter((file) => file.name.endsWith('.zip'));
+    const blobs = (await Promise.all(zips.map(this.unzip)))
+      .flat()
+      .filter((file) => file.name.endsWith('.slp'));
     const newState = {
       ...this.currentState,
-      files: files.filter((file) => file.name.endsWith('.slp')),
+      files: slps.concat(blobs),
       currentFileIndex: undefined,
       currentHighlightIndex: undefined,
     };
@@ -192,7 +198,7 @@ export class Model {
     try {
       if (file.name.endsWith('.slp')) {
         const game = parseReplay(await file.arrayBuffer());
-        if (this.isSupported(game)) {
+        if (supportedStagesById[game.settings.stageId]) {
           let highlights: Map<string, Highlight[]> = new Map();
           if (game.settings.playerSettings.filter((ps) => ps).length === 2) {
             [...this.currentState.searches.entries()].forEach(
@@ -214,12 +220,17 @@ export class Model {
     return undefined;
   }
 
-  private isSupported(game: ReplayData): boolean {
-    const stageId = game.settings.stageId;
-    if (!stageId) {
-      return false;
-    }
-    return Boolean(supportedStagesById[stageId]);
+  private async unzip(zipFile: File): Promise<File[]> {
+    const entries = await new ZipReader(new BlobReader(zipFile)).getEntries();
+    return Promise.all(
+      entries
+        .filter((entry) => !entry.filename.split('/').at(-1)?.startsWith('.'))
+        .map((entry) =>
+          (entry.getData?.(new BlobWriter()) as Promise<Blob>).then(
+            (blob) => new File([blob], entry.filename),
+          ),
+        ),
+    );
   }
 }
 

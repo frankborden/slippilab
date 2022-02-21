@@ -63,7 +63,7 @@ export class ReplaySelect extends LitElement {
           id="replay-input-files"
           name="replay-input-files"
           type="file"
-          accept=".slp"
+          accept=".slp,.zip"
           multiple
           @change=${this.filesSelected}
         />
