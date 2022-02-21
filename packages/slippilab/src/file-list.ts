@@ -55,6 +55,9 @@ export class FileList extends LitElement {
       .flipped {
         transform: scaleX(-1);
       }
+      select {
+        max-width: 100%;
+      }
     `;
   }
 
@@ -82,9 +85,12 @@ export class FileList extends LitElement {
                   value=${index}
                   ?selected=${this.currentFileIndex === index}
                 >
-                  ${file.webkitRelativePath
+                  ${(file.webkitRelativePath
                     ? file.webkitRelativePath
-                    : file.name}
+                    : file.name
+                  )
+                    .split('/')
+                    .at(-1)}
                 </option>
               `,
           )}
