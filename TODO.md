@@ -15,6 +15,7 @@
 
 ## Character Render
 
+- Follow animation index added in spec 3.11.0.0 (ex: wait1 vs wait2)
 - Zelda/Sheik transformations
 - Calculate shield origin
 - Spacies calculate shine origin
@@ -68,6 +69,10 @@
 
 - Other filters (matchup, date, player, stage)
 - Fix doubles
+
+# @slippilab/parser
+
+- Parse new stuff since 3.9.0.0
 
 # Export Highlight
 
