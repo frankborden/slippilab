@@ -50,8 +50,6 @@
 
 ## Game UI / Viewer UI
 
-- Game timer
-  - Convert seekbar from frames to h:m:s?
 - Higher % = darker text
 - % dances when hit
 - % hidden immediately on death until respawn
