@@ -882,7 +882,7 @@ function readUint(
   firstVersionPresent: string,
   offset: number,
 ): number {
-  if ([replayVersion, firstVersionPresent].sort()[0] !== firstVersionPresent) {
+  if (!isInVersion(replayVersion, firstVersionPresent)) {
     // @ts-ignore: I'd rather have missing data than make users deal with
     // all data being optional.
     return undefined;
@@ -904,7 +904,7 @@ function readFloat(
   firstVersionPresent: string,
   offset: number,
 ): number {
-  if ([replayVersion, firstVersionPresent].sort()[0] !== firstVersionPresent) {
+  if (!isInVersion(replayVersion, firstVersionPresent)) {
     // @ts-ignore: I'd rather have missing data than make users deal with
     // all data being optional.
     return undefined;
@@ -924,7 +924,7 @@ function readInt(
   firstVersionPresent: string,
   offset: number,
 ): number {
-  if ([replayVersion, firstVersionPresent].sort()[0] !== firstVersionPresent) {
+  if (!isInVersion(replayVersion, firstVersionPresent)) {
     // @ts-ignore: I'd rather have missing data than make users deal with
     // all data being optional.
     return undefined;
@@ -946,7 +946,7 @@ function readShiftJisString(
   offset: number,
   maxLength: number,
 ): string {
-  if ([replayVersion, firstVersionPresent].sort()[0] !== firstVersionPresent) {
+  if (!isInVersion(replayVersion, firstVersionPresent)) {
     // @ts-ignore: I'd rather have missing data than make users deal with
     // all data being optional.
     return undefined;
@@ -964,4 +964,19 @@ function readShiftJisString(
       .replaceAll('＃', '#');
   }
   return '';
+}
+
+function isInVersion(
+  replayVersion: string,
+  firstVersionPresent: string,
+): boolean {
+  const replayVersionParts = replayVersion.split('.');
+  const firstVersionParts = firstVersionPresent.split('.');
+  for (let i = 0; i < replayVersionParts.length; i++) {
+    const replayVersionPart = parseInt(replayVersionParts[i]);
+    const firstVersionPart = parseInt(firstVersionParts[i]);
+    if (replayVersionPart > firstVersionPart) return true;
+    if (replayVersionPart < firstVersionPart) return false;
+  }
+  return true;
 }

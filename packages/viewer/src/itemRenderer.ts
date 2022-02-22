@@ -29,19 +29,18 @@ function renderItem(
     case 55:
       // Laser
       const owner = frame.players[item.owner]?.state;
-      if (!owner) {
-        return;
-      }
       // TODO: currently length is based on current owner position, rather than
       // owner position when item spawned.
       const angle = Math.atan2(item.yVelocity, item.xVelocity);
-      const distToOwner = Math.max(
-        0,
-        Math.sqrt(
-          Math.pow(item.xPosition - owner.xPosition, 2) +
-            Math.pow(item.yPosition - owner.yPosition, 2),
-        ) - 10, // 10 = guess to account for edge of char to center of char
-      );
+      const distToOwner = !owner
+        ? 30
+        : Math.max(
+            0,
+            Math.sqrt(
+              Math.pow(item.xPosition - owner.xPosition, 2) +
+                Math.pow(item.yPosition - owner.yPosition, 2),
+            ) - 10, // 10 = guess to account for edge of char to center of char
+          );
       const length = Math.min(
         30, // guess
         Math.abs(distToOwner),
