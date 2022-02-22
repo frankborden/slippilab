@@ -38,7 +38,6 @@
 ## Performance / Load times
 
 - combine all of a character's jsons into one?
-- Render loop problems on windows firefox
 - truncate SVG path values
 
 ## Stage
@@ -81,5 +80,4 @@
 # @slippilab/slippilab
 
 - Tests
-- Save settings, localstorage?
 - Webworkers for parsing?
