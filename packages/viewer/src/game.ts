@@ -188,11 +188,22 @@ export class Game {
       return;
     }
     this.tickOnceEvenIfPaused = false;
-
     this.tickHandler?.(this.currentFrameNumber);
     clearLayers(this.layers, this.isDarkMode);
+
+    let timer: string[] | undefined;
+    if (this.replay.settings.timerType === 'counting down') {
+      // Hundredths doesn't match melee's weird rounding.
+      const secondsRemaining =
+        this.replay.settings.timerStart -
+        Math.max(0, this.currentFrameNumber - 123) / 60;
+      const minutes = `${Math.floor(secondsRemaining / 60)}`.padStart(2, '0');
+      const seconds = `${Math.floor(secondsRemaining % 60)}`.padStart(2, '0');
+      const hundredths = `${(secondsRemaining % 1).toFixed(2).substring(2)}`;
+      timer = [minutes, seconds, hundredths];
+    }
     this.camera.updateCamera(frame, this.replay, this.stage, this.layers);
-    renderStage(this.stage, this.layers, frame, this.isDarkMode);
+    renderStage(this.stage, this.layers, frame, this.isDarkMode, timer);
     this.renders.forEach((render) =>
       render(this.layers, frame, frames, this.isDarkMode, this.isDebugMode),
     );

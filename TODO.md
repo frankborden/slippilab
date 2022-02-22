@@ -18,7 +18,6 @@
 - Zelda/Sheik transformations
 - Calculate shield origin
 - Spacies calculate shine origin
-- Does shield break use item blind? what about mewtwo downB?
 - Invisible upBs
 - Yoshi shield
 - Show Shield tilting (original visualiser reads inputs and checks for stun)
