@@ -1,6 +1,6 @@
 import type { Character } from '../common';
 import { Vector } from '../vector';
-import type { ActionName } from '../animations/actions';
+import type { ActionName } from '@slippilab/common';
 export const ganondorf: Character = {
   scale: 1.08,
   shieldOffset: new Vector(0.2, 10.447), // TODO

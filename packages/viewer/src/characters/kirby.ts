@@ -1,6 +1,6 @@
 import type { Character } from '../common';
 import { Vector } from '../vector';
-import type { ActionName } from '../animations/actions';
+import type { ActionName } from '@slippilab/common';
 export const kirby: Character = {
   scale: 0.92,
   shieldOffset: new Vector(0, 4.828),

@@ -1,9 +1,12 @@
 import type { ReplayData } from '@slippilab/common';
-import { ids } from '@slippilab/common';
+import {
+  characterNameByExternalId,
+  stageNameByExternalId,
+} from '@slippilab/common';
 
 export type GamePredicate = (game: ReplayData, playerIndex: number) => boolean;
 
-export type Character = typeof ids.characterNameByExternalId[number];
+export type Character = typeof characterNameByExternalId[number];
 
 export type Matchup = `${Character} vs ${Character}`;
 
@@ -20,7 +23,7 @@ export function isCharacter(character: Character): GamePredicate {
       (playerSettings) =>
         playerSettings.playerIndex === playerIndex &&
         playerSettings.externalCharacterId ===
-          ids.characterNameByExternalId.indexOf(character),
+          characterNameByExternalId.indexOf(character),
     ) ?? false;
 }
 
@@ -30,15 +33,15 @@ export function vsCharacter(character: Character): GamePredicate {
       (playerSettings) =>
         playerSettings.playerIndex !== playerIndex &&
         playerSettings.externalCharacterId ===
-          ids.characterNameByExternalId.indexOf(character),
+          characterNameByExternalId.indexOf(character),
     ) ?? false;
 }
 
-export type Stage = typeof ids.stageNameByExternalId[number];
+export type Stage = typeof stageNameByExternalId[number];
 
 export function isStage(stage: Stage): GamePredicate {
   return (game: ReplayData, _playerIndex: number) =>
-    game.settings.stageId === ids.stageNameByExternalId.indexOf(stage);
+    game.settings.stageId === stageNameByExternalId.indexOf(stage);
 }
 const tournamentStages: Stage[] = [
   'Battlefield',
@@ -51,7 +54,7 @@ const tournamentStages: Stage[] = [
 export function isTournamentStage(game: ReplayData, _playerIndex: number) {
   return (
     tournamentStages
-      .map((stage) => ids.stageNameByExternalId.indexOf(stage))
+      .map((stage) => stageNameByExternalId.indexOf(stage))
       .filter((stageId) => stageId === game.settings.stageId).length > 0
   );
 }

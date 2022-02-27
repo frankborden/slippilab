@@ -1,9 +1,6 @@
 import type { Frame, PlayerSettings, PlayerState } from '@slippilab/common';
-import {
-  fetchAnimations,
-  //isOneIndexed,
-  animationNameByActionId,
-} from '../animations';
+import { actionNameById } from '@slippilab/common';
+import { fetchAnimations } from '../animations';
 import type { CharacterAnimations } from '../animations';
 import { supportedCharactersByInternalId } from '../characters';
 import { characterNamesById, characterNamesByInternalId } from '../common';
@@ -149,7 +146,7 @@ function renderPercent(
   const playerFrame = frame.players[player.playerIndex].state;
   const characterData =
     supportedCharactersByInternalId[playerFrame.internalCharacterId];
-  const actionName = animationNameByActionId[playerFrame.actionStateId];
+  const actionName = actionNameById[playerFrame.actionStateId];
   const animationName =
     characterData.animationMap.get(actionName) ?? actionName;
   if (animationName?.match('Dead')) {
@@ -265,7 +262,7 @@ function getAnimationFrame(
   const characterAnimations = animations[playerFrame.internalCharacterId];
   // Determine animation
   let animationName;
-  const actionName = animationNameByActionId[playerFrame.actionStateId];
+  const actionName = actionNameById[playerFrame.actionStateId];
   if (characterData.specialsMap.has(playerFrame.actionStateId)) {
     animationName = characterData.specialsMap.get(playerFrame.actionStateId);
   } else if (actionName) {

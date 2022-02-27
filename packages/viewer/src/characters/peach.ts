@@ -1,6 +1,6 @@
 import type { Character } from '../common';
 import { Vector } from '../vector';
-import type { ActionName } from '../animations/actions';
+import type { ActionName } from '@slippilab/common';
 export const peach: Character = {
   scale: 1.15,
   shieldOffset: new Vector(5 / 4.5, 34 / 4.5), // guess

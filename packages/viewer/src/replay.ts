@@ -1,5 +1,6 @@
 import type { Frame, PlayerSettings, PlayerState } from '@slippilab/common';
-import { isOneIndexed, animationNameByActionId } from './animations';
+import { actionNameById } from '@slippilab/common';
+import { isOneIndexed } from './animations';
 import { characterNamesByInternalId } from './common';
 import type { CharacterName } from './common';
 
@@ -93,8 +94,7 @@ export function getThrowerName(
       // this could be wrong if there's multiple of the same throw happening. I
       // don't know if replay data can connect thrower to throwee for doubles.
       if (
-        animationNameByActionId[otherPlayerState.actionStateId] ===
-        throwerAnimationName
+        actionNameById[otherPlayerState.actionStateId] === throwerAnimationName
       ) {
         const throwerName =
           characterNamesByInternalId[otherPlayerState.internalCharacterId];

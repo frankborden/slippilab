@@ -1,7 +1,6 @@
 import { BlobReader, TextWriter, ZipReader } from '@zip.js/zip.js';
 
 export { isOneIndexed } from './oneIndexed';
-export { animationNameByActionId } from './actions';
 
 const animationsCache = new Map<number, CharacterAnimations>();
 

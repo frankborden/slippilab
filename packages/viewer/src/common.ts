@@ -1,4 +1,4 @@
-import type { ActionName } from './animations/actions';
+import type { ActionName } from '@slippilab/common';
 import type { Vector } from './vector';
 
 export type Line = [Vector, Vector];

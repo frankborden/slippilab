@@ -1,6 +1,6 @@
 import type { Character } from '../common';
 import { Vector } from '../vector';
-import type { ActionName } from '../animations/actions';
+import type { ActionName } from '@slippilab/common';
 export const zelda: Character = {
   scale: 1.26,
   shieldOffset: new Vector(0.541, 6.969),

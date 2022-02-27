@@ -1,6 +1,6 @@
 import type { Character } from '../common';
 import { Vector } from '../vector';
-import type { ActionName } from '../animations/actions';
+import type { ActionName } from '@slippilab/common';
 export const pichu: Character = {
   scale: 0.5,
   shieldOffset: new Vector(2.724, 9.003), // TODO

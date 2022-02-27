@@ -1,6 +1,6 @@
 import type { Character } from '../common';
 import { Vector } from '../vector';
-import type { ActionName } from '../animations/actions';
+import type { ActionName } from '@slippilab/common';
 export const iceClimbers: Character = {
   scale: 1.15,
   shieldOffset: new Vector(2.724, 9.003), // model units // TODO

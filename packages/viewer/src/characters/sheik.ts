@@ -1,6 +1,6 @@
 import type { Character } from '../common';
 import { Vector } from '../vector';
-import type { ActionName } from '../animations/actions';
+import type { ActionName } from '@slippilab/common';
 export const sheik: Character = {
   scale: 1.4,
   shieldOffset: new Vector(0.541, 6.969),
