@@ -1,3 +1,5 @@
+import { actionNameById, attackNamesById } from './ids';
+import type { ActionName, AttackName } from './ids';
 import type { ReplayData } from './replay-data';
 
 export type Predicate = (
@@ -180,6 +182,25 @@ export function isOffstage(
     state.yPosition! < currentStageData.mainPlatformHeight ||
     state.xPosition! < currentStageData.leftLedgeX ||
     state.xPosition! > currentStageData.rightLedgeX
+  );
+}
+
+export function action(actionName: ActionName): Predicate {
+  return (playerIndex: number, frameNumber: number, replay: ReplayData) => {
+    const actionStateId =
+      replay.frames[frameNumber].players[playerIndex].state.actionStateId;
+    return actionNameById[actionStateId] === actionName;
+  };
+}
+
+export function landsAttack(attackName: AttackName): Predicate {
+  return all(
+    opponent(isInHitstun),
+    (playerIndex, frameNumber, replay) =>
+      attackNamesById[
+        replay.frames[frameNumber].players[playerIndex].state
+          .lastHittingAttackId
+      ] === attackName,
   );
 }
 

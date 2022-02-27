@@ -4,38 +4,38 @@
  */
 export const characterNameByExternalId = [
   'Captain Falcon', // 0, 0x0
-  'Donkey Kong',// 1, 0x1
-  'Fox',// 2, 0x2
-  'Mr. Game & Watch',// 3, 0x3
-  'Kirby',// 4, 0x4
-  'Bowser',// 5, 0x5
-  'Link',// 6, 0x6
-  'Luigi',// 7, 0x7
-  'Mario',// 8, 0x8
-  'Marth',// 9, 0x9
-  'Mewtwo',// 10, 0xa
-  'Ness',// 11, 0xb
-  'Peach',// 12, 0xc
-  'Pikachu',// 13, 0xd
-  'Ice Climbers',// 14, 0xe
-  'Jigglypuff',// 15, 0xf
-  'Samus',// 16, 0x10
-  'Yoshi',// 17, 0x11
-  'Zelda',// 18, 0x12
-  'Sheik',// 19, 0x13
-  'Falco',// 20, 0x14
-  'Young Link',// 21, 0x15
-  'Dr. Mario',// 22, 0x16
-  'Roy',// 23, 0x17
-  'Pichu',// 24, 0x18
-  'Ganondorf',// 25, 0x19
-  'Master Hand',// 26, 0x1a
-  'Wireframe Male',// 27, 0x1b
-  'Wireframe Female',// 28, 0x1c
-  'Giga Bowser',// 29, 0x1d
-  'Crazy Hand',// 30, 0x1e
-  'Sandbag',// 31, 0x1f
-  'Popo',// 32, 0x20
+  'Donkey Kong', // 1, 0x1
+  'Fox', // 2, 0x2
+  'Mr. Game & Watch', // 3, 0x3
+  'Kirby', // 4, 0x4
+  'Bowser', // 5, 0x5
+  'Link', // 6, 0x6
+  'Luigi', // 7, 0x7
+  'Mario', // 8, 0x8
+  'Marth', // 9, 0x9
+  'Mewtwo', // 10, 0xa
+  'Ness', // 11, 0xb
+  'Peach', // 12, 0xc
+  'Pikachu', // 13, 0xd
+  'Ice Climbers', // 14, 0xe
+  'Jigglypuff', // 15, 0xf
+  'Samus', // 16, 0x10
+  'Yoshi', // 17, 0x11
+  'Zelda', // 18, 0x12
+  'Sheik', // 19, 0x13
+  'Falco', // 20, 0x14
+  'Young Link', // 21, 0x15
+  'Dr. Mario', // 22, 0x16
+  'Roy', // 23, 0x17
+  'Pichu', // 24, 0x18
+  'Ganondorf', // 25, 0x19
+  'Master Hand', // 26, 0x1a
+  'Wireframe Male', // 27, 0x1b
+  'Wireframe Female', // 28, 0x1c
+  'Giga Bowser', // 29, 0x1d
+  'Crazy Hand', // 30, 0x1e
+  'Sandbag', // 31, 0x1f
+  'Popo', // 32, 0x20
 ] as const;
 export type ExternalCharacterName = typeof characterNameByExternalId[number];
 
@@ -472,3 +472,104 @@ export const actionNameById = [
   'BarrelCannonWait', // 340, 0x154
 ] as const;
 export type ActionName = typeof actionNameById[number];
+
+/**
+ * Source: https://github.com/project-slippi/slippi-wiki/blob/master/SPEC.md#melee-ids
+ */
+export const attackNamesById = [
+  'None', // 0, 0x00
+  'Non-Staling', // 1, 0x01
+  'Jab 1', // 2, 0x02
+  'Jab 2', // 3, 0x03
+  'Jab 3', // 4, 0x04
+  'Rapid Jabs', // 5, 0x05
+  'Dash Attack', // 6, 0x06
+  'Side Tilt', // 7, 0x07
+  'Up Tilt', // 8, 0x08
+  'Down Tilt', // 9, 0x09
+  'Side Smash', // 10, 0x0A
+  'Up Smash', // 11, 0x0B
+  'Down Smash', // 12, 0x0C
+  'Nair', // 13, 0x0D
+  'Fair', // 14, 0x0E
+  'Bair', // 15, 0x0F
+  'Uair', // 16, 0x10
+  'Dair', // 17, 0x11
+  'Neutral Special', // 18, 0x12
+  'Side Special', // 19, 0x13
+  'Up Special', // 20, 0x14
+  'Down Special', // 21, 0x15
+  'Kirby Hat: Mario Neutral Special', // 22, 0x16
+  'Kirby Hat: Fox Neutral Special', // 23, 0x17
+  'Kirby Hat: CFalcon Neutral Special', // 24, 0x18
+  'Kirby Hat: DK Neutral Special', // 25, 0x19
+  'Kirby Hat: Bowser Neutral Special', // 26, 0x1A
+  'Kirby Hat: Link Neutral Special', // 27, 0x1B
+  'Kirby Hat: Sheik Neutral Special', // 28, 0x1C
+  'Kirby Hat: Ness Neutral Special', // 29, 0x1D
+  'Kirby Hat: Peach Neutral Special', // 30, 0x1E
+  'Kirby Hat: Ice Climber Neutral Special', // 31, 0x1F
+  'Kirby Hat: Pikachu Neutral Special', // 32, 0x20
+  'Kirby Hat: Samus Neutral Special', // 33, 0x21
+  'Kirby Hat: Yoshi Neutral Special', // 34, 0x22
+  'Kirby Hat: Jigglypuff Neutral Special', // 35, 0x23
+  'Kirby Hat: Mewtwo Neutral Special', // 36, 0x24
+  'Kirby Hat: Luigi Neutral Special', // 37, 0x25
+  'Kirby Hat: Marth Neutral Special', // 38, 0x26
+  'Kirby Hat: Zelda Neutral Special', // 39, 0x27
+  'Kirby Hat: Young Link Neutral Special', // 40, 0x28
+  'Kirby Hat: Doc Neutral Special', // 41, 0x29
+  'Kirby Hat: Falco Neutral Special', // 42, 0x2A
+  'Kirby Hat: Pichu Neutral Special', // 43, 0x2B
+  'Kirby Hat: Game & Watch Neutral Special', // 44, 0x2C
+  'Kirby Hat: Ganon Neutral Special', // 45, 0x2D
+  'Kirby Hat: Roy Neutral Special', // 46, 0x2E
+  'Unknown', // 47, 0x2F
+  'Unknown', // 48, 0x30
+  'Unknown', // 49, 0x31
+  'Get Up Attack (From Back)', // 50, 0x32
+  'Get Up Attack (From Front)', // 51, 0x33
+  'Pummel', // 52, 0x34
+  'Forward Throw', // 53, 0x35
+  'Back Throw', // 54, 0x36
+  'Up Throw', // 55, 0x37
+  'Down Throw', // 56, 0x38
+  'Cargo Forward Throw', // 57, 0x39
+  'Cargo Back Throw', // 58, 0x3A
+  'Cargo Up Throw', // 59, 0x3B
+  'Cargo Down Throw', // 60, 0x3C
+  'Ledge Get Up Attack 100%+', // 61, 0x3D
+  'Ledge Get Up Attack', // 62, 0x3E
+  'Beam Sword Jab', // 63, 0x3F
+  'Beam Sword Tilt Swing', // 64, 0x40
+  'Beam Sword Smash Swing', // 65, 0x41
+  'Beam Sword Dash Swing', // 66, 0x42
+  'Home Run Bat Jab', // 67, 0x43
+  'Home Run Bat Tilt Swing', // 68, 0x44
+  'Home Run Bat Smash Swing', // 69, 0x45
+  'Home Run Bat Dash Swing', // 70, 0x46
+  'Parasol Jab', // 71, 0x47
+  'Parasol Tilt Swing', // 72, 0x48
+  'Parasol Smash Swing', // 73, 0x49
+  'Parasol Dash Swing', // 74, 0x4A
+  'Fan Jab', // 75, 0x4B
+  'Fan Tilt Swing', // 76, 0x4C
+  'Fan Smash Swing', // 77, 0x4D
+  'Fan Dash Swing', // 78, 0x4E
+  'Star Rod Jab', // 79, 0x4F
+  'Star Rod Tilt Swing', // 80, 0x50
+  'Star Rod Smash Swing', // 81, 0x51
+  'Star Rod Dash Swing', // 82, 0x52
+  "Lip's Stick Jab", // 83, 0x53
+  "Lip's Stick Tilt Swing", // 84, 0x54
+  "Lip's Stick Smash Swing", // 85, 0x55
+  "Lip's Stick Dash Swing", // 86, 0x56
+  'Open Parasol', // 87, 0x57
+  'Ray Gun Shoot', // 88, 0x58
+  'Fire Flower Shoot', // 89, 0x59
+  'Screw Attack', // 90, 0x5A
+  'Super Scope (Rapid)', // 91, 0x5B
+  'Super Scope (Charged)', // 92, 0x5C
+  'Hammer', // 93, 0x5D
+] as const;
+export type AttackName = typeof attackNamesById[number];

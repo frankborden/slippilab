@@ -15,6 +15,7 @@ import {
   isCrouching,
   not,
   opponent,
+  landsAttack,
 } from '@slippilab/common';
 import type { Predicate, ReplayData } from '@slippilab/common';
 
@@ -266,11 +267,16 @@ const edgeguardQuery: [Query, Predicate?] = [
 const crouchCancelQuery: [Query, Predicate?] = [
   [{ predicate: isCrouching }, { predicate: isInHitstun }],
 ];
+const upthrowUpairQuery: [Query, Predicate?] = [
+  [{ predicate: landsAttack('Up Throw') }, { predicate: landsAttack('Uair') }],
+  not(opponent(isInGroundedControl)),
+];
 model.setSearches(
   new Map([
     ['kill', killComboQuery],
     ['edgeguard', edgeguardQuery],
-    ['grab punish', grabPunishQuery],
-    ['crouch cancels', crouchCancelQuery],
+    ['grab', grabPunishQuery],
+    ['crouch cancel', crouchCancelQuery],
+    ['upthrow-upair', upthrowUpairQuery],
   ]),
 );
