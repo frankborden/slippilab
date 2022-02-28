@@ -190,10 +190,23 @@ export function isOffstage(
   if (state === undefined) {
     return false;
   }
+  /**
+   * Positions during thrown actions are untrustworthy. The game ignores
+   * throwee's position and dynamically attaches throwee's bones to thrower's
+   * bones for smooth animation.
+   */
+  const actionName = actionNameById[state.actionStateId];
+  if (actionName?.startsWith('Thrown')) {
+    return false;
+  }
+  /**
+   * Sometimes positions can clip through the main platform a bit before players
+   * land and so give 10 leeway.
+   */
   return (
-    state.yPosition! < currentStageData.mainPlatformHeight ||
-    state.xPosition! < currentStageData.leftLedgeX ||
-    state.xPosition! > currentStageData.rightLedgeX
+    state.yPosition! <= currentStageData.mainPlatformHeight - 10 ||
+    state.xPosition! <= currentStageData.leftLedgeX ||
+    state.xPosition! >= currentStageData.rightLedgeX
   );
 }
 

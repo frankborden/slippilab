@@ -286,7 +286,6 @@ const edgeguardQuery: [Query, Predicate?] = [
     { predicate: opponent(isOffstage) },
     { predicate: not(opponent(isInHitstun)), delayed: true },
     { predicate: opponent(isInHitstun), delayed: true },
-    { predicate: opponent(isDead), delayed: true },
   ],
   not(opponent(isInGroundedControl)),
 ];
@@ -307,8 +306,8 @@ const defaultCustomQuery: [Query, Predicate?] = [
 model.setSearches(
   new Map([
     ['kill', killComboQuery],
-    ['edgeguard', edgeguardQuery],
     ['grab followup', grabPunishQuery],
+    ['edgeguard attempt', edgeguardQuery],
     ['shieldgrab attempt', shieldGrabQuery],
     ['crouch cancel', crouchCancelQuery],
     ['custom attack', defaultCustomQuery],
