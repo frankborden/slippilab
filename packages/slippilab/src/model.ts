@@ -17,7 +17,7 @@ import {
   opponent,
   landsAttack,
 } from '@slippilab/common';
-import type { Predicate, ReplayData } from '@slippilab/common';
+import type { AttackName, Predicate, ReplayData } from '@slippilab/common';
 
 export interface Replay {
   fileName: string;
@@ -79,7 +79,15 @@ export class Model {
   }
 
   setSearches(searches: Map<string, [Query, Predicate?]>) {
-    const newState = { ...this.currentState, searches };
+    let newReplay: Replay | undefined;
+    if (this.currentState.replay) {
+      const highlights = this.runSearches(
+        this.currentState.replay.game,
+        searches,
+      );
+      newReplay = { ...this.currentState.replay, highlights };
+    }
+    const newState = { ...this.currentState, searches, replay: newReplay };
     this.currentState = newState;
     this.stateSubject$.next(newState);
   }
@@ -103,7 +111,7 @@ export class Model {
     this.stateSubject$.next(newState);
   }
 
-  async jumpToHighlight(highlight: Highlight) {
+  jumpToHighlight(highlight: Highlight) {
     if (!this.currentState.replay?.highlights) {
       return;
     }
@@ -166,7 +174,7 @@ export class Model {
     }
   }
 
-  async nextHighlight() {
+  nextHighlight() {
     if (!this.currentState.replay) {
       return;
     }
@@ -179,7 +187,7 @@ export class Model {
     );
   }
 
-  async prevHighlight() {
+  prevHighlight() {
     if (!this.currentState.replay) {
       return;
     }
@@ -195,18 +203,21 @@ export class Model {
     );
   }
 
+  setAttack(attack: AttackName) {
+    const attackQuery: [Query, Predicate?] = [
+      [{ predicate: landsAttack(attack) }],
+    ];
+    const searches = new Map(this.currentState.searches);
+    searches.set('custom attack', attackQuery);
+    this.setSearches(searches);
+  }
+
   private async parseFile(file: File): Promise<Replay | undefined> {
     try {
       if (file.name.endsWith('.slp')) {
         const game = parseReplay(await file.arrayBuffer());
         if (supportedStagesById[game.settings.stageId]) {
-          let highlights: Map<string, Highlight[]> = new Map();
-          if (game.settings.playerSettings.filter((ps) => ps).length === 2) {
-            [...this.currentState.searches.entries()].forEach(
-              ([name, queryParams]) =>
-                highlights.set(name, run(game, ...queryParams)),
-            );
-          }
+          const highlights = this.runSearches(game, this.currentState.searches);
           return {
             fileName: file.name,
             game: game,
@@ -219,6 +230,19 @@ export class Model {
       return undefined;
     }
     return undefined;
+  }
+
+  private runSearches(
+    game: ReplayData,
+    searches: Map<string, [Query, Predicate?]>,
+  ) {
+    const highlights: Map<string, Highlight[]> = new Map();
+    if (game.settings.playerSettings.filter((ps) => ps).length === 2) {
+      [...searches.entries()].forEach(([name, queryParams]) =>
+        highlights.set(name, run(game, ...queryParams)),
+      );
+    }
+    return highlights;
   }
 
   private async unzip(zipFile: File): Promise<File[]> {
@@ -267,8 +291,8 @@ const edgeguardQuery: [Query, Predicate?] = [
 const crouchCancelQuery: [Query, Predicate?] = [
   [{ predicate: isCrouching }, { predicate: isInHitstun }],
 ];
-const upthrowUpairQuery: [Query, Predicate?] = [
-  [{ predicate: landsAttack('Up Throw') }, { predicate: landsAttack('Uair') }],
+const customQuery: [Query, Predicate?] = [
+  [{ predicate: landsAttack('Jab 1') }],
   not(opponent(isInGroundedControl)),
 ];
 model.setSearches(
@@ -277,6 +301,6 @@ model.setSearches(
     ['edgeguard', edgeguardQuery],
     ['grab', grabPunishQuery],
     ['crouch cancel', crouchCancelQuery],
-    ['upthrow-upair', upthrowUpairQuery],
+    ['custom attack', customQuery],
   ]),
 );

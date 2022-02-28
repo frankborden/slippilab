@@ -3,6 +3,8 @@ import { customElement, state } from 'lit/decorators.js';
 import type { Highlight } from '@slippilab/search';
 
 import { model } from './model';
+import { attackNamesById } from '@slippilab/common';
+import type { AttackName } from '@slippilab/common';
 
 @customElement('highlight-list')
 export class HighlightList extends LitElement {
@@ -28,9 +30,16 @@ export class HighlightList extends LitElement {
     });
   }
 
-  private selected(e: Event) {
+  private highlightSelected(e: Event) {
     const select = e.currentTarget as HTMLSelectElement;
     model.jumpToHighlight(this.highlights[Number(select.value)][2]);
+    select.blur();
+  }
+
+  private attackSelected(e: Event) {
+    const select = e.currentTarget as HTMLSelectElement;
+    const attack = select.value as AttackName;
+    model.setAttack(attack);
     select.blur();
   }
 
@@ -51,7 +60,7 @@ export class HighlightList extends LitElement {
         <select
           size="30"
           .selectedIndex=${this.currentHighlightIndex ?? 0}
-          @change=${this.selected}
+          @change=${this.highlightSelected}
         >
           ${this.highlights.map(
             ([name, playerIndex, highlight], index) =>
@@ -63,6 +72,12 @@ export class HighlightList extends LitElement {
                 ${highlight.startFrame - 123}-${highlight.endFrame - 123}
               </option>`,
           )}
+        </select>
+        Custom Attack:
+        <select @change=${this.attackSelected}>
+          ${attackNamesById
+            .slice(2)
+            .map((name) => html`<option value=${name}>${name}</option>`)}
         </select>
       </div>
     `;
