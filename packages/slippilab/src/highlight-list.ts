@@ -76,7 +76,8 @@ export class HighlightList extends LitElement {
         Custom Attack:
         <select @change=${this.attackSelected}>
           ${attackNamesById
-            .slice(2)
+            .slice(2) // Skip 'None' and 'Non-Staling'
+            .filter((name) => name !== 'Unknown')
             .map((name) => html`<option value=${name}>${name}</option>`)}
         </select>
       </div>

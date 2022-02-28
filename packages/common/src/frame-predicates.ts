@@ -140,6 +140,18 @@ export function isInHitstun(
   );
 }
 
+export function isInShieldstun(
+  playerIndex: number,
+  frameNumber: number,
+  replay: ReplayData,
+) {
+  const state = replay.frames[frameNumber].players[playerIndex]?.state;
+  if (state === undefined) {
+    return false;
+  }
+  return actionNameById[state.actionStateId] === 'GuardSetOff';
+}
+
 export function isCrouching(
   playerIndex: number,
   frameNumber: number,

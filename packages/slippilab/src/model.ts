@@ -16,6 +16,8 @@ import {
   not,
   opponent,
   landsAttack,
+  action,
+  isInShieldstun,
 } from '@slippilab/common';
 import type { AttackName, Predicate, ReplayData } from '@slippilab/common';
 
@@ -291,7 +293,14 @@ const edgeguardQuery: [Query, Predicate?] = [
 const crouchCancelQuery: [Query, Predicate?] = [
   [{ predicate: isCrouching }, { predicate: isInHitstun }],
 ];
-const customQuery: [Query, Predicate?] = [
+const shieldGrabQuery: [Query, Predicate?] = [
+  [
+    { predicate: isInShieldstun },
+    { predicate: action('Catch'), delayed: true },
+  ],
+  either(action('Guard'), action('Catch'), action('GuardSetOff')),
+];
+const defaultCustomQuery: [Query, Predicate?] = [
   [{ predicate: landsAttack('Jab 1') }],
   not(opponent(isInGroundedControl)),
 ];
@@ -299,8 +308,9 @@ model.setSearches(
   new Map([
     ['kill', killComboQuery],
     ['edgeguard', edgeguardQuery],
-    ['grab', grabPunishQuery],
+    ['grab followup', grabPunishQuery],
+    ['shieldgrab attempt', shieldGrabQuery],
     ['crouch cancel', crouchCancelQuery],
-    ['custom attack', customQuery],
+    ['custom attack', defaultCustomQuery],
   ]),
 );
