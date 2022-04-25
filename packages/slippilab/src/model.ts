@@ -1,6 +1,6 @@
 import { parseReplay } from '@slippilab/parser';
 import { Subject } from 'rxjs';
-import { BlobReader, BlobWriter, ZipReader } from '@zip.js/zip.js';
+import { BlobReader, BlobWriter, ZipReader, ZipWriter } from '@zip.js/zip.js';
 import { run } from '@slippilab/search';
 import type { Highlight, Query } from '@slippilab/search';
 import { supportedStagesById } from '@slippilab/viewer';
@@ -258,6 +258,29 @@ export class Model {
           ),
         ),
     );
+  }
+
+  async zip(octetFile: File): Promise<File> {
+    if (octetFile.type == "application/zip") {
+      console.log("Found a zip file. don't zip further")
+      return octetFile;
+    }
+    // use a BlobWriter to store with a ZipWriter the zip into a Blob object
+    const blobWriter = new BlobWriter("application/zip");
+    const writer = new ZipWriter(blobWriter);
+
+    // use a BlobReader to read the Blob to add
+    await writer.add(octetFile.name, new BlobReader(octetFile));
+
+    // close the ZipReader
+    await writer.close();
+
+    // get the zip file as a Blob
+    const blob = blobWriter.getData();
+
+    var zipFile = new File([blob], octetFile.name + ".zip", { type: 'application/zip' });
+
+    return zipFile;
   }
 }
 

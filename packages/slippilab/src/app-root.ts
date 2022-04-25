@@ -15,6 +15,7 @@ import { model } from './model';
 import type { Replay } from './model';
 import { fetchAnimation } from '@slippilab/viewer';
 import './replay-select';
+import './replay-store-select';
 import './file-list';
 import './highlight-list';
 import './sl-settings';
@@ -83,6 +84,11 @@ export class AppRoot extends LitElement {
         width: 25vw;
         display: flex;
         flex-direction: column;
+        justify-content: space-between;
+      }
+      .middle {
+        display: flex;
+        flex-direction: row;
         justify-content: space-between;
       }
       .bottom {
@@ -162,6 +168,9 @@ export class AppRoot extends LitElement {
                 <sl-settings></sl-settings>
               </sp-tab-panel>
             </sp-tabs>
+            <div class="middle">
+              <replay-store-select></replay-store-select>
+            </div>
             <div class="bottom">
               <sp-link
                 size="xl"
