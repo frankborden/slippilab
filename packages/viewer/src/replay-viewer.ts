@@ -80,14 +80,11 @@ export class ReplayViewer extends LitElement {
     }
     switch (e.key) {
       case ' ':
-      case 'k':
         this.game?.togglePause();
         break;
-      case 'j':
       case 'ArrowLeft':
         this.game?.setFrame(Math.max(0, this.currentFrame - 120));
         break;
-      case 'l':
       case 'ArrowRight':
         this.game?.setFrame(
           Math.min(this.replayData.frames.length - 1, this.currentFrame + 120),
@@ -116,23 +113,6 @@ export class ReplayViewer extends LitElement {
       case '-':
       case '_':
         this.game?.zoomOut();
-        break;
-      case '0':
-      case '1':
-      case '2':
-      case '3':
-      case '4':
-      case '5':
-      case '6':
-      case '7':
-      case '8':
-      case '9':
-        const num = Number(e.key);
-        if (!isNaN(num)) {
-          const percent = (num * 10) / 100;
-          const frame = Math.round(this.replayData.frames.length * percent);
-          this.game?.setFrame(frame);
-        }
         break;
     }
   }

@@ -56,13 +56,11 @@ export class SlippiLabSettings extends LitElement {
         Debug Mode
       </sp-switch>
       <div>
-        <kbd>K</kbd>/<kbd>Space</kbd>/<kbd>Click</kbd> Toggle pause
+        <kbd>Space</kbd>/<kbd>Click</kbd> Toggle pause
         <br />
-        <kbd>L</kbd>/<kbd>Right</kbd> Jump 2 seconds forward
+        <kbd>Right</kbd> Jump 2 seconds forward
         <br />
-        <kbd>J</kbd>/<kbd>Left</kbd> Jump 2 seconds backward
-        <br />
-        <kbd>0</kbd>-<kbd>9</kbd> Jump to 0%-90% point of the replay
+        <kbd>Left</kbd> Jump 2 seconds backward
         <br />
         <kbd>.</kbd> Frame advance forward
         <br />
@@ -84,7 +82,7 @@ export class SlippiLabSettings extends LitElement {
         <br />
         <kbd>-</kbd> Zoom out
         <br />
-        <kbd>D</kbd> Toggle dark mode
+        <kbd>/</kbd> Toggle dark mode
       </div>
     `;
   }

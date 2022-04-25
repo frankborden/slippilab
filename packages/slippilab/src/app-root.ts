@@ -44,7 +44,7 @@ export class AppRoot extends LitElement {
     model.setDebugMode(localStorage.getItem('debugMode') === 'true');
     window.addEventListener('keydown', (e: KeyboardEvent) => {
       switch (e.key) {
-        case 'd':
+        case '/':
           model.setDarkMode(!this.darkMode);
           break;
         case '[':
