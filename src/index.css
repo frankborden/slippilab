@@ -1,8 +1,9 @@
 body {
   margin: 0;
+  /* overflow: hidden; */
 }
 
 /* Added in HopeUI */
-*:focus {
+:focus {
   box-shadow: none !important;
 }

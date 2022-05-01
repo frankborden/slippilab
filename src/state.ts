@@ -1,8 +1,8 @@
 import createRAF, { targetFPS } from "@solid-primitives/raf";
 import { add, dec, inc, pipe } from "rambda";
 import { batch, createSignal } from "solid-js";
-import { parseReplay } from "./parser";
-import { ReplayData } from "./types";
+import { parseReplay } from "./parser/parser";
+import { ReplayData } from "./common/types";
 
 const [replayData, setReplayData] = createSignal<ReplayData | undefined>();
 const [frame, setFrame] = createSignal(0);

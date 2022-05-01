@@ -1,9 +1,7 @@
-import { Show } from "solid-js";
-import { ReplaySelect } from "./ReplaySelect";
-import { ReplayView } from "./ReplayView";
-import { state } from "./state";
-import { fetchAnimations } from "./animationCache";
-import { HopeProvider, Button } from "@hope-ui/solid";
+import { Viewer } from "./viewer/Viewer";
+import { fetchAnimations } from "./viewer/animationCache";
+import { Box, Flex } from "@hope-ui/solid";
+import { Sidebar } from "./sidebar/Sidebar";
 
 export function App() {
   // Get started fetching the most popular characters
@@ -14,13 +12,18 @@ export function App() {
 
   return (
     <>
-      <HopeProvider>
-        {/* TODO: ReplayPicker, Clip stuff, Settings */}
-        <ReplaySelect />
-        <Show when={state.replayData()}>
-          <ReplayView />
-        </Show>
-      </HopeProvider>
+      <Flex width={"$screenW"}>
+        <Box flexGrow={1}>
+          <Sidebar />
+        </Box>
+        <Box
+          height={"$screenH"}
+          overflow={"hidden"}
+          style={{ "aspect-ratio": "73/60" }}
+        >
+          <Viewer />
+        </Box>
+      </Flex>
     </>
   );
 }
