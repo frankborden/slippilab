@@ -45,19 +45,24 @@ export function Player(props: { player: number }) {
     fetchAnimations(matchingExternalCharacterId())
   );
   const renderData = createMemo((): RenderData => {
-    const actionName = actionNameById[player().state.actionStateId];
+    const currentPlayerState = player().state;
+    const startOfActionPlayerState = getPlayerOnFrame(
+      props.player,
+      getStartOfAction(props.player, state.frame())
+    ).state;
+    const actionName = actionNameById[currentPlayerState.actionStateId];
     const characterData =
-      actionMapByInternalId[player().state.internalCharacterId];
+      actionMapByInternalId[currentPlayerState.internalCharacterId];
     const animationName =
       characterData.animationMap.get(actionName) ??
-      characterData.specialsMap.get(player().state.actionStateId) ??
+      characterData.specialsMap.get(currentPlayerState.actionStateId) ??
       actionName;
     const animationFrames = animations()?.[animationName];
     // TODO: validate L cancels & other fractional frames, currently just
     // flooring.
     // Converts - 1 to 0 and loops for Entry, Guard, etc.
     const frameIndex = modulo(
-      Math.floor(max(0, player().state.actionStateFrameCounter)),
+      Math.floor(max(0, currentPlayerState.actionStateFrameCounter)),
       animationFrames?.length ?? 1
     );
     // To save animation file size, duplicate frames just reference earlier
@@ -81,21 +86,24 @@ export function Player(props: { player: number }) {
     // Jigglypuff/Kirby mid-air jumps are an exception where we need to flip
     // based on the updated state.facingDirection.
     const facingDirection = actionFollowsFacingDirection(animationName)
-      ? player().state.facingDirection
-      : getPlayerOnFrame(
-          props.player,
-          getStartOfAction(props.player, state.frame())
-        ).state.facingDirection;
+      ? currentPlayerState.facingDirection
+      : startOfActionPlayerState.facingDirection;
     return {
       path,
-      // TODO: teams colors
+      // TODO: teams colors and shades
       innerColor: ["darkred", "darkblue", "gold", "darkgreen"][props.player],
-      // TODO: L cancel / invincibility highlight colors
-      outerColor: "none",
+      outerColor:
+        startOfActionPlayerState.lCancelStatus === "missed"
+          ? "red"
+          : startOfActionPlayerState.hurtboxCollisionState !== "vulnerable"
+          ? "blue"
+          : "none",
       transforms: [
-        `translate(${player().state.xPosition} ${player().state.yPosition})`,
+        `translate(${currentPlayerState.xPosition} ${
+          player().state.yPosition
+        })`,
         // TODO: rotate around true character center instead of current guessed
-        // center of 0,8
+        // center of position+(0,8)
         `rotate(${rotation} 0 8)`,
         `scale(${characterData.scale} ${characterData.scale})`,
         `scale(${facingDirection} 1)`,

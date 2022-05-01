@@ -30,22 +30,29 @@ export async function load(files: File[]) {
 }
 
 export async function nextFile() {
-  const replayData = parseReplay(
-    await files()[currentFile() + 1].arrayBuffer()
-  );
+  const nextIndex = wrap(files().length, currentFile() + 1);
+  const replayData = parseReplay(await files()[nextIndex].arrayBuffer());
   batch(() => {
-    setCurrentFile(inc);
+    setCurrentFile(nextIndex);
     setReplayData(replayData);
     setFrame(0);
   });
 }
 
 export async function previousFile() {
-  const replayData = parseReplay(
-    await files()[currentFile() - 1].arrayBuffer()
-  );
+  const previousIndex = wrap(files().length, currentFile() - 1);
+  const replayData = parseReplay(await files()[previousIndex].arrayBuffer());
   batch(() => {
-    setCurrentFile(dec);
+    setCurrentFile(previousIndex);
+    setReplayData(replayData);
+    setFrame(0);
+  });
+}
+
+export async function setFile(fileIndex: number) {
+  const replayData = parseReplay(await files()[fileIndex].arrayBuffer());
+  batch(() => {
+    setCurrentFile(fileIndex);
     setReplayData(replayData);
     setFrame(0);
   });
@@ -60,11 +67,11 @@ export function pause() {
 }
 
 export function tick() {
-  setFrame(pipe(inc, wrap));
+  setFrame(pipe(inc, (frame) => wrap(replayData()!.frames.length, frame)));
 }
 
 export function tickBack() {
-  setFrame(pipe(dec, wrap));
+  setFrame(pipe(dec, (frame) => wrap(replayData()!.frames.length, frame)));
 }
 
 export function jump(target: number) {
@@ -72,10 +79,11 @@ export function jump(target: number) {
 }
 
 export function adjust(delta: number) {
-  setFrame(pipe(add(delta), wrap));
+  setFrame(
+    pipe(add(delta), (frame) => wrap(replayData()!.frames.length, frame))
+  );
 }
 
-function wrap(targetFrame: number) {
-  const { frames } = replayData()!;
-  return (targetFrame + frames.length) % frames.length;
+function wrap(max: number, targetFrame: number): number {
+  return (targetFrame + max) % max;
 }

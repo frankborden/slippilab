@@ -1,9 +1,7 @@
 For feature parity:
 
-- basic layout
 - .zip support
 - URL support
-- ReplayPicker
 - Clip stuff
 - Search stuff
 - Settings
@@ -11,8 +9,6 @@ For feature parity:
 - Timer
 - Nana
 - Teams colors
-- Lcancel outline
-- Invincibility outline
 - Shields
 - Shine
 - Projectiles

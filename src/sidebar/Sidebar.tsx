@@ -1,7 +1,8 @@
 import { Tab, TabList, TabPanel, Tabs } from "@hope-ui/solid";
-import { Upload } from "./Upload";
+import { ClipsTab } from "./ClipsTab";
+import { ReplaysTab } from "./ReplaysTab";
+import { SettingsTab } from "./SettingsTab";
 
-/* TODO: ReplayPicker, Clip stuff, Settings */
 export function Sidebar() {
   return (
     <>
@@ -12,16 +13,13 @@ export function Sidebar() {
           <Tab>Settings</Tab>
         </TabList>
         <TabPanel>
-          {/* ReplayTab */}
-          <Upload />
+          <ReplaysTab />
         </TabPanel>
         <TabPanel>
-          {/* ClipsTab */}
-          ClipsContents
+          <ClipsTab />
         </TabPanel>
         <TabPanel>
-          {/* SettingsTab */}
-          SettingsContents
+          <SettingsTab />
         </TabPanel>
       </Tabs>
     </>

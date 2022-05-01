@@ -1,10 +1,7 @@
-import { adjust, jump, nextFile, pause, play, tick, tickBack } from "../state";
+import { adjust, jump, pause, play, tick, tickBack } from "../state";
 import { Button } from "@hope-ui/solid";
 
 export function Controls() {
-  async function onNext(e: Event) {
-    nextFile();
-  }
   return (
     <foreignObject
       transform="scale(1 -1)"
@@ -13,7 +10,6 @@ export function Controls() {
       width="100%"
       height="100%"
     >
-      <Button onClick={onNext}>Next</Button>
       <Button onClick={() => play()}>Play</Button>
       <Button onClick={() => pause()}>Pause</Button>
       <Button onClick={() => tick()}>Tick</Button>
