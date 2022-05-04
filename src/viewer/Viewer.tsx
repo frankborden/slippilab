@@ -1,4 +1,4 @@
-import { createEffect, createMemo, For, Show } from "solid-js";
+import { createMemo, For, Show } from "solid-js";
 import { Camera } from "./Camera";
 import { Controls } from "./Controls";
 import { HUD } from "./HUD";
@@ -17,7 +17,6 @@ export function Viewer() {
   const items = createMemo(
     () => state.replayData()?.frames[state.frame()].items
   );
-  createEffect(() => items()?.length && console.log(items()));
   return (
     <Show when={state.replayData()}>
       <svg
