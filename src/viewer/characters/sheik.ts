@@ -60,7 +60,7 @@ export const sheik: Character = {
     ["Guard", "Guard"],
     ["GuardOff", "GuardOff"],
     ["GuardOn", "GuardOn"],
-    ["GuardReflect", "Guard"],
+    ["GuardReflect", "GuardOn"],
     ["GuardSetOff", "GuardDamage"],
     ["ItemParasolDamageFall", ""],
     ["ItemParasolFall", ""],

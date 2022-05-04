@@ -9,8 +9,6 @@ For feature parity:
 - Timer
 - Nana
 - Teams colors
-- Shields
-- Shine
 - Projectiles
 - Debug info
 - Seekbar
