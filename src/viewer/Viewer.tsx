@@ -1,10 +1,11 @@
-import { createMemo, For, Show } from "solid-js";
+import { createEffect, createMemo, For, Show } from "solid-js";
 import { Camera } from "./Camera";
 import { Controls } from "./Controls";
 import { HUD } from "./HUD";
 import { Player } from "./Player";
 import { Stage } from "./Stage";
 import { state } from "../state";
+import { Item } from "./Item";
 
 export function Viewer() {
   const playerIndexes = createMemo(() =>
@@ -13,6 +14,10 @@ export function Viewer() {
       ?.settings.playerSettings.filter(Boolean)
       .map((playerSettings) => playerSettings.playerIndex)
   );
+  const items = createMemo(
+    () => state.replayData()?.frames[state.frame()].items
+  );
+  createEffect(() => items()?.length && console.log(items()));
   return (
     <Show when={state.replayData()}>
       <svg
@@ -25,12 +30,13 @@ export function Viewer() {
           transform: "scaleY(-1)",
         }}
       >
-        {/* TODO: Items, Debug Info */}
+        {/* TODO: Debug Info */}
         <Camera>
           <Stage />
           <For each={playerIndexes()}>
             {(playerIndex) => <Player player={playerIndex} />}
           </For>
+          <For each={items()}>{(item) => <Item item={item} />}</For>
         </Camera>
         <HUD />
         <Controls />
