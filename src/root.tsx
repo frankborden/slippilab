@@ -1,10 +1,13 @@
 import { render } from "solid-js/web";
 import { App } from "./App";
-import { HopeProvider } from "@hope-ui/solid";
+import { HopeProvider, HopeThemeConfig } from "@hope-ui/solid";
 
+const config: HopeThemeConfig = {
+  initialColorMode: "system",
+};
 render(
   () => (
-    <HopeProvider>
+    <HopeProvider config={config}>
       <App />
     </HopeProvider>
   ),

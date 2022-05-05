@@ -1,7 +1,7 @@
 import { load } from "../state";
 import { Button } from "@hope-ui/solid";
 
-// TODO: zip support
+// TODO: zip support, drop support
 export function Upload() {
   let fileInput!: HTMLInputElement;
   let folderInput!: HTMLInputElement;
@@ -10,7 +10,6 @@ export function Upload() {
     const input = e.target as HTMLInputElement;
 
     if (!input.files?.length) {
-      console.log("no file selected");
       return;
     }
     const files = Array.from(input.files);
