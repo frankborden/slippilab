@@ -66,6 +66,10 @@ export function pause() {
   stop();
 }
 
+export function togglePause() {
+  running() ? stop() : start();
+}
+
 export function tick() {
   setFrame(pipe(inc, (frame) => wrap(replayData()!.frames.length, frame)));
 }
@@ -76,6 +80,11 @@ export function tickBack() {
 
 export function jump(target: number) {
   setFrame(target);
+}
+
+// percent is [0,1]
+export function jumpPercent(percent: number) {
+  setFrame(Math.round(replayData()!.frames.length * percent));
 }
 
 export function adjust(delta: number) {

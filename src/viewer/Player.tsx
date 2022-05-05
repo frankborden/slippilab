@@ -137,9 +137,9 @@ export function Shine(props: {
     <>
       <Show
         when={
-          (["Fox", "Falco"].includes(characterName()) &&
-            props.renderData.animationName.includes("SpecialLw")) ||
-          props.renderData.animationName.includes("SpecialAirLw")
+          ["Fox", "Falco"].includes(characterName()) &&
+          (props.renderData.animationName.includes("SpecialLw") ||
+            props.renderData.animationName.includes("SpecialAirLw"))
         }
       >
         <Hexagon

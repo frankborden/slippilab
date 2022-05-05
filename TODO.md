@@ -9,7 +9,6 @@ For feature parity:
 - Timer
 - Nana
 - Teams colors
-- Projectiles
 - Debug info
 - Seekbar
 - Keyboard shortcuts
