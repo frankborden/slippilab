@@ -1,14 +1,13 @@
 For feature parity:
 
 - .zip support
+- drop files support
 - URL support
 - Clip stuff
 - Search stuff
-- Settings
 - Display name cascade
 - Timer
 - Nana
 - Teams colors
 - Debug info
-- Seekbar
-- Keyboard shortcuts
+- Zoom

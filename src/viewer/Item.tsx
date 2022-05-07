@@ -4,8 +4,8 @@ import { ItemUpdate } from "../common/types";
 // TODO: characters projectiles. Done: Sheik, Fox, Falco
 
 // Note: Most items coordinates and sizes are divided by 256 to convert them
-// from hitboxspace to worldspace. I am scaling lasers by character model scale,
-// but it's not clear if that is correct.
+// from hitboxspace to worldspace. I am not scaling lasers by character model
+// scale, but it's not clear if that is correct.
 export function Item(props: { item: ItemUpdate }) {
   return (
     <Switch>
@@ -40,8 +40,8 @@ function Needle(props: { item: ItemUpdate }) {
 
 function FoxLaser(props: { item: ItemUpdate }) {
   // There is a 4th hitbox for the first frame only at -3600 (hitboxspace) with
-  // size 400 / 256 that I am skipping. 0.96 is fox model scaling.
-  const hitboxOffsets = [-200, -933, -1666].map((x) => (x * 0.96) / 256);
+  // size 400 / 256 that I am skipping.
+  const hitboxOffsets = [-200, -933, -1666].map((x) => x / 256);
   const hitboxSize = 300 / 256;
   // Throws and deflected lasers are not straight horizontal
   const rotations = createMemo(() => {
@@ -90,8 +90,7 @@ function FoxLaser(props: { item: ItemUpdate }) {
 }
 
 function FalcoLaser(props: { item: ItemUpdate }) {
-  // 1.1 is falco model scaling
-  const hitboxOffsets = [-200, -933, -1666, -2400].map((x) => (x * 1.1) / 256);
+  const hitboxOffsets = [-200, -933, -1666, -2400].map((x) => x / 256);
   const hitboxSize = 300 / 256;
   // Throws and deflected lasers are not straight horizontal
   const rotations = createMemo(() => {

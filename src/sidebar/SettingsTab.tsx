@@ -1,7 +1,4 @@
 import {
-  Box,
-  Grid,
-  Heading,
   Kbd,
   Table,
   TableCaption,
@@ -10,15 +7,12 @@ import {
   Th,
   Thead,
   Tr,
-  VStack,
 } from "@hope-ui/solid";
 
 export function SettingsTab() {
   /* Colors, Debug */
   return (
     <>
-      {/* <VStack> */}
-      {/* <Heading>Playback</Heading> */}
       <Table>
         <TableCaption placement={"top"}>Playback</TableCaption>
         <Thead>
@@ -67,20 +61,20 @@ export function SettingsTab() {
             </Td>
             <Td>Previous frame (pauses if not paused)</Td>
           </Tr>
+          <Tr>
+            <Td>
+              <Kbd>UpArrow</Kbd>
+            </Td>
+            <Td>Slow speed</Td>
+          </Tr>
+          <Tr>
+            <Td>
+              <Kbd>DownArrow</Kbd>
+            </Td>
+            <Td>Fast speed</Td>
+          </Tr>
         </Tbody>
-        {/* <Grid gridTemplateColumns={"auto auto"} gap={"$2 $4"}>
-            <Box justifySelf={"end"}>
-              <Kbd>.</Kbd>
-            </Box>
-            <Box>Next frame</Box>
-
-            <Box justifySelf={"end"}>
-              <Kbd>,</Kbd>
-            </Box>
-            <Box>Previous frame</Box>
-          </Grid> */}
       </Table>
-      {/* </VStack> */}
     </>
   );
 }

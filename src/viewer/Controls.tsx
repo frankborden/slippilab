@@ -1,20 +1,31 @@
 import {
   adjust,
+  speedFast,
   jump,
   jumpPercent,
   pause,
-  play,
+  speedSlow,
+  state,
   tick,
   tickBack,
   togglePause,
+  speedNormal,
 } from "../state";
-import { Button } from "@hope-ui/solid";
+import { Center, hope } from "@hope-ui/solid";
 import { onCleanup, onMount } from "solid-js";
+import styles from "./Controls.module.css";
 
 export function Controls() {
-  onMount(() => window.addEventListener("keydown", handleKey));
-  onCleanup(() => window.addEventListener("keydown", handleKey));
-  function handleKey({ key }: KeyboardEvent) {
+  onMount(() => {
+    window.addEventListener("keydown", onKeyDown);
+    window.addEventListener("keyup", onKeyUp);
+  });
+  onCleanup(() => {
+    window.addEventListener("keydown", onKeyDown);
+    window.addEventListener("keyup", onKeyUp);
+  });
+
+  function onKeyDown({ key }: KeyboardEvent) {
     switch (key) {
       case "k":
       case " ":
@@ -46,11 +57,29 @@ export function Controls() {
       case "7":
       case "8":
       case "9":
-        const percent = Number(key) * 0.1; // [0,1]
+        const percent = Number(key) * 0.1; // convert 3 => 30%
         jumpPercent(percent);
+        break;
+      case "ArrowUp":
+        speedSlow();
+        break;
+      case "ArrowDown":
+        speedFast();
         break;
     }
   }
+
+  function onKeyUp({ key }: KeyboardEvent) {
+    switch (key) {
+      case "ArrowUp":
+      case "ArrowDown":
+        speedNormal();
+        break;
+    }
+  }
+
+  let seekbarInput!: HTMLInputElement;
+
   return (
     <foreignObject
       transform="scale(1 -1)"
@@ -59,13 +88,17 @@ export function Controls() {
       width="100%"
       height="100%"
     >
-      <Button onClick={() => play()}>Play</Button>
-      <Button onClick={() => pause()}>Pause</Button>
-      <Button onClick={() => tick()}>Tick</Button>
-      <Button onClick={() => tickBack()}>Tick Back</Button>
-      <Button onClick={() => jump(0)}>Reset</Button>
-      <Button onClick={() => adjust(-120)}>Rewind 2s</Button>
-      <Button onClick={() => adjust(120)}>Ahead 2s</Button>
+      <Center>
+        <hope.input
+          class={styles.seekbarInput}
+          type="range"
+          width="$lg"
+          ref={seekbarInput}
+          value={state.frame()}
+          max={state.replayData()!.frames.length - 1}
+          onInput={() => jump(Number(seekbarInput!.value))}
+        ></hope.input>
+      </Center>
     </foreignObject>
   );
 }

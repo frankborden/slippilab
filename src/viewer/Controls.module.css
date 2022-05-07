@@ -1,0 +1,46 @@
+.seekbarInput {
+  background-color: transparent;
+  -webkit-appearance: none;
+}
+.seekbarInput::-webkit-slider-runnable-track {
+  /* This margin also bumps down the thumb within it */
+  margin-top: 10px;
+  background-color: var(--hope-colors-neutral9);
+  border: 1px solid black;
+  border-radius: 10px;
+  height: 5px;
+  cursor: pointer;
+}
+.seekbarInput::-moz-range-track {
+  background: var(--hope-colors-neutral9);
+  border: 1px solid black;
+  border-radius: 10px;
+  height: 5px;
+  cursor: pointer;
+}
+.seekbarInput::-webkit-slider-thumb {
+  /* Align vertically with the runnable-track */
+  margin-top: -3px;
+  width: 10px;
+  height: 10px;
+  background-color: var(--hope-colors-primary9);
+  border: 1px solid black;
+  border-radius: 10px;
+  cursor: pointer;
+  -webkit-appearance: none;
+}
+.seekbarInput::-moz-range-thumb {
+  width: 10px;
+  height: 10px;
+  background-color: var(--hope-colors-primary9);
+  border: 1px solid black;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+/*
+ * By default:
+ * - Mozilla center-aligns everything while webkit top-aligns everything
+ * - Mozilla has some vertical padding while webkit does not
+ * - Mozilla is a bit bigger than the sizes I give it
+*/

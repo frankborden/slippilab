@@ -8,7 +8,7 @@ const [replayData, setReplayData] = createSignal<ReplayData | undefined>();
 const [frame, setFrame] = createSignal(0);
 const [currentFile, setCurrentFile] = createSignal(0);
 const [files, setFiles] = createSignal<File[]>([]);
-
+const [fps, setFps] = createSignal(60);
 export const state = {
   replayData,
   frame,
@@ -16,7 +16,7 @@ export const state = {
   files,
 };
 
-const [running, start, stop] = createRAF(targetFPS(tick, 60));
+const [running, start, stop] = createRAF(targetFPS(tick, fps));
 
 export async function load(files: File[]) {
   const replayData = parseReplay(await files[0].arrayBuffer());
@@ -76,6 +76,18 @@ export function tick() {
 
 export function tickBack() {
   setFrame(pipe(dec, (frame) => wrap(replayData()!.frames.length, frame)));
+}
+
+export function speedNormal() {
+  setFps(60);
+}
+
+export function speedFast() {
+  setFps(120);
+}
+
+export function speedSlow() {
+  setFps(30);
 }
 
 export function jump(target: number) {
