@@ -5,7 +5,6 @@ For feature parity:
 - URL support
 - Clip stuff
 - Search stuff
-- Timer
 - Nana
 - Teams colors
 - Debug info
