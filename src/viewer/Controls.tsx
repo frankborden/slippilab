@@ -10,6 +10,8 @@ import {
   tickBack,
   togglePause,
   speedNormal,
+  zoomOut,
+  zoomIn,
 } from "../state";
 import { Center, hope } from "@hope-ui/solid";
 import { onCleanup, onMount } from "solid-js";
@@ -65,6 +67,14 @@ export function Controls() {
         break;
       case "ArrowDown":
         speedFast();
+        break;
+      case "-":
+      case "_":
+        zoomOut();
+        break;
+      case "=":
+      case "+":
+        zoomIn();
         break;
     }
   }

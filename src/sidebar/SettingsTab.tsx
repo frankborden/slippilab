@@ -14,7 +14,7 @@ export function SettingsTab() {
   return (
     <>
       <Table>
-        <TableCaption placement={"top"}>Playback</TableCaption>
+        <TableCaption placement={"top"}>Playback Shortcuts</TableCaption>
         <Thead>
           <Tr>
             <Th>Shortcut</Th>
@@ -72,6 +72,18 @@ export function SettingsTab() {
               <Kbd>DownArrow</Kbd>
             </Td>
             <Td>Fast speed</Td>
+          </Tr>
+          <Tr>
+            <Td>
+              <Kbd>+</Kbd>/<Kbd>=</Kbd>
+            </Td>
+            <Td>Zoom in</Td>
+          </Tr>
+          <Tr>
+            <Td>
+              <Kbd>-</Kbd>/<Kbd>_</Kbd>
+            </Td>
+            <Td>Zoom out</Td>
           </Tr>
         </Tbody>
       </Table>

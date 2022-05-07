@@ -9,11 +9,14 @@ const [frame, setFrame] = createSignal(0);
 const [currentFile, setCurrentFile] = createSignal(0);
 const [files, setFiles] = createSignal<File[]>([]);
 const [fps, setFps] = createSignal(60);
+const [zoom, setZoom] = createSignal(1);
+
 export const state = {
   replayData,
   frame,
   currentFile,
   files,
+  zoom,
 };
 
 const [running, start, stop] = createRAF(targetFPS(tick, fps));
@@ -88,6 +91,14 @@ export function speedFast() {
 
 export function speedSlow() {
   setFps(30);
+}
+
+export function zoomIn() {
+  setZoom((z) => z * 1.01);
+}
+
+export function zoomOut() {
+  setZoom((z) => z / 1.01);
 }
 
 export function jump(target: number) {

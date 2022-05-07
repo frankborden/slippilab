@@ -10,4 +10,3 @@ For feature parity:
 - Nana
 - Teams colors
 - Debug info
-- Zoom

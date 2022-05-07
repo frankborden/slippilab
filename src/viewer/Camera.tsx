@@ -42,8 +42,10 @@ export function Camera(props: PropsWithChildren) {
       smooth(oldCenter?.[0] ?? newCenterX, newCenterX, followSpeeds[0]),
       smooth(oldCenter?.[1] ?? newCenterY, newCenterY, followSpeeds[1]),
     ]);
-    setScale((oldScaling) =>
-      smooth(oldScaling ?? 1, scaling, Math.max(...followSpeeds))
+    setScale(
+      (oldScaling) =>
+        state.zoom() *
+        smooth(oldScaling ?? 1, scaling, Math.max(...followSpeeds))
     );
   });
   const transforms = createMemo(() =>
