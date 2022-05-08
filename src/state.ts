@@ -3,11 +3,21 @@ import { add, dec, inc, pipe } from "rambda";
 import { batch, createSignal } from "solid-js";
 import { parseReplay } from "./parser/parser";
 import { ReplayData } from "./common/types";
+import { Highlight, Query, search } from "./search/search";
+import {
+  isDead,
+  isInGroundedControl,
+  isInHitstun,
+  not,
+  opponent,
+  Predicate,
+} from "./search/framePredicates";
 
 const [replayData, setReplayData] = createSignal<ReplayData | undefined>();
 const [frame, setFrame] = createSignal(0);
 const [currentFile, setCurrentFile] = createSignal(0);
 const [files, setFiles] = createSignal<File[]>([]);
+const [clips, setClips] = createSignal<Highlight[]>([]);
 const [fps, setFps] = createSignal(60);
 const [zoom, setZoom] = createSignal(1);
 
@@ -16,6 +26,7 @@ export const state = {
   frame,
   currentFile,
   files,
+  clips,
   zoom,
 };
 
@@ -23,11 +34,13 @@ const [running, start, stop] = createRAF(targetFPS(tick, fps));
 
 export async function load(files: File[]) {
   const replayData = parseReplay(await files[0].arrayBuffer());
+  const clips = search(replayData, ...killComboQuery);
   batch(() => {
     setFiles(files);
     setCurrentFile(0);
     setReplayData(replayData);
     setFrame(0);
+    setClips(clips);
   });
   play();
 }
@@ -74,11 +87,11 @@ export function togglePause() {
 }
 
 export function tick() {
-  setFrame(pipe(inc, (frame) => wrap(replayData()!.frames.length, frame)));
+  setFrame(pipe(inc, frame => wrap(replayData()!.frames.length, frame)));
 }
 
 export function tickBack() {
-  setFrame(pipe(dec, (frame) => wrap(replayData()!.frames.length, frame)));
+  setFrame(pipe(dec, frame => wrap(replayData()!.frames.length, frame)));
 }
 
 export function speedNormal() {
@@ -94,11 +107,11 @@ export function speedSlow() {
 }
 
 export function zoomIn() {
-  setZoom((z) => z * 1.01);
+  setZoom(z => z * 1.01);
 }
 
 export function zoomOut() {
-  setZoom((z) => z / 1.01);
+  setZoom(z => z / 1.01);
 }
 
 export function jump(target: number) {
@@ -111,11 +124,17 @@ export function jumpPercent(percent: number) {
 }
 
 export function adjust(delta: number) {
-  setFrame(
-    pipe(add(delta), (frame) => wrap(replayData()!.frames.length, frame))
-  );
+  setFrame(pipe(add(delta), frame => wrap(replayData()!.frames.length, frame)));
 }
 
 function wrap(max: number, targetFrame: number): number {
   return (targetFrame + max) % max;
 }
+
+const killComboQuery: [Query, Predicate?] = [
+  [
+    { predicate: opponent(isInHitstun) },
+    { predicate: opponent(isDead), delayed: true },
+  ],
+  not(opponent(isInGroundedControl)),
+];

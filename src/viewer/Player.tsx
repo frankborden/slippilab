@@ -32,17 +32,19 @@ export function Player(props: { player: number }) {
     () => state.replayData()!.settings.playerSettings[props.player]
   );
   const adjustedExternalCharacterId = createMemo(() =>
-    adjustExternalCharacterId(
-      playerSettings().externalCharacterId,
-      player().state.internalCharacterId
-    )
+    player()
+      ? adjustExternalCharacterId(
+          playerSettings().externalCharacterId,
+          player().state.internalCharacterId
+        )
+      : playerSettings().externalCharacterId
   );
   const [animations] = createResource(adjustedExternalCharacterId, () =>
     fetchAnimations(adjustedExternalCharacterId())
   );
   return (
     <>
-      <Show when={animations()}>
+      <Show when={animations() && player()}>
         <PlayerOutline
           playerIndex={props.player}
           player={player()}
