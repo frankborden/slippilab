@@ -5,5 +5,4 @@ For feature parity:
 - URL support
 - Clip stuff
 - Search stuff
-- Nana
 - Debug info

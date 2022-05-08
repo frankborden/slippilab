@@ -24,7 +24,6 @@ interface RenderData {
   characterData: Character;
 }
 
-// TODO: Nana
 export function Player(props: { player: number }) {
   const player = createMemo(() =>
     getPlayerOnFrame(props.player, state.frame())
@@ -41,33 +40,70 @@ export function Player(props: { player: number }) {
   const [animations] = createResource(adjustedExternalCharacterId, () =>
     fetchAnimations(adjustedExternalCharacterId())
   );
-  const renderData = createMemo(() =>
-    computeRenderData(props.player, player(), animations())
-  );
-
   return (
     <>
       <Show when={animations()}>
-        <path
-          transform={renderData().transforms.join(" ")}
-          d={renderData().path}
-          fill={renderData().innerColor}
-          stroke-width={2}
-          stroke={renderData().outerColor}
-        ></path>
-        <Shield renderData={renderData()} playerUpdate={player()} />
-        <Shine renderData={renderData()} playerUpdate={player()} />
+        <PlayerOutline
+          playerIndex={props.player}
+          player={player()}
+          animations={animations()!}
+          isNana={false}
+        />
+        <Show when={player().nanaState}>
+          <PlayerOutline
+            playerIndex={props.player}
+            player={player()}
+            animations={animations()!}
+            isNana={true}
+          />
+        </Show>
       </Show>
     </>
   );
 }
 
-export function Shield(props: {
+function PlayerOutline(props: {
+  playerIndex: number;
+  player: PlayerUpdate;
+  animations: CharacterAnimations;
+  isNana: boolean;
+}) {
+  const renderData = createMemo(() =>
+    computeRenderData(
+      props.playerIndex,
+      props.player,
+      props.animations,
+      props.isNana
+    )
+  );
+  return (
+    <>
+      <path
+        transform={renderData().transforms.join(" ")}
+        d={renderData().path}
+        fill={renderData().innerColor}
+        stroke-width={2}
+        stroke={renderData().outerColor}
+      ></path>
+      <Shield
+        renderData={renderData()}
+        playerUpdate={props.player}
+        isNana={props.isNana}
+      />
+      <Shine renderData={renderData()} playerUpdate={props.player} />
+    </>
+  );
+}
+
+function Shield(props: {
   renderData: RenderData;
   playerUpdate: PlayerUpdate;
+  isNana: boolean;
 }) {
   // [0,60]
-  const shieldHealth = createMemo(() => props.playerUpdate.state.shieldSize);
+  const shieldHealth = createMemo(
+    () => props.playerUpdate[props.isNana ? "nanaState" : "state"]!.shieldSize
+  );
   // [0,1]. If 0 is received, set to 1 because user may have released shield
   // during a Guard-related animation. As an example, a shield must stay active
   // for 8 frames minimum before it is dropped even if the player releases the
@@ -80,7 +116,8 @@ export function Shield(props: {
           props.playerUpdate.playerIndex,
           getStartOfAction(
             props.playerUpdate.playerIndex,
-            props.playerUpdate.frameNumber
+            props.playerUpdate.frameNumber,
+            props.isNana
           )
         ).inputs.processed.anyTrigger
       : props.playerUpdate.inputs.processed.anyTrigger || 1
@@ -104,7 +141,8 @@ export function Shield(props: {
           cx={
             props.renderData.position[0] +
             props.renderData.characterData.shieldOffset[0] *
-              props.playerUpdate.state.facingDirection
+              props.playerUpdate[props.isNana ? "nanaState" : "state"]!
+                .facingDirection
           }
           cy={
             props.renderData.position[1] +
@@ -119,10 +157,7 @@ export function Shield(props: {
   );
 }
 
-export function Shine(props: {
-  renderData: RenderData;
-  playerUpdate: PlayerUpdate;
-}) {
+function Shine(props: { renderData: RenderData; playerUpdate: PlayerUpdate }) {
   const characterName = createMemo(
     () =>
       characterNameByExternalId[
@@ -223,26 +258,27 @@ function adjustExternalCharacterId(
 function computeRenderData(
   playerIndex: number,
   playerUpdate: PlayerUpdate,
-  animations?: CharacterAnimations
+  animations: CharacterAnimations | undefined,
+  isNana: boolean
 ): RenderData {
+  const playerState = playerUpdate[isNana ? "nanaState" : "state"]!;
   const startOfActionPlayerState = getPlayerOnFrame(
     playerIndex,
-    getStartOfAction(playerIndex, state.frame())
-  ).state;
-  const actionName = actionNameById[playerUpdate.state.actionStateId];
+    getStartOfAction(playerIndex, state.frame(), isNana)
+  )[isNana ? "nanaState" : "state"]!;
+  const actionName = actionNameById[playerState.actionStateId];
 
-  const characterData =
-    actionMapByInternalId[playerUpdate.state.internalCharacterId];
+  const characterData = actionMapByInternalId[playerState.internalCharacterId];
   const animationName =
     characterData.animationMap.get(actionName) ??
-    characterData.specialsMap.get(playerUpdate.state.actionStateId) ??
+    characterData.specialsMap.get(playerState.actionStateId) ??
     actionName;
   const animationFrames = animations?.[animationName];
   // TODO: validate L cancels & other fractional frames, currently just
   // flooring.
   // Converts - 1 to 0 and loops for Entry, Guard, etc.
   const frameIndex = modulo(
-    Math.floor(max(0, playerUpdate.state.actionStateFrameCounter)),
+    Math.floor(max(0, playerState.actionStateFrameCounter)),
     animationFrames?.length ?? 1
   );
   // To save animation file size, duplicate frames just reference earlier
@@ -255,9 +291,9 @@ function computeRenderData(
     : animationPathOrFrameReference;
   const rotation =
     animationName === "DamageFlyRoll"
-      ? getDamageFlyRollRotation(playerIndex, state.frame())
-      : isSpacieUpB(playerIndex, state.frame())
-      ? getSpacieUpBRotation(playerIndex, state.frame())
+      ? getDamageFlyRollRotation(playerIndex, state.frame(), isNana)
+      : isSpacieUpB(playerIndex, state.frame(), isNana)
+      ? getSpacieUpBRotation(playerIndex, state.frame(), isNana)
       : 0;
   // Some animations naturally turn the player around, but facingDirection
   // updates partway through the animation and incorrectly flips the
@@ -266,11 +302,10 @@ function computeRenderData(
   // Jigglypuff/Kirby mid-air jumps are an exception where we need to flip
   // based on the updated state.facingDirection.
   const facingDirection = actionFollowsFacingDirection(animationName)
-    ? playerUpdate.state.facingDirection
+    ? playerState.facingDirection
     : startOfActionPlayerState.facingDirection;
   return {
     path,
-    // TODO: teams colors and shades
     innerColor: getPlayerColor(playerIndex),
     outerColor:
       startOfActionPlayerState.lCancelStatus === "missed"
@@ -279,7 +314,7 @@ function computeRenderData(
         ? "blue"
         : "none",
     transforms: [
-      `translate(${playerUpdate.state.xPosition} ${playerUpdate.state.yPosition})`,
+      `translate(${playerState.xPosition} ${playerState.yPosition})`,
       // TODO: rotate around true character center instead of current guessed
       // center of position+(0,8)
       `rotate(${rotation} 0 8)`,
@@ -288,7 +323,7 @@ function computeRenderData(
       `scale(.1 -.1) translate(-500 -500)`,
     ],
     animationName: animationName,
-    position: [playerUpdate.state.xPosition, playerUpdate.state.yPosition],
+    position: [playerState.xPosition, playerState.yPosition],
     characterData: characterData,
   };
 }
@@ -302,10 +337,15 @@ function computeRenderData(
 // (0, 1)
 function getDamageFlyRollRotation(
   playerIndex: number,
-  frameNumber: number
+  frameNumber: number,
+  isNana: boolean
 ): number {
-  const currentState = getPlayerOnFrame(playerIndex, frameNumber).state;
-  const previousState = getPlayerOnFrame(playerIndex, frameNumber - 1).state;
+  const currentState = getPlayerOnFrame(playerIndex, frameNumber)[
+    isNana ? "nanaState" : "state"
+  ]!;
+  const previousState = getPlayerOnFrame(playerIndex, frameNumber - 1)[
+    isNana ? "nanaState" : "state"
+  ]!;
   const deltaX = currentState.xPosition - previousState.xPosition;
   const deltaY = currentState.yPosition - previousState.yPosition;
   return (Math.atan2(deltaY, deltaX) * 180) / Math.PI - 90;
@@ -319,11 +359,12 @@ function getDamageFlyRollRotation(
 // 0 - 180 = -180, so (1,0) is flipped when facing left
 function getSpacieUpBRotation(
   playerIndex: number,
-  currentFrame: number
+  currentFrame: number,
+  isNana: boolean
 ): number {
   const startOfActionPlayer = getPlayerOnFrame(
     playerIndex,
-    getStartOfAction(playerIndex, currentFrame)
+    getStartOfAction(playerIndex, currentFrame, isNana)
   );
   const joystickDegrees =
     (Math.atan2(
@@ -334,7 +375,9 @@ function getSpacieUpBRotation(
     Math.PI;
   return (
     joystickDegrees -
-    (startOfActionPlayer.state.facingDirection === -1 ? 180 : 0)
+    (startOfActionPlayer[isNana ? "nanaState" : "state"]!.facingDirection === -1
+      ? 180
+      : 0)
   );
 }
 
@@ -348,8 +391,14 @@ function actionFollowsFacingDirection(animationName: string): boolean {
   );
 }
 
-function isSpacieUpB(playerIndex: number, frameNumber: number) {
-  const state = getPlayerOnFrame(playerIndex, frameNumber).state;
+function isSpacieUpB(
+  playerIndex: number,
+  frameNumber: number,
+  isNana: boolean
+) {
+  const state = getPlayerOnFrame(playerIndex, frameNumber)[
+    isNana ? "nanaState" : "state"
+  ]!;
   const character = characterNameByInternalId[state.internalCharacterId];
   return (
     ["Fox", "Falco"].includes(character) &&
@@ -366,13 +415,19 @@ function getPlayerColor(playerIndex: number) {
   return ["darkred", "darkblue", "gold", "darkgreen"][playerIndex];
 }
 
-function getStartOfAction(playerIndex: number, currentFrame: number): number {
-  let earliestStateOfAction = getPlayerOnFrame(playerIndex, currentFrame).state;
+function getStartOfAction(
+  playerIndex: number,
+  currentFrame: number,
+  isNana: boolean
+): number {
+  let earliestStateOfAction = getPlayerOnFrame(playerIndex, currentFrame)[
+    isNana ? "nanaState" : "state"
+  ]!;
   while (true) {
     const testEarlierState = getPlayerOnFrame(
       playerIndex,
       earliestStateOfAction.frameNumber - 1
-    )?.state;
+    )?.[isNana ? "nanaState" : "state"]!;
     if (
       testEarlierState === undefined ||
       testEarlierState.actionStateId !== earliestStateOfAction.actionStateId
