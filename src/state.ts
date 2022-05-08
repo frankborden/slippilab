@@ -17,7 +17,7 @@ const [replayData, setReplayData] = createSignal<ReplayData | undefined>();
 const [frame, setFrame] = createSignal(0);
 const [currentFile, setCurrentFile] = createSignal(0);
 const [files, setFiles] = createSignal<File[]>([]);
-const [clips, setClips] = createSignal<Highlight[]>([]);
+const [clips, setClips] = createSignal<Record<string, Highlight[]>>({});
 const [fps, setFps] = createSignal(60);
 const [zoom, setZoom] = createSignal(1);
 
@@ -34,7 +34,7 @@ const [running, start, stop] = createRAF(targetFPS(tick, fps));
 
 export async function load(files: File[]) {
   const replayData = parseReplay(await files[0].arrayBuffer());
-  const clips = search(replayData, ...killComboQuery);
+  const clips = { killCombo: search(replayData, ...killComboQuery) };
   batch(() => {
     setFiles(files);
     setCurrentFile(0);
