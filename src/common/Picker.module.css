@@ -1,0 +1,11 @@
+.picker {
+  height: 80vh;
+  overflow-y: auto;
+}
+.row {
+  border: 1px solid white;
+  width: 100%;
+}
+.selected {
+  background-color: var(--hope-colors-primary8);
+}
