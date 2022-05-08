@@ -18,8 +18,8 @@
     "@solid-primitives/raf": "^2.1.0",
     "@stitches/core": "^1.2.8",
     "@zip.js/zip.js": "^2.4.10",
-    "rambda": "^7.0.3",
-    "solid-js": "^1.3.16",
+    "rambda": "^7.1.0",
+    "solid-js": "^1.3.17",
     "solid-transition-group": "^0.0.10"
   }
 }

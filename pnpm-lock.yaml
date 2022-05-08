@@ -1,4 +1,4 @@
-lockfileVersion: 5.3
+lockfileVersion: 5.4
 
 specifiers:
   '@hope-ui/solid': ^0.5.1
@@ -6,8 +6,8 @@ specifiers:
   '@solid-primitives/raf': ^2.1.0
   '@stitches/core': ^1.2.8
   '@zip.js/zip.js': ^2.4.10
-  rambda: ^7.0.3
-  solid-js: ^1.3.16
+  rambda: ^7.1.0
+  solid-js: ^1.3.17
   solid-transition-group: ^0.0.10
   typescript: ^4.6.3
   vite: ^2.9.5
@@ -15,14 +15,14 @@ specifiers:
   vitest: ^0.10.0
 
 dependencies:
-  '@hope-ui/solid': 0.5.1_0d4ef152441470f3e6a49b52b3653809
+  '@hope-ui/solid': 0.5.1_ns2rgxgp5h3mpedlwm4jfylu2m
   '@shelacek/ubjson': 1.1.1
-  '@solid-primitives/raf': 2.1.0_solid-js@1.3.16
+  '@solid-primitives/raf': 2.1.0_solid-js@1.3.17
   '@stitches/core': 1.2.8
   '@zip.js/zip.js': 2.4.10
-  rambda: 7.0.3
-  solid-js: 1.3.16
-  solid-transition-group: 0.0.10_solid-js@1.3.16
+  rambda: 7.1.0
+  solid-js: 1.3.17
+  solid-transition-group: 0.0.10_solid-js@1.3.17
 
 devDependencies:
   typescript: 4.6.3
@@ -253,6 +253,8 @@ packages:
     resolution: {integrity: sha512-vqUSBLP8dQHFPdPi9bc5GK9vRkYHJ49fsZdtoJ8EQ8ibpwk5rPKfvNIwChB0KVXcIjcepEBBd2VHC5r9Gy8ueg==}
     engines: {node: '>=6.0.0'}
     hasBin: true
+    dependencies:
+      '@babel/types': 7.17.0
     dev: true
 
   /@babel/plugin-syntax-jsx/7.16.7_@babel+core@7.17.9:
@@ -348,7 +350,7 @@ packages:
       '@floating-ui/core': 0.6.2
     dev: false
 
-  /@hope-ui/solid/0.5.1_0d4ef152441470f3e6a49b52b3653809:
+  /@hope-ui/solid/0.5.1_ns2rgxgp5h3mpedlwm4jfylu2m:
     resolution: {integrity: sha512-NRectL1QnI1Uypx0rkglR5AZ7zBBJBLAaAr118hglkd9HUAbT0ehu0KjoGiheVhhwsLFbgJfp7+3iITdEeFlmw==}
     peerDependencies:
       '@stitches/core': ^1.2.8
@@ -361,8 +363,8 @@ packages:
       focus-trap: 6.7.3
       lodash.merge: 4.6.2
       scroll-lock: 2.1.5
-      solid-js: 1.3.16
-      solid-transition-group: 0.0.10_solid-js@1.3.16
+      solid-js: 1.3.17
+      solid-transition-group: 0.0.10_solid-js@1.3.17
     dev: false
 
   /@jridgewell/resolve-uri/3.0.6:
@@ -385,21 +387,21 @@ packages:
     resolution: {integrity: sha512-2Vi46ct3IWzh8eAz9IZ0NulIRtJbGgJDppatJvufB0fHwasRSfklBoQrVrCutF24fSuRvTvZVebjtcIHOxvzWw==}
     dev: false
 
-  /@solid-primitives/raf/2.1.0_solid-js@1.3.16:
+  /@solid-primitives/raf/2.1.0_solid-js@1.3.17:
     resolution: {integrity: sha512-XpQ3A729VBcjzUAqEN6a5yo58cbPTiuYymK7jMPm7Zvw1iFme/BZHqBaF64cOgLqV6c2EJv0PIErdGdr6StHDQ==}
     peerDependencies:
       solid-js: ^1.3.0
     dependencies:
-      '@solid-primitives/utils': 1.3.0_solid-js@1.3.16
-      solid-js: 1.3.16
+      '@solid-primitives/utils': 1.3.0_solid-js@1.3.17
+      solid-js: 1.3.17
     dev: false
 
-  /@solid-primitives/utils/1.3.0_solid-js@1.3.16:
+  /@solid-primitives/utils/1.3.0_solid-js@1.3.17:
     resolution: {integrity: sha512-ZrL4gYYbqDY2aeyNxl1EK/IjifgfNXkyQAezfWRgLviQw+TQYLQrqDJBfxFIlU+dgJ2Oyq+RbpkBX12RIOXVxg==}
     peerDependencies:
       solid-js: ^1.3.1
     dependencies:
-      solid-js: 1.3.16
+      solid-js: 1.3.17
     dev: false
 
   /@stitches/core/1.2.8:
@@ -886,8 +888,8 @@ packages:
       source-map-js: 1.0.2
     dev: true
 
-  /rambda/7.0.3:
-    resolution: {integrity: sha512-vRkFoukpx9PTmYyOjMZ6+anbDI9BrjaAepigsSOVQcgy7dZKMHM26m1/r8BvegeBCM8qBwr1m/+rufgNKRrofw==}
+  /rambda/7.1.0:
+    resolution: {integrity: sha512-HkqheuvgfSxj+Pyg4yT1fpX1KzPL9ghG5z5lAfbkwRcwIVx8P657MgrGWGaHRNI+j2Mr1d88AdHKgm8Qy0I10w==}
     dev: false
 
   /resolve/1.22.0:
@@ -920,10 +922,10 @@ packages:
     hasBin: true
     dev: true
 
-  /solid-js/1.3.16:
-    resolution: {integrity: sha512-ks9wrUFLx2vzXnR+yXLtL/qO++lixueYsPb9baN0jMNpe1nzAdZn8AbodCmDu9yLPrA7oEFt5CYnzN6/MwtswA==}
+  /solid-js/1.3.17:
+    resolution: {integrity: sha512-BFCosxa4hRm+LF7S+kBL5bNr4RtuZif6AaR5FdQkBpV1E6QNLAOFm4HWgEN8vL2aCWEKl384cT8Etw8ziW8aag==}
 
-  /solid-refresh/0.4.0_solid-js@1.3.16:
+  /solid-refresh/0.4.0_solid-js@1.3.17:
     resolution: {integrity: sha512-5XCUz845n/sHPzKK2i2G2EeV61tAmzv6SqzqhXcPaYhrgzVy7nKTQaBpKK8InKrriq9Z2JFF/mguIU00t/73xw==}
     peerDependencies:
       solid-js: ^1.3.0
@@ -931,15 +933,15 @@ packages:
       '@babel/generator': 7.17.9
       '@babel/helper-module-imports': 7.16.7
       '@babel/types': 7.17.0
-      solid-js: 1.3.16
+      solid-js: 1.3.17
     dev: true
 
-  /solid-transition-group/0.0.10_solid-js@1.3.16:
+  /solid-transition-group/0.0.10_solid-js@1.3.17:
     resolution: {integrity: sha512-b3O9z6BUP60CG1WnTdqFuvHms0reDNYwQF+eAEEaSaoDEmiOu9+Lu7zQgWGySJjaAdSAClhmFCmx/eAjQgfIoA==}
     peerDependencies:
       solid-js: ^1.0.0
     dependencies:
-      solid-js: 1.3.16
+      solid-js: 1.3.17
     dev: false
 
   /source-map-js/1.0.2:
@@ -1005,8 +1007,8 @@ packages:
       '@babel/preset-typescript': 7.16.7_@babel+core@7.17.9
       babel-preset-solid: 1.3.16_@babel+core@7.17.9
       merge-anything: 5.0.2
-      solid-js: 1.3.16
-      solid-refresh: 0.4.0_solid-js@1.3.16
+      solid-js: 1.3.17
+      solid-refresh: 0.4.0_solid-js@1.3.17
       vite: 2.9.5
     transitivePeerDependencies:
       - less
