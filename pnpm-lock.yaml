@@ -4,6 +4,7 @@ specifiers:
   '@hope-ui/solid': ^0.5.1
   '@shelacek/ubjson': ^1.1.1
   '@solid-primitives/raf': ^2.1.0
+  '@solid-primitives/upload': ^0.0.100
   '@stitches/core': ^1.2.8
   '@zip.js/zip.js': ^2.4.10
   rambda: ^7.1.0
@@ -18,6 +19,7 @@ dependencies:
   '@hope-ui/solid': 0.5.1_ns2rgxgp5h3mpedlwm4jfylu2m
   '@shelacek/ubjson': 1.1.1
   '@solid-primitives/raf': 2.1.0_solid-js@1.3.17
+  '@solid-primitives/upload': 0.0.100_solid-js@1.3.17
   '@stitches/core': 1.2.8
   '@zip.js/zip.js': 2.4.10
   rambda: 7.1.0
@@ -396,8 +398,25 @@ packages:
       solid-js: 1.3.17
     dev: false
 
+  /@solid-primitives/upload/0.0.100_solid-js@1.3.17:
+    resolution: {integrity: sha512-5rnKoiDrX1yNEJyl8mkVnVBXVEkZN1q25SvJ6JVHmDPYa2hCf/tgfHQaOtd3U49648wH4FwnzWjqbvLK0Msp6A==}
+    peerDependencies:
+      solid-js: ^1.3.1
+    dependencies:
+      '@solid-primitives/utils': 1.4.0_solid-js@1.3.17
+      solid-js: 1.3.17
+    dev: false
+
   /@solid-primitives/utils/1.3.0_solid-js@1.3.17:
     resolution: {integrity: sha512-ZrL4gYYbqDY2aeyNxl1EK/IjifgfNXkyQAezfWRgLviQw+TQYLQrqDJBfxFIlU+dgJ2Oyq+RbpkBX12RIOXVxg==}
+    peerDependencies:
+      solid-js: ^1.3.1
+    dependencies:
+      solid-js: 1.3.17
+    dev: false
+
+  /@solid-primitives/utils/1.4.0_solid-js@1.3.17:
+    resolution: {integrity: sha512-VDEqiq03HSQ+n/vGWQ3Jqk1w+ONkWUNke/d/SS6Srre5EkY7280UktS+Ml6eYECst6LdHfSgsZBrq3RJxM4tfA==}
     peerDependencies:
       solid-js: ^1.3.1
     dependencies:

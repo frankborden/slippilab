@@ -1,7 +1,7 @@
 import { load } from "../state";
 import { Button } from "@hope-ui/solid";
 
-// TODO: zip support, drop support
+// TODO: zip support
 export function Upload() {
   let fileInput!: HTMLInputElement;
   let folderInput!: HTMLInputElement;
@@ -15,6 +15,7 @@ export function Upload() {
     const files = Array.from(input.files);
     load(files);
   }
+
   return (
     <>
       <Button onClick={() => fileInput.click()}>Open File</Button>

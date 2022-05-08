@@ -1,5 +1,5 @@
 import createRAF, { targetFPS } from "@solid-primitives/raf";
-import { add, dec, inc, pipe } from "rambda";
+import { add, dec, pipe } from "rambda";
 import { batch, createSignal } from "solid-js";
 import { parseReplay } from "./parser/parser";
 import { ReplayData } from "./common/types";
@@ -20,6 +20,7 @@ const [files, setFiles] = createSignal<File[]>([]);
 const [clips, setClips] = createSignal<Record<string, Highlight[]>>({});
 const [fps, setFps] = createSignal(60);
 const [zoom, setZoom] = createSignal(1);
+const [framesPerTick, setFramesPerTick] = createSignal(1);
 
 export const state = {
   replayData,
@@ -87,7 +88,11 @@ export function togglePause() {
 }
 
 export function tick() {
-  setFrame(pipe(inc, frame => wrap(replayData()!.frames.length, frame)));
+  setFrame(
+    pipe(add(framesPerTick()), frame =>
+      wrap(replayData()!.frames.length, frame)
+    )
+  );
 }
 
 export function tickBack() {
@@ -96,10 +101,11 @@ export function tickBack() {
 
 export function speedNormal() {
   setFps(60);
+  setFramesPerTick(1);
 }
 
 export function speedFast() {
-  setFps(120);
+  setFramesPerTick(2);
 }
 
 export function speedSlow() {

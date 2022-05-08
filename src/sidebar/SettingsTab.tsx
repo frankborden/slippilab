@@ -85,6 +85,18 @@ export function SettingsTab() {
             </Td>
             <Td>Zoom out</Td>
           </Tr>
+          <Tr>
+            <Td>
+              <Kbd>[</Kbd>/<Kbd>{"{"}</Kbd>
+            </Td>
+            <Td>Play previous file</Td>
+          </Tr>
+          <Tr>
+            <Td>
+              <Kbd>]</Kbd>/<Kbd>{"}"}</Kbd>
+            </Td>
+            <Td>Play next file</Td>
+          </Tr>
         </Tbody>
       </Table>
     </>

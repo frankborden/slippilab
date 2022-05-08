@@ -2,6 +2,8 @@ import { Viewer } from "./viewer/Viewer";
 import { fetchAnimations } from "./viewer/animationCache";
 import { Box, Flex } from "@hope-ui/solid";
 import { Sidebar } from "./sidebar/Sidebar";
+import { createDropzone } from "@solid-primitives/upload";
+import { load } from "./state";
 
 export function App() {
   // Get started fetching the most popular characters
@@ -10,9 +12,16 @@ export function App() {
   fetchAnimations(0); // Falcon
   fetchAnimations(9); // Marth
 
+  // Make the whole screen a dropzone
+  const { setRef: dropzoneRef } = createDropzone({
+    onDrop: async uploads => {
+      load(uploads.map(upload => upload.file));
+    },
+  });
+
   return (
     <>
-      <Flex width={"$screenW"}>
+      <Flex ref={dropzoneRef} width={"$screenW"}>
         <Box flexGrow={1}>
           <Sidebar />
         </Box>

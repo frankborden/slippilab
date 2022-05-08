@@ -12,6 +12,8 @@ import {
   speedNormal,
   zoomOut,
   zoomIn,
+  nextFile,
+  previousFile,
 } from "../state";
 import { Center, hope } from "@hope-ui/solid";
 import { onCleanup, onMount } from "solid-js";
@@ -75,6 +77,14 @@ export function Controls() {
       case "=":
       case "+":
         zoomIn();
+        break;
+      case "]":
+      case "}":
+        nextFile();
+        break;
+      case "[":
+      case "{":
+        previousFile();
         break;
     }
   }

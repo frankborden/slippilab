@@ -16,6 +16,7 @@
     "@hope-ui/solid": "^0.5.1",
     "@shelacek/ubjson": "^1.1.1",
     "@solid-primitives/raf": "^2.1.0",
+    "@solid-primitives/upload": "^0.0.100",
     "@stitches/core": "^1.2.8",
     "@zip.js/zip.js": "^2.4.10",
     "rambda": "^7.1.0",
