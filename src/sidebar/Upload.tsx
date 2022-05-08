@@ -12,7 +12,10 @@ export function Upload() {
     if (!input.files?.length) {
       return;
     }
-    const files = Array.from(input.files);
+    const slpFiles = Array.from(input.files).filter(file =>
+      file.name.endsWith(".slp")
+    );
+    const files = Array.from(slpFiles);
     load(files);
   }
 
@@ -22,6 +25,7 @@ export function Upload() {
       <input
         style="display: none"
         type="file"
+        accept=".slp"
         multiple
         ref={fileInput}
         onChange={onFileSelected}
