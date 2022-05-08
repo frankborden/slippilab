@@ -13,7 +13,7 @@
     "vitest": "^0.10.0"
   },
   "dependencies": {
-    "@hope-ui/solid": "^0.4.2",
+    "@hope-ui/solid": "^0.5.1",
     "@shelacek/ubjson": "^1.1.1",
     "@solid-primitives/raf": "^2.1.0",
     "@stitches/core": "^1.2.8",

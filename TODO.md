@@ -6,5 +6,4 @@ For feature parity:
 - Clip stuff
 - Search stuff
 - Nana
-- Teams colors
 - Debug info

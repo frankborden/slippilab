@@ -13,9 +13,7 @@ export function PlayerHUD(props: { player: number }) {
     x: -30 + 20 * props.player, // ports at: -30%, -10%, 10%, 30%
     y: 40, // y% is flipped by css to make the text right-side up.
   }));
-  const color = createMemo(
-    () => ["darkred", "darkblue", "gold", "darkgreen"][props.player]
-  );
+  const color = createMemo(() => getPlayerColor(props.player));
   const name = createMemo(() =>
     [
       playerSettings().displayName,
@@ -24,7 +22,7 @@ export function PlayerHUD(props: { player: number }) {
       playerSettings().playerType === 1
         ? "CPU"
         : characterNameByInternalId[playerState().internalCharacterId],
-    ].find((n) => n?.length > 0)
+    ].find(n => n?.length > 0)
   );
   return (
     <>
@@ -56,4 +54,14 @@ export function PlayerHUD(props: { player: number }) {
       />
     </>
   );
+}
+
+// TODO: dedupe with same code in Player.tsx
+function getPlayerColor(playerIndex: number) {
+  if (state.replayData()!.settings.isTeams) {
+    const teamId =
+      state.replayData()!.settings.playerSettings[playerIndex].teamId;
+    return ["darkred", "darkblue", "darkgreen"][teamId];
+  }
+  return ["darkred", "darkblue", "gold", "darkgreen"][playerIndex];
 }

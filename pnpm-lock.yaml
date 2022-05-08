@@ -1,7 +1,7 @@
 lockfileVersion: 5.3
 
 specifiers:
-  '@hope-ui/solid': ^0.4.2
+  '@hope-ui/solid': ^0.5.1
   '@shelacek/ubjson': ^1.1.1
   '@solid-primitives/raf': ^2.1.0
   '@stitches/core': ^1.2.8
@@ -15,7 +15,7 @@ specifiers:
   vitest: ^0.10.0
 
 dependencies:
-  '@hope-ui/solid': 0.4.2_0d4ef152441470f3e6a49b52b3653809
+  '@hope-ui/solid': 0.5.1_0d4ef152441470f3e6a49b52b3653809
   '@shelacek/ubjson': 1.1.1
   '@solid-primitives/raf': 2.1.0_solid-js@1.3.16
   '@stitches/core': 1.2.8
@@ -348,12 +348,12 @@ packages:
       '@floating-ui/core': 0.6.2
     dev: false
 
-  /@hope-ui/solid/0.4.2_0d4ef152441470f3e6a49b52b3653809:
-    resolution: {integrity: sha512-851ZbQDckF6T8m8GfB1ggDau12iZdDq5p3iESnlupM8oY81Pk5yd7FmxQEKlSxnCRybBU7Eb3N9kfa8TGpVagQ==}
+  /@hope-ui/solid/0.5.1_0d4ef152441470f3e6a49b52b3653809:
+    resolution: {integrity: sha512-NRectL1QnI1Uypx0rkglR5AZ7zBBJBLAaAr118hglkd9HUAbT0ehu0KjoGiheVhhwsLFbgJfp7+3iITdEeFlmw==}
     peerDependencies:
-      '@stitches/core': ^1.2.7
-      solid-js: ^1.3.14
-      solid-transition-group: ^0.0.8
+      '@stitches/core': ^1.2.8
+      solid-js: ^1.3.15
+      solid-transition-group: ^0.0.10
     dependencies:
       '@floating-ui/dom': 0.4.4
       '@stitches/core': 1.2.8

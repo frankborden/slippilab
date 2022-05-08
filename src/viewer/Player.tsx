@@ -111,9 +111,7 @@ export function Shield(props: {
             props.renderData.characterData.shieldOffset[1]
           }
           r={props.renderData.characterData.shieldSize * shieldSizeMultiplier()}
-          fill={
-            ["red", "blue", "yellow", "green"][props.playerUpdate.playerIndex]
-          }
+          fill={props.renderData.innerColor}
           opacity={0.6}
         ></circle>
       </Show>
@@ -273,7 +271,7 @@ function computeRenderData(
   return {
     path,
     // TODO: teams colors and shades
-    innerColor: ["darkred", "darkblue", "gold", "darkgreen"][playerIndex],
+    innerColor: getPlayerColor(playerIndex),
     outerColor:
       startOfActionPlayerState.lCancelStatus === "missed"
         ? "red"
@@ -357,6 +355,15 @@ function isSpacieUpB(playerIndex: number, frameNumber: number) {
     ["Fox", "Falco"].includes(character) &&
     [355, 356].includes(state.actionStateId)
   );
+}
+
+function getPlayerColor(playerIndex: number) {
+  if (state.replayData()!.settings.isTeams) {
+    const teamId =
+      state.replayData()!.settings.playerSettings[playerIndex].teamId;
+    return ["darkred", "darkblue", "darkgreen"][teamId];
+  }
+  return ["darkred", "darkblue", "gold", "darkgreen"][playerIndex];
 }
 
 function getStartOfAction(playerIndex: number, currentFrame: number): number {
