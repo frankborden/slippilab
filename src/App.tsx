@@ -15,14 +15,14 @@ export function App() {
 
   // Make the whole screen a dropzone
   const { setRef: dropzoneRef } = createDropzone({
-    onDrop: async uploads => {
-      const files = uploads.map(upload => upload.file);
+    onDrop: async (uploads) => {
+      const files = uploads.map((upload) => upload.file);
 
-      const slpFiles = files.filter(file => file.name.endsWith(".slp"));
-      const zipFiles = files.filter(file => file.name.endsWith(".zip"));
+      const slpFiles = files.filter((file) => file.name.endsWith(".slp"));
+      const zipFiles = files.filter((file) => file.name.endsWith(".zip"));
       const blobsFromZips = (await Promise.all(zipFiles.map(unzip)))
         .flat()
-        .filter(file => file.name.endsWith(".slp"));
+        .filter((file) => file.name.endsWith(".slp"));
 
       load([...slpFiles, ...blobsFromZips]);
     },
@@ -50,10 +50,10 @@ async function unzip(zipFile: File): Promise<File[]> {
   const entries = await new ZipReader(new BlobReader(zipFile)).getEntries();
   return Promise.all(
     entries
-      .filter(entry => !entry.filename.split("/").at(-1)?.startsWith("."))
-      .map(entry =>
+      .filter((entry) => !entry.filename.split("/").at(-1)?.startsWith("."))
+      .map((entry) =>
         (entry.getData?.(new BlobWriter()) as Promise<Blob>).then(
-          blob => new File([blob], entry.filename)
+          (blob) => new File([blob], entry.filename)
         )
       )
   );
