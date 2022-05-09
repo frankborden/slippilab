@@ -91,14 +91,14 @@ export function togglePause() {
 
 export function tick() {
   setFrame(
-    pipe(add(framesPerTick()), frame =>
+    pipe(add(framesPerTick()), (frame) =>
       wrap(replayData()!.frames.length, frame)
     )
   );
 }
 
 export function tickBack() {
-  setFrame(pipe(dec, frame => wrap(replayData()!.frames.length, frame)));
+  setFrame(pipe(dec, (frame) => wrap(replayData()!.frames.length, frame)));
 }
 
 export function speedNormal() {
@@ -115,15 +115,15 @@ export function speedSlow() {
 }
 
 export function zoomIn() {
-  setZoom(z => z * 1.01);
+  setZoom((z) => z * 1.01);
 }
 
 export function zoomOut() {
-  setZoom(z => z / 1.01);
+  setZoom((z) => z / 1.01);
 }
 
 export function toggleDebug() {
-  setIsDebug(value => !value);
+  setIsDebug((value) => !value);
 }
 
 export function jump(target: number) {
@@ -136,7 +136,9 @@ export function jumpPercent(percent: number) {
 }
 
 export function adjust(delta: number) {
-  setFrame(pipe(add(delta), frame => wrap(replayData()!.frames.length, frame)));
+  setFrame(
+    pipe(add(delta), (frame) => wrap(replayData()!.frames.length, frame))
+  );
 }
 
 function wrap(max: number, targetFrame: number): number {
@@ -159,10 +161,10 @@ const url =
   "https://storage.googleapis.com/slippi.appspot.com/replays/114117/Day%203-Game_20210718T094500.slp";
 if (url) {
   try {
-    const response = await fetch(url);
-    const blob = await response.blob();
-    const file = new File([blob], url.split("/").at(-1) ?? "url.slp");
-    load([file]);
+    fetch(url)
+      .then((response) => response.blob())
+      .then((blob) => new File([blob], url.split("/").at(-1) ?? "url.slp"))
+      .then((file) => load([file]));
   } catch (e) {
     console.error("Error: could not load replay from url:", url, e);
   }

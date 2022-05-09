@@ -4,13 +4,13 @@
   "author": "Frank Borden",
   "license": "MIT",
   "scripts": {
-    "start": "vite"
+    "start": "vite",
+    "build": "vite build"
   },
   "devDependencies": {
     "typescript": "^4.6.3",
     "vite": "^2.9.5",
-    "vite-plugin-solid": "^2.2.6",
-    "vitest": "^0.10.0"
+    "vite-plugin-solid": "^2.2.6"
   },
   "dependencies": {
     "@hope-ui/solid": "^0.5.1",
