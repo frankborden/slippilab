@@ -21,6 +21,7 @@ const [clips, setClips] = createSignal<Record<string, Highlight[]>>({});
 const [fps, setFps] = createSignal(60);
 const [zoom, setZoom] = createSignal(1);
 const [framesPerTick, setFramesPerTick] = createSignal(1);
+const [isDebug, setIsDebug] = createSignal(false);
 
 export const state = {
   replayData,
@@ -29,6 +30,7 @@ export const state = {
   files,
   clips,
   zoom,
+  isDebug,
 };
 
 const [running, start, stop] = createRAF(targetFPS(tick, fps));
@@ -120,6 +122,10 @@ export function zoomOut() {
   setZoom(z => z / 1.01);
 }
 
+export function toggleDebug() {
+  setIsDebug(value => !value);
+}
+
 export function jump(target: number) {
   setFrame(target);
 }
@@ -145,9 +151,12 @@ const killComboQuery: [Query, Predicate?] = [
   not(opponent(isInGroundedControl)),
 ];
 
-// load a file from query params if provided
+// load a file from query params if provided. Otherwise start playing a match
+// from slippi.gg
 const params = new URLSearchParams(location.search);
-const url = params.get("replayUrl");
+const url =
+  params.get("replayUrl") ??
+  "https://storage.googleapis.com/slippi.appspot.com/replays/114117/Day%203-Game_20210718T094500.slp";
 if (url) {
   try {
     const response = await fetch(url);
@@ -155,6 +164,6 @@ if (url) {
     const file = new File([blob], url.split("/").at(-1) ?? "url.slp");
     load([file]);
   } catch (e) {
-    console.error("could not load replay from url:", url, e);
+    console.error("Error: could not load replay from url:", url, e);
   }
 }

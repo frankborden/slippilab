@@ -10,7 +10,6 @@ import {
 } from "@hope-ui/solid";
 
 export function SettingsTab() {
-  /* Colors, Debug */
   return (
     <>
       <Table>
@@ -96,6 +95,12 @@ export function SettingsTab() {
               <Kbd>]</Kbd>/<Kbd>{"}"}</Kbd>
             </Td>
             <Td>Play next file</Td>
+          </Tr>
+          <Tr>
+            <Td>
+              <Kbd>d</Kbd>
+            </Td>
+            <Td>Toggle debug output</Td>
           </Tr>
         </Tbody>
       </Table>

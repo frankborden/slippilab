@@ -14,6 +14,7 @@ import {
   zoomIn,
   nextFile,
   previousFile,
+  toggleDebug,
 } from "../state";
 import { Center, hope } from "@hope-ui/solid";
 import { onCleanup, onMount } from "solid-js";
@@ -85,6 +86,9 @@ export function Controls() {
       case "[":
       case "{":
         previousFile();
+        break;
+      case "d":
+        toggleDebug();
         break;
     }
   }
