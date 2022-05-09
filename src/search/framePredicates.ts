@@ -233,8 +233,8 @@ export function landsAttack(attackName: AttackName): Predicate {
 export function opponent(predicate: Predicate): Predicate {
   return (playerIndex: number, frameNumber: number, replay: ReplayData) => {
     const otherPlayerIndex = replay.frames[frameNumber].players
-      .filter(p => p)
-      .find(p => p.playerIndex !== playerIndex)?.playerIndex;
+      .filter((p) => p)
+      .find((p) => p.playerIndex !== playerIndex)?.playerIndex;
     if (otherPlayerIndex === undefined) {
       return false;
     }
@@ -244,7 +244,7 @@ export function opponent(predicate: Predicate): Predicate {
 
 export function either(...predicates: Predicate[]): Predicate {
   return (playerIndex: number, frameNumber: number, replay: ReplayData) => {
-    return predicates.some(predicate =>
+    return predicates.some((predicate) =>
       predicate(playerIndex, frameNumber, replay)
     );
   };
@@ -252,7 +252,7 @@ export function either(...predicates: Predicate[]): Predicate {
 
 export function all(...predicates: Predicate[]): Predicate {
   return (playerIndex: number, frameNumber: number, replay: ReplayData) => {
-    return predicates.every(predicate =>
+    return predicates.every((predicate) =>
       predicate(playerIndex, frameNumber, replay)
     );
   };
@@ -260,7 +260,7 @@ export function all(...predicates: Predicate[]): Predicate {
 
 export function not(...predicates: Predicate[]): Predicate {
   return (playerIndex: number, frameNumber: number, replay: ReplayData) => {
-    return !predicates.some(predicate =>
+    return !predicates.some((predicate) =>
       predicate(playerIndex, frameNumber, replay)
     );
   };

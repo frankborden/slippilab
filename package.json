@@ -5,7 +5,8 @@
   "license": "MIT",
   "scripts": {
     "start": "vite",
-    "build": "vite build"
+    "build": "vite build",
+    "check": "tsc --noEmit"
   },
   "devDependencies": {
     "typescript": "^4.6.3",

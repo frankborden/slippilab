@@ -1,0 +1,51 @@
+// Assumes you have already loaded the Model
+// Also it helps to delete all the textures
+
+string $character = "Fox";
+string $animsDirectory = "D:\\Tools\\Animation_Pack\\Textured_Models\\" + $character + "\\anims\\";
+// string $throwsDirectory = "/Users/frank/Downloads/Animation_Pack/Throws";
+string $outputDirectory = "D:\\Output\\";
+sysFile -md $outputDirectory;
+
+// Keep character centered during animation. The position in replay file will handle the translation
+// instead of the TransN bone.
+// Note: For Mewtwo and G&W this should be JOBJ_2 instead.
+string $transN = ":JOBJ_1";
+transformLimits -tx 0 0 -ty 0 0 -tz 0 0 -etx 1 1 -ety 1 1 -etz 1 1 $transN;
+
+// put the camera to the -X side so that animation are facing right
+camera -e -o true -ow 100 side;
+xform -worldSpace -translation -1000 0 0 -rotation 0 -90 0 side;
+
+// for testing only:
+//string $file = "PlyFox5K_Share_ACTION_Wait1_figatree.anim";
+for($file in `getFileList -folder $animsDirectory`) {
+    print $file;
+    render($outputDirectory, $animsDirectory, $file);
+}
+
+proc render(string $outputDirectory, string $fileDirectory, string $file) {
+    if(!endsWith($file, ".anim"))
+        return;
+    string $animFilePath = $fileDirectory + $file;
+    print $animFilePath;
+    string $baseFileName = substituteAllString($file, ".anim", "");
+    string $outputSubdirectory = $outputDirectory + $baseFileName + "\\";
+    sysFile -md $outputSubdirectory;
+    string $outputFilePath = $outputSubdirectory + $baseFileName;
+    print $outputFilePath;
+ 
+    // Restore
+    currentTime 0;
+    select -r `ls -type joint`;
+    cutKey -time "0:600";
+    gotoBindPose;
+    
+    file -import -type animImport $animFilePath;
+    vectorize -imageFormat "bmp"
+    -w 1000 -h 1000
+    -ff "name_#.ext" -of $outputFilePath
+    -dl 2 -fs SingleColor -sb
+    -sf 0.0 -ef 200.0 -bf 1.0
+    -c side;
+}

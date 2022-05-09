@@ -5,9 +5,16 @@ import { parseReplay } from "./parser/parser";
 import { ReplayData } from "./common/types";
 import { Highlight, Query, search } from "./search/search";
 import {
+  action,
+  all,
+  either,
+  isCrouching,
   isDead,
+  isGrabbed,
   isInGroundedControl,
   isInHitstun,
+  isInShieldstun,
+  isOffstage,
   not,
   opponent,
   Predicate,
@@ -151,6 +158,35 @@ const killComboQuery: [Query, Predicate?] = [
     { predicate: opponent(isDead), delayed: true },
   ],
   not(opponent(isInGroundedControl)),
+];
+const grabPunishQuery: [Query, Predicate?] = [
+  [
+    { predicate: opponent(isGrabbed) },
+    {
+      predicate: all(
+        not(opponent(isDead)),
+        either(not(opponent(isInGroundedControl)), opponent(isOffstage))
+      ),
+    },
+  ],
+];
+const edgeguardQuery: [Query, Predicate?] = [
+  [
+    { predicate: opponent(isOffstage) },
+    { predicate: not(opponent(isInHitstun)), delayed: true },
+    { predicate: opponent(isInHitstun), delayed: true },
+  ],
+  not(opponent(isInGroundedControl)),
+];
+const crouchCancelQuery: [Query, Predicate?] = [
+  [{ predicate: isCrouching }, { predicate: isInHitstun }],
+];
+const shieldGrabQuery: [Query, Predicate?] = [
+  [
+    { predicate: isInShieldstun },
+    { predicate: action("Catch"), delayed: true },
+  ],
+  either(action("Guard"), action("Catch"), action("GuardSetOff")),
 ];
 
 // load a file from query params if provided. Otherwise start playing a match
