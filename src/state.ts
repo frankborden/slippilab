@@ -144,3 +144,17 @@ const killComboQuery: [Query, Predicate?] = [
   ],
   not(opponent(isInGroundedControl)),
 ];
+
+// load a file from query params if provided
+const params = new URLSearchParams(location.search);
+const url = params.get("replayUrl");
+if (url) {
+  try {
+    const response = await fetch(url);
+    const blob = await response.blob();
+    const file = new File([blob], url.split("/").at(-1) ?? "url.slp");
+    load([file]);
+  } catch (e) {
+    console.error("could not load replay from url:", url, e);
+  }
+}
