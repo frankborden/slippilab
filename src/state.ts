@@ -192,8 +192,8 @@ const shieldGrabQuery: [Query, Predicate?] = [
 
 // load a file from query params if provided. Otherwise start playing the sample
 // match.
-const params = new URLSearchParams(location.search);
-const url = params.get("replayUrl");
+const url = new URLSearchParams(location.search).get("replayUrl");
+const path = location.pathname.slice(1);
 if (url) {
   try {
     fetch(url)
@@ -201,19 +201,19 @@ if (url) {
       .then((blob) => new File([blob], url.split("/").at(-1) ?? "url.slp"))
       .then((file) => load([file]));
   } catch (e) {
-    console.error("Error: could not load replay from url:", url, e);
+    console.error("Error: could not load replay", url, e);
   }
-} else {
+} else if (path !== "") {
   supabase.storage
     .from("public/replays")
-    .download("sample.slp")
+    .download(`${path}.slp`)
     .then(({ data, error }) => {
       if (data) {
         const file = new File([data], "sample.slp");
         load([file]);
       }
       if (error) {
-        console.error("Error: could not load sample replay", error);
+        console.error("Error: could not load replay", error);
       }
     });
 }
