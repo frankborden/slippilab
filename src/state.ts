@@ -19,6 +19,7 @@ import {
   opponent,
   Predicate,
 } from "./search/framePredicates";
+import { supabase } from "./supabaseClient";
 
 const [replayData, setReplayData] = createSignal<ReplayData | undefined>();
 const [frame, setFrame] = createSignal(0);
@@ -189,12 +190,10 @@ const shieldGrabQuery: [Query, Predicate?] = [
   either(action("Guard"), action("Catch"), action("GuardSetOff")),
 ];
 
-// load a file from query params if provided. Otherwise start playing a match
-// from slippi.gg
+// load a file from query params if provided. Otherwise start playing the sample
+// match.
 const params = new URLSearchParams(location.search);
-const url =
-  params.get("replayUrl") ??
-  "https://storage.googleapis.com/slippi.appspot.com/replays/114117/Day%203-Game_20210718T094500.slp";
+const url = params.get("replayUrl");
 if (url) {
   try {
     fetch(url)
@@ -204,4 +203,17 @@ if (url) {
   } catch (e) {
     console.error("Error: could not load replay from url:", url, e);
   }
+} else {
+  supabase.storage
+    .from("public/replays")
+    .download("sample.slp")
+    .then(({ data, error }) => {
+      if (data) {
+        const file = new File([data], "sample.slp");
+        load([file]);
+      }
+      if (error) {
+        console.error("Error: could not load sample replay", error);
+      }
+    });
 }
