@@ -205,7 +205,7 @@ if (url) {
   }
 } else if (path !== "") {
   supabase.storage
-    .from("public/replays")
+    .from("replays")
     .download(`${path}.slp`)
     .then(({ data, error }) => {
       if (data) {
