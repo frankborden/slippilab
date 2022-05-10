@@ -1,4 +1,4 @@
-# @slippilab/viewer
+# viewer
 
 ## SVG
 
@@ -16,19 +16,15 @@
 ## Character Render
 
 - Follow animation index added in spec 3.11.0.0 (ex: wait1 vs wait2)
-- Zelda/Sheik transformations
 - Calculate shield origin
 - Spacies calculate shine origin
-- Invisible upBs
 - Yoshi shield
 - Show Shield tilting (original visualiser reads inputs and checks for stun)
 - Some attacks are rotated or flipped
   - Luigi upB, falcon upB release, kirby bair, etc
 - Shield put up / take down animation
-- Correct laser & fly guy sizes
 - Tether grabs / air tethers
   Powershield animation 0x0b6: 'GUARD', //GuardReflect (182 decimal)
-- Lightshield: Read pre.trigger, do some math?
 - Death animation
 - Effects for hits/electric/fire/darkness
 - Color by costume instead of port
@@ -44,8 +40,8 @@
 ## Stage
 
 - Background visuals (grid?)
-- Better stage coloring
-- Fountain platforms/Wispy
+- stage coloring
+- Fountain platforms/Wispy indicator
   - infeasible until it's added to .slp spec
 
 ## Game UI / Viewer UI
@@ -55,34 +51,29 @@
 - % hidden immediately on death until respawn
 - Stock icons that look like the character
   - First letter(s)?
-- Actionstate/frame below % as option (stun/lag remaining too)
+- More debug information
 - Play/Pause button, other GUI controls
-- Input display?
+- Input display
 
 ## Other
 
-- Camera freaks out on some replays.. almost all my IC replays. maybe just old ones?
 - Colorblind friendly colors - Make every match red vs blue?
 - Debug canvas for viewing individual animations
 
-# @slippilab/search
+# search
 
 - Other filters (matchup, date, player, stage)
 - Fix doubles
 
-# @slippilab/parser
+# parser
 
 - Parse new stuff since 3.9.0.0
 
 # Export Highlight
 
-- Re-enable
-- Export to other formats better than gif? apng, webp, mp4?
-  - Discord doesn't like .apng and .webp. Will it allow embeded mp4 from url?
-- Upload gif to some host (example project with imgur: https://github.com/eirikb/gifie)
-- Able to adjust start/end clip
+- .gif or .mp4? What works for Discord?
 
-# @slippilab/slippilab
+# slippilab
 
 - Tests
-- Webworkers for parsing?
+- Webworkers for parsing? Edge functions?
