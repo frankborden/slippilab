@@ -11,6 +11,7 @@ import {
   ModalHeader,
   ModalOverlay,
   Spinner,
+  Box,
 } from "@hope-ui/solid";
 import { BlobReader, BlobWriter, ZipReader } from "@zip.js/zip.js";
 import { createSignal, Show } from "solid-js";
@@ -60,44 +61,50 @@ export function Upload() {
 
   return (
     <>
-      <Button onClick={() => fileInput.click()}>Open File</Button>
-      <input
-        style="display: none"
-        type="file"
-        accept=".slp,.zip"
-        multiple
-        ref={fileInput}
-        onChange={onFileSelected}
-      />
-      <Button onClick={() => folderInput.click()}>Open Folder</Button>
-      <input
-        style="display: none"
-        type="file"
-        // @ts-ignore folder input is not standard, but is supported by all
-        // modern browsers
-        webkitDirectory
-        ref={folderInput}
-        onChange={onFileSelected}
-      />
-      <Show when={state.files().length > 0}>
-        <Button onClick={onShare}>Share</Button>
-      </Show>
-      <Modal opened={isOpen()} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Replay Upload</ModalHeader>
-          <ModalBody>
-            <Center>
-              <Show when={!isUploading()} fallback={<Spinner />}>
-                <hope.div>{urlOrError()}</hope.div>
-              </Show>
-            </Center>
-          </ModalBody>
-          <ModalFooter>
-            <Button onClick={onClose}>Close</Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+      <Box>
+        <Box>
+          <Button onClick={() => fileInput.click()}>Open File</Button>
+          <input
+            style="display: none"
+            type="file"
+            accept=".slp,.zip"
+            multiple
+            ref={fileInput}
+            onChange={onFileSelected}
+          />
+          <Button onClick={() => folderInput.click()}>Open Folder</Button>
+          <input
+            style="display: none"
+            type="file"
+            // @ts-ignore folder input is not standard, but is supported by all
+            // modern browsers
+            webkitDirectory
+            ref={folderInput}
+            onChange={onFileSelected}
+          />
+        </Box>
+        <Show when={state.files().length > 0}>
+          <Center>
+            <Button onClick={onShare}>Share</Button>
+          </Center>
+        </Show>
+        <Modal opened={isOpen()} onClose={onClose}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Replay Upload</ModalHeader>
+            <ModalBody>
+              <Center>
+                <Show when={!isUploading()} fallback={<Spinner />}>
+                  <hope.div>{urlOrError()}</hope.div>
+                </Show>
+              </Center>
+            </ModalBody>
+            <ModalFooter>
+              <Button onClick={onClose}>Close</Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+      </Box>
     </>
   );
 }
