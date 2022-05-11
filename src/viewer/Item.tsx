@@ -1,4 +1,5 @@
 import { createMemo, For, Match, Switch } from "solid-js";
+import { itemNamesById } from "../common/ids";
 import { ItemUpdate } from "../common/types";
 
 // TODO: characters projectiles. Done: Sheik, Fox, Falco
@@ -7,18 +8,19 @@ import { ItemUpdate } from "../common/types";
 // from hitboxspace to worldspace. I am not scaling lasers by character model
 // scale, but it's not clear if that is correct.
 export function Item(props: { item: ItemUpdate }) {
+  const itemName = createMemo(() => itemNamesById[props.item.typeId]);
   return (
     <Switch>
-      <Match when={props.item.typeId === 79}>
+      <Match when={itemName() === "Needle(thrown)"}>
         <Needle item={props.item} />
       </Match>
-      <Match when={props.item.typeId === 54}>
+      <Match when={itemName() === "Fox's Laser"}>
         <FoxLaser item={props.item} />
       </Match>
-      <Match when={props.item.typeId === 55}>
+      <Match when={itemName() === "Falco's Laser"}>
         <FalcoLaser item={props.item} />
       </Match>
-      <Match when={props.item.typeId === 210}>
+      <Match when={itemName() === "Shyguy (Heiho)"}>
         <FlyGuy item={props.item} />
       </Match>
     </Switch>
@@ -41,7 +43,7 @@ function Needle(props: { item: ItemUpdate }) {
 function FoxLaser(props: { item: ItemUpdate }) {
   // There is a 4th hitbox for the first frame only at -3600 (hitboxspace) with
   // size 400 / 256 that I am skipping.
-  const hitboxOffsets = [-200, -933, -1666].map((x) => x / 256);
+  const hitboxOffsets = [-200, -933, -1666].map(x => x / 256);
   const hitboxSize = 300 / 256;
   // Throws and deflected lasers are not straight horizontal
   const rotations = createMemo(() => {
@@ -70,7 +72,7 @@ function FoxLaser(props: { item: ItemUpdate }) {
         stroke="red"
       ></line>
       <For each={hitboxOffsets}>
-        {(hitboxOffset) => (
+        {hitboxOffset => (
           <circle
             cx={
               props.item.xPosition +
@@ -90,7 +92,7 @@ function FoxLaser(props: { item: ItemUpdate }) {
 }
 
 function FalcoLaser(props: { item: ItemUpdate }) {
-  const hitboxOffsets = [-200, -933, -1666, -2400].map((x) => x / 256);
+  const hitboxOffsets = [-200, -933, -1666, -2400].map(x => x / 256);
   const hitboxSize = 300 / 256;
   // Throws and deflected lasers are not straight horizontal
   const rotations = createMemo(() => {
@@ -107,7 +109,7 @@ function FalcoLaser(props: { item: ItemUpdate }) {
         stroke="red"
       ></line>
       <For each={hitboxOffsets}>
-        {(hitboxOffset) => (
+        {hitboxOffset => (
           <circle
             cx={props.item.xPosition + hitboxOffset * rotations()[0]}
             cy={props.item.yPosition + hitboxOffset * rotations()[1]}
