@@ -35,10 +35,27 @@ export function Item(props: { item: ItemUpdate }) {
       <Match when={itemName() === "Missile"}>
         <Missile item={props.item} />
       </Match>
+      <Match when={itemName() === "Samus's bomb"}>
+        <SamusBomb item={props.item} />
+      </Match>
       <Match when={itemName() === "Shyguy (Heiho)"}>
         <FlyGuy item={props.item} />
       </Match>
     </Switch>
+  );
+}
+
+function SamusBomb(props: { item: ItemUpdate }) {
+  // states: 1 = falling, 3 = exploding
+  return (
+    <>
+      <circle
+        cx={props.item.xPosition}
+        cy={props.item.yPosition}
+        r={(props.item.state === 3 ? 1536 : 500) / 256}
+        fill="darkgray"
+      />
+    </>
   );
 }
 
