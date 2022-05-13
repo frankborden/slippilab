@@ -6,13 +6,13 @@ import { SettingsTab } from "./SettingsTab";
 export function Sidebar() {
   return (
     <>
-      <Tabs>
+      <Tabs height="$full" display="flex" flexDirection="column">
         <TabList>
           <Tab>Replays</Tab>
           <Tab>Clips</Tab>
           <Tab>Settings</Tab>
         </TabList>
-        <TabPanel>
+        <TabPanel flexShrink="1" overflowY="auto">
           <ReplaysTab />
         </TabPanel>
         <TabPanel>

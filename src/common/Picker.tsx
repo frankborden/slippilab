@@ -10,13 +10,15 @@ export function Picker<T>(props: {
 }) {
   return (
     <>
-      <VStack class={styles.picker}>
+      <VStack>
         <For each={props.items}>
           {(item, index) => (
             <Button
-              class={`${styles.row} ${
-                index() === props.selected ? styles.selected : ""
-              }`}
+              borderColor="white"
+              borderWidth="1px"
+              borderStyle="solid"
+              width="100%"
+              class={`${index() === props.selected ? styles.selected : ""}`}
               onClick={() => props.onClick(item, index())}
             >
               {props.render(item, index())}

@@ -31,6 +31,7 @@
 - Marth sideB colors / sword swings in general
 - Spacie sideB clones
 - Optional state-dependent colors? (hitstun, shieldstun, actionable)
+- Yellow flash charging smash attacks
 
 ## Performance / Load times
 
