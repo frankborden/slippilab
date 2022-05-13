@@ -100,6 +100,18 @@ export function SettingsTab() {
             </Tr>
             <Tr>
               <Td>
+                <Kbd>;</Kbd>/<Kbd>:</Kbd>
+              </Td>
+              <Td>Play previous clip</Td>
+            </Tr>
+            <Tr>
+              <Td>
+                <Kbd>'</Kbd>/<Kbd>"</Kbd>
+              </Td>
+              <Td>Play next clip</Td>
+            </Tr>
+            <Tr>
+              <Td>
                 <Kbd>d</Kbd>
               </Td>
               <Td>Toggle debug output</Td>

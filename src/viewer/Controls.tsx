@@ -15,6 +15,8 @@ import {
   nextFile,
   previousFile,
   toggleDebug,
+  nextClip,
+  previousClip,
 } from "../state";
 import { Box, hope, HStack } from "@hope-ui/solid";
 import { onCleanup, onMount } from "solid-js";
@@ -86,6 +88,14 @@ export function Controls() {
       case "[":
       case "{":
         previousFile();
+        break;
+      case "'":
+      case '"':
+        nextClip();
+        break;
+      case ";":
+      case ":":
+        previousClip();
         break;
       case "d":
         toggleDebug();

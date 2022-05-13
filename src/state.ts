@@ -23,7 +23,8 @@ import { supabase } from "./supabaseClient";
 
 const [replayData, setReplayData] = createSignal<ReplayData | undefined>();
 const [frame, setFrame] = createSignal(0);
-const [currentFile, setCurrentFile] = createSignal(0);
+const [currentFile, setCurrentFile] = createSignal(-1);
+const [currentClip, setCurrentClip] = createSignal(-1);
 const [files, setFiles] = createSignal<File[]>([]);
 const [clips, setClips] = createSignal<Record<string, Highlight[]>>({});
 const [fps, setFps] = createSignal(60);
@@ -37,6 +38,7 @@ export const state = {
   currentFile,
   files,
   clips,
+  currentClip,
   zoom,
   isDebug,
 };
@@ -58,6 +60,7 @@ export async function load(files: File[]) {
     setReplayData(replayData);
     setFrame(0);
     setClips(clips);
+    setCurrentClip(-1);
   });
   play();
 }
@@ -77,6 +80,7 @@ export async function nextFile() {
     setReplayData(replayData);
     setFrame(0);
     setClips(clips);
+    setCurrentClip(-1);
   });
 }
 
@@ -95,6 +99,7 @@ export async function previousFile() {
     setReplayData(replayData);
     setFrame(0);
     setClips(clips);
+    setCurrentClip(-1);
   });
 }
 
@@ -162,6 +167,41 @@ export function zoomOut() {
 
 export function toggleDebug() {
   setIsDebug(value => !value);
+}
+
+export function nextClip() {
+  const entries = Array.from(Object.entries(state.clips())).flatMap(
+    ([name, clips]) => clips.map((clip): [string, Highlight] => [name, clip])
+  );
+  const newClipIndex = wrap(entries.length, currentClip() + 1);
+  const [_, newClip] = entries[newClipIndex];
+  batch(() => {
+    setCurrentClip(newClipIndex);
+    jump(wrap(replayData()!.frames.length, newClip.startFrame - 30));
+  });
+}
+
+export function previousClip() {
+  const entries = Array.from(Object.entries(state.clips())).flatMap(
+    ([name, clips]) => clips.map((clip): [string, Highlight] => [name, clip])
+  );
+  const newClipIndex = wrap(entries.length, currentClip() - 1);
+  const [_, newClip] = entries[newClipIndex];
+  batch(() => {
+    setCurrentClip(newClipIndex);
+    jump(wrap(replayData()!.frames.length, newClip.startFrame - 30));
+  });
+}
+
+export function setClip(newClipIndex: number) {
+  const entries = Array.from(Object.entries(state.clips())).flatMap(
+    ([name, clips]) => clips.map((clip): [string, Highlight] => [name, clip])
+  );
+  const [_, newClip] = entries[newClipIndex];
+  batch(() => {
+    setCurrentClip(wrap(entries.length, newClipIndex));
+    jump(wrap(replayData()!.frames.length, newClip.startFrame - 30));
+  });
 }
 
 export function jump(target: number) {

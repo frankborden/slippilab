@@ -1,3 +1,4 @@
+import { findLastIndex } from "rambda";
 import type { ReplayData } from "../common/types";
 import { Predicate } from "./framePredicates";
 
@@ -79,6 +80,16 @@ export function search(
           (highlight, index, highlights) =>
             index ===
             highlights.findIndex(h => h.endFrame === highlight.endFrame)
+        )
+        // deduplicate by firstFrame. Keep the last one because it's the
+        // longest.
+        .filter(
+          (highlight, index, highlights) =>
+            index ===
+            findLastIndex(
+              h => h.startFrame === highlight.startFrame,
+              highlights
+            )
         )
     );
   });
