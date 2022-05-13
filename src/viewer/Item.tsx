@@ -32,10 +32,27 @@ export function Item(props: { item: ItemUpdate }) {
       <Match when={itemName() === "Mario's fire"}>
         <MarioFireball item={props.item} />
       </Match>
+      <Match when={itemName() === "Missile"}>
+        <Missile item={props.item} />
+      </Match>
       <Match when={itemName() === "Shyguy (Heiho)"}>
         <FlyGuy item={props.item} />
       </Match>
     </Switch>
+  );
+}
+
+function Missile(props: { item: ItemUpdate }) {
+  // samusMissileTypes: 0 = homing missile, 1 = smash missile
+  return (
+    <>
+      <circle
+        cx={props.item.xPosition}
+        cy={props.item.yPosition}
+        r={(props.item.samusMissileType === 0 ? 500 : 600) / 256}
+        fill="darkgray"
+      />
+    </>
   );
 }
 
