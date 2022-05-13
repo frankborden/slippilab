@@ -16,7 +16,7 @@ import {
   previousFile,
   toggleDebug,
 } from "../state";
-import { Center, hope } from "@hope-ui/solid";
+import { Box, hope, HStack } from "@hope-ui/solid";
 import { onCleanup, onMount } from "solid-js";
 import styles from "./Controls.module.css";
 
@@ -112,7 +112,10 @@ export function Controls() {
       width="100%"
       height="100%"
     >
-      <Center>
+      <HStack justifyContent={"space-evenly"}>
+        <Box>
+          {state.frame()}/{state.replayData()!.frames.length - 1}
+        </Box>
         <hope.input
           class={styles.seekbarInput}
           type="range"
@@ -122,7 +125,8 @@ export function Controls() {
           max={state.replayData()!.frames.length - 1}
           onInput={() => jump(Number(seekbarInput!.value))}
         ></hope.input>
-      </Center>
+        <Box />
+      </HStack>
     </foreignObject>
   );
 }

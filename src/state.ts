@@ -165,7 +165,7 @@ export function toggleDebug() {
 }
 
 export function jump(target: number) {
-  setFrame(target);
+  setFrame(wrap(replayData()!.frames.length, target));
 }
 
 // percent is [0,1]
