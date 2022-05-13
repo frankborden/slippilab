@@ -13,7 +13,7 @@ import {
 export function SettingsTab() {
   return (
     <>
-      <Box height="80vh" overflowY={"auto"}>
+      <Box overflowY={"auto"}>
         <Table>
           <TableCaption placement={"top"}>Playback Shortcuts</TableCaption>
           <Thead>

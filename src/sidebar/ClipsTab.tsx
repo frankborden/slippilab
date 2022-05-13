@@ -1,3 +1,4 @@
+import { Box } from "@hope-ui/solid";
 import { createMemo } from "solid-js";
 import { Picker } from "../common/Picker";
 import { Highlight } from "../search/search";
@@ -14,12 +15,14 @@ export function ClipsTab() {
   });
   return (
     <>
-      <Picker
-        items={entries()}
-        render={renderClip}
-        onClick={([_, clip]) => jump(clip.startFrame)}
-        selected={0}
-      />
+      <Box overflowY="auto">
+        <Picker
+          items={entries()}
+          render={renderClip}
+          onClick={([_, clip]) => jump(clip.startFrame)}
+          selected={0}
+        />
+      </Box>
     </>
   );
 }

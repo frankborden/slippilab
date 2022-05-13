@@ -15,10 +15,10 @@ export function Sidebar() {
         <TabPanel flexShrink="1" overflowY="auto">
           <ReplaysTab />
         </TabPanel>
-        <TabPanel>
+        <TabPanel flexShrink="1" overflowY="auto">
           <ClipsTab />
         </TabPanel>
-        <TabPanel>
+        <TabPanel flexShrink="1" overflowY="auto">
           <SettingsTab />
         </TabPanel>
       </Tabs>

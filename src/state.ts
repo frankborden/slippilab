@@ -45,7 +45,13 @@ const [running, start, stop] = createRAF(targetFPS(tick, fps));
 
 export async function load(files: File[]) {
   const replayData = parseReplay(await files[0].arrayBuffer());
-  const clips = { killCombo: search(replayData, ...killComboQuery) };
+  const clips = {
+    killCombo: search(replayData, ...killComboQuery),
+    shieldGrab: search(replayData, ...shieldGrabQuery),
+    crouchCancel: search(replayData, ...crouchCancelQuery),
+    edgeguard: search(replayData, ...edgeguardQuery),
+    grabPunish: search(replayData, ...grabPunishQuery),
+  };
   batch(() => {
     setFiles(files);
     setCurrentFile(0);
@@ -59,29 +65,53 @@ export async function load(files: File[]) {
 export async function nextFile() {
   const nextIndex = wrap(files().length, currentFile() + 1);
   const replayData = parseReplay(await files()[nextIndex].arrayBuffer());
+  const clips = {
+    killCombo: search(replayData, ...killComboQuery),
+    shieldGrab: search(replayData, ...shieldGrabQuery),
+    crouchCancel: search(replayData, ...crouchCancelQuery),
+    edgeguard: search(replayData, ...edgeguardQuery),
+    grabPunish: search(replayData, ...grabPunishQuery),
+  };
   batch(() => {
     setCurrentFile(nextIndex);
     setReplayData(replayData);
     setFrame(0);
+    setClips(clips);
   });
 }
 
 export async function previousFile() {
   const previousIndex = wrap(files().length, currentFile() - 1);
   const replayData = parseReplay(await files()[previousIndex].arrayBuffer());
+  const clips = {
+    killCombo: search(replayData, ...killComboQuery),
+    shieldGrab: search(replayData, ...shieldGrabQuery),
+    crouchCancel: search(replayData, ...crouchCancelQuery),
+    edgeguard: search(replayData, ...edgeguardQuery),
+    grabPunish: search(replayData, ...grabPunishQuery),
+  };
   batch(() => {
     setCurrentFile(previousIndex);
     setReplayData(replayData);
     setFrame(0);
+    setClips(clips);
   });
 }
 
 export async function setFile(fileIndex: number) {
   const replayData = parseReplay(await files()[fileIndex].arrayBuffer());
+  const clips = {
+    killCombo: search(replayData, ...killComboQuery),
+    shieldGrab: search(replayData, ...shieldGrabQuery),
+    crouchCancel: search(replayData, ...crouchCancelQuery),
+    edgeguard: search(replayData, ...edgeguardQuery),
+    grabPunish: search(replayData, ...grabPunishQuery),
+  };
   batch(() => {
     setCurrentFile(fileIndex);
     setReplayData(replayData);
     setFrame(0);
+    setClips(clips);
   });
 }
 
@@ -99,14 +129,14 @@ export function togglePause() {
 
 export function tick() {
   setFrame(
-    pipe(add(framesPerTick()), (frame) =>
+    pipe(add(framesPerTick()), frame =>
       wrap(replayData()!.frames.length, frame)
     )
   );
 }
 
 export function tickBack() {
-  setFrame(pipe(dec, (frame) => wrap(replayData()!.frames.length, frame)));
+  setFrame(pipe(dec, frame => wrap(replayData()!.frames.length, frame)));
 }
 
 export function speedNormal() {
@@ -123,15 +153,15 @@ export function speedSlow() {
 }
 
 export function zoomIn() {
-  setZoom((z) => z * 1.01);
+  setZoom(z => z * 1.01);
 }
 
 export function zoomOut() {
-  setZoom((z) => z / 1.01);
+  setZoom(z => z / 1.01);
 }
 
 export function toggleDebug() {
-  setIsDebug((value) => !value);
+  setIsDebug(value => !value);
 }
 
 export function jump(target: number) {
@@ -144,9 +174,7 @@ export function jumpPercent(percent: number) {
 }
 
 export function adjust(delta: number) {
-  setFrame(
-    pipe(add(delta), (frame) => wrap(replayData()!.frames.length, frame))
-  );
+  setFrame(pipe(add(delta), frame => wrap(replayData()!.frames.length, frame)));
 }
 
 function wrap(max: number, targetFrame: number): number {
@@ -197,9 +225,9 @@ const path = location.pathname.slice(1);
 if (url) {
   try {
     fetch(url)
-      .then((response) => response.blob())
-      .then((blob) => new File([blob], url.split("/").at(-1) ?? "url.slp"))
-      .then((file) => load([file]));
+      .then(response => response.blob())
+      .then(blob => new File([blob], url.split("/").at(-1) ?? "url.slp"))
+      .then(file => load([file]));
   } catch (e) {
     console.error("Error: could not load replay", url, e);
   }
