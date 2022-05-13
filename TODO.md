@@ -16,12 +16,10 @@
 ## Character Render
 
 - Follow animation index added in spec 3.11.0.0 (ex: wait1 vs wait2)
-- Calculate shield origin
+- Calculate shield origins
 - Spacies calculate shine origin
 - Yoshi shield
 - Show Shield tilting (original visualiser reads inputs and checks for stun)
-- Some attacks are rotated or flipped
-  - Luigi upB, falcon upB release, kirby bair, etc
 - Shield put up / take down animation
 - Tether grabs / air tethers
   Powershield animation 0x0b6: 'GUARD', //GuardReflect (182 decimal)

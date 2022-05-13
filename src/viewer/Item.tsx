@@ -1,8 +1,9 @@
 import { createMemo, For, Match, Switch } from "solid-js";
 import { itemNamesById } from "../common/ids";
 import { ItemUpdate } from "../common/types";
+import { state } from "../state";
 
-// TODO: characters projectiles. Done: Sheik, Fox, Falco
+// TODO: characters projectiles. Done: Sheik, Fox, Falco, Peach, Yoshi
 
 // Note: Most items coordinates and sizes are divided by 256 to convert them
 // from hitboxspace to worldspace. I am not scaling lasers by character model
@@ -20,10 +21,60 @@ export function Item(props: { item: ItemUpdate }) {
       <Match when={itemName() === "Falco's Laser"}>
         <FalcoLaser item={props.item} />
       </Match>
+      <Match when={itemName() === "Turnip"}>
+        <Turnip item={props.item} />
+      </Match>
+      <Match when={itemName() === "Yoshi's egg(thrown)"}>
+        <YoshiEgg item={props.item} />
+      </Match>
       <Match when={itemName() === "Shyguy (Heiho)"}>
         <FlyGuy item={props.item} />
       </Match>
     </Switch>
+  );
+}
+
+function YoshiEgg(props: { item: ItemUpdate }) {
+  // states: 0 = held, 1 = thrown, 2 = exploded
+  const ownerState = createMemo(() => getOwner(props.item).state);
+  return (
+    <>
+      <circle
+        cx={
+          props.item.state === 0 ? ownerState().xPosition : props.item.xPosition
+        }
+        cy={
+          props.item.state === 0
+            ? ownerState().yPosition + 8
+            : props.item.yPosition
+        }
+        r={props.item.state === 2 ? 2500 / 256 : 1000 / 256}
+        fill="darkgray"
+        opacity={props.item.state === 1 ? 1 : 0.5}
+      />
+    </>
+  );
+}
+
+function Turnip(props: { item: ItemUpdate }) {
+  // states: 0 = held, 1 = bouncing?, 2 = thrown
+  const ownerState = createMemo(() => getOwner(props.item).state);
+  return (
+    <>
+      <circle
+        cx={
+          props.item.state === 0 ? ownerState().xPosition : props.item.xPosition
+        }
+        cy={
+          props.item.state === 0
+            ? ownerState().yPosition + 8
+            : props.item.yPosition
+        }
+        r={600 / 256}
+        fill="darkgray"
+        opacity={props.item.state === 0 ? 0.5 : 1}
+      />
+    </>
   );
 }
 
@@ -133,4 +184,8 @@ function FlyGuy(props: { item: ItemUpdate }) {
       />
     </>
   );
+}
+
+function getOwner(item: ItemUpdate) {
+  return state.replayData()!.frames[item.frameNumber].players[item.owner];
 }
