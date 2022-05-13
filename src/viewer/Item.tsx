@@ -43,7 +43,7 @@ function Needle(props: { item: ItemUpdate }) {
 function FoxLaser(props: { item: ItemUpdate }) {
   // There is a 4th hitbox for the first frame only at -3600 (hitboxspace) with
   // size 400 / 256 that I am skipping.
-  const hitboxOffsets = [-200, -933, -1666].map(x => x / 256);
+  const hitboxOffsets = [-200, -933, -1666].map((x) => x / 256);
   const hitboxSize = 300 / 256;
   // Throws and deflected lasers are not straight horizontal
   const rotations = createMemo(() => {
@@ -72,7 +72,7 @@ function FoxLaser(props: { item: ItemUpdate }) {
         stroke="red"
       ></line>
       <For each={hitboxOffsets}>
-        {hitboxOffset => (
+        {(hitboxOffset) => (
           <circle
             cx={
               props.item.xPosition +
@@ -92,7 +92,7 @@ function FoxLaser(props: { item: ItemUpdate }) {
 }
 
 function FalcoLaser(props: { item: ItemUpdate }) {
-  const hitboxOffsets = [-200, -933, -1666, -2400].map(x => x / 256);
+  const hitboxOffsets = [-200, -933, -1666, -2400].map((x) => x / 256);
   const hitboxSize = 300 / 256;
   // Throws and deflected lasers are not straight horizontal
   const rotations = createMemo(() => {
@@ -109,7 +109,7 @@ function FalcoLaser(props: { item: ItemUpdate }) {
         stroke="red"
       ></line>
       <For each={hitboxOffsets}>
-        {hitboxOffset => (
+        {(hitboxOffset) => (
           <circle
             cx={props.item.xPosition + hitboxOffset * rotations()[0]}
             cy={props.item.yPosition + hitboxOffset * rotations()[1]}

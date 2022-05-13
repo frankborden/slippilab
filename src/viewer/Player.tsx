@@ -369,10 +369,13 @@ function getSpacieUpBRotation(
     getStartOfAction(playerIndex, currentFrame, isNana)
   );
   const joystickDegrees =
-    (Math.atan2(
-      startOfActionPlayer.inputs.processed.joystickY,
-      startOfActionPlayer.inputs.processed.joystickX
-    ) *
+    ((startOfActionPlayer.inputs.processed.joystickY === 0 &&
+    startOfActionPlayer.inputs.processed.joystickX === 0
+      ? Math.PI / 2
+      : Math.atan2(
+          startOfActionPlayer.inputs.processed.joystickY,
+          startOfActionPlayer.inputs.processed.joystickX
+        )) *
       180) /
     Math.PI;
   return (
