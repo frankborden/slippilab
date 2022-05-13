@@ -3,11 +3,10 @@ import { itemNamesById } from "../common/ids";
 import { ItemUpdate } from "../common/types";
 import { state } from "../state";
 
-// TODO: characters projectiles. Done: Sheik, Fox, Falco, Peach, Yoshi
+// TODO: characters projectiles
 
 // Note: Most items coordinates and sizes are divided by 256 to convert them
-// from hitboxspace to worldspace. I am not scaling lasers by character model
-// scale, but it's not clear if that is correct.
+// from hitboxspace to worldspace.
 export function Item(props: { item: ItemUpdate }) {
   const itemName = createMemo(() => itemNamesById[props.item.typeId]);
   return (
@@ -27,10 +26,42 @@ export function Item(props: { item: ItemUpdate }) {
       <Match when={itemName() === "Yoshi's egg(thrown)"}>
         <YoshiEgg item={props.item} />
       </Match>
+      <Match when={itemName() === "Luigi's fire"}>
+        <LuigiFireball item={props.item} />
+      </Match>
+      <Match when={itemName() === "Mario's fire"}>
+        <MarioFireball item={props.item} />
+      </Match>
       <Match when={itemName() === "Shyguy (Heiho)"}>
         <FlyGuy item={props.item} />
       </Match>
     </Switch>
+  );
+}
+
+function MarioFireball(props: { item: ItemUpdate }) {
+  return (
+    <>
+      <circle
+        cx={props.item.xPosition}
+        cy={props.item.yPosition}
+        r={600 / 256}
+        fill="darkgray"
+      />
+    </>
+  );
+}
+
+function LuigiFireball(props: { item: ItemUpdate }) {
+  return (
+    <>
+      <circle
+        cx={props.item.xPosition}
+        cy={props.item.yPosition}
+        r={500 / 256}
+        fill="darkgray"
+      />
+    </>
   );
 }
 
@@ -58,6 +89,7 @@ function YoshiEgg(props: { item: ItemUpdate }) {
 
 function Turnip(props: { item: ItemUpdate }) {
   // states: 0 = held, 1 = bouncing?, 2 = thrown
+  // face: props.item.peachTurnipFace
   const ownerState = createMemo(() => getOwner(props.item).state);
   return (
     <>
