@@ -1,5 +1,7 @@
 import {
+  hope,
   Box,
+  HStack,
   Kbd,
   Table,
   TableCaption,
@@ -13,9 +15,25 @@ import {
 export function SettingsTab() {
   return (
     <>
-      <Box overflowY={"auto"}>
+      <Box overflowY="auto">
+        <HStack width="$full" justifyContent="space-around">
+          <hope.a
+            textDecoration="underline"
+            target="_blank"
+            href="https://github.com/frankborden/slippilab"
+          >
+            Source
+          </hope.a>
+          <hope.a
+            textDecoration="underline"
+            target="_blank"
+            href="https://github.com/frankborden/slippilab/issues/new"
+          >
+            Report Issue
+          </hope.a>
+        </HStack>
         <Table>
-          <TableCaption placement={"top"}>Playback Shortcuts</TableCaption>
+          <TableCaption placement="top">Playback Shortcuts</TableCaption>
           <Thead>
             <Tr>
               <Th>Shortcut</Th>
