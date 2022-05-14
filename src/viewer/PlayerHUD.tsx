@@ -57,7 +57,7 @@ export function PlayerHUD(props: { player: number }) {
           <text
             style={{ font: "bold 15px sans-serif", transform: "scaleY(-1)" }}
             x={`${position().x}%`}
-            y={"-40%"}
+            y="-40%"
             text-anchor="middle"
             textContent={`State: ${playerState().actionStateId}`}
             fill={color()}
@@ -65,7 +65,7 @@ export function PlayerHUD(props: { player: number }) {
           <text
             style={{ font: "bold 15px sans-serif", transform: "scaleY(-1)" }}
             x={`${position().x}%`}
-            y={"-37%"}
+            y="-37%"
             text-anchor="middle"
             textContent={`Frame: ${parseFloat(
               playerState().actionStateFrameCounter.toFixed(4)
@@ -75,7 +75,7 @@ export function PlayerHUD(props: { player: number }) {
           <text
             style={{ font: "bold 15px sans-serif", transform: "scaleY(-1)" }}
             x={`${position().x}%`}
-            y={"-34%"}
+            y="-34%"
             text-anchor="middle"
             textContent={`X: ${parseFloat(playerState().xPosition.toFixed(4))}`}
             fill={color()}
@@ -83,7 +83,7 @@ export function PlayerHUD(props: { player: number }) {
           <text
             style={{ font: "bold 15px sans-serif", transform: "scaleY(-1)" }}
             x={`${position().x}%`}
-            y={"-31%"}
+            y="-31%"
             text-anchor="middle"
             textContent={`Y: ${parseFloat(playerState().yPosition.toFixed(4))}`}
             fill={color()}

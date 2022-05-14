@@ -121,7 +121,7 @@ export function Controls() {
       width="100%"
       height="100%"
     >
-      <HStack justifyContent={"space-evenly"}>
+      <HStack justifyContent="space-evenly">
         <Box>
           {state.frame()}/{state.replayData()!.frames.length - 1}
         </Box>

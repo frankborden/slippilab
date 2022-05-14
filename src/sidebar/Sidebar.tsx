@@ -7,7 +7,7 @@ export function Sidebar() {
   return (
     <>
       <Tabs height="$full" display="flex" flexDirection="column">
-        <TabList>
+        <TabList displa="flex" justifyContent="space-evenly">
           <Tab>Replays</Tab>
           <Tab>Clips</Tab>
           <Tab>Settings</Tab>
