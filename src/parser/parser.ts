@@ -831,7 +831,7 @@ function parseItemUpdateEvent(
       8,
       replayVersion,
       "3.2.0.0",
-      offset + 0x28
+      offset + 0x29
     ),
     owner: readInt(rawData, 8, replayVersion, "3.6.0.0", offset + 0x2a),
   };

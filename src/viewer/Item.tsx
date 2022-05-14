@@ -38,10 +38,28 @@ export function Item(props: { item: ItemUpdate }) {
       <Match when={itemName() === "Samus's bomb"}>
         <SamusBomb item={props.item} />
       </Match>
+      <Match when={itemName() === "Samus's chargeshot"}>
+        <SamusChargeshot item={props.item} />
+      </Match>
       <Match when={itemName() === "Shyguy (Heiho)"}>
         <FlyGuy item={props.item} />
       </Match>
     </Switch>
+  );
+}
+
+function SamusChargeshot(props: { item: ItemUpdate }) {
+  // charge levels go 0 to 7
+  const hitboxesByChargeLevel = [300, 400, 500, 600, 700, 800, 900, 1200];
+  return (
+    <>
+      <circle
+        cx={props.item.xPosition}
+        cy={props.item.yPosition}
+        r={hitboxesByChargeLevel[props.item.chargeShotChargeLevel] / 256}
+        fill="darkgray"
+      />
+    </>
   );
 }
 
@@ -160,7 +178,7 @@ function Needle(props: { item: ItemUpdate }) {
 function FoxLaser(props: { item: ItemUpdate }) {
   // There is a 4th hitbox for the first frame only at -3600 (hitboxspace) with
   // size 400 / 256 that I am skipping.
-  const hitboxOffsets = [-200, -933, -1666].map((x) => x / 256);
+  const hitboxOffsets = [-200, -933, -1666].map(x => x / 256);
   const hitboxSize = 300 / 256;
   // Throws and deflected lasers are not straight horizontal
   const rotations = createMemo(() => {
@@ -189,7 +207,7 @@ function FoxLaser(props: { item: ItemUpdate }) {
         stroke="red"
       ></line>
       <For each={hitboxOffsets}>
-        {(hitboxOffset) => (
+        {hitboxOffset => (
           <circle
             cx={
               props.item.xPosition +
@@ -209,7 +227,7 @@ function FoxLaser(props: { item: ItemUpdate }) {
 }
 
 function FalcoLaser(props: { item: ItemUpdate }) {
-  const hitboxOffsets = [-200, -933, -1666, -2400].map((x) => x / 256);
+  const hitboxOffsets = [-200, -933, -1666, -2400].map(x => x / 256);
   const hitboxSize = 300 / 256;
   // Throws and deflected lasers are not straight horizontal
   const rotations = createMemo(() => {
@@ -226,7 +244,7 @@ function FalcoLaser(props: { item: ItemUpdate }) {
         stroke="red"
       ></line>
       <For each={hitboxOffsets}>
-        {(hitboxOffset) => (
+        {hitboxOffset => (
           <circle
             cx={props.item.xPosition + hitboxOffset * rotations()[0]}
             cy={props.item.yPosition + hitboxOffset * rotations()[1]}
