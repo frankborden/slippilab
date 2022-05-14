@@ -20,7 +20,6 @@ import {
 } from "../state";
 import { Box, hope, HStack } from "@hope-ui/solid";
 import { onCleanup, onMount } from "solid-js";
-import styles from "./Controls.module.css";
 
 export function Controls() {
   onMount(() => {
@@ -127,9 +126,9 @@ export function Controls() {
           {state.frame()}/{state.replayData()!.frames.length - 1}
         </Box>
         <hope.input
-          class={styles.seekbarInput}
           type="range"
           width="$lg"
+          css={{ "accent-color": "var(--hope-colors-primary9)" }}
           ref={seekbarInput}
           value={state.frame()}
           max={state.replayData()!.frames.length - 1}
