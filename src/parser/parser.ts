@@ -4,6 +4,7 @@ import type {
   GameEnding,
   GameSettings,
   ItemUpdate,
+  Metadata,
   PlayerInputs,
   PlayerSettings,
   PlayerState,
@@ -36,7 +37,15 @@ interface CommandPayloadSizes {
 }
 const firstVersion = "0.1.0.0";
 
-/** */
+/**
+ * Takes ~5ms on my laptop. Should be the same regardless of players/size.
+ */
+export function parseMetadata(fileBuffer: ArrayBuffer): Metadata {
+  const baseJson = decode(fileBuffer, { useTypedArrays: true });
+  return baseJson.metadata;
+}
+
+/** Takes ~230ms on my laptop for a 10k frame singles file */
 export function parseReplay(fileBuffer: ArrayBuffer): ReplayData {
   const baseJson = decode(fileBuffer, { useTypedArrays: true });
   const metadata = baseJson.metadata;
@@ -368,7 +377,7 @@ function parseGameStartEvent(
       port: playerIndex + 1,
       internalCharacterIds: Object.keys(
         metadata.players[playerIndex]?.characters ?? {}
-      ).map((key) => Number(key)),
+      ).map(key => Number(key)),
       externalCharacterId: readUint(
         rawData,
         8,

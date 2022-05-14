@@ -14,6 +14,7 @@ export function Picker<T>(props: {
         <For each={props.items}>
           {(item, index) => (
             <Button
+              size="sm"
               borderColor="white"
               borderWidth="1px"
               borderStyle="solid"

@@ -1,8 +1,8 @@
 import createRAF, { targetFPS } from "@solid-primitives/raf";
 import { add, dec, pipe } from "rambda";
 import { batch, createSignal } from "solid-js";
-import { parseReplay } from "./parser/parser";
-import { ReplayData } from "./common/types";
+import { parseMetadata, parseReplay } from "./parser/parser";
+import { Metadata, ReplayData } from "./common/types";
 import { Highlight, Query, search } from "./search/search";
 import {
   action,
@@ -20,6 +20,7 @@ import {
   Predicate,
 } from "./search/framePredicates";
 import { supabase } from "./supabaseClient";
+import { send } from "./workerServer";
 
 const [replayData, setReplayData] = createSignal<ReplayData | undefined>();
 const [frame, setFrame] = createSignal(0);
@@ -27,6 +28,7 @@ const [currentFile, setCurrentFile] = createSignal(-1);
 const [currentClip, setCurrentClip] = createSignal(-1);
 const [files, setFiles] = createSignal<File[]>([]);
 const [clips, setClips] = createSignal<Record<string, Highlight[]>>({});
+const [metadatas, setMetadatas] = createSignal<Metadata[]>([]);
 const [fps, setFps] = createSignal(60);
 const [zoom, setZoom] = createSignal(1);
 const [framesPerTick, setFramesPerTick] = createSignal(1);
@@ -38,6 +40,7 @@ export const state = {
   currentFile,
   files,
   clips,
+  metadatas,
   currentClip,
   zoom,
   isDebug,
@@ -46,7 +49,7 @@ export const state = {
 const [running, start, stop] = createRAF(targetFPS(tick, fps));
 
 export async function load(files: File[]) {
-  const replayData = parseReplay(await files[0].arrayBuffer());
+  const replayData: ReplayData = parseReplay(await files[0].arrayBuffer());
   const clips = {
     killCombo: search(replayData, ...killComboQuery),
     shieldGrab: search(replayData, ...shieldGrabQuery),
@@ -63,6 +66,7 @@ export async function load(files: File[]) {
     setCurrentClip(-1);
   });
   play();
+  setMetadatas(await send(files));
 }
 
 export async function nextFile() {
@@ -258,6 +262,15 @@ const shieldGrabQuery: [Query, Predicate?] = [
   either(action("Guard"), action("Catch"), action("GuardSetOff")),
 ];
 
+/// Setup webworker
+
+// const worker = new Worker(new URL("./worker.ts", import.meta.url), {
+//   type: "module",
+// });
+// worker.onmessage = ev => console.log("received on main thread:", ev.data);
+
+/// start loading anything we find in the URL
+
 // load a file from query params if provided. Otherwise start playing the sample
 // match.
 const url = new URLSearchParams(location.search).get("replayUrl");
@@ -277,7 +290,7 @@ if (url) {
     .download(`${path}.slp`)
     .then(({ data, error }) => {
       if (data) {
-        const file = new File([data], "sample.slp");
+        const file = new File([data], `${path}.slp`);
         load([file]);
       }
       if (error) {
