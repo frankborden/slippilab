@@ -1,5 +1,4 @@
 import {
-  hope,
   Box,
   HStack,
   Kbd,
@@ -10,6 +9,7 @@ import {
   Th,
   Thead,
   Tr,
+  Anchor,
 } from "@hope-ui/solid";
 
 export function SettingsTab() {
@@ -17,20 +17,20 @@ export function SettingsTab() {
     <>
       <Box overflowY="auto">
         <HStack width="$full" justifyContent="space-around">
-          <hope.a
+          <Anchor
+            external
             textDecoration="underline"
-            target="_blank"
             href="https://github.com/frankborden/slippilab"
           >
             Source
-          </hope.a>
-          <hope.a
+          </Anchor>
+          <Anchor
+            external
             textDecoration="underline"
-            target="_blank"
             href="https://github.com/frankborden/slippilab/issues/new"
           >
             Report Issue
-          </hope.a>
+          </Anchor>
         </HStack>
         <Table>
           <TableCaption placement="top">Playback Shortcuts</TableCaption>

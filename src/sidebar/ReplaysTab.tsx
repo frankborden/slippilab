@@ -56,12 +56,12 @@ export function ReplaysTab() {
 function GameInfo(props: { gameSettings: GameSettings }) {
   function playerString(player: PlayerSettings) {
     const name = [player.displayName, player.connectCode, player.nametag].find(
-      x => x?.length > 0
+      s => s?.length > 0
     );
     const character = characterNameByExternalId[player.externalCharacterId];
-    if (name) return `${name}(${character})`;
-    return `${character}`;
+    return name ? `${name}(${character})` : character;
   }
+
   return (
     <>
       <HStack width="$full">
@@ -110,6 +110,4 @@ function StageBadge(props: { stage: ExternalStageName }) {
       {abbreviations[props.stage] ?? "??"}
     </Badge>
   );
-
-  return props.stage;
 }
