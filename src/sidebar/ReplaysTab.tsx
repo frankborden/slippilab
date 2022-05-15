@@ -102,7 +102,7 @@ function StageBadge(props: { stage: ExternalStageName }) {
   };
   const colors: Partial<{ [key in ExternalStageName]: string }> = {
     "Final Destination": "fuchsia",
-    "Pokémon Stadium": "darkolivegreen",
+    "Pokémon Stadium": "blue",
     Battlefield: "dimgray",
     "Fountain of Dreams": "darkviolet",
     "Yoshi's Story": "green",

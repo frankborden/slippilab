@@ -49,24 +49,70 @@ export const state = {
 const [running, start, stop] = createRAF(targetFPS(tick, fps));
 
 export async function load(files: File[]) {
-  const replayData: ReplayData = parseReplay(await files[0].arrayBuffer());
-  const clips = {
-    killCombo: search(replayData, ...killComboQuery),
-    shieldGrab: search(replayData, ...shieldGrabQuery),
-    crouchCancel: search(replayData, ...crouchCancelQuery),
-    edgeguard: search(replayData, ...edgeguardQuery),
-    grabPunish: search(replayData, ...grabPunishQuery),
-  };
-  batch(() => {
-    setFiles(files);
-    setCurrentFile(0);
-    setReplayData(replayData);
-    setFrame(0);
-    setClips(clips);
-    setCurrentClip(-1);
-  });
-  play();
-  setGameSettings(await send(files));
+  let loadWorked = false;
+  try {
+    const replayData: ReplayData = parseReplay(await files[0].arrayBuffer());
+    const clips = {
+      killCombo: search(replayData, ...killComboQuery),
+      shieldGrab: search(replayData, ...shieldGrabQuery),
+      crouchCancel: search(replayData, ...crouchCancelQuery),
+      edgeguard: search(replayData, ...edgeguardQuery),
+      grabPunish: search(replayData, ...grabPunishQuery),
+    };
+    batch(() => {
+      setFiles(files);
+      setCurrentFile(0);
+      setReplayData(replayData);
+      setFrame(0);
+      setClips(clips);
+      setCurrentClip(-1);
+    });
+    play();
+    loadWorked = true;
+  } catch (e) {}
+  const allGameSettings: GameSettings[] = await send(files);
+  const parseFailIndexes = allGameSettings
+    .map((s, i) => [s, i])
+    .filter(([s]) => s === undefined)
+    .map(([_, i]) => i);
+  const workingFiles = files.filter((_, i) => !parseFailIndexes.includes(i));
+  const workingGameSettings = allGameSettings.filter(
+    (_, i) => !parseFailIndexes.includes(i)
+  );
+  if (parseFailIndexes.length > 0) {
+    const fileNames = files
+      .filter((_, i) => parseFailIndexes.includes(i))
+      .map(f => f.name);
+    alert(`Removing files that failed to parse: ${fileNames.join(", ")}`);
+    if (!loadWorked && workingFiles.length > 0) {
+      const replayData = parseReplay(await workingFiles[0].arrayBuffer());
+      const clips = {
+        killCombo: search(replayData, ...killComboQuery),
+        shieldGrab: search(replayData, ...shieldGrabQuery),
+        crouchCancel: search(replayData, ...crouchCancelQuery),
+        edgeguard: search(replayData, ...edgeguardQuery),
+        grabPunish: search(replayData, ...grabPunishQuery),
+      };
+      batch(() => {
+        setFiles(workingFiles);
+        setCurrentFile(0);
+        setReplayData(replayData);
+        setFrame(0);
+        setClips(clips);
+        setGameSettings(workingGameSettings);
+      });
+      play();
+    }
+    batch(() => {
+      setFiles(workingFiles);
+      setGameSettings(workingGameSettings);
+    });
+  } else {
+    batch(() => {
+      setFiles(workingFiles);
+      setGameSettings(workingGameSettings);
+    });
+  }
 }
 
 export async function nextFile() {
