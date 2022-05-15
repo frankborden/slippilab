@@ -312,7 +312,7 @@ function computeRenderData(
     outerColor:
       startOfActionPlayerState.lCancelStatus === "missed"
         ? "red"
-        : startOfActionPlayerState.hurtboxCollisionState !== "vulnerable"
+        : playerState.hurtboxCollisionState !== "vulnerable"
         ? "blue"
         : "none",
     transforms: [
