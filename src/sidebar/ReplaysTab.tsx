@@ -55,7 +55,9 @@ export function ReplaysTab() {
 
 function GameInfo(props: { gameSettings: GameSettings }) {
   function playerString(player: PlayerSettings) {
-    const name = player.displayName ?? player.connectCode;
+    const name = [player.displayName, player.connectCode, player.nametag].find(
+      x => x?.length > 0
+    );
     const character = characterNameByExternalId[player.externalCharacterId];
     if (name) return `${name}(${character})`;
     return `${character}`;
