@@ -16,7 +16,8 @@ import "./select.css";
 
 type Filter =
   | { type: "character"; label: ExternalCharacterName }
-  | { type: "stage"; label: ExternalStageName };
+  | { type: "stage"; label: ExternalStageName }
+  | { type: "codeOrName"; label: string };
 
 export function ReplaysTab() {
   const filesWithGameSettings = createMemo(() =>
@@ -42,6 +43,14 @@ export function ReplaysTab() {
             );
           case "stage":
             return stageNameByExternalId[gameSettings.stageId] === filter.label;
+          case "codeOrName":
+            return gameSettings.playerSettings.some((p) =>
+              [
+                p.connectCode?.toLowerCase(),
+                p.displayName?.toLowerCase(),
+                p.nametag?.toLowerCase(),
+              ].includes(filter.label.toLowerCase())
+            );
         }
       })
     );
@@ -54,7 +63,10 @@ export function ReplaysTab() {
       })),
       ...stageNameByExternalId.map((name) => ({ type: "stage", label: name })),
     ],
-    { key: "label" }
+    {
+      key: "label",
+      createable: (code) => ({ type: "codeOrName", label: code }),
+    }
   );
   const HopeSelect = hope(Select);
   return (
