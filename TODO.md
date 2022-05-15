@@ -61,7 +61,6 @@
 
 # search
 
-- Other filters (matchup, date, player, stage)
 - Fix doubles
 
 # parser

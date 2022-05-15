@@ -384,7 +384,7 @@ function parseGameStartEvent(
       port: playerIndex + 1,
       internalCharacterIds: Object.keys(
         metadata.players[playerIndex]?.characters ?? {}
-      ).map(key => Number(key)),
+      ).map((key) => Number(key)),
       externalCharacterId: readUint(
         rawData,
         8,
@@ -975,9 +975,7 @@ function readShiftJisString(
   } while (charNum < maxLength && shiftJisBytes[charNum - 1] !== 0x00);
   if (shiftJisBytes[0] !== 0x00) {
     const decoder = new TextDecoder("shift-jis");
-    return decoder
-      .decode(shiftJisBytes.subarray(0, charNum - 1))
-      .replaceAll("＃", "#");
+    return toHalfWidth(decoder.decode(shiftJisBytes.subarray(0, charNum - 1)));
   }
   return "";
 }
@@ -995,4 +993,10 @@ function isInVersion(
     if (replayVersionPart < firstVersionPart) return false;
   }
   return true;
+}
+
+function toHalfWidth(s: string) {
+  return s.replace(/[！-～]/g, function (r) {
+    return String.fromCharCode(r.charCodeAt(0) - 0xfee0);
+  });
 }
