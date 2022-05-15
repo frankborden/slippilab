@@ -20,7 +20,7 @@ import {
   Predicate,
 } from "./search/framePredicates";
 import { supabase } from "./supabaseClient";
-import { send } from "./workerServer";
+import { send } from "./workerClient";
 
 const [replayData, setReplayData] = createSignal<ReplayData | undefined>();
 const [frame, setFrame] = createSignal(0);
@@ -261,15 +261,6 @@ const shieldGrabQuery: [Query, Predicate?] = [
   ],
   either(action("Guard"), action("Catch"), action("GuardSetOff")),
 ];
-
-/// Setup webworker
-
-// const worker = new Worker(new URL("./worker.ts", import.meta.url), {
-//   type: "module",
-// });
-// worker.onmessage = ev => console.log("received on main thread:", ev.data);
-
-/// start loading anything we find in the URL
 
 // load a file from query params if provided. Otherwise start playing the sample
 // match.

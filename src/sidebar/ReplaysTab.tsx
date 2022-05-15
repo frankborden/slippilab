@@ -19,7 +19,7 @@ export function ReplaysTab() {
         ? state.gameSettings()
         : Array(state.files().length).fill(undefined)
     )
-  ) as Accessor<[File, GameSettings][]>;
+  ) as Accessor<[File, GameSettings | undefined][]>;
   return (
     <>
       <Box height="$full" display="flex" flexDirection="column">
@@ -31,7 +31,10 @@ export function ReplaysTab() {
           <Box overflowY="auto">
             <Picker
               items={filesWithGameSettings()}
-              render={([file, gameSettings]: [File, GameSettings]) =>
+              render={([file, gameSettings]: [
+                File,
+                GameSettings | undefined
+              ]) =>
                 gameSettings ? (
                   <GameInfo gameSettings={gameSettings} />
                 ) : (
@@ -71,7 +74,7 @@ function GameInfo(props: { gameSettings: GameSettings }) {
             ? Object.values(
                 groupBy(
                   p => String(p.teamId),
-                  props.gameSettings.playerSettings
+                  props.gameSettings.playerSettings.filter(s => s)
                 )
               ).map(team => (
                 <Box color={["red", "blue", "green"][team[0].teamId]}>
