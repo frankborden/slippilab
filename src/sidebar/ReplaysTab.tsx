@@ -14,6 +14,10 @@ import { nextFile, previousFile, setFile, state } from "../state";
 import { Upload } from "./Upload";
 import "./select.css";
 
+type Filter =
+  | { type: "character"; label: ExternalCharacterName }
+  | { type: "stage"; label: ExternalStageName };
+
 export function ReplaysTab() {
   const filesWithGameSettings = createMemo(() =>
     zip(
@@ -23,19 +27,34 @@ export function ReplaysTab() {
         : Array(state.files().length).fill(undefined)
     )
   ) as Accessor<[File, GameSettings | undefined][]>;
-  const [filters, setFilters] = createSignal<ExternalCharacterName[]>([]);
+  const [filters, setFilters] = createSignal<Filter[]>([]);
   const filteredFilesWithGameSettings = createMemo(() => {
     if (filters().length === 0) return filesWithGameSettings();
     return filesWithGameSettings().filter(([_, gameSettings]) =>
-      filters().every((filter) =>
-        gameSettings?.playerSettings.some(
-          (p) => filter === characterNameByExternalId[p.externalCharacterId]
-        )
-      )
+      filters().every((filter) => {
+        if (!gameSettings) return true;
+        switch (filter.type) {
+          case "character":
+            return gameSettings.playerSettings.some(
+              (p) =>
+                filter.label ===
+                characterNameByExternalId[p.externalCharacterId]
+            );
+          case "stage":
+            return stageNameByExternalId[gameSettings.stageId] === filter.label;
+        }
+      })
     );
   });
   const filterProps = createOptions(
-    characterNameByExternalId as unknown as string[]
+    [
+      ...characterNameByExternalId.map((name) => ({
+        type: "character",
+        label: name,
+      })),
+      ...stageNameByExternalId.map((name) => ({ type: "stage", label: name })),
+    ],
+    { key: "label" }
   );
   const HopeSelect = hope(Select);
   return (
