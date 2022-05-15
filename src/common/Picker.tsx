@@ -1,6 +1,5 @@
 import { Button, VStack } from "@hope-ui/solid";
 import { For, JSX } from "solid-js";
-import styles from "./Picker.module.css";
 
 export function Picker<T>(props: {
   items: T[];
@@ -18,8 +17,12 @@ export function Picker<T>(props: {
               borderColor="white"
               borderWidth="1px"
               borderStyle="solid"
+              paddingTop="$1"
+              paddingBottom="$1"
               width="100%"
-              class={`${index() === props.selected ? styles.selected : ""}`}
+              height="initial"
+              css={{ "white-space": "normal" }}
+              variant={index() === props.selected ? "solid" : "outline"}
               onClick={() => props.onClick(item, index())}
             >
               {props.render(item, index())}

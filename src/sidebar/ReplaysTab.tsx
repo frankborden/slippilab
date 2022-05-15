@@ -58,7 +58,6 @@ function getMetadataInfo(metadata: Metadata) {
         characterNameByInternalId[
           Number(Object.keys(metadata.players![i].characters)[0])
         ];
-      console.log(name, character);
       if (name) return `${name}(${character})`;
       return `${character}`;
     })
