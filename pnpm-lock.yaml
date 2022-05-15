@@ -7,6 +7,7 @@ specifiers:
   '@solid-primitives/upload': ^0.0.100
   '@stitches/core': ^1.2.8
   '@supabase/supabase-js': ^1.35.3
+  '@thisbeyond/solid-select': ^0.9.0
   '@zip.js/zip.js': ^2.4.11
   rambda: ^7.1.4
   solid-js: ^1.4.0
@@ -22,6 +23,7 @@ dependencies:
   '@solid-primitives/upload': 0.0.100_solid-js@1.4.0
   '@stitches/core': 1.2.8
   '@supabase/supabase-js': 1.35.3
+  '@thisbeyond/solid-select': 0.9.0_solid-js@1.4.0
   '@zip.js/zip.js': 2.4.11
   rambda: 7.1.4
   solid-js: 1.4.0
@@ -485,6 +487,14 @@ packages:
     transitivePeerDependencies:
       - encoding
       - supports-color
+    dev: false
+
+  /@thisbeyond/solid-select/0.9.0_solid-js@1.4.0:
+    resolution: {integrity: sha512-CHQm9/drYBiKZH0QOLhi43SUjfWnfYC6LXhe3zfallSAbmrV/Oo5oCm1YvmspFOWLubQ8TUrj+b5bl2R0pWQpg==}
+    peerDependencies:
+      solid-js: ^1.1.0
+    dependencies:
+      solid-js: 1.4.0
     dev: false
 
   /@types/phoenix/1.5.4:

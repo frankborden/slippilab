@@ -5,6 +5,7 @@ import { Sidebar } from "./sidebar/Sidebar";
 import { createDropzone } from "@solid-primitives/upload";
 import { load } from "./state";
 import { BlobReader, BlobWriter, ZipReader } from "@zip.js/zip.js";
+import "@thisbeyond/solid-select/style.css";
 
 export function App() {
   // Get started fetching the most popular characters

@@ -1,0 +1,37 @@
+.custom.solid-select-container {
+  color: var(--hope-colors-primary9);
+}
+.custom .solid-select-control {
+  outline: none !important;
+  border-color: var(--hope-colors-primary9);
+}
+.custom .solid-select-input {
+  border-color: var(--hope-colors-primary9);
+  color: white;
+}
+.custom .solid-select-placeholder {
+  color: var(--hope-colors-primary9);
+}
+.custom .solid-select-list {
+  background-color: var(--hope-colors-background);
+  border: 1px solid var(--hope-colors-primary9);
+}
+.custom .solid-select-multi-value {
+  background-color: var(--hope-colors-primary9);
+  color: white;
+}
+.custom .solid-select-multi-value-remove {
+  background-color: var(--hope-colors-primary9);
+  color: white;
+}
+.custom .solid-select-option {
+  background-color: var(--hope-colors-background);
+}
+.custom .solid-select-option:hover {
+  background-color: var(--hope-colors-primary9);
+  color: #fff;
+}
+.custom .solid-select-option[data-focused="true"] {
+  background-color: var(--hope-colors-primary7);
+  color: #fff;
+}

@@ -1,8 +1,10 @@
-import { Badge, Box, Button, Center, HStack } from "@hope-ui/solid";
+import { Badge, Box, Button, Center, hope, HStack } from "@hope-ui/solid";
+import { createOptions, Select } from "@thisbeyond/solid-select";
 import { groupBy, zip } from "rambda";
-import { Accessor, createMemo, Show } from "solid-js";
+import { Accessor, createMemo, createSignal, Show } from "solid-js";
 import {
   characterNameByExternalId,
+  ExternalCharacterName,
   ExternalStageName,
   stageNameByExternalId,
 } from "../common/ids";
@@ -10,6 +12,7 @@ import { Picker } from "../common/Picker";
 import { GameSettings, PlayerSettings } from "../common/types";
 import { nextFile, previousFile, setFile, state } from "../state";
 import { Upload } from "./Upload";
+import "./select.css";
 
 export function ReplaysTab() {
   const filesWithGameSettings = createMemo(() =>
@@ -20,6 +23,21 @@ export function ReplaysTab() {
         : Array(state.files().length).fill(undefined)
     )
   ) as Accessor<[File, GameSettings | undefined][]>;
+  const [filters, setFilters] = createSignal<ExternalCharacterName[]>([]);
+  const filteredFilesWithGameSettings = createMemo(() => {
+    if (filters().length === 0) return filesWithGameSettings();
+    return filesWithGameSettings().filter(([_, gameSettings]) =>
+      filters().every((filter) =>
+        gameSettings?.playerSettings.some(
+          (p) => filter === characterNameByExternalId[p.externalCharacterId]
+        )
+      )
+    );
+  });
+  const filterProps = createOptions(
+    characterNameByExternalId as unknown as string[]
+  );
+  const HopeSelect = hope(Select);
   return (
     <>
       <Box height="$full" display="flex" flexDirection="column">
@@ -28,9 +46,17 @@ export function ReplaysTab() {
             <Button onClick={nextFile}>Next</Button>
             <Button onClick={previousFile}>Previous</Button>
           </Center>
+          <HopeSelect
+            class="custom"
+            width="$full"
+            placeholder="Filter"
+            multiple
+            {...filterProps}
+            onChange={setFilters}
+          />
           <Box overflowY="auto">
             <Picker
-              items={filesWithGameSettings()}
+              items={filteredFilesWithGameSettings()}
               render={([file, gameSettings]: [
                 File,
                 GameSettings | undefined
@@ -41,9 +67,13 @@ export function ReplaysTab() {
                   file.name
                 )
               }
-              onClick={(_, index) => {
-                setFile(index);
-              }}
+              onClick={(_, index) =>
+                setFile(
+                  filesWithGameSettings().indexOf(
+                    filteredFilesWithGameSettings()[index]
+                  )
+                )
+              }
               selected={state.currentFile()}
             />
           </Box>
@@ -59,7 +89,7 @@ export function ReplaysTab() {
 function GameInfo(props: { gameSettings: GameSettings }) {
   function playerString(player: PlayerSettings) {
     const name = [player.displayName, player.connectCode, player.nametag].find(
-      s => s?.length > 0
+      (s) => s?.length > 0
     );
     const character = characterNameByExternalId[player.externalCharacterId];
     return name ? `${name}(${character})` : character;
@@ -73,16 +103,16 @@ function GameInfo(props: { gameSettings: GameSettings }) {
           {props.gameSettings.isTeams
             ? Object.values(
                 groupBy(
-                  p => String(p.teamId),
-                  props.gameSettings.playerSettings.filter(s => s)
+                  (p) => String(p.teamId),
+                  props.gameSettings.playerSettings.filter((s) => s)
                 )
-              ).map(team => (
+              ).map((team) => (
                 <Box color={["red", "blue", "green"][team[0].teamId]}>
                   {team.map(playerString).join(" + ")}
                 </Box>
               ))
             : props.gameSettings.playerSettings
-                .filter(s => s)
+                .filter((s) => s)
                 .map(playerString)
                 .join(" vs ")}
         </Box>
@@ -109,7 +139,7 @@ function StageBadge(props: { stage: ExternalStageName }) {
     "Dream Land N64": "chocolate",
   };
   return (
-    <Badge backgroundColor={colors[props.stage] ?? "black"}>
+    <Badge backgroundColor={colors[props.stage] ?? "black"} color="white">
       {abbreviations[props.stage] ?? "??"}
     </Badge>
   );
