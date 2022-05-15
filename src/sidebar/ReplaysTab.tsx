@@ -1,21 +1,25 @@
-import { Box, Button, Center } from "@hope-ui/solid";
-import { zip } from "rambda";
-import { createMemo, Show } from "solid-js";
-import { characterNameByInternalId } from "../common/ids";
+import { Badge, Box, Button, Center, HStack } from "@hope-ui/solid";
+import { groupBy, zip } from "rambda";
+import { Accessor, createMemo, Show } from "solid-js";
+import {
+  characterNameByExternalId,
+  ExternalStageName,
+  stageNameByExternalId,
+} from "../common/ids";
 import { Picker } from "../common/Picker";
-import { Metadata } from "../common/types";
+import { GameSettings, PlayerSettings } from "../common/types";
 import { nextFile, previousFile, setFile, state } from "../state";
 import { Upload } from "./Upload";
 
 export function ReplaysTab() {
-  const filesWithMetadatas = createMemo(() =>
+  const filesWithGameSettings = createMemo(() =>
     zip(
       state.files(),
-      state.metadatas().length > 0
-        ? state.metadatas()
+      state.gameSettings().length > 0
+        ? state.gameSettings()
         : Array(state.files().length).fill(undefined)
     )
-  );
+  ) as Accessor<[File, GameSettings][]>;
   return (
     <>
       <Box height="$full" display="flex" flexDirection="column">
@@ -26,9 +30,13 @@ export function ReplaysTab() {
           </Center>
           <Box overflowY="auto">
             <Picker
-              items={filesWithMetadatas()}
-              render={([file, metadata]) =>
-                metadata ? getMetadataInfo(metadata) : file.name
+              items={filesWithGameSettings()}
+              render={([file, gameSettings]: [File, GameSettings]) =>
+                gameSettings ? (
+                  <GameInfo gameSettings={gameSettings} />
+                ) : (
+                  file.name
+                )
               }
               onClick={(_, index) => {
                 setFile(index);
@@ -45,21 +53,61 @@ export function ReplaysTab() {
   );
 }
 
-function getMetadataInfo(metadata: Metadata) {
-  if (!metadata.players || Object.keys(metadata.players).length === 0) {
-    return `${metadata.consoleNick} ${metadata.startAt}`;
+function GameInfo(props: { gameSettings: GameSettings }) {
+  function playerString(player: PlayerSettings) {
+    const name = player.displayName ?? player.connectCode;
+    const character = characterNameByExternalId[player.externalCharacterId];
+    if (name) return `${name}(${character})`;
+    return `${character}`;
   }
-  return Array.from(Array(4).keys())
-    .filter(i => metadata.players![i])
-    .map(i => {
-      const name =
-        metadata.players![i].names?.netplay ?? metadata.players![i].names?.code;
-      const character =
-        characterNameByInternalId[
-          Number(Object.keys(metadata.players![i].characters)[0])
-        ];
-      if (name) return `${name}(${character})`;
-      return `${character}`;
-    })
-    .join(", ");
+  return (
+    <>
+      <HStack width="$full">
+        <StageBadge stage={stageNameByExternalId[props.gameSettings.stageId]} />
+        <Box flexGrow="1" display="flex" flexDirection="column">
+          {props.gameSettings.isTeams
+            ? Object.values(
+                groupBy(
+                  p => String(p.teamId),
+                  props.gameSettings.playerSettings
+                )
+              ).map(team => (
+                <Box color={["red", "blue", "green"][team[0].teamId]}>
+                  {team.map(playerString).join(" + ")}
+                </Box>
+              ))
+            : props.gameSettings.playerSettings
+                .filter(s => s)
+                .map(playerString)
+                .join(" vs ")}
+        </Box>
+      </HStack>
+    </>
+  );
+}
+
+function StageBadge(props: { stage: ExternalStageName }) {
+  const abbreviations: Partial<{ [key in ExternalStageName]: string }> = {
+    "Final Destination": "FD",
+    "Pokémon Stadium": "PS",
+    Battlefield: "BF",
+    "Fountain of Dreams": "FoD",
+    "Yoshi's Story": "YS",
+    "Dream Land N64": "DL",
+  };
+  const colors: Partial<{ [key in ExternalStageName]: string }> = {
+    "Final Destination": "fuchsia",
+    "Pokémon Stadium": "darkolivegreen",
+    Battlefield: "dimgray",
+    "Fountain of Dreams": "darkviolet",
+    "Yoshi's Story": "green",
+    "Dream Land N64": "chocolate",
+  };
+  return (
+    <Badge backgroundColor={colors[props.stage] ?? "black"}>
+      {abbreviations[props.stage] ?? "??"}
+    </Badge>
+  );
+
+  return props.stage;
 }

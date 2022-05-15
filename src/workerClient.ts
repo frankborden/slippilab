@@ -1,9 +1,9 @@
-import { parseMetadata } from "./parser/parser";
+import { parseGameSettings } from "./parser/parser";
 
 onmessage = async event => {
   const metadatas = await Promise.all(
     (event.data.payload as File[]).map((file: File) =>
-      file.arrayBuffer().then(buffer => parseMetadata(buffer))
+      file.arrayBuffer().then(buffer => parseGameSettings(buffer))
     )
   );
   postMessage({

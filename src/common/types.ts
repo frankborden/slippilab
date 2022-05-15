@@ -211,26 +211,3 @@ export interface GameEnding {
   oldGameEndMethod?: "resolved" | "unresolved";
   quitInitiator: number;
 }
-
-/**
- * The metadata bit at the start of the replay. This is returned as-is from the
- * file. It may be missing data or be completely missing. For example, games
- * playedOn console via nintendont will not capture players information.
- */
-export interface Metadata {
-  startAt?: string | null;
-  playedOn?: string | null;
-  lastFrame?: number | null;
-  players?: {
-    [playerIndex: number]: {
-      characters: {
-        [internalCharacterId: number]: number;
-      };
-      names?: {
-        netplay?: string | null;
-        code?: string | null;
-      };
-    };
-  } | null;
-  consoleNick?: string | null;
-}

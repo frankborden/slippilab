@@ -1,8 +1,8 @@
 import createRAF, { targetFPS } from "@solid-primitives/raf";
 import { add, dec, pipe } from "rambda";
 import { batch, createSignal } from "solid-js";
-import { parseMetadata, parseReplay } from "./parser/parser";
-import { Metadata, ReplayData } from "./common/types";
+import { parseReplay } from "./parser/parser";
+import { GameSettings, ReplayData } from "./common/types";
 import { Highlight, Query, search } from "./search/search";
 import {
   action,
@@ -28,7 +28,7 @@ const [currentFile, setCurrentFile] = createSignal(-1);
 const [currentClip, setCurrentClip] = createSignal(-1);
 const [files, setFiles] = createSignal<File[]>([]);
 const [clips, setClips] = createSignal<Record<string, Highlight[]>>({});
-const [metadatas, setMetadatas] = createSignal<Metadata[]>([]);
+const [gameSettings, setGameSettings] = createSignal<GameSettings[]>([]);
 const [fps, setFps] = createSignal(60);
 const [zoom, setZoom] = createSignal(1);
 const [framesPerTick, setFramesPerTick] = createSignal(1);
@@ -40,7 +40,7 @@ export const state = {
   currentFile,
   files,
   clips,
-  metadatas,
+  gameSettings,
   currentClip,
   zoom,
   isDebug,
@@ -66,7 +66,7 @@ export async function load(files: File[]) {
     setCurrentClip(-1);
   });
   play();
-  setMetadatas(await send(files));
+  setGameSettings(await send(files));
 }
 
 export async function nextFile() {
