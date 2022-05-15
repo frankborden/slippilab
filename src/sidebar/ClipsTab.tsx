@@ -1,4 +1,4 @@
-import { Box } from "@hope-ui/solid";
+import { Badge, Box, Center, HStack } from "@hope-ui/solid";
 import { createMemo } from "solid-js";
 import { Picker } from "../common/Picker";
 import { Highlight } from "../search/search";
@@ -6,9 +6,33 @@ import { setClip, state } from "../state";
 
 export function ClipsTab() {
   function renderClip([name, clip]: [string, Highlight]) {
-    return `${name} - Player ${clip.playerIndex + 1}: ${clip.startFrame}-${
-      clip.endFrame
-    }`;
+    const index = Object.keys(state.clips()).indexOf(name);
+    const nameColorScheme = (
+      [
+        "primary",
+        "accent",
+        "neutral",
+        "success",
+        "info",
+        "warning",
+        "danger",
+      ] as const
+    )[index % 7];
+    return (
+      <>
+        <HStack width="$full">
+          <Box>
+            <Badge
+              backgroundColor={
+                ["darkred", "darkblue", "gold", "darkgreen"][clip.playerIndex]
+              }
+            >{`P${clip.playerIndex + 1}`}</Badge>
+            <Badge colorScheme={nameColorScheme}>{name}</Badge>
+          </Box>
+          <Center flexGrow="1">{`${clip.startFrame}-${clip.endFrame}`}</Center>
+        </HStack>
+      </>
+    );
   }
   const entries = createMemo(() => {
     return Array.from(Object.entries(state.clips())).flatMap(([name, clips]) =>

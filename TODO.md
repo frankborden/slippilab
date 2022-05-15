@@ -75,4 +75,3 @@
 # slippilab
 
 - Tests
-- Webworkers for parsing? Edge functions?
