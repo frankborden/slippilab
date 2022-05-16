@@ -33,6 +33,7 @@ const [fps, setFps] = createSignal(60);
 const [zoom, setZoom] = createSignal(1);
 const [framesPerTick, setFramesPerTick] = createSignal(1);
 const [isDebug, setIsDebug] = createSignal(false);
+const [running, start, stop] = createRAF(targetFPS(tick, fps));
 
 export const state = {
   replayData,
@@ -44,9 +45,8 @@ export const state = {
   currentClip,
   zoom,
   isDebug,
+  running,
 };
-
-const [running, start, stop] = createRAF(targetFPS(tick, fps));
 
 export async function load(files: File[]) {
   let loadWorked = false;
@@ -82,7 +82,7 @@ export async function load(files: File[]) {
   if (parseFailIndexes.length > 0) {
     const fileNames = files
       .filter((_, i) => parseFailIndexes.includes(i))
-      .map(f => f.name);
+      .map((f) => f.name);
     alert(`Removing files that failed to parse: ${fileNames.join(", ")}`);
     if (!loadWorked && workingFiles.length > 0) {
       const replayData = parseReplay(await workingFiles[0].arrayBuffer());
@@ -184,14 +184,14 @@ export function togglePause() {
 
 export function tick() {
   setFrame(
-    pipe(add(framesPerTick()), frame =>
+    pipe(add(framesPerTick()), (frame) =>
       wrap(replayData()!.frames.length, frame)
     )
   );
 }
 
 export function tickBack() {
-  setFrame(pipe(dec, frame => wrap(replayData()!.frames.length, frame)));
+  setFrame(pipe(dec, (frame) => wrap(replayData()!.frames.length, frame)));
 }
 
 export function speedNormal() {
@@ -208,15 +208,15 @@ export function speedSlow() {
 }
 
 export function zoomIn() {
-  setZoom(z => z * 1.01);
+  setZoom((z) => z * 1.01);
 }
 
 export function zoomOut() {
-  setZoom(z => z / 1.01);
+  setZoom((z) => z / 1.01);
 }
 
 export function toggleDebug() {
-  setIsDebug(value => !value);
+  setIsDebug((value) => !value);
 }
 
 export function nextClip() {
@@ -264,7 +264,9 @@ export function jumpPercent(percent: number) {
 }
 
 export function adjust(delta: number) {
-  setFrame(pipe(add(delta), frame => wrap(replayData()!.frames.length, frame)));
+  setFrame(
+    pipe(add(delta), (frame) => wrap(replayData()!.frames.length, frame))
+  );
 }
 
 function wrap(max: number, targetFrame: number): number {
@@ -315,9 +317,9 @@ const path = location.pathname.slice(1);
 if (url) {
   try {
     fetch(url)
-      .then(response => response.blob())
-      .then(blob => new File([blob], url.split("/").at(-1) ?? "url.slp"))
-      .then(file => load([file]));
+      .then((response) => response.blob())
+      .then((blob) => new File([blob], url.split("/").at(-1) ?? "url.slp"))
+      .then((file) => load([file]));
   } catch (e) {
     console.error("Error: could not load replay", url, e);
   }

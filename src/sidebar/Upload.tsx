@@ -85,7 +85,7 @@ export function Upload() {
         </Box>
         <Show when={state.files().length > 0}>
           <Center>
-            <Button onClick={onShare}>Share</Button>
+            <Button onClick={onShare}>Share File</Button>
           </Center>
         </Show>
         <Modal opened={isOpen()} onClose={onClose}>

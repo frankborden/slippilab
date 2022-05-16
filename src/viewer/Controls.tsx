@@ -19,7 +19,20 @@ import {
   previousClip,
 } from "../state";
 import { Box, hope, HStack } from "@hope-ui/solid";
-import { onCleanup, onMount } from "solid-js";
+import { onCleanup, onMount, Show } from "solid-js";
+import {
+  ArrowClockwise,
+  ArrowCounterClockwise,
+  ArrowsClockwise,
+  ClockClockwise,
+  ClockCounterClockwise,
+  MagnifyingGlassMinus,
+  MagnifyingGlassPlus,
+  Minus,
+  Pause,
+  Play,
+  Plus,
+} from "phosphor-solid";
 
 export function Controls() {
   onMount(() => {
@@ -121,7 +134,7 @@ export function Controls() {
       width="100%"
       height="100%"
     >
-      <HStack justifyContent="space-evenly">
+      <HStack justifyContent="space-evenly" gap="$4">
         <Box>
           {state.frame()}/{state.replayData()!.frames.length - 1}
         </Box>
@@ -133,8 +146,73 @@ export function Controls() {
           value={state.frame()}
           max={state.replayData()!.frames.length - 1}
           onInput={() => jump(Number(seekbarInput!.value))}
-        ></hope.input>
-        <Box />
+        />
+        <HStack gap="$5">
+          <HStack gap="$1">
+            <ClockCounterClockwise
+              color="var(--hope-colors-neutral5)"
+              style={{ cursor: "pointer" }}
+              size={16}
+              onClick={() => adjust(-120)}
+            />
+            <Minus
+              color="var(--hope-colors-neutral5)"
+              style={{ cursor: "pointer" }}
+              size={16}
+              onClick={() => {
+                pause();
+                tickBack();
+              }}
+            />
+            <Show
+              when={state.running()}
+              fallback={
+                <Play
+                  color="var(--hope-colors-neutral5)"
+                  style={{ cursor: "pointer" }}
+                  size={16}
+                  onClick={() => togglePause()}
+                />
+              }
+            >
+              <Pause
+                color="var(--hope-colors-neutral5)"
+                style={{ cursor: "pointer" }}
+                size={16}
+                onClick={() => togglePause()}
+              />
+            </Show>
+            <Plus
+              color="var(--hope-colors-neutral5)"
+              style={{ cursor: "pointer" }}
+              size={16}
+              onClick={() => {
+                pause();
+                tick();
+              }}
+            />
+            <ClockClockwise
+              color="var(--hope-colors-neutral5)"
+              style={{ cursor: "pointer" }}
+              size={16}
+              onClick={() => adjust(120)}
+            />
+          </HStack>
+          <HStack gap="$1">
+            <MagnifyingGlassMinus
+              color="var(--hope-colors-neutral5)"
+              style={{ cursor: "pointer" }}
+              size={16}
+              onClick={() => zoomOut()}
+            />
+            <MagnifyingGlassPlus
+              color="var(--hope-colors-neutral5)"
+              style={{ cursor: "pointer" }}
+              size={16}
+              onClick={() => zoomIn()}
+            />
+          </HStack>
+        </HStack>
       </HStack>
     </foreignObject>
   );

@@ -78,10 +78,6 @@ export function ReplaysTab() {
     <>
       <Box height="$full" display="flex" flexDirection="column">
         <Show when={state.files().length > 0}>
-          <Center>
-            <Button onClick={nextFile}>Next</Button>
-            <Button onClick={previousFile}>Previous</Button>
-          </Center>
           <Box
             onkeydown={(e: Event) => e.stopPropagation()}
             onkeyup={(e: Event) => e.stopPropagation()}
@@ -118,6 +114,10 @@ export function ReplaysTab() {
               selected={state.currentFile()}
             />
           </Box>
+          <Center>
+            <Button onClick={nextFile}>Next</Button>
+            <Button onClick={previousFile}>Previous</Button>
+          </Center>
         </Show>
         <Center>
           <Upload />
