@@ -21,18 +21,13 @@ import {
 import { Box, hope, HStack } from "@hope-ui/solid";
 import { onCleanup, onMount, Show } from "solid-js";
 import {
-  ArrowClockwise,
-  ArrowCounterClockwise,
-  ArrowsClockwise,
   ClockClockwise,
   ClockCounterClockwise,
   FastForward,
   MagnifyingGlassMinus,
   MagnifyingGlassPlus,
-  Minus,
   Pause,
   Play,
-  Plus,
   Rewind,
 } from "phosphor-solid";
 
@@ -136,11 +131,16 @@ export function Controls() {
       width="100%"
       height="100%"
     >
-      <HStack justifyContent="space-evenly" gap="$4">
+      <HStack
+        justifyContent="space-evenly"
+        gap="$4"
+        paddingLeft="$2"
+        paddingRight="$4"
+      >
         <Box width="6ch" color="var(--hope-colors-neutral5)" textAlign="end">
           {state.frame()}
         </Box>
-        <HStack gap="$1">
+        <HStack gap="$2">
           <ClockCounterClockwise
             color="var(--hope-colors-neutral5)"
             style={{ cursor: "pointer" }}
@@ -205,7 +205,7 @@ export function Controls() {
           max={state.replayData()!.frames.length - 1}
           onInput={() => jump(Number(seekbarInput!.value))}
         />
-        <HStack gap="$1">
+        <HStack gap="$2">
           <MagnifyingGlassMinus
             color="var(--hope-colors-neutral5)"
             style={{ cursor: "pointer" }}

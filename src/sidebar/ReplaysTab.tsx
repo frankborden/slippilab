@@ -1,12 +1,4 @@
-import {
-  Badge,
-  Box,
-  Button,
-  Center,
-  hope,
-  HStack,
-  VStack,
-} from "@hope-ui/solid";
+import { Badge, Box, Button, hope, HStack, VStack } from "@hope-ui/solid";
 import { createOptions, Select } from "@thisbeyond/solid-select";
 import { groupBy, zip } from "rambda";
 import { Accessor, createMemo, createSignal, Show } from "solid-js";
@@ -86,7 +78,7 @@ export function ReplaysTab() {
   return (
     <>
       <VStack height="$full" gap="$2">
-        <HStack width="$full" justifyContent={"space-between"}>
+        <HStack width="$full" justifyContent="space-between">
           <Upload />
           <HStack gap="$2">
             <Show when={state.files().length > 0}>
@@ -164,7 +156,7 @@ function GameInfo(props: { gameSettings: GameSettings }) {
     <>
       <HStack width="$full">
         <StageBadge stage={stageNameByExternalId[props.gameSettings.stageId]} />
-        <Box flexGrow="1" display="flex" flexDirection="column">
+        <VStack flexGrow="1">
           {props.gameSettings.isTeams
             ? Object.values(
                 groupBy(
@@ -180,7 +172,7 @@ function GameInfo(props: { gameSettings: GameSettings }) {
                 .filter((s) => s)
                 .map(playerString)
                 .join(" vs ")}
-        </Box>
+        </VStack>
       </HStack>
     </>
   );

@@ -22,7 +22,7 @@ export function SettingsTab() {
             textDecoration="underline"
             href="https://github.com/frankborden/slippilab"
           >
-            Source
+            Source Code
           </Anchor>
           <Anchor
             external
