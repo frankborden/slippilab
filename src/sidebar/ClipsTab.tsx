@@ -21,14 +21,16 @@ export function ClipsTab() {
     return (
       <>
         <HStack width="$full">
-          <Box>
+          <HStack gap="$1">
             <Badge
               backgroundColor={
-                ["darkred", "darkblue", "gold", "darkgreen"][clip.playerIndex]
+                ["darkred", "darkblue", "darkgoldenrod", "darkgreen"][
+                  clip.playerIndex
+                ]
               }
             >{`P${clip.playerIndex + 1}`}</Badge>
             <Badge colorScheme={nameColorScheme}>{name}</Badge>
-          </Box>
+          </HStack>
           <Center flexGrow="1">{`${clip.startFrame}-${clip.endFrame}`}</Center>
         </HStack>
       </>
