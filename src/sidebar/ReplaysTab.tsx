@@ -1,4 +1,12 @@
-import { Badge, Box, Button, Center, hope, HStack } from "@hope-ui/solid";
+import {
+  Badge,
+  Box,
+  Button,
+  Center,
+  hope,
+  HStack,
+  VStack,
+} from "@hope-ui/solid";
 import { createOptions, Select } from "@thisbeyond/solid-select";
 import { groupBy, zip } from "rambda";
 import { Accessor, createMemo, createSignal, Show } from "solid-js";
@@ -13,6 +21,7 @@ import { GameSettings, PlayerSettings } from "../common/types";
 import { nextFile, previousFile, setFile, state } from "../state";
 import { Upload } from "./Upload";
 import "./select.css";
+import { ArrowLeft, ArrowRight } from "phosphor-solid";
 
 type Filter =
   | { type: "character"; label: ExternalCharacterName }
@@ -76,9 +85,31 @@ export function ReplaysTab() {
   const HopeSelect = hope(Select);
   return (
     <>
-      <Box height="$full" display="flex" flexDirection="column">
+      <VStack height="$full" gap="$2">
+        <HStack width="$full" justifyContent={"space-between"}>
+          <Upload />
+          <HStack gap="$2">
+            <Show when={state.files().length > 0}>
+              <Button
+                onClick={previousFile}
+                variant="subtle"
+                leftIcon={<ArrowLeft size="24" />}
+              >
+                Previous
+              </Button>
+              <Button
+                onClick={nextFile}
+                variant="subtle"
+                rightIcon={<ArrowRight size="24" />}
+              >
+                Next
+              </Button>
+            </Show>
+          </HStack>
+        </HStack>
         <Show when={state.files().length > 0}>
           <Box
+            width="$full"
             onkeydown={(e: Event) => e.stopPropagation()}
             onkeyup={(e: Event) => e.stopPropagation()}
           >
@@ -91,7 +122,7 @@ export function ReplaysTab() {
               onChange={setFilters}
             />
           </Box>
-          <Box overflowY="auto">
+          <Box width="$full" overflowY="auto">
             <Picker
               items={filteredFilesWithGameSettings()}
               render={([file, gameSettings]: [
@@ -114,15 +145,8 @@ export function ReplaysTab() {
               selected={state.currentFile()}
             />
           </Box>
-          <Center>
-            <Button onClick={nextFile}>Next</Button>
-            <Button onClick={previousFile}>Previous</Button>
-          </Center>
         </Show>
-        <Center>
-          <Upload />
-        </Center>
-      </Box>
+      </VStack>
     </>
   );
 }

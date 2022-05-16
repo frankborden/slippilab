@@ -12,10 +12,16 @@ import {
   ModalOverlay,
   Spinner,
   Box,
+  Menu,
+  MenuTrigger,
+  MenuContent,
+  MenuItem,
+  HStack,
 } from "@hope-ui/solid";
 import { BlobReader, BlobWriter, ZipReader } from "@zip.js/zip.js";
 import { createSignal, Show } from "solid-js";
 import { supabase } from "../supabaseClient";
+import { FileArrowUp, FolderOpen } from "phosphor-solid";
 
 export function Upload() {
   const { isOpen, onOpen, onClose } = createDisclosure();
@@ -61,32 +67,32 @@ export function Upload() {
 
   return (
     <>
-      <Box>
-        <Box>
-          <Button onClick={() => fileInput.click()}>Open File</Button>
-          <input
-            style="display: none"
-            type="file"
-            accept=".slp,.zip"
-            multiple
-            ref={fileInput}
-            onChange={onFileSelected}
-          />
-          <Button onClick={() => folderInput.click()}>Open Folder</Button>
-          <input
-            style="display: none"
-            type="file"
-            // @ts-ignore folder input is not standard, but is supported by all
-            // modern browsers
-            webkitDirectory
-            ref={folderInput}
-            onChange={onFileSelected}
-          />
-        </Box>
+      <HStack gap="$2">
+        <Menu>
+          <MenuTrigger
+            as={Button}
+            variant="subtle"
+            rightIcon={<FolderOpen size="24" />}
+          >
+            Open
+          </MenuTrigger>
+          <MenuContent>
+            <MenuItem disabled={false} onSelect={() => fileInput.click()}>
+              Files
+            </MenuItem>
+            <MenuItem disabled={false} onSelect={() => folderInput.click()}>
+              Directory
+            </MenuItem>
+          </MenuContent>
+        </Menu>
         <Show when={state.files().length > 0}>
-          <Center>
-            <Button onClick={onShare}>Share File</Button>
-          </Center>
+          <Button
+            onClick={onShare}
+            rightIcon={<FileArrowUp size="24" />}
+            variant="subtle"
+          >
+            Share
+          </Button>
         </Show>
         <Modal opened={isOpen()} onClose={onClose}>
           <ModalOverlay />
@@ -104,7 +110,24 @@ export function Upload() {
             </ModalFooter>
           </ModalContent>
         </Modal>
-      </Box>
+        <hope.input
+          display="none"
+          type="file"
+          accept=".slp,.zip"
+          multiple
+          ref={fileInput}
+          onChange={onFileSelected}
+        />
+        <hope.input
+          display="none"
+          type="file"
+          // @ts-ignore folder input is not standard, but is supported by all
+          // modern browsers
+          webkitDirectory
+          ref={folderInput}
+          onChange={onFileSelected}
+        />
+      </HStack>
     </>
   );
 }
