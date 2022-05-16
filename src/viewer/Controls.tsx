@@ -26,12 +26,14 @@ import {
   ArrowsClockwise,
   ClockClockwise,
   ClockCounterClockwise,
+  FastForward,
   MagnifyingGlassMinus,
   MagnifyingGlassPlus,
   Minus,
   Pause,
   Play,
   Plus,
+  Rewind,
 } from "phosphor-solid";
 
 export function Controls() {
@@ -135,9 +137,65 @@ export function Controls() {
       height="100%"
     >
       <HStack justifyContent="space-evenly" gap="$4">
-        <Box>
-          {state.frame()}/{state.replayData()!.frames.length - 1}
+        <Box width="6ch" color="var(--hope-colors-neutral5)" textAlign="end">
+          {state.frame()}
         </Box>
+        <HStack gap="$1">
+          <ClockCounterClockwise
+            color="var(--hope-colors-neutral5)"
+            style={{ cursor: "pointer" }}
+            size={32}
+            weight="fill"
+            onClick={() => adjust(-120)}
+          />
+          <Rewind
+            color="var(--hope-colors-neutral5)"
+            style={{ cursor: "pointer" }}
+            size={32}
+            weight="fill"
+            onClick={() => {
+              pause();
+              tickBack();
+            }}
+          />
+          <Show
+            when={state.running()}
+            fallback={
+              <Play
+                color="var(--hope-colors-neutral5)"
+                style={{ cursor: "pointer" }}
+                size={32}
+                weight="fill"
+                onClick={() => togglePause()}
+              />
+            }
+          >
+            <Pause
+              color="var(--hope-colors-neutral5)"
+              style={{ cursor: "pointer" }}
+              size={32}
+              weight="fill"
+              onClick={() => togglePause()}
+            />
+          </Show>
+          <FastForward
+            color="var(--hope-colors-neutral5)"
+            style={{ cursor: "pointer" }}
+            size={32}
+            weight="fill"
+            onClick={() => {
+              pause();
+              tick();
+            }}
+          />
+          <ClockClockwise
+            color="var(--hope-colors-neutral5)"
+            style={{ cursor: "pointer" }}
+            size={32}
+            weight="fill"
+            onClick={() => adjust(120)}
+          />
+        </HStack>
         <hope.input
           type="range"
           width="$lg"
@@ -147,71 +205,20 @@ export function Controls() {
           max={state.replayData()!.frames.length - 1}
           onInput={() => jump(Number(seekbarInput!.value))}
         />
-        <HStack gap="$5">
-          <HStack gap="$1">
-            <ClockCounterClockwise
-              color="var(--hope-colors-neutral5)"
-              style={{ cursor: "pointer" }}
-              size={16}
-              onClick={() => adjust(-120)}
-            />
-            <Minus
-              color="var(--hope-colors-neutral5)"
-              style={{ cursor: "pointer" }}
-              size={16}
-              onClick={() => {
-                pause();
-                tickBack();
-              }}
-            />
-            <Show
-              when={state.running()}
-              fallback={
-                <Play
-                  color="var(--hope-colors-neutral5)"
-                  style={{ cursor: "pointer" }}
-                  size={16}
-                  onClick={() => togglePause()}
-                />
-              }
-            >
-              <Pause
-                color="var(--hope-colors-neutral5)"
-                style={{ cursor: "pointer" }}
-                size={16}
-                onClick={() => togglePause()}
-              />
-            </Show>
-            <Plus
-              color="var(--hope-colors-neutral5)"
-              style={{ cursor: "pointer" }}
-              size={16}
-              onClick={() => {
-                pause();
-                tick();
-              }}
-            />
-            <ClockClockwise
-              color="var(--hope-colors-neutral5)"
-              style={{ cursor: "pointer" }}
-              size={16}
-              onClick={() => adjust(120)}
-            />
-          </HStack>
-          <HStack gap="$1">
-            <MagnifyingGlassMinus
-              color="var(--hope-colors-neutral5)"
-              style={{ cursor: "pointer" }}
-              size={16}
-              onClick={() => zoomOut()}
-            />
-            <MagnifyingGlassPlus
-              color="var(--hope-colors-neutral5)"
-              style={{ cursor: "pointer" }}
-              size={16}
-              onClick={() => zoomIn()}
-            />
-          </HStack>
+        <HStack gap="$1">
+          <MagnifyingGlassMinus
+            color="var(--hope-colors-neutral5)"
+            style={{ cursor: "pointer" }}
+            size={32}
+            onClick={() => zoomOut()}
+          />
+          <MagnifyingGlassPlus
+            color="var(--hope-colors-neutral5)"
+            style={{ cursor: "pointer" }}
+            weight="bold"
+            size={32}
+            onClick={() => zoomIn()}
+          />
         </HStack>
       </HStack>
     </foreignObject>
