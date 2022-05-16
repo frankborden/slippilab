@@ -32,16 +32,16 @@ export function ReplaysTab() {
   const filteredFilesWithGameSettings = createMemo(() => {
     if (filters().length === 0) return filesWithGameSettings();
     return filesWithGameSettings().filter(([_, gameSettings]) =>
-      filters().every(filter => {
+      filters().every((filter) => {
         if (!gameSettings) return true;
         switch (filter.type) {
           case "character":
             const numTimesCharacterInFilter = filters().filter(
-              f => f.type === "character" && f.label === filter.label
+              (f) => f.type === "character" && f.label === filter.label
             ).length;
             return (
               gameSettings.playerSettings.filter(
-                p =>
+                (p) =>
                   filter.label ===
                   characterNameByExternalId[p.externalCharacterId]
               ).length == numTimesCharacterInFilter
@@ -49,7 +49,7 @@ export function ReplaysTab() {
           case "stage":
             return stageNameByExternalId[gameSettings.stageId] === filter.label;
           case "codeOrName":
-            return gameSettings.playerSettings.some(p =>
+            return gameSettings.playerSettings.some((p) =>
               [
                 p.connectCode?.toLowerCase(),
                 p.displayName?.toLowerCase(),
@@ -62,15 +62,15 @@ export function ReplaysTab() {
   });
   const filterProps = createOptions(
     [
-      ...characterNameByExternalId.map(name => ({
+      ...characterNameByExternalId.map((name) => ({
         type: "character",
         label: name,
       })),
-      ...stageNameByExternalId.map(name => ({ type: "stage", label: name })),
+      ...stageNameByExternalId.map((name) => ({ type: "stage", label: name })),
     ],
     {
       key: "label",
-      createable: code => ({ type: "codeOrName", label: code }),
+      createable: (code) => ({ type: "codeOrName", label: code }),
     }
   );
   const HopeSelect = hope(Select);
@@ -82,14 +82,19 @@ export function ReplaysTab() {
             <Button onClick={nextFile}>Next</Button>
             <Button onClick={previousFile}>Previous</Button>
           </Center>
-          <HopeSelect
-            class="custom"
-            width="$full"
-            placeholder="Filter"
-            multiple
-            {...filterProps}
-            onChange={setFilters}
-          />
+          <Box
+            onkeydown={(e: Event) => e.stopPropagation()}
+            onkeyup={(e: Event) => e.stopPropagation()}
+          >
+            <HopeSelect
+              class="custom"
+              width="$full"
+              placeholder="Filter"
+              multiple
+              {...filterProps}
+              onChange={setFilters}
+            />
+          </Box>
           <Box overflowY="auto">
             <Picker
               items={filteredFilesWithGameSettings()}
@@ -125,7 +130,7 @@ export function ReplaysTab() {
 function GameInfo(props: { gameSettings: GameSettings }) {
   function playerString(player: PlayerSettings) {
     const name = [player.displayName, player.connectCode, player.nametag].find(
-      s => s?.length > 0
+      (s) => s?.length > 0
     );
     const character = characterNameByExternalId[player.externalCharacterId];
     return name ? `${name}(${character})` : character;
@@ -139,16 +144,16 @@ function GameInfo(props: { gameSettings: GameSettings }) {
           {props.gameSettings.isTeams
             ? Object.values(
                 groupBy(
-                  p => String(p.teamId),
-                  props.gameSettings.playerSettings.filter(s => s)
+                  (p) => String(p.teamId),
+                  props.gameSettings.playerSettings.filter((s) => s)
                 )
-              ).map(team => (
+              ).map((team) => (
                 <Box color={["red", "blue", "green"][team[0].teamId]}>
                   {team.map(playerString).join(" + ")}
                 </Box>
               ))
             : props.gameSettings.playerSettings
-                .filter(s => s)
+                .filter((s) => s)
                 .map(playerString)
                 .join(" vs ")}
         </Box>
