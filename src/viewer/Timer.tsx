@@ -5,7 +5,8 @@ import { state } from "../state";
 export function Timer() {
   const color = useColorModeValue("black", "#dddddd");
   const time = createMemo(() => {
-    const frames = state.replayData()!.settings.timerStart * 60 - state.frame();
+    const frames =
+      state.replayData()!.settings.timerStart * 60 - state.frame() + 123;
     const minutes = Math.floor(frames / (60 * 60))
       .toString()
       .padStart(2, "0");

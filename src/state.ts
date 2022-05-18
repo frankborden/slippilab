@@ -19,7 +19,7 @@ import {
   opponent,
   Predicate,
 } from "./search/framePredicates";
-import { supabase } from "./supabaseClient";
+import { downloadReplay } from "./supabaseClient";
 import { send } from "./workerClient";
 import { notificationService } from "@hope-ui/solid";
 
@@ -305,16 +305,13 @@ if (url) {
     console.error("Error: could not load replay", url, e);
   }
 } else if (path !== "") {
-  supabase.storage
-    .from("replays")
-    .download(`${path}.slp`)
-    .then(({ data, error }) => {
-      if (data) {
-        const file = new File([data], `${path}.slp`);
-        load([file]);
-      }
-      if (error) {
-        console.error("Error: could not load replay", error);
-      }
-    });
+  downloadReplay(path).then(({ data, error }) => {
+    if (data) {
+      const file = new File([data], `${path}.slp`);
+      load([file]);
+    }
+    if (error) {
+      console.error("Error: could not load replay", error);
+    }
+  });
 }

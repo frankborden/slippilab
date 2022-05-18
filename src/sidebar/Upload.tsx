@@ -19,7 +19,7 @@ import {
 } from "@hope-ui/solid";
 import { BlobReader, BlobWriter, ZipReader } from "@zip.js/zip.js";
 import { createSignal, Show } from "solid-js";
-import { supabase } from "../supabaseClient";
+import { uploadReplay } from "../supabaseClient";
 import { FileArrowUp, FolderOpen } from "phosphor-solid";
 
 export function Upload() {
@@ -37,11 +37,11 @@ export function Upload() {
       return;
     }
     const files = Array.from(input.files);
-    const slpFiles = files.filter((file) => file.name.endsWith(".slp"));
-    const zipFiles = files.filter((file) => file.name.endsWith(".zip"));
+    const slpFiles = files.filter(file => file.name.endsWith(".slp"));
+    const zipFiles = files.filter(file => file.name.endsWith(".zip"));
     const blobsFromZips = (await Promise.all(zipFiles.map(unzip)))
       .flat()
-      .filter((file) => file.name.endsWith(".slp"));
+      .filter(file => file.name.endsWith(".slp"));
 
     load([...slpFiles, ...blobsFromZips]);
   }
@@ -50,10 +50,7 @@ export function Upload() {
     setIsUploading(true);
     onOpen();
     const file = state.files()[state.currentFile()];
-    const id = crypto.randomUUID();
-    const { data, error } = await supabase.storage
-      .from("replays")
-      .upload(`${id}.slp`, file);
+    const { id, data, error } = await uploadReplay(file);
     const message = data
       ? `${window.location.origin}/${id}`
       : "Error uploading file";
@@ -135,10 +132,10 @@ async function unzip(zipFile: File): Promise<File[]> {
   const entries = await new ZipReader(new BlobReader(zipFile)).getEntries();
   return Promise.all(
     entries
-      .filter((entry) => !entry.filename.split("/").at(-1)?.startsWith("."))
-      .map((entry) =>
+      .filter(entry => !entry.filename.split("/").at(-1)?.startsWith("."))
+      .map(entry =>
         (entry.getData?.(new BlobWriter()) as Promise<Blob>).then(
-          (blob) => new File([blob], entry.filename)
+          blob => new File([blob], entry.filename)
         )
       )
   );

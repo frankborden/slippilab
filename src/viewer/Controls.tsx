@@ -141,7 +141,7 @@ export function Controls() {
         color={controlColor()}
       >
         <Box width="6ch" textAlign="end">
-          {state.frame()}
+          {state.isDebug() ? state.frame() - 123 : state.frame()}
         </Box>
         <HStack gap="$2">
           <ClockCounterClockwise
