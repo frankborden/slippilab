@@ -1,4 +1,4 @@
-import { Button, VStack } from "@hope-ui/solid";
+import { Button, useColorModeValue, VStack } from "@hope-ui/solid";
 import { For, JSX } from "solid-js";
 
 export function Picker<T>(props: {
@@ -7,6 +7,7 @@ export function Picker<T>(props: {
   onClick: (item: T, index: number) => unknown;
   selected: number;
 }) {
+  const borderColor = useColorModeValue("$primary9", "white");
   return (
     <>
       <VStack>
@@ -14,7 +15,7 @@ export function Picker<T>(props: {
           {(item, index) => (
             <Button
               size="sm"
-              borderColor="white"
+              borderColor={borderColor()}
               borderWidth="1px"
               borderStyle="solid"
               paddingTop="$1"

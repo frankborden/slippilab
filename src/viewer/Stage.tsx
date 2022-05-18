@@ -1,3 +1,4 @@
+import { hope, useColorModeValue } from "@hope-ui/solid";
 import { createMemo, For, Match, Switch } from "solid-js";
 import { stageNameByExternalId } from "../common/ids";
 import { state } from "../state";
@@ -65,7 +66,7 @@ function Battlefield() {
     <>
       <polyline points={mainStage.join(" ")} />
       <For each={platforms}>
-        {(points) => <polyline points={points.join(" ")} stroke="black" />}
+        {points => <polyline points={points.join(" ")} stroke="black" />}
       </For>
       <rect
         x={blastzones[0][0]}
@@ -103,7 +104,7 @@ function Dreamland() {
     <>
       <polyline points={mainStage.join(" ")} />
       <For each={platforms}>
-        {(points) => <polyline points={points.join(" ")} stroke="black" />}
+        {points => <polyline points={points.join(" ")} stroke="black" />}
       </For>
       <rect
         x={blastzones[0][0]}
@@ -276,13 +277,14 @@ function YoshisStory() {
     [-175.7, -91],
     [173.6, 169],
   ];
+  const borderColor = useColorModeValue("darkgray", "white");
   return (
     <>
       <polyline points={mainStage.join(" ")} />
       <For each={platforms}>
-        {(points) => <polyline points={points.join(" ")} stroke="black" />}
+        {points => <polyline points={points.join(" ")} stroke="black" />}
       </For>
-      <polyline points={randall().join(" ")} stroke="white" />
+      <polyline points={randall().join(" ")} stroke={borderColor()} />
       <rect
         x={blastzones[0][0]}
         y={blastzones[0][1]}
@@ -345,7 +347,7 @@ function FountainOfDreams() {
     <>
       <polyline points={mainStage.join(" ")} />
       <For each={platforms.slice(0, 2)}>
-        {(points) => (
+        {points => (
           <polyline
             points={points.join(" ")}
             stroke-dasharray="2,4"
@@ -398,7 +400,7 @@ function PokemonStadium() {
     <>
       <polyline points={mainStage.join(" ")} />
       <For each={platforms}>
-        {(points) => <polyline points={points.join(" ")} stroke="black" />}
+        {points => <polyline points={points.join(" ")} stroke="black" />}
       </For>
       <rect
         x={blastzones[0][0]}

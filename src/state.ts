@@ -21,6 +21,7 @@ import {
 } from "./search/framePredicates";
 import { supabase } from "./supabaseClient";
 import { send } from "./workerClient";
+import { notificationService } from "@hope-ui/solid";
 
 const [replayData, setReplayData] = createSignal<ReplayData | undefined>();
 const [frame, setFrame] = createSignal(0);
@@ -34,8 +35,10 @@ const [zoom, setZoom] = createSignal(1);
 const [framesPerTick, setFramesPerTick] = createSignal(1);
 const [isDebug, setIsDebug] = createSignal(false);
 const [running, start, stop] = createRAF(targetFPS(tick, fps));
+const [parsing, setParsing] = createSignal(false);
 
 export const state = {
+  parsing,
   replayData,
   frame,
   currentFile,
@@ -49,9 +52,31 @@ export const state = {
 };
 
 export async function load(files: File[]) {
-  let loadWorked = false;
+  notificationService.show({
+    loading: true,
+    persistent: true,
+    title: `Parsing ${files.length} files`,
+  });
+  const allGameSettings: GameSettings[] = await send(files);
+  const workingIndexes = allGameSettings.flatMap((s, i) => (s ? [i] : []));
+  const workingFiles = files.filter((_, i) => workingIndexes.includes(i));
+  const failingFiles = files.filter((_, i) => !workingIndexes.includes(i));
+  const workingGameSettings = allGameSettings.filter(
+    (settings, i): settings is GameSettings => workingIndexes.includes(i)
+  );
+  notificationService.clear();
+  if (failingFiles.length > 0) {
+    notificationService.show({
+      status: "danger",
+      persistent: true,
+      title: "Failed to parse",
+      description: failingFiles.map(file => file.name).join("\n"),
+    });
+  }
   try {
-    const replayData: ReplayData = parseReplay(await files[0].arrayBuffer());
+    const replayData: ReplayData = parseReplay(
+      await workingFiles[0].arrayBuffer()
+    );
     const clips = {
       killCombo: search(replayData, ...killComboQuery),
       shieldGrab: search(replayData, ...shieldGrabQuery),
@@ -60,59 +85,17 @@ export async function load(files: File[]) {
       grabPunish: search(replayData, ...grabPunishQuery),
     };
     batch(() => {
-      setFiles(files);
+      setParsing(false);
+      setFiles(workingFiles);
       setCurrentFile(0);
       setReplayData(replayData);
       setFrame(0);
       setClips(clips);
       setCurrentClip(-1);
+      setGameSettings(workingGameSettings);
     });
     play();
-    loadWorked = true;
   } catch (e) {}
-  const allGameSettings: GameSettings[] = await send(files);
-  const parseFailIndexes = allGameSettings
-    .map((s, i) => [s, i])
-    .filter(([s]) => s === undefined)
-    .map(([_, i]) => i);
-  const workingFiles = files.filter((_, i) => !parseFailIndexes.includes(i));
-  const workingGameSettings = allGameSettings.filter(
-    (_, i) => !parseFailIndexes.includes(i)
-  );
-  if (parseFailIndexes.length > 0) {
-    const fileNames = files
-      .filter((_, i) => parseFailIndexes.includes(i))
-      .map((f) => f.name);
-    alert(`Removing files that failed to parse: ${fileNames.join(", ")}`);
-    if (!loadWorked && workingFiles.length > 0) {
-      const replayData = parseReplay(await workingFiles[0].arrayBuffer());
-      const clips = {
-        killCombo: search(replayData, ...killComboQuery),
-        shieldGrab: search(replayData, ...shieldGrabQuery),
-        crouchCancel: search(replayData, ...crouchCancelQuery),
-        edgeguard: search(replayData, ...edgeguardQuery),
-        grabPunish: search(replayData, ...grabPunishQuery),
-      };
-      batch(() => {
-        setFiles(workingFiles);
-        setCurrentFile(0);
-        setReplayData(replayData);
-        setFrame(0);
-        setClips(clips);
-        setGameSettings(workingGameSettings);
-      });
-      play();
-    }
-    batch(() => {
-      setFiles(workingFiles);
-      setGameSettings(workingGameSettings);
-    });
-  } else {
-    batch(() => {
-      setFiles(workingFiles);
-      setGameSettings(workingGameSettings);
-    });
-  }
 }
 
 export async function nextFile() {
@@ -184,14 +167,14 @@ export function togglePause() {
 
 export function tick() {
   setFrame(
-    pipe(add(framesPerTick()), (frame) =>
+    pipe(add(framesPerTick()), frame =>
       wrap(replayData()!.frames.length, frame)
     )
   );
 }
 
 export function tickBack() {
-  setFrame(pipe(dec, (frame) => wrap(replayData()!.frames.length, frame)));
+  setFrame(pipe(dec, frame => wrap(replayData()!.frames.length, frame)));
 }
 
 export function speedNormal() {
@@ -208,15 +191,15 @@ export function speedSlow() {
 }
 
 export function zoomIn() {
-  setZoom((z) => z * 1.01);
+  setZoom(z => z * 1.01);
 }
 
 export function zoomOut() {
-  setZoom((z) => z / 1.01);
+  setZoom(z => z / 1.01);
 }
 
 export function toggleDebug() {
-  setIsDebug((value) => !value);
+  setIsDebug(value => !value);
 }
 
 export function nextClip() {
@@ -264,9 +247,7 @@ export function jumpPercent(percent: number) {
 }
 
 export function adjust(delta: number) {
-  setFrame(
-    pipe(add(delta), (frame) => wrap(replayData()!.frames.length, frame))
-  );
+  setFrame(pipe(add(delta), frame => wrap(replayData()!.frames.length, frame)));
 }
 
 function wrap(max: number, targetFrame: number): number {
@@ -317,9 +298,9 @@ const path = location.pathname.slice(1);
 if (url) {
   try {
     fetch(url)
-      .then((response) => response.blob())
-      .then((blob) => new File([blob], url.split("/").at(-1) ?? "url.slp"))
-      .then((file) => load([file]));
+      .then(response => response.blob())
+      .then(blob => new File([blob], url.split("/").at(-1) ?? "url.slp"))
+      .then(file => load([file]));
   } catch (e) {
     console.error("Error: could not load replay", url, e);
   }

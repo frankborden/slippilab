@@ -1,3 +1,4 @@
+import { useColorModeValue } from "@hope-ui/solid";
 import { createMemo, For, Show } from "solid-js";
 import { characterNameByInternalId } from "../common/ids";
 import { state } from "../state";
@@ -96,10 +97,18 @@ export function PlayerHUD(props: { player: number }) {
 
 // TODO: dedupe with same code in Player.tsx
 function getPlayerColor(playerIndex: number) {
+  const playerColors = useColorModeValue(
+    ["red", "blue", "goldenrod", "green"],
+    ["darkred", "darkblue", "darkgoldenrod", "darkgreen"]
+  );
+  const teamColors = useColorModeValue(
+    ["red", "blue", "green"],
+    ["darkred", "darkblue", "darkgreen"]
+  );
   if (state.replayData()!.settings.isTeams) {
     const teamId =
       state.replayData()!.settings.playerSettings[playerIndex].teamId;
-    return ["darkred", "darkblue", "darkgreen"][teamId];
+    return teamColors()[teamId];
   }
-  return ["darkred", "darkblue", "gold", "darkgreen"][playerIndex];
+  return playerColors()[playerIndex];
 }

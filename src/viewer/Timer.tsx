@@ -1,7 +1,9 @@
+import { useColorModeValue } from "@hope-ui/solid";
 import { createMemo } from "solid-js";
 import { state } from "../state";
 
 export function Timer() {
+  const color = useColorModeValue("black", "#dddddd");
   const time = createMemo(() => {
     const frames = state.replayData()!.settings.timerStart * 60 - state.frame();
     const minutes = Math.floor(frames / (60 * 60))
@@ -20,7 +22,7 @@ export function Timer() {
       text-anchor="middle"
       y="-42%"
       textContent={time()}
-      fill="#DDDDDD"
+      fill={color()}
     />
   );
 }

@@ -18,7 +18,7 @@ import {
   nextClip,
   previousClip,
 } from "../state";
-import { Box, hope, HStack } from "@hope-ui/solid";
+import { Box, hope, HStack, useColorModeValue } from "@hope-ui/solid";
 import { onCleanup, onMount, Show } from "solid-js";
 import {
   ClockClockwise,
@@ -123,6 +123,8 @@ export function Controls() {
 
   let seekbarInput!: HTMLInputElement;
 
+  const controlColor = useColorModeValue("$neutral10", "$neutral5");
+
   return (
     <foreignObject
       transform="scale(1 -1)"
@@ -136,20 +138,19 @@ export function Controls() {
         gap="$4"
         paddingLeft="$2"
         paddingRight="$4"
+        color={controlColor()}
       >
-        <Box width="6ch" color="var(--hope-colors-neutral5)" textAlign="end">
+        <Box width="6ch" textAlign="end">
           {state.frame()}
         </Box>
         <HStack gap="$2">
           <ClockCounterClockwise
-            color="var(--hope-colors-neutral5)"
             style={{ cursor: "pointer" }}
             size={32}
             weight="fill"
             onClick={() => adjust(-120)}
           />
           <Rewind
-            color="var(--hope-colors-neutral5)"
             style={{ cursor: "pointer" }}
             size={32}
             weight="fill"
@@ -162,7 +163,6 @@ export function Controls() {
             when={state.running()}
             fallback={
               <Play
-                color="var(--hope-colors-neutral5)"
                 style={{ cursor: "pointer" }}
                 size={32}
                 weight="fill"
@@ -171,7 +171,6 @@ export function Controls() {
             }
           >
             <Pause
-              color="var(--hope-colors-neutral5)"
               style={{ cursor: "pointer" }}
               size={32}
               weight="fill"
@@ -179,7 +178,6 @@ export function Controls() {
             />
           </Show>
           <FastForward
-            color="var(--hope-colors-neutral5)"
             style={{ cursor: "pointer" }}
             size={32}
             weight="fill"
@@ -189,7 +187,6 @@ export function Controls() {
             }}
           />
           <ClockClockwise
-            color="var(--hope-colors-neutral5)"
             style={{ cursor: "pointer" }}
             size={32}
             weight="fill"
@@ -199,7 +196,9 @@ export function Controls() {
         <hope.input
           type="range"
           width="$lg"
-          css={{ "accent-color": "var(--hope-colors-primary9)" }}
+          css={{
+            "accent-color": "var(--hope-colors-primary9)",
+          }}
           ref={seekbarInput}
           value={state.frame()}
           max={state.replayData()!.frames.length - 1}
@@ -207,13 +206,11 @@ export function Controls() {
         />
         <HStack gap="$2">
           <MagnifyingGlassMinus
-            color="var(--hope-colors-neutral5)"
             style={{ cursor: "pointer" }}
             size={32}
             onClick={() => zoomOut()}
           />
           <MagnifyingGlassPlus
-            color="var(--hope-colors-neutral5)"
             style={{ cursor: "pointer" }}
             weight="bold"
             size={32}
