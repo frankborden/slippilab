@@ -22,6 +22,7 @@ import {
 import { downloadReplay } from "./supabaseClient";
 import { send } from "./workerClient";
 import { notificationService } from "@hope-ui/solid";
+import { stageNameByExternalId } from "./common/ids";
 
 const [replayData, setReplayData] = createSignal<ReplayData | undefined>();
 const [frame, setFrame] = createSignal(0);
@@ -57,13 +58,41 @@ export async function load(files: File[]) {
     persistent: true,
     title: `Parsing ${files.length} files`,
   });
-  const allGameSettings: GameSettings[] = await send(files);
-  const workingIndexes = allGameSettings.flatMap((s, i) => (s ? [i] : []));
+  const allGameSettings: (GameSettings | undefined)[] = await send(files);
+  function isLegalGameWithoutCPUs(
+    gameSettings: GameSettings | undefined
+  ): boolean {
+    if (gameSettings === undefined) return false;
+    const stageName = stageNameByExternalId[gameSettings.stageId];
+    if (
+      ![
+        "Battlefield",
+        "Fountain of Dreams",
+        "Yoshi's Story",
+        "Dream Land N64",
+        "Pokémon Stadium",
+        "Final Destination",
+      ].includes(stageName)
+    ) {
+      return false;
+    }
+    if (
+      gameSettings.playerSettings
+        .filter(p => p)
+        .some(p => p.playerType === 1 || p.externalCharacterId >= 26)
+    ) {
+      return false;
+    }
+    return true;
+  }
+  const workingIndexes = allGameSettings.flatMap((s, i) =>
+    isLegalGameWithoutCPUs(s) ? [i] : []
+  );
   const workingFiles = files.filter((_, i) => workingIndexes.includes(i));
-  const failingFiles = files.filter((_, i) => !workingIndexes.includes(i));
   const workingGameSettings = allGameSettings.filter(
     (settings, i): settings is GameSettings => workingIndexes.includes(i)
   );
+  const failingFiles = files.filter((_, i) => allGameSettings[i] === undefined);
   notificationService.clear();
   if (failingFiles.length > 0) {
     notificationService.show({
