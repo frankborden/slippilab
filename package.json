@@ -21,10 +21,10 @@
     "@stitches/core": "^1.2.8",
     "@supabase/supabase-js": "^1.35.3",
     "@thisbeyond/solid-select": "^0.9.0",
-    "@zip.js/zip.js": "^2.4.11",
+    "@zip.js/zip.js": "^2.4.12",
     "phosphor-solid": "^1.1.5",
     "rambda": "^7.1.4",
-    "solid-js": "^1.4.0",
+    "solid-js": "^1.4.2",
     "solid-transition-group": "^0.0.10"
   }
 }
