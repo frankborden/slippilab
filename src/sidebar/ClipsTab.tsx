@@ -2,7 +2,7 @@ import { Badge, Box, Center, HStack, useColorModeValue } from "@hope-ui/solid";
 import { createMemo } from "solid-js";
 import { Picker } from "../common/Picker";
 import { Highlight } from "../search/search";
-import { setClip, state } from "../state";
+import { setClip, store } from "../state";
 
 export function ClipsTab() {
   const playerColors = useColorModeValue(
@@ -10,7 +10,7 @@ export function ClipsTab() {
     ["darkred", "darkblue", "darkgoldenrod", "darkgreen"]
   );
   function renderClip([name, clip]: [string, Highlight]) {
-    const index = Object.keys(state.clips()).indexOf(name);
+    const index = Object.keys(store.clips).indexOf(name);
     const nameColorScheme = (
       [
         "primary",
@@ -38,7 +38,7 @@ export function ClipsTab() {
     );
   }
   const entries = createMemo(() => {
-    return Array.from(Object.entries(state.clips())).flatMap(([name, clips]) =>
+    return Array.from(Object.entries(store.clips)).flatMap(([name, clips]) =>
       clips.map((clip): [string, Highlight] => [name, clip])
     );
   });
@@ -49,7 +49,7 @@ export function ClipsTab() {
           items={entries()}
           render={renderClip}
           onClick={(_, index) => setClip(index)}
-          selected={state.currentClip()}
+          selected={store.currentClip}
         />
       </Box>
     </>

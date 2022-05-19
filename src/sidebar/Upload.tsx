@@ -1,4 +1,4 @@
-import { load, state } from "../state";
+import { load, store } from "../state";
 import {
   hope,
   Button,
@@ -49,7 +49,7 @@ export function Upload() {
   async function onShare() {
     setIsUploading(true);
     onOpen();
-    const file = state.files()[state.currentFile()];
+    const file = store.files[store.currentFile];
     const { id, data, error } = await uploadReplay(file);
     const message = data
       ? `${window.location.origin}/${id}`
@@ -81,7 +81,7 @@ export function Upload() {
             </MenuItem>
           </MenuContent>
         </Menu>
-        <Show when={state.files().length > 0}>
+        <Show when={store.files.length > 0}>
           <Button
             onClick={onShare}
             rightIcon={<FileArrowUp size="24" />}

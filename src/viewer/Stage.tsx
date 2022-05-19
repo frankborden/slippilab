@@ -1,11 +1,11 @@
-import { hope, useColorModeValue } from "@hope-ui/solid";
+import { useColorModeValue } from "@hope-ui/solid";
 import { createMemo, For, Match, Switch } from "solid-js";
 import { stageNameByExternalId } from "../common/ids";
-import { state } from "../state";
+import { frame, store } from "../state";
 
 export function Stage() {
   const stageName = createMemo(
-    () => stageNameByExternalId[state.replayData()!.settings.stageId]
+    () => stageNameByExternalId[store.replayData!.settings.stageId]
   );
   return (
     <Switch>
@@ -227,7 +227,7 @@ function YoshisStory() {
       1022: [-14.954894065856934, -103.46499633789062],
     };
     // return frameNumber to -123 based.
-    const frameInLap = (state.frame() - 123 + 1200) % 1200;
+    const frameInLap = (frame() - 123 + 1200) % 1200;
     const randallWidth = 11.9;
 
     if (476 < frameInLap && frameInLap < 1016) {

@@ -1,6 +1,7 @@
 import createRAF, { targetFPS } from "@solid-primitives/raf";
 import { add, dec, pipe } from "rambda";
-import { batch, createSignal } from "solid-js";
+import { batch, createEffect, createSignal } from "solid-js";
+import { createStore, SetStoreFunction } from "solid-js/store";
 import { parseReplay } from "./parser/parser";
 import { GameSettings, ReplayData } from "./common/types";
 import { Highlight, Query, search } from "./search/search";
@@ -24,33 +25,37 @@ import { send } from "./workerClient";
 import { notificationService } from "@hope-ui/solid";
 import { stageNameByExternalId } from "./common/ids";
 
-const [replayData, setReplayData] = createSignal<ReplayData | undefined>();
-const [frame, setFrame] = createSignal(0);
-const [currentFile, setCurrentFile] = createSignal(-1);
-const [currentClip, setCurrentClip] = createSignal(-1);
-const [files, setFiles] = createSignal<File[]>([]);
-const [clips, setClips] = createSignal<Record<string, Highlight[]>>({});
-const [gameSettings, setGameSettings] = createSignal<GameSettings[]>([]);
-const [fps, setFps] = createSignal(60);
-const [zoom, setZoom] = createSignal(1);
-const [framesPerTick, setFramesPerTick] = createSignal(1);
-const [isDebug, setIsDebug] = createSignal(false);
-const [running, start, stop] = createRAF(targetFPS(tick, fps));
-const [parsing, setParsing] = createSignal(false);
+interface Store {
+  isDebug: boolean;
+  zoom: number;
+  currentFile: number;
+  currentClip: number;
+  files: File[];
+  clips: Record<string, Highlight[]>;
+  gameSettings: GameSettings[];
+  replayData?: ReplayData;
+  running: boolean;
+}
 
-export const state = {
-  parsing,
-  replayData,
-  frame,
-  currentFile,
-  files,
-  clips,
-  gameSettings,
-  currentClip,
-  zoom,
-  isDebug,
-  running,
-};
+const [getStore, setStore] = createStore<Store>({
+  isDebug: false,
+  zoom: 1,
+  currentFile: -1,
+  currentClip: -1,
+  files: [],
+  clips: {},
+  gameSettings: [],
+  running: false,
+}) as [Store, SetStoreFunction<Store>];
+export const store = getStore;
+
+const [getFrame, setFrame] = createSignal(0);
+const [fps, setFps] = createSignal(60);
+const [framesPerTick, setFramesPerTick] = createSignal(1);
+const [running, start, stop] = createRAF(targetFPS(tick, fps));
+createEffect(() => setStore("running", running()));
+
+export const frame = getFrame;
 
 export async function load(files: File[]) {
   notificationService.show({
@@ -114,22 +119,21 @@ export async function load(files: File[]) {
       grabPunish: search(replayData, ...grabPunishQuery),
     };
     batch(() => {
-      setParsing(false);
-      setFiles(workingFiles);
-      setCurrentFile(0);
-      setReplayData(replayData);
+      setStore("files", workingFiles);
+      setStore("currentFile", 0);
+      setStore("replayData", replayData);
       setFrame(0);
-      setClips(clips);
-      setCurrentClip(-1);
-      setGameSettings(workingGameSettings);
+      setStore("clips", clips);
+      setStore("currentClip", -1);
+      setStore("gameSettings", workingGameSettings);
     });
     play();
   } catch (e) {}
 }
 
 export async function nextFile() {
-  const nextIndex = wrap(files().length, currentFile() + 1);
-  const replayData = parseReplay(await files()[nextIndex].arrayBuffer());
+  const nextIndex = wrap(store.files.length, store.currentFile + 1);
+  const replayData = parseReplay(await store.files[nextIndex].arrayBuffer());
   const clips = {
     killCombo: search(replayData, ...killComboQuery),
     shieldGrab: search(replayData, ...shieldGrabQuery),
@@ -138,17 +142,19 @@ export async function nextFile() {
     grabPunish: search(replayData, ...grabPunishQuery),
   };
   batch(() => {
-    setCurrentFile(nextIndex);
-    setReplayData(replayData);
+    setStore("currentFile", nextIndex);
+    setStore("replayData", replayData);
     setFrame(0);
-    setClips(clips);
-    setCurrentClip(-1);
+    setStore("clips", clips);
+    setStore("currentClip", -1);
   });
 }
 
 export async function previousFile() {
-  const previousIndex = wrap(files().length, currentFile() - 1);
-  const replayData = parseReplay(await files()[previousIndex].arrayBuffer());
+  const previousIndex = wrap(store.files.length, store.currentFile - 1);
+  const replayData = parseReplay(
+    await store.files[previousIndex].arrayBuffer()
+  );
   const clips = {
     killCombo: search(replayData, ...killComboQuery),
     shieldGrab: search(replayData, ...shieldGrabQuery),
@@ -157,16 +163,16 @@ export async function previousFile() {
     grabPunish: search(replayData, ...grabPunishQuery),
   };
   batch(() => {
-    setCurrentFile(previousIndex);
-    setReplayData(replayData);
+    setStore("currentFile", previousIndex);
+    setStore("replayData", replayData);
     setFrame(0);
-    setClips(clips);
-    setCurrentClip(-1);
+    setStore("clips", clips);
+    setStore("currentClip", -1);
   });
 }
 
 export async function setFile(fileIndex: number) {
-  const replayData = parseReplay(await files()[fileIndex].arrayBuffer());
+  const replayData = parseReplay(await store.files[fileIndex].arrayBuffer());
   const clips = {
     killCombo: search(replayData, ...killComboQuery),
     shieldGrab: search(replayData, ...shieldGrabQuery),
@@ -175,10 +181,11 @@ export async function setFile(fileIndex: number) {
     grabPunish: search(replayData, ...grabPunishQuery),
   };
   batch(() => {
-    setCurrentFile(fileIndex);
-    setReplayData(replayData);
+    setStore("currentFile", fileIndex);
+    setStore("replayData", replayData);
     setFrame(0);
-    setClips(clips);
+    setStore("clips", clips);
+    setStore("currentClip", -1);
   });
 }
 
@@ -191,19 +198,19 @@ export function pause() {
 }
 
 export function togglePause() {
-  running() ? stop() : start();
+  store.running ? stop() : start();
 }
 
 export function tick() {
   setFrame(
     pipe(add(framesPerTick()), frame =>
-      wrap(replayData()!.frames.length, frame)
+      wrap(store.replayData!.frames.length, frame)
     )
   );
 }
 
 export function tickBack() {
-  setFrame(pipe(dec, frame => wrap(replayData()!.frames.length, frame)));
+  setFrame(pipe(dec, frame => wrap(store.replayData!.frames.length, frame)));
 }
 
 export function speedNormal() {
@@ -220,63 +227,65 @@ export function speedSlow() {
 }
 
 export function zoomIn() {
-  setZoom(z => z * 1.01);
+  setStore("zoom", z => z * 1.01);
 }
 
 export function zoomOut() {
-  setZoom(z => z / 1.01);
+  setStore("zoom", z => z / 1.01);
 }
 
 export function toggleDebug() {
-  setIsDebug(value => !value);
+  setStore("isDebug", isDebug => !isDebug);
 }
 
 export function nextClip() {
-  const entries = Array.from(Object.entries(state.clips())).flatMap(
+  const entries = Array.from(Object.entries(store.clips)).flatMap(
     ([name, clips]) => clips.map((clip): [string, Highlight] => [name, clip])
   );
-  const newClipIndex = wrap(entries.length, currentClip() + 1);
+  const newClipIndex = wrap(entries.length, store.currentClip + 1);
   const [_, newClip] = entries[newClipIndex];
   batch(() => {
-    setCurrentClip(newClipIndex);
-    jump(wrap(replayData()!.frames.length, newClip.startFrame - 30));
+    setStore("currentClip", newClipIndex);
+    jump(wrap(store.replayData!.frames.length, newClip.startFrame - 30));
   });
 }
 
 export function previousClip() {
-  const entries = Array.from(Object.entries(state.clips())).flatMap(
+  const entries = Array.from(Object.entries(store.clips)).flatMap(
     ([name, clips]) => clips.map((clip): [string, Highlight] => [name, clip])
   );
-  const newClipIndex = wrap(entries.length, currentClip() - 1);
+  const newClipIndex = wrap(entries.length, store.currentClip - 1);
   const [_, newClip] = entries[newClipIndex];
   batch(() => {
-    setCurrentClip(newClipIndex);
-    jump(wrap(replayData()!.frames.length, newClip.startFrame - 30));
+    setStore("currentClip", newClipIndex);
+    jump(wrap(store.replayData!.frames.length, newClip.startFrame - 30));
   });
 }
 
 export function setClip(newClipIndex: number) {
-  const entries = Array.from(Object.entries(state.clips())).flatMap(
+  const entries = Array.from(Object.entries(store.clips)).flatMap(
     ([name, clips]) => clips.map((clip): [string, Highlight] => [name, clip])
   );
   const [_, newClip] = entries[newClipIndex];
   batch(() => {
-    setCurrentClip(wrap(entries.length, newClipIndex));
-    jump(wrap(replayData()!.frames.length, newClip.startFrame - 30));
+    setStore("currentClip", wrap(entries.length, newClipIndex));
+    jump(wrap(store.replayData!.frames.length, newClip.startFrame - 30));
   });
 }
 
 export function jump(target: number) {
-  setFrame(wrap(replayData()!.frames.length, target));
+  setFrame(wrap(store.replayData!.frames.length, target));
 }
 
 // percent is [0,1]
 export function jumpPercent(percent: number) {
-  setFrame(Math.round(replayData()!.frames.length * percent));
+  setFrame(Math.round(store.replayData!.frames.length * percent));
 }
 
 export function adjust(delta: number) {
-  setFrame(pipe(add(delta), frame => wrap(replayData()!.frames.length, frame)));
+  setFrame(
+    pipe(add(delta), frame => wrap(store.replayData!.frames.length, frame))
+  );
 }
 
 function wrap(max: number, targetFrame: number): number {

@@ -1,11 +1,11 @@
 import {
   adjust,
+  frame,
   speedFast,
   jump,
   jumpPercent,
   pause,
   speedSlow,
-  state,
   tick,
   tickBack,
   togglePause,
@@ -17,6 +17,7 @@ import {
   toggleDebug,
   nextClip,
   previousClip,
+  store,
 } from "../state";
 import { Box, hope, HStack, useColorModeValue } from "@hope-ui/solid";
 import { onCleanup, onMount, Show } from "solid-js";
@@ -141,7 +142,7 @@ export function Controls() {
         color={controlColor()}
       >
         <Box width="6ch" textAlign="end">
-          {state.isDebug() ? state.frame() - 123 : state.frame()}
+          {store.isDebug ? frame() - 123 : frame()}
         </Box>
         <HStack gap="$2">
           <ClockCounterClockwise
@@ -160,7 +161,7 @@ export function Controls() {
             }}
           />
           <Show
-            when={state.running()}
+            when={store.running}
             fallback={
               <Play
                 style={{ cursor: "pointer" }}
@@ -200,8 +201,8 @@ export function Controls() {
             "accent-color": "var(--hope-colors-primary9)",
           }}
           ref={seekbarInput}
-          value={state.frame()}
-          max={state.replayData()!.frames.length - 1}
+          value={frame()}
+          max={store.replayData!.frames.length - 1}
           onInput={() => jump(Number(seekbarInput!.value))}
         />
         <HStack gap="$2">

@@ -4,23 +4,20 @@ import { Controls } from "./Controls";
 import { HUD } from "./HUD";
 import { Player } from "./Player";
 import { Stage } from "./Stage";
-import { state } from "../state";
+import { frame, store } from "../state";
 import { Item } from "./Item";
 import { hope, useColorModeValue } from "@hope-ui/solid";
 
 export function Viewer() {
   const backgroundColor = useColorModeValue("white", "gray");
   const playerIndexes = createMemo(() =>
-    state
-      .replayData()
-      ?.settings.playerSettings.filter(Boolean)
+    store.replayData?.settings.playerSettings
+      .filter(Boolean)
       .map(playerSettings => playerSettings.playerIndex)
   );
-  const items = createMemo(
-    () => state.replayData()?.frames[state.frame()].items
-  );
+  const items = createMemo(() => store.replayData?.frames[frame()].items);
   return (
-    <Show when={state.replayData()}>
+    <Show when={store.replayData}>
       <hope.svg
         viewBox="-365 -300 730 600"
         backgroundColor={backgroundColor()}

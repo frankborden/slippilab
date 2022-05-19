@@ -7,7 +7,7 @@ import {
   characterNameByExternalId,
   characterNameByInternalId,
 } from "../common/ids";
-import { state } from "../state";
+import { frame, store } from "../state";
 import { PlayerUpdate } from "../common/types";
 import { Character } from "./characters/character";
 import { useColorModeValue } from "@hope-ui/solid";
@@ -26,11 +26,9 @@ interface RenderData {
 }
 
 export function Player(props: { player: number }) {
-  const player = createMemo(() =>
-    getPlayerOnFrame(props.player, state.frame())
-  );
+  const player = createMemo(() => getPlayerOnFrame(props.player, frame()));
   const playerSettings = createMemo(
-    () => state.replayData()!.settings.playerSettings[props.player]
+    () => store.replayData!.settings.playerSettings[props.player]
   );
   const adjustedExternalCharacterId = createMemo(() =>
     player()
@@ -164,7 +162,7 @@ function Shine(props: { renderData: RenderData; playerUpdate: PlayerUpdate }) {
   const characterName = createMemo(
     () =>
       characterNameByExternalId[
-        state.replayData()!.settings.playerSettings[
+        store.replayData!.settings.playerSettings[
           props.playerUpdate.playerIndex
         ].externalCharacterId
       ]
@@ -267,7 +265,7 @@ function computeRenderData(
   const playerState = playerUpdate[isNana ? "nanaState" : "state"]!;
   const startOfActionPlayerState = getPlayerOnFrame(
     playerIndex,
-    getStartOfAction(playerIndex, state.frame(), isNana)
+    getStartOfAction(playerIndex, frame(), isNana)
   )[isNana ? "nanaState" : "state"]!;
   const actionName = actionNameById[playerState.actionStateId];
 
@@ -294,9 +292,9 @@ function computeRenderData(
     : animationPathOrFrameReference;
   const rotation =
     animationName === "DamageFlyRoll"
-      ? getDamageFlyRollRotation(playerIndex, state.frame(), isNana)
-      : isSpacieUpB(playerIndex, state.frame(), isNana)
-      ? getSpacieUpBRotation(playerIndex, state.frame(), isNana)
+      ? getDamageFlyRollRotation(playerIndex, frame(), isNana)
+      : isSpacieUpB(playerIndex, frame(), isNana)
+      ? getSpacieUpBRotation(playerIndex, frame(), isNana)
       : 0;
   // Some animations naturally turn the player around, but facingDirection
   // updates partway through the animation and incorrectly flips the
@@ -421,9 +419,9 @@ function getPlayerColor(playerIndex: number) {
     ["red", "blue", "green"],
     ["darkred", "darkblue", "darkgreen"]
   );
-  if (state.replayData()!.settings.isTeams) {
+  if (store.replayData!.settings.isTeams) {
     const teamId =
-      state.replayData()!.settings.playerSettings[playerIndex].teamId;
+      store.replayData!.settings.playerSettings[playerIndex].teamId;
     return teamColors()[teamId];
   }
   return playerColors()[playerIndex];
@@ -453,5 +451,5 @@ function getStartOfAction(
 }
 
 function getPlayerOnFrame(playerIndex: number, frameNumber: number) {
-  return state.replayData()!.frames[frameNumber]?.players[playerIndex];
+  return store.replayData!.frames[frameNumber]?.players[playerIndex];
 }

@@ -1,13 +1,7 @@
 import { Badge, Box, Button, hope, HStack, VStack } from "@hope-ui/solid";
 import { createOptions, Select } from "@thisbeyond/solid-select";
 import { groupBy, zip } from "rambda";
-import {
-  Accessor,
-  createEffect,
-  createMemo,
-  createSignal,
-  Show,
-} from "solid-js";
+import { Accessor, createMemo, createSignal, Show } from "solid-js";
 import {
   characterNameByExternalId,
   ExternalCharacterName,
@@ -16,7 +10,7 @@ import {
 } from "../common/ids";
 import { Picker } from "../common/Picker";
 import { GameSettings, PlayerSettings } from "../common/types";
-import { nextFile, previousFile, setFile, state } from "../state";
+import { nextFile, previousFile, setFile, store } from "../state";
 import { Upload } from "./Upload";
 import "./select.css";
 import { ArrowLeft, ArrowRight } from "phosphor-solid";
@@ -29,10 +23,10 @@ type Filter =
 export function ReplaysTab() {
   const filesWithGameSettings = createMemo(() =>
     zip(
-      state.files(),
-      state.gameSettings().length > 0
-        ? state.gameSettings()
-        : Array(state.files().length).fill(undefined)
+      store.files,
+      store.gameSettings.length > 0
+        ? store.gameSettings
+        : Array(store.files.length).fill(undefined)
     )
   ) as Accessor<[File, GameSettings | undefined][]>;
   const [filters, setFilters] = createSignal<Filter[]>([]);
@@ -87,7 +81,7 @@ export function ReplaysTab() {
         <HStack width="$full" justifyContent="space-between">
           <Upload />
           <HStack gap="$2">
-            <Show when={state.files().length > 0}>
+            <Show when={store.files.length > 0}>
               <Button
                 onClick={previousFile}
                 variant="subtle"
@@ -105,7 +99,7 @@ export function ReplaysTab() {
             </Show>
           </HStack>
         </HStack>
-        <Show when={state.files().length > 0}>
+        <Show when={store.files.length > 0}>
           <Box
             width="$full"
             onkeydown={(e: Event) => e.stopPropagation()}
@@ -140,7 +134,7 @@ export function ReplaysTab() {
                   )
                 )
               }
-              selected={state.currentFile()}
+              selected={store.currentFile}
             />
           </Box>
         </Show>

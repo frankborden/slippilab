@@ -5,7 +5,7 @@ import {
   createSignal,
   PropsWithChildren,
 } from "solid-js";
-import { state } from "../state";
+import { frame, store } from "../state";
 import { PlayerUpdate } from "../common/types";
 
 export function Camera(props: PropsWithChildren) {
@@ -17,14 +17,14 @@ export function Camera(props: PropsWithChildren) {
     const padding = [25, 25];
     const minimums = [100, 100];
 
-    const frame = state.replayData()!.frames[state.frame()];
+    const currentFrame = store.replayData!.frames[frame()];
     const focuses = pipe(
       filter((player: PlayerUpdate) => Boolean(player)),
       map((player: PlayerUpdate) => ({
         x: player.state.xPosition,
         y: player.state.yPosition,
       }))
-    )(frame.players);
+    )(currentFrame.players);
     const xs = map(prop("x"), focuses);
     const ys = map(prop("y"), focuses);
     const xMin = Math.min(...xs) - padding[0];
@@ -36,16 +36,15 @@ export function Camera(props: PropsWithChildren) {
     const xRange = Math.max(xMax - xMin, minimums[0]);
     const yRange = Math.max(yMax - yMin, minimums[1]);
     // scale both axes based on the most zoomed out one.
-    const scaling = Math.min(730 / xRange, 600 / yRange);
+    const scaling = Math.min(640 / xRange, 480 / yRange);
 
-    setCenter((oldCenter) => [
+    setCenter(oldCenter => [
       smooth(oldCenter?.[0] ?? newCenterX, newCenterX, followSpeeds[0]),
       smooth(oldCenter?.[1] ?? newCenterY, newCenterY, followSpeeds[1]),
     ]);
     setScale(
-      (oldScaling) =>
-        state.zoom() *
-        smooth(oldScaling ?? 1, scaling, Math.max(...followSpeeds))
+      oldScaling =>
+        store.zoom * smooth(oldScaling ?? 1, scaling, Math.max(...followSpeeds))
     );
   });
   const transforms = createMemo(() =>

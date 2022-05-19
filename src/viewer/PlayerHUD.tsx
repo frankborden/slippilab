@@ -1,14 +1,14 @@
 import { useColorModeValue } from "@hope-ui/solid";
 import { createMemo, For, Show } from "solid-js";
 import { characterNameByInternalId } from "../common/ids";
-import { state } from "../state";
+import { frame, store } from "../state";
 
 export function PlayerHUD(props: { player: number }) {
   const playerState = createMemo(
-    () => state.replayData()!.frames[state.frame()].players[props.player]?.state
+    () => store.replayData!.frames[frame()].players[props.player]?.state
   );
   const playerSettings = createMemo(
-    () => state.replayData()!.settings.playerSettings[props.player]
+    () => store.replayData!.settings.playerSettings[props.player]
   );
   const position = createMemo(() => ({
     x: -30 + 20 * props.player, // ports at: -30%, -10%, 10%, 30%
@@ -54,7 +54,7 @@ export function PlayerHUD(props: { player: number }) {
           textContent={name()}
           fill={color()}
         />
-        <Show when={state.isDebug()}>
+        <Show when={store.isDebug}>
           <text
             style={{ font: "bold 15px sans-serif", transform: "scaleY(-1)" }}
             x={`${position().x}%`}
@@ -105,9 +105,9 @@ function getPlayerColor(playerIndex: number) {
     ["red", "blue", "green"],
     ["darkred", "darkblue", "darkgreen"]
   );
-  if (state.replayData()!.settings.isTeams) {
+  if (store.replayData!.settings.isTeams) {
     const teamId =
-      state.replayData()!.settings.playerSettings[playerIndex].teamId;
+      store.replayData!.settings.playerSettings[playerIndex].teamId;
     return teamColors()[teamId];
   }
   return playerColors()[playerIndex];
