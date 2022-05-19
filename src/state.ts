@@ -1,5 +1,5 @@
 import createRAF, { targetFPS } from "@solid-primitives/raf";
-import { add, dec, pipe } from "rambda";
+import { add, dec, groupBy, map, pipe } from "rambda";
 import { batch, createEffect, createSignal } from "solid-js";
 import { createStore, SetStoreFunction } from "solid-js/store";
 import { parseReplay } from "./parser/parser";
@@ -24,6 +24,7 @@ import { downloadReplay } from "./supabaseClient";
 import { send } from "./workerClient";
 import { notificationService } from "@hope-ui/solid";
 import {
+  characterNameByExternalId,
   ExternalCharacterName,
   ExternalStageName,
   stageNameByExternalId,
@@ -40,6 +41,7 @@ interface Store {
   replayData?: ReplayData;
   running: boolean;
   filters: Filter[];
+  filteredIndexes: number[];
 }
 
 export type Filter =
@@ -57,6 +59,7 @@ const [getStore, setStore] = createStore<Store>({
   gameSettings: [],
   running: false,
   filters: [],
+  filteredIndexes: [],
 }) as [Store, SetStoreFunction<Store>];
 export const store = getStore;
 
@@ -143,7 +146,16 @@ export async function load(files: File[]) {
 }
 
 export async function nextFile() {
-  const nextIndex = wrap(store.files.length, store.currentFile + 1);
+  const currentIndex =
+    store.filteredIndexes.length > 0
+      ? store.filteredIndexes.indexOf(store.currentFile)
+      : store.currentFile;
+  const nextIndex =
+    store.filteredIndexes.length > 0
+      ? store.filteredIndexes[
+          wrap(store.filteredIndexes.length, currentIndex + 1)
+        ]
+      : wrap(store.files.length, currentIndex - 1);
   const replayData = parseReplay(await store.files[nextIndex].arrayBuffer());
   const clips = {
     killCombo: search(replayData, ...killComboQuery),
@@ -162,7 +174,16 @@ export async function nextFile() {
 }
 
 export async function previousFile() {
-  const previousIndex = wrap(store.files.length, store.currentFile - 1);
+  const currentIndex =
+    store.filteredIndexes.length > 0
+      ? store.filteredIndexes.indexOf(store.currentFile)
+      : store.currentFile;
+  const previousIndex =
+    store.filteredIndexes.length > 0
+      ? store.filteredIndexes[
+          wrap(store.filteredIndexes.length, currentIndex - 1)
+        ]
+      : wrap(store.files.length, currentIndex - 1);
   const replayData = parseReplay(
     await store.files[previousIndex].arrayBuffer()
   );
@@ -301,6 +322,44 @@ export function adjust(delta: number) {
 
 export function setFilters(filters: Filter[]) {
   setStore("filters", filters);
+  const filterResults = store.gameSettings.filter((gameSettings) => {
+    const charactersNeeded = map(
+      (filters: Filter[]) => filters.length,
+      groupBy(
+        (filter) => filter.label,
+        filters.filter((filter) => filter.type === "character")
+      )
+    );
+    const charactersPass = Object.entries(charactersNeeded).every(
+      ([character, amountRequired]) =>
+        gameSettings.playerSettings.filter(
+          (p) => character === characterNameByExternalId[p.externalCharacterId]
+        ).length == amountRequired
+    );
+    const stagesToShow = filters
+      .filter((filter) => filter.type === "stage")
+      .map((filter) => filter.label);
+    const stagePass =
+      stagesToShow.length === 0 ||
+      stagesToShow.includes(stageNameByExternalId[gameSettings.stageId]);
+    const namesNeeded = filters
+      .filter((filter) => filter.type === "codeOrName")
+      .map((filter) => filter.label);
+    const namesPass = namesNeeded.every((name) =>
+      gameSettings.playerSettings.some((p) =>
+        [
+          p.connectCode?.toLowerCase(),
+          p.displayName?.toLowerCase(),
+          p.nametag?.toLowerCase(),
+        ].includes(name.toLowerCase())
+      )
+    );
+    return stagePass && charactersPass && namesPass;
+  });
+  setStore(
+    "filteredIndexes",
+    filterResults.map((settings) => store.gameSettings.indexOf(settings))
+  );
 }
 
 function wrap(max: number, targetFrame: number): number {

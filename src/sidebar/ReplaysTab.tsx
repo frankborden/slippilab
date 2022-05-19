@@ -1,6 +1,6 @@
 import { Badge, Box, Button, hope, HStack, VStack } from "@hope-ui/solid";
 import { createOptions, Select } from "@thisbeyond/solid-select";
-import { groupBy, map } from "rambda";
+import { groupBy } from "rambda";
 import { createMemo, Show } from "solid-js";
 import {
   characterNameByExternalId,
@@ -9,68 +9,29 @@ import {
 } from "../common/ids";
 import { Picker } from "../common/Picker";
 import { GameSettings, PlayerSettings } from "../common/types";
-import {
-  Filter,
-  nextFile,
-  previousFile,
-  setFile,
-  setFilters,
-  store,
-} from "../state";
+import { nextFile, previousFile, setFile, setFilters, store } from "../state";
 import { Upload } from "./Upload";
 import "./select.css";
 import { ArrowLeft, ArrowRight } from "phosphor-solid";
 
+const filterProps = createOptions(
+  [
+    ...characterNameByExternalId.map((name) => ({
+      type: "character",
+      label: name,
+    })),
+    ...stageNameByExternalId.map((name) => ({ type: "stage", label: name })),
+  ],
+  {
+    key: "label",
+    createable: (code) => ({ type: "codeOrName", label: code }),
+  }
+);
 export function ReplaysTab() {
   const filteredGameSettings = createMemo(() =>
-    store.gameSettings.filter((gameSettings) => {
-      const charactersNeeded = map(
-        (filters: Filter[]) => filters.length,
-        groupBy(
-          (filter) => filter.label,
-          store.filters.filter((filter) => filter.type === "character")
-        )
-      );
-      const charactersPass = Object.entries(charactersNeeded).every(
-        ([character, amountRequired]) =>
-          gameSettings.playerSettings.filter(
-            (p) =>
-              character === characterNameByExternalId[p.externalCharacterId]
-          ).length == amountRequired
-      );
-      const stagesToShow = store.filters
-        .filter((filter) => filter.type === "stage")
-        .map((filter) => filter.label);
-      const stagePass =
-        stagesToShow.length === 0 ||
-        stagesToShow.includes(stageNameByExternalId[gameSettings.stageId]);
-      const namesNeeded = store.filters
-        .filter((filter) => filter.type === "codeOrName")
-        .map((filter) => filter.label);
-      const namesPass = namesNeeded.every((name) =>
-        gameSettings.playerSettings.some((p) =>
-          [
-            p.connectCode?.toLowerCase(),
-            p.displayName?.toLowerCase(),
-            p.nametag?.toLowerCase(),
-          ].includes(name.toLowerCase())
-        )
-      );
-      return stagePass && charactersPass && namesPass;
-    })
-  );
-  const filterProps = createOptions(
-    [
-      ...characterNameByExternalId.map((name) => ({
-        type: "character",
-        label: name,
-      })),
-      ...stageNameByExternalId.map((name) => ({ type: "stage", label: name })),
-    ],
-    {
-      key: "label",
-      createable: (code) => ({ type: "codeOrName", label: code }),
-    }
+    store.filteredIndexes.length > 0
+      ? store.filteredIndexes.map((i) => store.gameSettings[i])
+      : store.gameSettings
   );
   const HopeSelect = hope(Select);
   return (
@@ -109,6 +70,7 @@ export function ReplaysTab() {
               placeholder="Filter"
               multiple
               {...filterProps}
+              initialValue={store.filters}
               onChange={setFilters}
             />
           </Box>
@@ -123,7 +85,9 @@ export function ReplaysTab() {
                   store.gameSettings.indexOf(filteredGameSettings()[index])
                 )
               }
-              selected={store.currentFile}
+              selected={(settings) =>
+                store.gameSettings.indexOf(settings) === store.currentFile
+              }
             />
           </Box>
         </Show>

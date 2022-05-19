@@ -5,7 +5,7 @@ export function Picker<T>(props: {
   items: T[];
   render: (item: T, index: number) => JSX.Element;
   onClick: (item: T, index: number) => unknown;
-  selected: number;
+  selected: (item: T, index: number) => boolean;
 }) {
   const borderColor = useColorModeValue("$primary9", "white");
   return (
@@ -23,7 +23,7 @@ export function Picker<T>(props: {
               width="100%"
               height="initial"
               css={{ "white-space": "normal" }}
-              variant={index() === props.selected ? "solid" : "outline"}
+              variant={props.selected(item, index()) ? "solid" : "outline"}
               onClick={() => props.onClick(item, index())}
             >
               {props.render(item, index())}

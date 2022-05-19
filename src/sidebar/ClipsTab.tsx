@@ -49,7 +49,7 @@ export function ClipsTab() {
           items={entries()}
           render={renderClip}
           onClick={(_, index) => setClip(index)}
-          selected={store.currentClip}
+          selected={(_, index) => index === store.currentClip}
         />
       </Box>
     </>
