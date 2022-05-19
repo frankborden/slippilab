@@ -1,77 +1,75 @@
 import { Badge, Box, Button, hope, HStack, VStack } from "@hope-ui/solid";
 import { createOptions, Select } from "@thisbeyond/solid-select";
-import { groupBy, zip } from "rambda";
-import { Accessor, createMemo, createSignal, Show } from "solid-js";
+import { groupBy, map } from "rambda";
+import { createMemo, Show } from "solid-js";
 import {
   characterNameByExternalId,
-  ExternalCharacterName,
   ExternalStageName,
   stageNameByExternalId,
 } from "../common/ids";
 import { Picker } from "../common/Picker";
 import { GameSettings, PlayerSettings } from "../common/types";
-import { nextFile, previousFile, setFile, store } from "../state";
+import {
+  Filter,
+  nextFile,
+  previousFile,
+  setFile,
+  setFilters,
+  store,
+} from "../state";
 import { Upload } from "./Upload";
 import "./select.css";
 import { ArrowLeft, ArrowRight } from "phosphor-solid";
 
-type Filter =
-  | { type: "character"; label: ExternalCharacterName }
-  | { type: "stage"; label: ExternalStageName }
-  | { type: "codeOrName"; label: string };
-
 export function ReplaysTab() {
-  const filesWithGameSettings = createMemo(() =>
-    zip(
-      store.files,
-      store.gameSettings.length > 0
-        ? store.gameSettings
-        : Array(store.files.length).fill(undefined)
-    )
-  ) as Accessor<[File, GameSettings | undefined][]>;
-  const [filters, setFilters] = createSignal<Filter[]>([]);
-  const filteredFilesWithGameSettings = createMemo(() => {
-    if (filters().length === 0) return filesWithGameSettings();
-    return filesWithGameSettings().filter(([_, gameSettings]) =>
-      filters().every(filter => {
-        if (!gameSettings) return true;
-        switch (filter.type) {
-          case "character":
-            const numTimesCharacterInFilter = filters().filter(
-              f => f.type === "character" && f.label === filter.label
-            ).length;
-            return (
-              gameSettings.playerSettings.filter(
-                p =>
-                  filter.label ===
-                  characterNameByExternalId[p.externalCharacterId]
-              ).length == numTimesCharacterInFilter
-            );
-          case "stage":
-            return stageNameByExternalId[gameSettings.stageId] === filter.label;
-          case "codeOrName":
-            return gameSettings.playerSettings.some(p =>
-              [
-                p.connectCode?.toLowerCase(),
-                p.displayName?.toLowerCase(),
-                p.nametag?.toLowerCase(),
-              ].includes(filter.label.toLowerCase())
-            );
-        }
-      })
-    );
-  });
+  const filteredGameSettings = createMemo(() =>
+    store.gameSettings.filter((gameSettings) => {
+      const charactersNeeded = map(
+        (filters: Filter[]) => filters.length,
+        groupBy(
+          (filter) => filter.label,
+          store.filters.filter((filter) => filter.type === "character")
+        )
+      );
+      const charactersPass = Object.entries(charactersNeeded).every(
+        ([character, amountRequired]) =>
+          gameSettings.playerSettings.filter(
+            (p) =>
+              character === characterNameByExternalId[p.externalCharacterId]
+          ).length == amountRequired
+      );
+      const stagesToShow = store.filters
+        .filter((filter) => filter.type === "stage")
+        .map((filter) => filter.label);
+      const stagePass =
+        stagesToShow.length === 0 ||
+        stagesToShow.includes(stageNameByExternalId[gameSettings.stageId]);
+      const namesNeeded = store.filters
+        .filter((filter) => filter.type === "codeOrName")
+        .map((filter) => filter.label);
+      const namesPass = namesNeeded.every((name) =>
+        gameSettings.playerSettings.some((p) =>
+          [
+            p.connectCode?.toLowerCase(),
+            p.displayName?.toLowerCase(),
+            p.nametag?.toLowerCase(),
+          ].includes(name.toLowerCase())
+        )
+      );
+      return stagePass && charactersPass && namesPass;
+    })
+  );
   const filterProps = createOptions(
     [
-      ...characterNameByExternalId.map(name => ({
+      ...characterNameByExternalId.map((name) => ({
         type: "character",
         label: name,
       })),
-      ...stageNameByExternalId.map(name => ({ type: "stage", label: name })),
+      ...stageNameByExternalId.map((name) => ({ type: "stage", label: name })),
     ],
     {
       key: "label",
-      createable: code => ({ type: "codeOrName", label: code }),
+      createable: (code) => ({ type: "codeOrName", label: code }),
     }
   );
   const HopeSelect = hope(Select);
@@ -116,22 +114,13 @@ export function ReplaysTab() {
           </Box>
           <Box width="$full" overflowY="auto">
             <Picker
-              items={filteredFilesWithGameSettings()}
-              render={([file, gameSettings]: [
-                File,
-                GameSettings | undefined
-              ]) =>
-                gameSettings ? (
-                  <GameInfo gameSettings={gameSettings} />
-                ) : (
-                  file.name
-                )
-              }
+              items={filteredGameSettings()}
+              render={(gameSettings: GameSettings) => (
+                <GameInfo gameSettings={gameSettings} />
+              )}
               onClick={(_, index) =>
                 setFile(
-                  filesWithGameSettings().indexOf(
-                    filteredFilesWithGameSettings()[index]
-                  )
+                  store.gameSettings.indexOf(filteredGameSettings()[index])
                 )
               }
               selected={store.currentFile}
@@ -146,7 +135,7 @@ export function ReplaysTab() {
 function GameInfo(props: { gameSettings: GameSettings }) {
   function playerString(player: PlayerSettings) {
     const name = [player.displayName, player.connectCode, player.nametag].find(
-      s => s?.length > 0
+      (s) => s?.length > 0
     );
     const character = characterNameByExternalId[player.externalCharacterId];
     return name ? `${name}(${character})` : character;
@@ -160,16 +149,16 @@ function GameInfo(props: { gameSettings: GameSettings }) {
           {props.gameSettings.isTeams
             ? Object.values(
                 groupBy(
-                  p => String(p.teamId),
-                  props.gameSettings.playerSettings.filter(s => s)
+                  (p) => String(p.teamId),
+                  props.gameSettings.playerSettings.filter((s) => s)
                 )
-              ).map(team => (
+              ).map((team) => (
                 <Box color={["red", "blue", "green"][team[0].teamId]}>
                   {team.map(playerString).join(" + ")}
                 </Box>
               ))
             : props.gameSettings.playerSettings
-                .filter(s => s)
+                .filter((s) => s)
                 .map(playerString)
                 .join(" vs ")}
         </VStack>

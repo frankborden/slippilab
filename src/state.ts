@@ -23,7 +23,11 @@ import {
 import { downloadReplay } from "./supabaseClient";
 import { send } from "./workerClient";
 import { notificationService } from "@hope-ui/solid";
-import { stageNameByExternalId } from "./common/ids";
+import {
+  ExternalCharacterName,
+  ExternalStageName,
+  stageNameByExternalId,
+} from "./common/ids";
 
 interface Store {
   isDebug: boolean;
@@ -35,7 +39,13 @@ interface Store {
   gameSettings: GameSettings[];
   replayData?: ReplayData;
   running: boolean;
+  filters: Filter[];
 }
+
+export type Filter =
+  | { type: "character"; label: ExternalCharacterName }
+  | { type: "stage"; label: ExternalStageName }
+  | { type: "codeOrName"; label: string };
 
 const [getStore, setStore] = createStore<Store>({
   isDebug: false,
@@ -46,6 +56,7 @@ const [getStore, setStore] = createStore<Store>({
   clips: {},
   gameSettings: [],
   running: false,
+  filters: [],
 }) as [Store, SetStoreFunction<Store>];
 export const store = getStore;
 
@@ -83,8 +94,8 @@ export async function load(files: File[]) {
     }
     if (
       gameSettings.playerSettings
-        .filter(p => p)
-        .some(p => p.playerType === 1 || p.externalCharacterId >= 26)
+        .filter((p) => p)
+        .some((p) => p.playerType === 1 || p.externalCharacterId >= 26)
     ) {
       return false;
     }
@@ -104,7 +115,7 @@ export async function load(files: File[]) {
       status: "danger",
       persistent: true,
       title: "Failed to parse",
-      description: failingFiles.map(file => file.name).join("\n"),
+      description: failingFiles.map((file) => file.name).join("\n"),
     });
   }
   try {
@@ -203,14 +214,14 @@ export function togglePause() {
 
 export function tick() {
   setFrame(
-    pipe(add(framesPerTick()), frame =>
+    pipe(add(framesPerTick()), (frame) =>
       wrap(store.replayData!.frames.length, frame)
     )
   );
 }
 
 export function tickBack() {
-  setFrame(pipe(dec, frame => wrap(store.replayData!.frames.length, frame)));
+  setFrame(pipe(dec, (frame) => wrap(store.replayData!.frames.length, frame)));
 }
 
 export function speedNormal() {
@@ -227,15 +238,15 @@ export function speedSlow() {
 }
 
 export function zoomIn() {
-  setStore("zoom", z => z * 1.01);
+  setStore("zoom", (z) => z * 1.01);
 }
 
 export function zoomOut() {
-  setStore("zoom", z => z / 1.01);
+  setStore("zoom", (z) => z / 1.01);
 }
 
 export function toggleDebug() {
-  setStore("isDebug", isDebug => !isDebug);
+  setStore("isDebug", (isDebug) => !isDebug);
 }
 
 export function nextClip() {
@@ -284,8 +295,12 @@ export function jumpPercent(percent: number) {
 
 export function adjust(delta: number) {
   setFrame(
-    pipe(add(delta), frame => wrap(store.replayData!.frames.length, frame))
+    pipe(add(delta), (frame) => wrap(store.replayData!.frames.length, frame))
   );
+}
+
+export function setFilters(filters: Filter[]) {
+  setStore("filters", filters);
 }
 
 function wrap(max: number, targetFrame: number): number {
@@ -336,9 +351,9 @@ const path = location.pathname.slice(1);
 if (url) {
   try {
     fetch(url)
-      .then(response => response.blob())
-      .then(blob => new File([blob], url.split("/").at(-1) ?? "url.slp"))
-      .then(file => load([file]));
+      .then((response) => response.blob())
+      .then((blob) => new File([blob], url.split("/").at(-1) ?? "url.slp"))
+      .then((file) => load([file]));
   } catch (e) {
     console.error("Error: could not load replay", url, e);
   }
