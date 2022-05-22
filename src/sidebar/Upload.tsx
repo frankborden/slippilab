@@ -16,6 +16,7 @@ import {
   MenuContent,
   MenuItem,
   HStack,
+  Anchor,
 } from "@hope-ui/solid";
 import { BlobReader, BlobWriter, ZipReader } from "@zip.js/zip.js";
 import { createSignal, Show } from "solid-js";
@@ -77,7 +78,7 @@ export function Upload() {
               Files
             </MenuItem>
             <MenuItem disabled={false} onSelect={() => folderInput.click()}>
-              Directory
+              Folder
             </MenuItem>
           </MenuContent>
         </Menu>
@@ -97,7 +98,7 @@ export function Upload() {
             <ModalBody>
               <Center>
                 <Show when={!isUploading()} fallback={<Spinner />}>
-                  <hope.div>{urlOrError()}</hope.div>
+                  <Anchor>{urlOrError()}</Anchor>
                 </Show>
               </Center>
             </ModalBody>

@@ -70,7 +70,7 @@ createEffect(() => setStore("running", running()));
 export const frame = getFrame;
 export const gameSettings = getGameSettings;
 
-export async function load(files: File[]) {
+export async function load(files: File[], startFrame: number = 0) {
   notificationService.show({
     loading: true,
     persistent: true,
@@ -100,7 +100,7 @@ export async function load(files: File[]) {
       setStore("clips", clips);
       setStore("currentFile", 0);
       setStore("currentClip", -1);
-      setFrame(0);
+      setFrame(Math.max(0, startFrame - 60));
     });
     play();
   } catch (e) {}
@@ -380,12 +380,14 @@ const shieldGrabQuery: [Query, Predicate?] = [
 // match.
 const url = new URLSearchParams(location.search).get("replayUrl");
 const path = location.pathname.slice(1);
+const frameParse = Number(location.hash.split("#").at(-1));
+const startFrame = Number.isNaN(frameParse) ? 0 : frameParse;
 if (url) {
   try {
     fetch(url)
       .then(response => response.blob())
       .then(blob => new File([blob], url.split("/").at(-1) ?? "url.slp"))
-      .then(file => load([file]));
+      .then(file => load([file], startFrame));
   } catch (e) {
     console.error("Error: could not load replay", url, e);
   }
@@ -393,7 +395,7 @@ if (url) {
   downloadReplay(path).then(({ data, error }) => {
     if (data) {
       const file = new File([data], `${path}.slp`);
-      load([file]);
+      load([file], startFrame);
     }
     if (error) {
       console.error("Error: could not load replay", error);
