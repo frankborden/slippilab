@@ -37,7 +37,6 @@ interface Store {
   currentClip: number;
   files: File[];
   clips: Record<string, Highlight[]>;
-  gameSettings: GameSettings[];
   replayData?: ReplayData;
   running: boolean;
   filters: Filter[];
@@ -56,74 +55,38 @@ const [getStore, setStore] = createStore<Store>({
   currentClip: -1,
   files: [],
   clips: {},
-  gameSettings: [],
   running: false,
   filters: [],
   filteredIndexes: [],
 }) as [Store, SetStoreFunction<Store>];
 export const store = getStore;
 
+const [getGameSettings, setGameSettings] = createSignal<GameSettings[]>([]);
 const [getFrame, setFrame] = createSignal(0);
 const [fps, setFps] = createSignal(60);
 const [framesPerTick, setFramesPerTick] = createSignal(1);
 const [running, start, stop] = createRAF(targetFPS(tick, fps));
 createEffect(() => setStore("running", running()));
-
 export const frame = getFrame;
+export const gameSettings = getGameSettings;
 
 export async function load(files: File[]) {
   notificationService.show({
     loading: true,
     persistent: true,
-    title: `Parsing ${files.length} files`,
+    title: `Parsing ${files.length} file(s)`,
   });
-  const allGameSettings: (GameSettings | undefined)[] = await send(files);
-  function isLegalGameWithoutCPUs(
-    gameSettings: GameSettings | undefined
-  ): boolean {
-    if (gameSettings === undefined) return false;
-    const stageName = stageNameByExternalId[gameSettings.stageId];
-    if (
-      ![
-        "Battlefield",
-        "Fountain of Dreams",
-        "Yoshi's Story",
-        "Dream Land N64",
-        "Pokémon Stadium",
-        "Final Destination",
-      ].includes(stageName)
-    ) {
-      return false;
-    }
-    if (
-      gameSettings.playerSettings
-        .filter((p) => p)
-        .some((p) => p.playerType === 1 || p.externalCharacterId >= 26)
-    ) {
-      return false;
-    }
-    return true;
-  }
-  const workingIndexes = allGameSettings.flatMap((s, i) =>
-    isLegalGameWithoutCPUs(s) ? [i] : []
-  );
-  const workingFiles = files.filter((_, i) => workingIndexes.includes(i));
-  const workingGameSettings = allGameSettings.filter(
-    (settings, i): settings is GameSettings => workingIndexes.includes(i)
-  );
-  const failingFiles = files.filter((_, i) => allGameSettings[i] === undefined);
-  notificationService.clear();
-  if (failingFiles.length > 0) {
-    notificationService.show({
-      status: "danger",
-      persistent: true,
-      title: "Failed to parse",
-      description: failingFiles.map((file) => file.name).join("\n"),
-    });
-  }
+  const filesAndSettings: [File, GameSettings][] = await send(files);
+  batch(() => {
+    setGameSettings(filesAndSettings.map(([, settings]) => settings));
+    setStore(
+      "files",
+      filesAndSettings.map(([file]) => file)
+    );
+  });
   try {
     const replayData: ReplayData = parseReplay(
-      await workingFiles[0].arrayBuffer()
+      await store.files[0].arrayBuffer()
     );
     const clips = {
       killCombo: search(replayData, ...killComboQuery),
@@ -133,16 +96,26 @@ export async function load(files: File[]) {
       grabPunish: search(replayData, ...grabPunishQuery),
     };
     batch(() => {
-      setStore("files", workingFiles);
-      setStore("currentFile", 0);
       setStore("replayData", replayData);
-      setFrame(0);
       setStore("clips", clips);
+      setStore("currentFile", 0);
       setStore("currentClip", -1);
-      setStore("gameSettings", workingGameSettings);
+      setFrame(0);
     });
     play();
   } catch (e) {}
+  notificationService.clear();
+  const failingFiles = files.filter(
+    file => !store.files.find(f => f.name === file.name && f.size === file.size)
+  );
+  if (failingFiles.length > 0) {
+    notificationService.show({
+      status: "danger",
+      persistent: true,
+      title: `Failed to parse ${failingFiles.length} file(s)`,
+      description: failingFiles.map(file => file.name).join("\n"),
+    });
+  }
 }
 
 export async function nextFile() {
@@ -155,7 +128,7 @@ export async function nextFile() {
       ? store.filteredIndexes[
           wrap(store.filteredIndexes.length, currentIndex + 1)
         ]
-      : wrap(store.files.length, currentIndex - 1);
+      : wrap(store.files.length, currentIndex + 1);
   const replayData = parseReplay(await store.files[nextIndex].arrayBuffer());
   const clips = {
     killCombo: search(replayData, ...killComboQuery),
@@ -235,14 +208,14 @@ export function togglePause() {
 
 export function tick() {
   setFrame(
-    pipe(add(framesPerTick()), (frame) =>
+    pipe(add(framesPerTick()), frame =>
       wrap(store.replayData!.frames.length, frame)
     )
   );
 }
 
 export function tickBack() {
-  setFrame(pipe(dec, (frame) => wrap(store.replayData!.frames.length, frame)));
+  setFrame(pipe(dec, frame => wrap(store.replayData!.frames.length, frame)));
 }
 
 export function speedNormal() {
@@ -259,15 +232,15 @@ export function speedSlow() {
 }
 
 export function zoomIn() {
-  setStore("zoom", (z) => z * 1.01);
+  setStore("zoom", z => z * 1.01);
 }
 
 export function zoomOut() {
-  setStore("zoom", (z) => z / 1.01);
+  setStore("zoom", z => z / 1.01);
 }
 
 export function toggleDebug() {
-  setStore("isDebug", (isDebug) => !isDebug);
+  setStore("isDebug", isDebug => !isDebug);
 }
 
 export function nextClip() {
@@ -316,37 +289,37 @@ export function jumpPercent(percent: number) {
 
 export function adjust(delta: number) {
   setFrame(
-    pipe(add(delta), (frame) => wrap(store.replayData!.frames.length, frame))
+    pipe(add(delta), frame => wrap(store.replayData!.frames.length, frame))
   );
 }
 
 export function setFilters(filters: Filter[]) {
   setStore("filters", filters);
-  const filterResults = store.gameSettings.filter((gameSettings) => {
+  const filterResults = gameSettings().filter(gameSettings => {
     const charactersNeeded = map(
       (filters: Filter[]) => filters.length,
       groupBy(
-        (filter) => filter.label,
-        filters.filter((filter) => filter.type === "character")
+        filter => filter.label,
+        filters.filter(filter => filter.type === "character")
       )
     );
     const charactersPass = Object.entries(charactersNeeded).every(
       ([character, amountRequired]) =>
         gameSettings.playerSettings.filter(
-          (p) => character === characterNameByExternalId[p.externalCharacterId]
+          p => character === characterNameByExternalId[p.externalCharacterId]
         ).length == amountRequired
     );
     const stagesToShow = filters
-      .filter((filter) => filter.type === "stage")
-      .map((filter) => filter.label);
+      .filter(filter => filter.type === "stage")
+      .map(filter => filter.label);
     const stagePass =
       stagesToShow.length === 0 ||
       stagesToShow.includes(stageNameByExternalId[gameSettings.stageId]);
     const namesNeeded = filters
-      .filter((filter) => filter.type === "codeOrName")
-      .map((filter) => filter.label);
-    const namesPass = namesNeeded.every((name) =>
-      gameSettings.playerSettings.some((p) =>
+      .filter(filter => filter.type === "codeOrName")
+      .map(filter => filter.label);
+    const namesPass = namesNeeded.every(name =>
+      gameSettings.playerSettings.some(p =>
         [
           p.connectCode?.toLowerCase(),
           p.displayName?.toLowerCase(),
@@ -358,7 +331,7 @@ export function setFilters(filters: Filter[]) {
   });
   setStore(
     "filteredIndexes",
-    filterResults.map((settings) => store.gameSettings.indexOf(settings))
+    filterResults.map(settings => gameSettings().indexOf(settings))
   );
 }
 
@@ -410,9 +383,9 @@ const path = location.pathname.slice(1);
 if (url) {
   try {
     fetch(url)
-      .then((response) => response.blob())
-      .then((blob) => new File([blob], url.split("/").at(-1) ?? "url.slp"))
-      .then((file) => load([file]));
+      .then(response => response.blob())
+      .then(blob => new File([blob], url.split("/").at(-1) ?? "url.slp"))
+      .then(file => load([file]));
   } catch (e) {
     console.error("Error: could not load replay", url, e);
   }

@@ -3,6 +3,7 @@ lockfileVersion: 5.4
 specifiers:
   '@hope-ui/solid': ^0.6.0
   '@shelacek/ubjson': ^1.1.1
+  '@solid-primitives/memo': ^0.1.1
   '@solid-primitives/raf': ^2.1.0
   '@solid-primitives/upload': ^0.0.100
   '@stitches/core': ^1.2.8
@@ -20,6 +21,7 @@ specifiers:
 dependencies:
   '@hope-ui/solid': 0.6.0_edavwlyd5jabdmps4672dxwe6q
   '@shelacek/ubjson': 1.1.1
+  '@solid-primitives/memo': 0.1.1_solid-js@1.4.2
   '@solid-primitives/raf': 2.1.0_solid-js@1.4.2
   '@solid-primitives/upload': 0.0.100_solid-js@1.4.2
   '@stitches/core': 1.2.8
@@ -416,12 +418,39 @@ packages:
     resolution: {integrity: sha512-2Vi46ct3IWzh8eAz9IZ0NulIRtJbGgJDppatJvufB0fHwasRSfklBoQrVrCutF24fSuRvTvZVebjtcIHOxvzWw==}
     dev: false
 
+  /@solid-primitives/debounce/1.3.0_solid-js@1.4.2:
+    resolution: {integrity: sha512-Cen4ccCPTuEtQM7o9aEKuOJ0LRlAnzKvN7loEBBOQ+zKdu7/7kYKr7HHE/WS8JAI3QeQr5v2ModYRIZLERw5zw==}
+    peerDependencies:
+      solid-js: '>=1.0.0'
+    dependencies:
+      solid-js: 1.4.2
+    dev: false
+
+  /@solid-primitives/memo/0.1.1_solid-js@1.4.2:
+    resolution: {integrity: sha512-7CtoD4276vZJN6RmK1ig8JnUL4ML7kbhDm/VhKPkSr3pLaHJ6g7cZJRi3Rq//su7OIr8/AIaIA8r3ERGMEhb3g==}
+    peerDependencies:
+      solid-js: ^1.3.1
+    dependencies:
+      '@solid-primitives/debounce': 1.3.0_solid-js@1.4.2
+      '@solid-primitives/throttle': 1.2.0_solid-js@1.4.2
+      '@solid-primitives/utils': 1.5.2_solid-js@1.4.2
+      solid-js: 1.4.2
+    dev: false
+
   /@solid-primitives/raf/2.1.0_solid-js@1.4.2:
     resolution: {integrity: sha512-XpQ3A729VBcjzUAqEN6a5yo58cbPTiuYymK7jMPm7Zvw1iFme/BZHqBaF64cOgLqV6c2EJv0PIErdGdr6StHDQ==}
     peerDependencies:
       solid-js: ^1.3.0
     dependencies:
       '@solid-primitives/utils': 1.5.2_solid-js@1.4.2
+      solid-js: 1.4.2
+    dev: false
+
+  /@solid-primitives/throttle/1.2.0_solid-js@1.4.2:
+    resolution: {integrity: sha512-qYKYEgGl/nSCF+wq7H6zFFi8s2e/woFZJkZbCbyUrtbEIvCze4xSZRr64Xi067GlBE+T/N4LZX/htJmLfwkAeg==}
+    peerDependencies:
+      solid-js: ^1.3.1
+    dependencies:
       solid-js: 1.4.2
     dev: false
 
