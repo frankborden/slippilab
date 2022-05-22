@@ -76,44 +76,60 @@ export async function load(files: File[], startFrame: number = 0) {
     persistent: true,
     title: `Parsing ${files.length} file(s)`,
   });
-  const filesAndSettings: [File, GameSettings][] = await send(files);
+  const {
+    goodFilesAndSettings,
+    skipCount,
+    failedFilenames,
+  }: {
+    goodFilesAndSettings: [File, GameSettings][];
+    failedFilenames: File[];
+    skipCount: number;
+  } = await send(files);
   batch(() => {
-    setGameSettings(filesAndSettings.map(([, settings]) => settings));
+    setGameSettings(goodFilesAndSettings.map(([, settings]) => settings));
     setStore(
       "files",
-      filesAndSettings.map(([file]) => file)
+      goodFilesAndSettings.map(([file]) => file)
     );
   });
   try {
-    const replayData: ReplayData = parseReplay(
-      await store.files[0].arrayBuffer()
-    );
-    const clips = {
-      killCombo: search(replayData, ...killComboQuery),
-      shieldGrab: search(replayData, ...shieldGrabQuery),
-      crouchCancel: search(replayData, ...crouchCancelQuery),
-      edgeguard: search(replayData, ...edgeguardQuery),
-      grabPunish: search(replayData, ...grabPunishQuery),
-    };
-    batch(() => {
-      setStore("replayData", replayData);
-      setStore("clips", clips);
-      setStore("currentFile", 0);
-      setStore("currentClip", -1);
-      setFrame(Math.max(0, startFrame - 60));
-    });
-    play();
-  } catch (e) {}
+    if (store.files.length > 0) {
+      const replayData: ReplayData = parseReplay(
+        await store.files[0].arrayBuffer()
+      );
+      const clips = {
+        killCombo: search(replayData, ...killComboQuery),
+        shieldGrab: search(replayData, ...shieldGrabQuery),
+        crouchCancel: search(replayData, ...crouchCancelQuery),
+        edgeguard: search(replayData, ...edgeguardQuery),
+        grabPunish: search(replayData, ...grabPunishQuery),
+      };
+      batch(() => {
+        setStore("replayData", replayData);
+        setStore("clips", clips);
+        setStore("currentFile", 0);
+        setStore("currentClip", -1);
+        setFrame(Math.max(0, startFrame - 60));
+      });
+      play();
+    }
+  } catch (e) {
+    console.error(e);
+  }
   notificationService.clear();
-  const failingFiles = files.filter(
-    file => !store.files.find(f => f.name === file.name && f.size === file.size)
-  );
-  if (failingFiles.length > 0) {
+  if (failedFilenames.length > 0) {
     notificationService.show({
       status: "danger",
       persistent: true,
-      title: `Failed to parse ${failingFiles.length} file(s)`,
-      description: failingFiles.map(file => file.name).join("\n"),
+      title: `Failed to parse ${failedFilenames.length} file(s)`,
+      description: failedFilenames.join("\n"),
+    });
+  }
+  if (skipCount > 0) {
+    notificationService.show({
+      status: "info",
+      persistent: true,
+      title: `Skipped ${skipCount} file(s) with CPUs or illegal stages`,
     });
   }
 }
@@ -208,14 +224,14 @@ export function togglePause() {
 
 export function tick() {
   setFrame(
-    pipe(add(framesPerTick()), frame =>
+    pipe(add(framesPerTick()), (frame) =>
       wrap(store.replayData!.frames.length, frame)
     )
   );
 }
 
 export function tickBack() {
-  setFrame(pipe(dec, frame => wrap(store.replayData!.frames.length, frame)));
+  setFrame(pipe(dec, (frame) => wrap(store.replayData!.frames.length, frame)));
 }
 
 export function speedNormal() {
@@ -232,15 +248,15 @@ export function speedSlow() {
 }
 
 export function zoomIn() {
-  setStore("zoom", z => z * 1.01);
+  setStore("zoom", (z) => z * 1.01);
 }
 
 export function zoomOut() {
-  setStore("zoom", z => z / 1.01);
+  setStore("zoom", (z) => z / 1.01);
 }
 
 export function toggleDebug() {
-  setStore("isDebug", isDebug => !isDebug);
+  setStore("isDebug", (isDebug) => !isDebug);
 }
 
 export function nextClip() {
@@ -289,37 +305,37 @@ export function jumpPercent(percent: number) {
 
 export function adjust(delta: number) {
   setFrame(
-    pipe(add(delta), frame => wrap(store.replayData!.frames.length, frame))
+    pipe(add(delta), (frame) => wrap(store.replayData!.frames.length, frame))
   );
 }
 
 export function setFilters(filters: Filter[]) {
   setStore("filters", filters);
-  const filterResults = gameSettings().filter(gameSettings => {
+  const filterResults = gameSettings().filter((gameSettings) => {
     const charactersNeeded = map(
       (filters: Filter[]) => filters.length,
       groupBy(
-        filter => filter.label,
-        filters.filter(filter => filter.type === "character")
+        (filter) => filter.label,
+        filters.filter((filter) => filter.type === "character")
       )
     );
     const charactersPass = Object.entries(charactersNeeded).every(
       ([character, amountRequired]) =>
         gameSettings.playerSettings.filter(
-          p => character === characterNameByExternalId[p.externalCharacterId]
+          (p) => character === characterNameByExternalId[p.externalCharacterId]
         ).length == amountRequired
     );
     const stagesToShow = filters
-      .filter(filter => filter.type === "stage")
-      .map(filter => filter.label);
+      .filter((filter) => filter.type === "stage")
+      .map((filter) => filter.label);
     const stagePass =
       stagesToShow.length === 0 ||
       stagesToShow.includes(stageNameByExternalId[gameSettings.stageId]);
     const namesNeeded = filters
-      .filter(filter => filter.type === "codeOrName")
-      .map(filter => filter.label);
-    const namesPass = namesNeeded.every(name =>
-      gameSettings.playerSettings.some(p =>
+      .filter((filter) => filter.type === "codeOrName")
+      .map((filter) => filter.label);
+    const namesPass = namesNeeded.every((name) =>
+      gameSettings.playerSettings.some((p) =>
         [
           p.connectCode?.toLowerCase(),
           p.displayName?.toLowerCase(),
@@ -331,7 +347,7 @@ export function setFilters(filters: Filter[]) {
   });
   setStore(
     "filteredIndexes",
-    filterResults.map(settings => gameSettings().indexOf(settings))
+    filterResults.map((settings) => gameSettings().indexOf(settings))
   );
 }
 
@@ -385,9 +401,9 @@ const startFrame = Number.isNaN(frameParse) ? 0 : frameParse;
 if (url) {
   try {
     fetch(url)
-      .then(response => response.blob())
-      .then(blob => new File([blob], url.split("/").at(-1) ?? "url.slp"))
-      .then(file => load([file], startFrame));
+      .then((response) => response.blob())
+      .then((blob) => new File([blob], url.split("/").at(-1) ?? "url.slp"))
+      .then((file) => load([file], startFrame));
   } catch (e) {
     console.error("Error: could not load replay", url, e);
   }
