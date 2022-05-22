@@ -37,12 +37,20 @@ interface CommandPayloadSizes {
 const firstVersion = "0.1.0.0";
 
 export function parseGameSettings(fileBuffer: ArrayBuffer): GameSettings {
-  const baseJson = decode(fileBuffer, { useTypedArrays: true });
-  const metadata = baseJson.metadata;
+  let rawBuffer = fileBuffer;
+  let rawOffset = 15;
+  let metadata: any = undefined;
+  try {
+    const baseJson = decode(fileBuffer, { useTypedArrays: true });
+    metadata = baseJson.metadata;
+    rawBuffer = baseJson.raw.buffer;
+    rawOffset = baseJson.raw.byteOffset;
+  } catch (e) {}
+
   const rawData = new DataView(
-    baseJson.raw.buffer,
-    baseJson.raw.byteOffset,
-    baseJson.raw.byteLength
+    rawBuffer,
+    rawOffset
+    // baseJson.raw.byteLength
   );
   const commandPayloadSizes = parseEventPayloadsEvent(rawData, 0x00);
   const gameSettings = parseGameStartEvent(
@@ -54,12 +62,20 @@ export function parseGameSettings(fileBuffer: ArrayBuffer): GameSettings {
 }
 
 export function parseReplay(fileBuffer: ArrayBuffer): ReplayData {
-  const baseJson = decode(fileBuffer, { useTypedArrays: true });
-  const metadata = baseJson.metadata;
+  let buffer = fileBuffer;
+  let rawOffset = 15;
+  let metadata: any = undefined;
+  try {
+    const baseJson = decode(fileBuffer, { useTypedArrays: true });
+    metadata = baseJson.metadata;
+    buffer = baseJson.raw.buffer;
+    rawOffset = baseJson.raw.byteOffset;
+  } catch (e) {}
+
   const rawData = new DataView(
-    baseJson.raw.buffer,
-    baseJson.raw.byteOffset,
-    baseJson.raw.byteLength
+    buffer,
+    rawOffset
+    // baseJson.raw.byteLength
   );
   // The first two events are always Event Payloads and Game Start.
   const commandPayloadSizes = parseEventPayloadsEvent(rawData, 0x00);
@@ -220,7 +236,7 @@ function parseEventPayloadsEvent(
 function parseGameStartEvent(
   rawData: DataView,
   offset: number,
-  metadata: any
+  metadata?: any
 ): GameSettings {
   const replayFormatVersion = [
     readUint(rawData, 8, firstVersion, firstVersion, offset + 0x01),
@@ -278,8 +294,8 @@ function parseGameStartEvent(
       firstVersion,
       offset + 0x13
     ),
-    startTimestamp: metadata.startAt,
-    platform: metadata.playedOn,
+    startTimestamp: metadata?.startAt,
+    platform: metadata?.playedOn,
     isPal: Boolean(
       readUint(rawData, 8, replayFormatVersion, "1.5.0.0", offset + 0x1a1)
     ),
@@ -344,7 +360,7 @@ function parseGameStartEvent(
       offset + 0x35
     ),
   };
-  if (metadata.consoleNick) {
+  if (metadata?.consoleNick) {
     settings.consoleNickname = metadata.consoleNick;
   }
   for (let playerIndex = 0; playerIndex < 4; playerIndex++) {
@@ -383,7 +399,7 @@ function parseGameStartEvent(
       playerIndex: playerIndex,
       port: playerIndex + 1,
       internalCharacterIds: Object.keys(
-        metadata.players[playerIndex]?.characters ?? {}
+        metadata?.players[playerIndex]?.characters ?? {}
       ).map((key) => Number(key)),
       externalCharacterId: readUint(
         rawData,
