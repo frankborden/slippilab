@@ -23,7 +23,7 @@ export function PlayerHUD(props: { player: number }) {
       playerSettings().playerType === 1
         ? "CPU"
         : characterNameByInternalId[playerState()?.internalCharacterId],
-    ].find(n => n?.length > 0)
+    ].find((n) => n?.length > 0)
   );
   return (
     <>
@@ -35,6 +35,7 @@ export function PlayerHUD(props: { player: number }) {
               cy={`-${position().y}%`}
               r={5}
               fill={color()}
+              stroke="black"
             />
           )}
         </For>
@@ -45,6 +46,7 @@ export function PlayerHUD(props: { player: number }) {
           text-anchor="middle"
           textContent={`${Math.floor(playerState().percent)}%`}
           fill={color()}
+          stroke="black"
         />
         <text
           style={{ font: "bold 15px sans-serif", transform: "scaleY(-1)" }}
@@ -53,6 +55,7 @@ export function PlayerHUD(props: { player: number }) {
           text-anchor="middle"
           textContent={name()}
           fill={color()}
+          stroke="black"
         />
         <Show when={store.isDebug}>
           <text
@@ -62,6 +65,7 @@ export function PlayerHUD(props: { player: number }) {
             text-anchor="middle"
             textContent={`State: ${playerState().actionStateId}`}
             fill={color()}
+            stroke="black"
           />
           <text
             style={{ font: "bold 15px sans-serif", transform: "scaleY(-1)" }}
@@ -72,6 +76,7 @@ export function PlayerHUD(props: { player: number }) {
               playerState().actionStateFrameCounter.toFixed(4)
             )}`}
             fill={color()}
+            stroke="black"
           />
           <text
             style={{ font: "bold 15px sans-serif", transform: "scaleY(-1)" }}
@@ -80,6 +85,7 @@ export function PlayerHUD(props: { player: number }) {
             text-anchor="middle"
             textContent={`X: ${parseFloat(playerState().xPosition.toFixed(4))}`}
             fill={color()}
+            stroke="black"
           />
           <text
             style={{ font: "bold 15px sans-serif", transform: "scaleY(-1)" }}
@@ -88,6 +94,7 @@ export function PlayerHUD(props: { player: number }) {
             text-anchor="middle"
             textContent={`Y: ${parseFloat(playerState().yPosition.toFixed(4))}`}
             fill={color()}
+            stroke="black"
           />
         </Show>
       </Show>
