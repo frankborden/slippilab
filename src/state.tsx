@@ -1,5 +1,5 @@
 import createRAF, { targetFPS } from "@solid-primitives/raf";
-import { add, dec, groupBy, map, pipe } from "rambda";
+import { add, dec, groupBy, inc, map, pipe } from "rambda";
 import { batch, createEffect, createSignal } from "solid-js";
 import { createStore, SetStoreFunction } from "solid-js/store";
 import { parseReplay } from "./parser/parser";
@@ -22,7 +22,16 @@ import {
 } from "./search/framePredicates";
 import { downloadReplay } from "./supabaseClient";
 import { send } from "./workerClient";
-import { notificationService } from "@hope-ui/solid";
+import {
+  Center,
+  CircularProgress,
+  CircularProgressIndicator,
+  HStack,
+  Notification,
+  NotificationIcon,
+  notificationService,
+  NotificationTitle,
+} from "@hope-ui/solid";
 import {
   characterNameByExternalId,
   ExternalCharacterName,
@@ -71,10 +80,23 @@ export const frame = getFrame;
 export const gameSettings = getGameSettings;
 
 export async function load(files: File[], startFrame: number = 0) {
+  let [progress, setProgress] = createSignal(0);
   notificationService.show({
-    loading: true,
     persistent: true,
-    title: `Parsing ${files.length} file(s)`,
+    render: () => (
+      <Notification>
+        <HStack width="$full">
+          <CircularProgress value={(100 * progress()) / files.length}>
+            <CircularProgressIndicator />
+          </CircularProgress>
+          <Center flexGrow={1}>
+            <NotificationTitle>
+              {`Parsing ${files.length} file(s)`}
+            </NotificationTitle>
+          </Center>
+        </HStack>
+      </Notification>
+    ),
   });
   const {
     goodFilesAndSettings,
@@ -84,7 +106,7 @@ export async function load(files: File[], startFrame: number = 0) {
     goodFilesAndSettings: [File, GameSettings][];
     failedFilenames: File[];
     skipCount: number;
-  } = await send(files);
+  } = await send(files, () => setProgress(inc));
   batch(() => {
     setGameSettings(goodFilesAndSettings.map(([, settings]) => settings));
     setStore(
@@ -128,7 +150,6 @@ export async function load(files: File[], startFrame: number = 0) {
   if (skipCount > 0) {
     notificationService.show({
       status: "info",
-      persistent: true,
       title: `Skipped ${skipCount} file(s) with CPUs or illegal stages`,
     });
   }
@@ -224,14 +245,14 @@ export function togglePause() {
 
 export function tick() {
   setFrame(
-    pipe(add(framesPerTick()), (frame) =>
+    pipe(add(framesPerTick()), frame =>
       wrap(store.replayData!.frames.length, frame)
     )
   );
 }
 
 export function tickBack() {
-  setFrame(pipe(dec, (frame) => wrap(store.replayData!.frames.length, frame)));
+  setFrame(pipe(dec, frame => wrap(store.replayData!.frames.length, frame)));
 }
 
 export function speedNormal() {
@@ -248,15 +269,15 @@ export function speedSlow() {
 }
 
 export function zoomIn() {
-  setStore("zoom", (z) => z * 1.01);
+  setStore("zoom", z => z * 1.01);
 }
 
 export function zoomOut() {
-  setStore("zoom", (z) => z / 1.01);
+  setStore("zoom", z => z / 1.01);
 }
 
 export function toggleDebug() {
-  setStore("isDebug", (isDebug) => !isDebug);
+  setStore("isDebug", isDebug => !isDebug);
 }
 
 export function nextClip() {
@@ -305,37 +326,37 @@ export function jumpPercent(percent: number) {
 
 export function adjust(delta: number) {
   setFrame(
-    pipe(add(delta), (frame) => wrap(store.replayData!.frames.length, frame))
+    pipe(add(delta), frame => wrap(store.replayData!.frames.length, frame))
   );
 }
 
 export function setFilters(filters: Filter[]) {
   setStore("filters", filters);
-  const filterResults = gameSettings().filter((gameSettings) => {
+  const filterResults = gameSettings().filter(gameSettings => {
     const charactersNeeded = map(
       (filters: Filter[]) => filters.length,
       groupBy(
-        (filter) => filter.label,
-        filters.filter((filter) => filter.type === "character")
+        filter => filter.label,
+        filters.filter(filter => filter.type === "character")
       )
     );
     const charactersPass = Object.entries(charactersNeeded).every(
       ([character, amountRequired]) =>
         gameSettings.playerSettings.filter(
-          (p) => character === characterNameByExternalId[p.externalCharacterId]
+          p => character === characterNameByExternalId[p.externalCharacterId]
         ).length == amountRequired
     );
     const stagesToShow = filters
-      .filter((filter) => filter.type === "stage")
-      .map((filter) => filter.label);
+      .filter(filter => filter.type === "stage")
+      .map(filter => filter.label);
     const stagePass =
       stagesToShow.length === 0 ||
       stagesToShow.includes(stageNameByExternalId[gameSettings.stageId]);
     const namesNeeded = filters
-      .filter((filter) => filter.type === "codeOrName")
-      .map((filter) => filter.label);
-    const namesPass = namesNeeded.every((name) =>
-      gameSettings.playerSettings.some((p) =>
+      .filter(filter => filter.type === "codeOrName")
+      .map(filter => filter.label);
+    const namesPass = namesNeeded.every(name =>
+      gameSettings.playerSettings.some(p =>
         [
           p.connectCode?.toLowerCase(),
           p.displayName?.toLowerCase(),
@@ -347,7 +368,7 @@ export function setFilters(filters: Filter[]) {
   });
   setStore(
     "filteredIndexes",
-    filterResults.map((settings) => gameSettings().indexOf(settings))
+    filterResults.map(settings => gameSettings().indexOf(settings))
   );
 }
 
@@ -401,9 +422,9 @@ const startFrame = Number.isNaN(frameParse) ? 0 : frameParse;
 if (url) {
   try {
     fetch(url)
-      .then((response) => response.blob())
-      .then((blob) => new File([blob], url.split("/").at(-1) ?? "url.slp"))
-      .then((file) => load([file], startFrame));
+      .then(response => response.blob())
+      .then(blob => new File([blob], url.split("/").at(-1) ?? "url.slp"))
+      .then(file => load([file], startFrame));
   } catch (e) {
     console.error("Error: could not load replay", url, e);
   }

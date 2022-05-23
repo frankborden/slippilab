@@ -1,7 +1,7 @@
 import { stageNameByExternalId } from "./common/ids";
 import { GameSettings, parseGameSettings } from "./parser/parser";
 
-onmessage = async (event) => {
+onmessage = async event => {
   const parsedSettings: [File, GameSettings | "skipped" | "failed"][] =
     await Promise.all(
       event.data.payload.map(async (file: File) => {
@@ -15,6 +15,11 @@ onmessage = async (event) => {
         } catch (e) {
           console.error(e);
           return [file, "failed"];
+        } finally {
+          // signal progress
+          postMessage({
+            id: event.data.id,
+          });
         }
       })
     );
@@ -62,8 +67,8 @@ function isLegalGameWithoutCPUs(gameSettings: GameSettings): boolean {
   }
   if (
     gameSettings.playerSettings
-      .filter((p) => p)
-      .some((p) => p.playerType === 1 || p.externalCharacterId >= 26)
+      .filter(p => p)
+      .some(p => p.playerType === 1 || p.externalCharacterId >= 26)
   ) {
     return false;
   }
