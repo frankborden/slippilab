@@ -313,7 +313,7 @@ function computeRenderData(
         ? "red"
         : playerState.hurtboxCollisionState !== "vulnerable"
         ? "blue"
-        : "none",
+        : "black",
     transforms: [
       `translate(${playerState.xPosition} ${playerState.yPosition})`,
       // TODO: rotate around true character center instead of current guessed
