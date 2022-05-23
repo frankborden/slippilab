@@ -1,28 +1,39 @@
+import { splitEvery } from "rambda";
 import { stageNameByExternalId } from "./common/ids";
 import { GameSettings, parseGameSettings } from "./parser/parser";
 
-onmessage = async event => {
-  const parsedSettings: [File, GameSettings | "skipped" | "failed"][] =
-    await Promise.all(
-      event.data.payload.map(async (file: File) => {
-        try {
-          const settings = parseGameSettings(await file.arrayBuffer());
-          if (isLegalGameWithoutCPUs(settings)) {
-            return [file, settings];
-          } else {
-            return [file, "skipped"];
+onmessage = async (event) => {
+  // Parse in groups of 500 replays at a time to prevent memory issues.
+  const parsedSettings: [File, GameSettings | "skipped" | "failed"][] = [];
+  const fileGroups = splitEvery<File>(500, event.data.payload);
+  for (const fileGroup of fileGroups) {
+    parsedSettings.push(
+      ...(await Promise.all(
+        fileGroup.map(
+          async (
+            file: File
+          ): Promise<[File, GameSettings | "skipped" | "failed"]> => {
+            try {
+              const settings = parseGameSettings(await file.arrayBuffer());
+              if (isLegalGameWithoutCPUs(settings)) {
+                return [file, settings];
+              } else {
+                return [file, "skipped"];
+              }
+            } catch (e) {
+              console.error(e);
+              return [file, "failed"];
+            } finally {
+              // signal progress to the UI
+              postMessage({
+                id: event.data.id,
+              });
+            }
           }
-        } catch (e) {
-          console.error(e);
-          return [file, "failed"];
-        } finally {
-          // signal progress
-          postMessage({
-            id: event.data.id,
-          });
-        }
-      })
+        )
+      ))
     );
+  }
   const goodFilesAndSettings = parsedSettings
     .filter(
       (fileAndSettings): fileAndSettings is [File, GameSettings] =>
@@ -67,8 +78,8 @@ function isLegalGameWithoutCPUs(gameSettings: GameSettings): boolean {
   }
   if (
     gameSettings.playerSettings
-      .filter(p => p)
-      .some(p => p.playerType === 1 || p.externalCharacterId >= 26)
+      .filter((p) => p)
+      .some((p) => p.playerType === 1 || p.externalCharacterId >= 26)
   ) {
     return false;
   }
