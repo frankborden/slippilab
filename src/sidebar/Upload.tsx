@@ -17,16 +17,19 @@ import {
   MenuItem,
   HStack,
   Anchor,
+  Box,
+  notificationService,
 } from "@hope-ui/solid";
 import { BlobReader, BlobWriter, ZipReader } from "@zip.js/zip.js";
 import { createSignal, Show } from "solid-js";
 import { uploadReplay } from "../supabaseClient";
-import { FileArrowUp, FolderOpen } from "phosphor-solid";
+import { Copy, FileArrowUp, FolderOpen } from "phosphor-solid";
 
 export function Upload() {
   const { isOpen, onOpen, onClose } = createDisclosure();
   const [isUploading, setIsUploading] = createSignal(false);
-  const [urlOrError, setUrlOrError] = createSignal("");
+  const [url, setUrl] = createSignal<string | undefined>();
+  const [error, setError] = createSignal<string | undefined>();
 
   let fileInput!: HTMLInputElement;
   let folderInput!: HTMLInputElement;
@@ -52,13 +55,12 @@ export function Upload() {
     onOpen();
     const file = store.files[store.currentFile];
     const { id, data, error } = await uploadReplay(file);
-    const message = data
-      ? `${window.location.origin}/${id}`
-      : "Error uploading file";
-    if (error) {
+    if (data) {
+      setUrl(`${window.location.origin}/${id}`);
+    } else {
+      setError("Error uploading file");
       console.error(error);
     }
-    setUrlOrError(message);
     setIsUploading(false);
   }
 
@@ -98,7 +100,27 @@ export function Upload() {
             <ModalBody>
               <Center>
                 <Show when={!isUploading()} fallback={<Spinner />}>
-                  <Anchor>{urlOrError()}</Anchor>
+                  <Show
+                    when={url() !== undefined}
+                    fallback={<div>{error()}</div>}
+                  >
+                    <HStack gap="$4">
+                      <Anchor>{url()}</Anchor>
+                      <Box
+                        cursor="pointer"
+                        onClick={() => {
+                          navigator.clipboard.writeText(url()!);
+                          notificationService.show({
+                            status: "success",
+                            duration: 1000,
+                            title: "Link copied",
+                          });
+                        }}
+                      >
+                        <Copy size={24}></Copy>
+                      </Box>
+                    </HStack>
+                  </Show>
                 </Show>
               </Center>
             </ModalBody>
