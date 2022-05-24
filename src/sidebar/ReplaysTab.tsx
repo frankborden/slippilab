@@ -36,9 +36,9 @@ const filterProps = createOptions(
 );
 export function ReplaysTab() {
   const filteredGameSettings = createMemo(() =>
-    store.filteredIndexes.length > 0
-      ? store.filteredIndexes.map(i => gameSettings()[i])
-      : gameSettings()
+    store.filteredIndexes === undefined
+      ? gameSettings()
+      : store.filteredIndexes.map(i => gameSettings()[i])
   );
   const HopeSelect = hope(Select);
   return (

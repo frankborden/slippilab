@@ -49,7 +49,7 @@ interface Store {
   replayData?: ReplayData;
   running: boolean;
   filters: Filter[];
-  filteredIndexes: number[];
+  filteredIndexes?: number[];
 }
 
 export type Filter =
@@ -66,7 +66,6 @@ const [getStore, setStore] = createStore<Store>({
   clips: {},
   running: false,
   filters: [],
-  filteredIndexes: [],
 }) as [Store, SetStoreFunction<Store>];
 export const store = getStore;
 
@@ -157,11 +156,11 @@ export async function load(files: File[], startFrame: number = 0) {
 
 export async function nextFile() {
   const currentIndex =
-    store.filteredIndexes.length > 0
+    store.filteredIndexes && store.filteredIndexes.length > 0
       ? store.filteredIndexes.indexOf(store.currentFile)
       : store.currentFile;
   const nextIndex =
-    store.filteredIndexes.length > 0
+    store.filteredIndexes && store.filteredIndexes.length > 0
       ? store.filteredIndexes[
           wrap(store.filteredIndexes.length, currentIndex + 1)
         ]
@@ -185,11 +184,11 @@ export async function nextFile() {
 
 export async function previousFile() {
   const currentIndex =
-    store.filteredIndexes.length > 0
+    store.filteredIndexes && store.filteredIndexes.length > 0
       ? store.filteredIndexes.indexOf(store.currentFile)
       : store.currentFile;
   const previousIndex =
-    store.filteredIndexes.length > 0
+    store.filteredIndexes && store.filteredIndexes.length > 0
       ? store.filteredIndexes[
           wrap(store.filteredIndexes.length, currentIndex - 1)
         ]
@@ -368,7 +367,9 @@ export function setFilters(filters: Filter[]) {
   });
   setStore(
     "filteredIndexes",
-    filterResults.map(settings => gameSettings().indexOf(settings))
+    filters.length === 0
+      ? undefined
+      : filterResults.map(settings => gameSettings().indexOf(settings))
   );
 }
 
