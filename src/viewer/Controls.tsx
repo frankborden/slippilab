@@ -19,7 +19,8 @@ import {
   previousClip,
   store,
 } from "../state";
-import { Box, hope, HStack, useColorModeValue } from "@hope-ui/solid";
+import { Box, hope, HStack } from "@hope-ui/solid";
+import { controlsColor } from "./colors";
 import { onCleanup, onMount, Show } from "solid-js";
 import {
   ClockClockwise,
@@ -124,8 +125,6 @@ export function Controls() {
 
   let seekbarInput!: HTMLInputElement;
 
-  const controlColor = useColorModeValue("$neutral10", "$neutral5");
-
   return (
     <foreignObject
       transform="scale(1 -1)"
@@ -139,7 +138,7 @@ export function Controls() {
         gap="$4"
         paddingLeft="$2"
         paddingRight="$4"
-        color={controlColor()}
+        color={controlsColor}
       >
         <Box width="6ch" textAlign="end">
           {store.isDebug ? frame() - 123 : frame()}

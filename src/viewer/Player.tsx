@@ -10,7 +10,7 @@ import {
 import { frame, store } from "../state";
 import { PlayerUpdate } from "../common/types";
 import { Character } from "./characters/character";
-import { useColorModeValue } from "@hope-ui/solid";
+import { playerColors, teamColors } from "./colors";
 
 interface RenderData {
   // main render
@@ -411,20 +411,12 @@ function isSpacieUpB(
 }
 
 function getPlayerColor(playerIndex: number) {
-  const playerColors = useColorModeValue(
-    ["red", "blue", "goldenrod", "green"],
-    ["darkred", "darkblue", "darkgoldenrod", "darkgreen"]
-  );
-  const teamColors = useColorModeValue(
-    ["red", "blue", "green"],
-    ["darkred", "darkblue", "darkgreen"]
-  );
   if (store.replayData!.settings.isTeams) {
     const teamId =
       store.replayData!.settings.playerSettings[playerIndex].teamId;
-    return teamColors()[teamId];
+    return teamColors[teamId];
   }
-  return playerColors()[playerIndex];
+  return playerColors[playerIndex];
 }
 
 function getStartOfAction(

@@ -1,9 +1,8 @@
-import { useColorModeValue } from "@hope-ui/solid";
 import { createMemo } from "solid-js";
 import { frame, store } from "../state";
+import { timerColor } from "./colors";
 
 export function Timer() {
-  const color = useColorModeValue("black", "#dddddd");
   const meleeHundredths = [
     "00",
     "02",
@@ -83,7 +82,7 @@ export function Timer() {
       text-anchor="middle"
       y="-42%"
       textContent={time()}
-      fill={color()}
+      fill={timerColor}
     />
   );
 }
