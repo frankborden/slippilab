@@ -20,10 +20,10 @@ import {
   Box,
   notificationService,
 } from "@hope-ui/solid";
-import { BlobReader, BlobWriter, ZipReader } from "@zip.js/zip.js";
 import { createSignal, Show } from "solid-js";
 import { uploadReplay } from "../supabaseClient";
 import { Copy, FileArrowUp, FolderOpen } from "phosphor-solid";
+import { filterFiles } from "../common/util";
 
 export function Upload() {
   const { isOpen, onOpen, onClose } = createDisclosure();
@@ -41,13 +41,8 @@ export function Upload() {
       return;
     }
     const files = Array.from(input.files);
-    const slpFiles = files.filter(file => file.name.endsWith(".slp"));
-    const zipFiles = files.filter(file => file.name.endsWith(".zip"));
-    const blobsFromZips = (await Promise.all(zipFiles.map(unzip)))
-      .flat()
-      .filter(file => file.name.endsWith(".slp"));
-
-    load([...slpFiles, ...blobsFromZips]);
+    const filteredFiles = await filterFiles(files);
+    load(filteredFiles);
   }
 
   async function onShare() {
@@ -148,18 +143,5 @@ export function Upload() {
         />
       </HStack>
     </>
-  );
-}
-
-async function unzip(zipFile: File): Promise<File[]> {
-  const entries = await new ZipReader(new BlobReader(zipFile)).getEntries();
-  return Promise.all(
-    entries
-      .filter(entry => !entry.filename.split("/").at(-1)?.startsWith("."))
-      .map(entry =>
-        (entry.getData?.(new BlobWriter()) as Promise<Blob>).then(
-          blob => new File([blob], entry.filename)
-        )
-      )
   );
 }

@@ -3,9 +3,11 @@ import { fetchAnimations } from "./viewer/animationCache";
 import { Box, Flex } from "@hope-ui/solid";
 import { Sidebar } from "./sidebar/Sidebar";
 import { createDropzone } from "@solid-primitives/upload";
-import { load } from "./state";
-import { BlobReader, BlobWriter, ZipReader } from "@zip.js/zip.js";
+import { load, store } from "./state";
 import "@thisbeyond/solid-select/style.css";
+import { Show } from "solid-js";
+import { Landing } from "./Landing";
+import { filterFiles } from "./common/util";
 
 export function App() {
   // Get started fetching the most popular characters
@@ -16,42 +18,25 @@ export function App() {
 
   // Make the whole screen a dropzone
   const { setRef: dropzoneRef } = createDropzone({
-    onDrop: async uploads => {
-      const files = uploads.map(upload => upload.file);
-
-      const slpFiles = files.filter(file => file.name.endsWith(".slp"));
-      const zipFiles = files.filter(file => file.name.endsWith(".zip"));
-      const blobsFromZips = (await Promise.all(zipFiles.map(unzip)))
-        .flat()
-        .filter(file => file.name.endsWith(".slp"));
-
-      load([...slpFiles, ...blobsFromZips]);
+    onDrop: async (uploads) => {
+      const files = uploads.map((upload) => upload.file);
+      const filteredFiles = await filterFiles(files);
+      load(filteredFiles);
     },
   });
 
   return (
     <>
       <Flex ref={dropzoneRef} width="$screenW" height="$screenH">
-        <Box flexGrow="1">
-          <Sidebar />
-        </Box>
-        <Box style={{ "aspect-ratio": "73/60" }}>
-          <Viewer />
-        </Box>
+        <Show when={store.files.length > 0} fallback={<Landing />}>
+          <Box flexGrow="1">
+            <Sidebar />
+          </Box>
+          <Box style={{ "aspect-ratio": "73/60" }}>
+            <Viewer />
+          </Box>
+        </Show>
       </Flex>
     </>
-  );
-}
-
-async function unzip(zipFile: File): Promise<File[]> {
-  const entries = await new ZipReader(new BlobReader(zipFile)).getEntries();
-  return Promise.all(
-    entries
-      .filter(entry => !entry.filename.split("/").at(-1)?.startsWith("."))
-      .map(entry =>
-        (entry.getData?.(new BlobWriter()) as Promise<Blob>).then(
-          blob => new File([blob], entry.filename)
-        )
-      )
   );
 }

@@ -28,7 +28,6 @@ import {
   CircularProgressIndicator,
   HStack,
   Notification,
-  NotificationIcon,
   notificationService,
   NotificationTitle,
 } from "@hope-ui/solid";
