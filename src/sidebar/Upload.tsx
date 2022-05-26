@@ -45,7 +45,7 @@ export function Upload() {
     load(filteredFiles);
   }
 
-  async function onShare() {
+  async function onUpload() {
     setIsUploading(true);
     onOpen();
     const file = store.files[store.currentFile];
@@ -81,11 +81,11 @@ export function Upload() {
         </Menu>
         <Show when={store.files.length > 0}>
           <Button
-            onClick={onShare}
+            onClick={onUpload}
             rightIcon={<FileArrowUp size="24" />}
             variant="subtle"
           >
-            Share
+            Upload
           </Button>
         </Show>
         <Modal opened={isOpen()} onClose={onClose}>
