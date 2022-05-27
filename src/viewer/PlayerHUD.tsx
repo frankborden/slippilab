@@ -2,13 +2,11 @@ import { createMemo, For, Show } from "solid-js";
 import { characterNameByInternalId } from "../common/ids";
 import { frame, store } from "../state";
 import { playerColors, teamColors } from "./colors";
+import { playerSettings, renderDatas } from "./viewerState";
 
 export function PlayerHUD(props: { player: number }) {
   const playerState = createMemo(
     () => store.replayData!.frames[frame()].players[props.player]?.state
-  );
-  const playerSettings = createMemo(
-    () => store.replayData!.settings.playerSettings[props.player]
   );
   const position = createMemo(() => ({
     x: -30 + 20 * props.player, // ports at: -30%, -10%, 10%, 30%
@@ -17,13 +15,14 @@ export function PlayerHUD(props: { player: number }) {
   const color = createMemo(() => getPlayerColor(props.player));
   const name = createMemo(() =>
     [
-      playerSettings().displayName,
-      playerSettings().connectCode,
-      playerSettings().nametag,
-      playerSettings().playerType === 1
+      playerSettings().find(s => s.playerIndex === props.player)?.displayName,
+      playerSettings().find(s => s.playerIndex === props.player)?.connectCode,
+      playerSettings().find(s => s.playerIndex === props.player)?.nametag,
+      playerSettings().find(s => s.playerIndex === props.player)?.playerType ===
+      1
         ? "CPU"
         : characterNameByInternalId[playerState()?.internalCharacterId],
-    ].find(n => n?.length > 0)
+    ].find(n => n && n.length > 0)
   );
   return (
     <>
@@ -63,7 +62,7 @@ export function PlayerHUD(props: { player: number }) {
             x={`${position().x}%`}
             y="-40%"
             text-anchor="middle"
-            textContent={`State: ${playerState().actionStateId}`}
+            textContent={`State ID: ${playerState().actionStateId}`}
             fill={color()}
             stroke="black"
           />
@@ -72,7 +71,7 @@ export function PlayerHUD(props: { player: number }) {
             x={`${position().x}%`}
             y="-37%"
             text-anchor="middle"
-            textContent={`Frame: ${parseFloat(
+            textContent={`State Frame: ${parseFloat(
               playerState().actionStateFrameCounter.toFixed(4)
             )}`}
             fill={color()}
@@ -93,6 +92,21 @@ export function PlayerHUD(props: { player: number }) {
             y="-31%"
             text-anchor="middle"
             textContent={`Y: ${parseFloat(playerState().yPosition.toFixed(4))}`}
+            fill={color()}
+            stroke="black"
+          />
+          <text
+            style={{ font: "bold 15px sans-serif", transform: "scaleY(-1)" }}
+            x={`${position().x}%`}
+            y="-28%"
+            text-anchor="middle"
+            textContent={
+              renderDatas()[
+                playerSettings().findIndex(
+                  ps => ps.playerIndex === props.player
+                )
+              ].animationName
+            }
             fill={color()}
             stroke="black"
           />

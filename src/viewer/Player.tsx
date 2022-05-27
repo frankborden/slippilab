@@ -1,97 +1,36 @@
-import { max, modulo } from "rambda";
-import { createMemo, createResource, Show } from "solid-js";
-import { CharacterAnimations, fetchAnimations } from "./animationCache";
-import { actionMapByInternalId } from "./characters";
-import {
-  actionNameById,
-  characterNameByExternalId,
-  characterNameByInternalId,
-} from "../common/ids";
-import { frame, store } from "../state";
+import { createMemo, For, Show } from "solid-js";
+import { characterNameByExternalId } from "../common/ids";
+import { store } from "../state";
 import { PlayerUpdate } from "../common/types";
-import { Character } from "./characters/character";
-import { playerColors, teamColors } from "./colors";
+import "./viewerState";
+import { RenderData, renderDatas } from "./viewerState";
+import { getPlayerOnFrame, getStartOfAction } from "./viewerUtil";
 
-interface RenderData {
-  // main render
-  path?: string;
-  innerColor: string;
-  outerColor: string;
-  transforms: string[];
-
-  // shield/shine renders
-  animationName: string;
-  position: [number, number];
-  characterData: Character;
-}
-
-export function Player(props: { player: number }) {
-  const player = createMemo(() => getPlayerOnFrame(props.player, frame()));
-  const playerSettings = createMemo(
-    () => store.replayData!.settings.playerSettings[props.player]
-  );
-  const adjustedExternalCharacterId = createMemo(() =>
-    player()
-      ? adjustExternalCharacterId(
-          playerSettings().externalCharacterId,
-          player().state.internalCharacterId
-        )
-      : playerSettings().externalCharacterId
-  );
-  const [animations] = createResource(adjustedExternalCharacterId, () =>
-    fetchAnimations(adjustedExternalCharacterId())
-  );
+export function Players() {
   return (
     <>
-      <Show when={animations() && player()}>
-        <PlayerOutline
-          playerIndex={props.player}
-          player={player()}
-          animations={animations()!}
-          isNana={false}
-        />
-        <Show when={player().nanaState}>
-          <PlayerOutline
-            playerIndex={props.player}
-            player={player()}
-            animations={animations()!}
-            isNana={true}
-          />
-        </Show>
-      </Show>
-    </>
-  );
-}
-
-function PlayerOutline(props: {
-  playerIndex: number;
-  player: PlayerUpdate;
-  animations: CharacterAnimations;
-  isNana: boolean;
-}) {
-  const renderData = createMemo(() =>
-    computeRenderData(
-      props.playerIndex,
-      props.player,
-      props.animations,
-      props.isNana
-    )
-  );
-  return (
-    <>
-      <path
-        transform={renderData().transforms.join(" ")}
-        d={renderData().path}
-        fill={renderData().innerColor}
-        stroke-width={2}
-        stroke={renderData().outerColor}
-      ></path>
-      <Shield
-        renderData={renderData()}
-        playerUpdate={props.player}
-        isNana={props.isNana}
-      />
-      <Shine renderData={renderData()} playerUpdate={props.player} />
+      <For each={renderDatas()}>
+        {renderData => (
+          <>
+            <path
+              transform={renderData.transforms.join(" ")}
+              d={renderData.path}
+              fill={renderData.innerColor}
+              stroke-width={2}
+              stroke={renderData.outerColor}
+            ></path>
+            <Shield
+              renderData={renderData}
+              playerUpdate={renderData.playerUpdate}
+              isNana={renderData.isNana}
+            />
+            <Shine
+              renderData={renderData}
+              playerUpdate={renderData.playerUpdate}
+            />
+          </>
+        )}
+      </For>
     </>
   );
 }
@@ -118,8 +57,10 @@ function Shield(props: {
           getStartOfAction(
             props.playerUpdate.playerIndex,
             props.playerUpdate.frameNumber,
-            props.isNana
-          )
+            props.isNana,
+            store.replayData!
+          ),
+          store.replayData!
         ).inputs.processed.anyTrigger
       : props.playerUpdate.inputs.processed.anyTrigger || 1
   );
@@ -234,214 +175,4 @@ function Hexagon(props: { x: number; y: number; r: number }) {
       ></polygon>
     </>
   );
-}
-
-// For Zelda/Sheik transformations we need to update the external ID to fetch
-// the other one's animations if there is a transformation. Don't bother
-// preloading though because Zelda is not popular.
-function adjustExternalCharacterId(
-  externalCharacterId: number,
-  internalCharacterId: number
-) {
-  const internalCharacterName = characterNameByInternalId[internalCharacterId];
-  // playerSettings is not updated, it only contains the starting
-  // transformation.
-  switch (internalCharacterName) {
-    case "Zelda":
-      return characterNameByExternalId.indexOf("Zelda");
-    case "Sheik":
-      return characterNameByExternalId.indexOf("Sheik");
-    default:
-      return externalCharacterId;
-  }
-}
-
-function computeRenderData(
-  playerIndex: number,
-  playerUpdate: PlayerUpdate,
-  animations: CharacterAnimations | undefined,
-  isNana: boolean
-): RenderData {
-  const playerState = playerUpdate[isNana ? "nanaState" : "state"]!;
-  const startOfActionPlayerState = getPlayerOnFrame(
-    playerIndex,
-    getStartOfAction(playerIndex, frame(), isNana)
-  )[isNana ? "nanaState" : "state"]!;
-  const actionName = actionNameById[playerState.actionStateId];
-
-  const characterData = actionMapByInternalId[playerState.internalCharacterId];
-  const animationName =
-    characterData.animationMap.get(actionName) ??
-    characterData.specialsMap.get(playerState.actionStateId) ??
-    actionName;
-  const animationFrames = animations?.[animationName];
-  // TODO: validate L cancels & other fractional frames, currently just
-  // flooring.
-  // Converts - 1 to 0 and loops for Entry, Guard, etc.
-  const frameIndex = modulo(
-    Math.floor(max(0, playerState.actionStateFrameCounter)),
-    animationFrames?.length ?? 1
-  );
-  // To save animation file size, duplicate frames just reference earlier
-  // matching frames such as "frame20".
-  const animationPathOrFrameReference = animationFrames?.[frameIndex];
-  const path = animationPathOrFrameReference?.startsWith("frame")
-    ? animationFrames?.[
-        Number(animationPathOrFrameReference.slice("frame".length))
-      ]
-    : animationPathOrFrameReference;
-  const rotation =
-    animationName === "DamageFlyRoll"
-      ? getDamageFlyRollRotation(playerIndex, frame(), isNana)
-      : isSpacieUpB(playerIndex, frame(), isNana)
-      ? getSpacieUpBRotation(playerIndex, frame(), isNana)
-      : 0;
-  // Some animations naturally turn the player around, but facingDirection
-  // updates partway through the animation and incorrectly flips the
-  // animation. The solution is to "fix" the facingDirection for the duration
-  // of the action, as the animation expects. However upB turnarounds and
-  // Jigglypuff/Kirby mid-air jumps are an exception where we need to flip
-  // based on the updated state.facingDirection.
-  const facingDirection = actionFollowsFacingDirection(animationName)
-    ? playerState.facingDirection
-    : startOfActionPlayerState.facingDirection;
-  return {
-    path,
-    innerColor: getPlayerColor(playerIndex),
-    outerColor:
-      startOfActionPlayerState.lCancelStatus === "missed"
-        ? "red"
-        : playerState.hurtboxCollisionState !== "vulnerable"
-        ? "blue"
-        : "black",
-    transforms: [
-      `translate(${playerState.xPosition} ${playerState.yPosition})`,
-      // TODO: rotate around true character center instead of current guessed
-      // center of position+(0,8)
-      `rotate(${rotation} 0 8)`,
-      `scale(${characterData.scale} ${characterData.scale})`,
-      `scale(${facingDirection} 1)`,
-      `scale(.1 -.1) translate(-500 -500)`,
-    ],
-    animationName: animationName,
-    position: [playerState.xPosition, playerState.yPosition],
-    characterData: characterData,
-  };
-}
-
-// DamageFlyRoll default rotation is (0,1), but we calculate rotation from (1,0)
-// so we need to subtract 90 degrees. Quick checks:
-// 0 - 90 = -90 which turns (0,1) into (1,0)
-// -90 - 90 = -180 which turns (0,1) into (-1,0)
-// Facing direction is handled naturally because the rotation will go the
-// opposite direction (that scale happens first) and the flip of (0,1) is still
-// (0, 1)
-function getDamageFlyRollRotation(
-  playerIndex: number,
-  frameNumber: number,
-  isNana: boolean
-): number {
-  const currentState = getPlayerOnFrame(playerIndex, frameNumber)[
-    isNana ? "nanaState" : "state"
-  ]!;
-  const previousState = getPlayerOnFrame(playerIndex, frameNumber - 1)[
-    isNana ? "nanaState" : "state"
-  ]!;
-  const deltaX = currentState.xPosition - previousState.xPosition;
-  const deltaY = currentState.yPosition - previousState.yPosition;
-  return (Math.atan2(deltaY, deltaX) * 180) / Math.PI - 90;
-}
-
-// Rotation will be whatever direction the player was holding at blastoff. The
-// default rotation of the animation is (1,0), so we need to subtract 180 when
-// facing left, and subtract 0 when facing right.
-// Quick checks:
-// 0 - 0 = 0, so (1,0) is unaltered when facing right
-// 0 - 180 = -180, so (1,0) is flipped when facing left
-function getSpacieUpBRotation(
-  playerIndex: number,
-  currentFrame: number,
-  isNana: boolean
-): number {
-  const startOfActionPlayer = getPlayerOnFrame(
-    playerIndex,
-    getStartOfAction(playerIndex, currentFrame, isNana)
-  );
-  const joystickDegrees =
-    ((startOfActionPlayer.inputs.processed.joystickY === 0 &&
-    startOfActionPlayer.inputs.processed.joystickX === 0
-      ? Math.PI / 2
-      : Math.atan2(
-          startOfActionPlayer.inputs.processed.joystickY,
-          startOfActionPlayer.inputs.processed.joystickX
-        )) *
-      180) /
-    Math.PI;
-  return (
-    joystickDegrees -
-    (startOfActionPlayer[isNana ? "nanaState" : "state"]!.facingDirection === -1
-      ? 180
-      : 0)
-  );
-}
-
-// All jumps and upBs either 1) Need to follow the current frame's
-// facingDirection, or 2) Won't have facingDirection change during the action.
-// In either case we can grab the facingDirection from the current frame.
-function actionFollowsFacingDirection(animationName: string): boolean {
-  return (
-    animationName.includes("Jump") ||
-    ["SpecialHi", "SpecialAirHi"].includes(animationName)
-  );
-}
-
-function isSpacieUpB(
-  playerIndex: number,
-  frameNumber: number,
-  isNana: boolean
-) {
-  const state = getPlayerOnFrame(playerIndex, frameNumber)[
-    isNana ? "nanaState" : "state"
-  ]!;
-  const character = characterNameByInternalId[state.internalCharacterId];
-  return (
-    ["Fox", "Falco"].includes(character) &&
-    [355, 356].includes(state.actionStateId)
-  );
-}
-
-function getPlayerColor(playerIndex: number) {
-  if (store.replayData!.settings.isTeams) {
-    const teamId =
-      store.replayData!.settings.playerSettings[playerIndex].teamId;
-    return teamColors[teamId];
-  }
-  return playerColors[playerIndex];
-}
-
-function getStartOfAction(
-  playerIndex: number,
-  currentFrame: number,
-  isNana: boolean
-): number {
-  let earliestStateOfAction = getPlayerOnFrame(playerIndex, currentFrame)[
-    isNana ? "nanaState" : "state"
-  ]!;
-  while (true) {
-    const testEarlierState = getPlayerOnFrame(
-      playerIndex,
-      earliestStateOfAction.frameNumber - 1
-    )?.[isNana ? "nanaState" : "state"]!;
-    if (
-      testEarlierState === undefined ||
-      testEarlierState.actionStateId !== earliestStateOfAction.actionStateId
-    ) {
-      return earliestStateOfAction.frameNumber;
-    }
-    earliestStateOfAction = testEarlierState;
-  }
-}
-
-function getPlayerOnFrame(playerIndex: number, frameNumber: number) {
-  return store.replayData!.frames[frameNumber]?.players[playerIndex];
 }

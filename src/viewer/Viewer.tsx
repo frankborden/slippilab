@@ -2,7 +2,7 @@ import { createMemo, For, Show } from "solid-js";
 import { Camera } from "./Camera";
 import { Controls } from "./Controls";
 import { HUD } from "./HUD";
-import { Player } from "./Player";
+import { Players } from "./Player";
 import { Stage } from "./Stage";
 import { frame, store } from "../state";
 import { Item } from "./Item";
@@ -28,9 +28,7 @@ export function Viewer() {
       >
         <Camera>
           <Stage />
-          <For each={playerIndexes()}>
-            {playerIndex => <Player player={playerIndex} />}
-          </For>
+          <Players />
           <For each={items()}>{item => <Item item={item} />}</For>
         </Camera>
         <HUD />
