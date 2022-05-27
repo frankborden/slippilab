@@ -10,7 +10,7 @@ export function Players() {
   return (
     <>
       <For each={renderDatas()}>
-        {renderData => (
+        {(renderData) => (
           <>
             <path
               transform={renderData.transforms.join(" ")}

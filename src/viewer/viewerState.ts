@@ -30,11 +30,11 @@ export interface RenderData {
 }
 
 const playerUpdates = createMemo(
-  () => store.replayData?.frames[frame()].players.filter(p => p) ?? []
+  () => store.replayData?.frames[frame()].players.filter((p) => p) ?? []
 );
 
 export const playerSettings = createMemo(
-  () => store.replayData?.settings.playerSettings.filter(p => p) ?? []
+  () => store.replayData?.settings.playerSettings.filter((p) => p) ?? []
 );
 
 // For Zelda/Sheik transformations we need to update the external ID to fetch
@@ -58,7 +58,7 @@ function adjustExternalCharacterId(
 }
 
 const adjustedExternalCharacterIds = createMemo(() =>
-  playerSettings().map(settings =>
+  playerSettings().map((settings) =>
     playerUpdates()[settings.playerIndex]
       ? adjustExternalCharacterId(
           settings.externalCharacterId,
@@ -69,20 +69,20 @@ const adjustedExternalCharacterIds = createMemo(() =>
 );
 
 const animationsByPlayerIndex = Array.from(Array(4).keys()).map(
-  i =>
+  (i) =>
     createResource(
-      () => playerSettings().find(p => p.playerIndex === i),
+      () => playerSettings().find((p) => p.playerIndex === i),
       () =>
         fetchAnimations(
           adjustedExternalCharacterIds()[
-            playerSettings().findIndex(p => p.playerIndex === i)
+            playerSettings().findIndex((p) => p.playerIndex === i)
           ]
         )
     )[0]
 );
 
 export const renderDatas = createMemo(() => {
-  return playerUpdates().flatMap(u => {
+  return playerUpdates().flatMap((u) => {
     if (!animationsByPlayerIndex[u.playerIndex]) return [];
     const renderDatas = [];
     renderDatas.push(

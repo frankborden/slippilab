@@ -8,13 +8,13 @@ export function HUD() {
   const playerIndexes = createMemo(() =>
     store
       .replayData!.settings.playerSettings.filter(Boolean)
-      .map(playerSettings => playerSettings.playerIndex)
+      .map((playerSettings) => playerSettings.playerIndex)
   );
   return (
     <>
       <Timer />
       <For each={playerIndexes()}>
-        {playerIndex => <PlayerHUD player={playerIndex} />}
+        {(playerIndex) => <PlayerHUD player={playerIndex} />}
       </For>
     </>
   );

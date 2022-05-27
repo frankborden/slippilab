@@ -13,7 +13,7 @@ export function Viewer() {
   const playerIndexes = createMemo(() =>
     store.replayData?.settings.playerSettings
       .filter(Boolean)
-      .map(playerSettings => playerSettings.playerIndex)
+      .map((playerSettings) => playerSettings.playerIndex)
   );
   const items = createMemo(() => store.replayData?.frames[frame()].items);
   return (
@@ -29,7 +29,7 @@ export function Viewer() {
         <Camera>
           <Stage />
           <Players />
-          <For each={items()}>{item => <Item item={item} />}</For>
+          <For each={items()}>{(item) => <Item item={item} />}</For>
         </Camera>
         <HUD />
         <Controls />

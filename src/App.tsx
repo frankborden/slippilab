@@ -18,8 +18,8 @@ export function App() {
 
   // Make the whole screen a dropzone
   const { setRef: dropzoneRef } = createDropzone({
-    onDrop: async uploads => {
-      const files = uploads.map(upload => upload.file);
+    onDrop: async (uploads) => {
+      const files = uploads.map((upload) => upload.file);
       const filteredFiles = await filterFiles(files);
       load(filteredFiles);
     },

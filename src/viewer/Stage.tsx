@@ -66,7 +66,7 @@ function Battlefield() {
     <>
       <polyline points={mainStage.join(" ")} fill={stageColor} />
       <For each={platforms}>
-        {points => <polyline points={points.join(" ")} stroke={stageColor} />}
+        {(points) => <polyline points={points.join(" ")} stroke={stageColor} />}
       </For>
       <rect
         x={blastzones[0][0]}
@@ -104,7 +104,7 @@ function Dreamland() {
     <>
       <polyline points={mainStage.join(" ")} fill={stageColor} />
       <For each={platforms}>
-        {points => <polyline points={points.join(" ")} stroke={stageColor} />}
+        {(points) => <polyline points={points.join(" ")} stroke={stageColor} />}
       </For>
       <rect
         x={blastzones[0][0]}
@@ -281,7 +281,7 @@ function YoshisStory() {
     <>
       <polyline points={mainStage.join(" ")} fill={stageColor} />
       <For each={platforms}>
-        {points => <polyline points={points.join(" ")} stroke={stageColor} />}
+        {(points) => <polyline points={points.join(" ")} stroke={stageColor} />}
       </For>
       <polyline points={randall().join(" ")} stroke={randallColor} />
       <rect
@@ -346,7 +346,7 @@ function FountainOfDreams() {
     <>
       <polyline points={mainStage.join(" ")} fill={stageColor} />
       <For each={platforms.slice(0, 2)}>
-        {points => (
+        {(points) => (
           <polyline
             points={points.join(" ")}
             stroke-dasharray="2,4"
@@ -399,7 +399,7 @@ function PokemonStadium() {
     <>
       <polyline points={mainStage.join(" ")} fill={stageColor} />
       <For each={platforms}>
-        {points => <polyline points={points.join(" ")} stroke={stageColor} />}
+        {(points) => <polyline points={points.join(" ")} stroke={stageColor} />}
       </For>
       <rect
         x={blastzones[0][0]}

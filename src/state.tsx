@@ -243,14 +243,14 @@ export function togglePause() {
 
 export function tick() {
   setFrame(
-    pipe(add(framesPerTick()), frame =>
+    pipe(add(framesPerTick()), (frame) =>
       wrap(store.replayData!.frames.length, frame)
     )
   );
 }
 
 export function tickBack() {
-  setFrame(pipe(dec, frame => wrap(store.replayData!.frames.length, frame)));
+  setFrame(pipe(dec, (frame) => wrap(store.replayData!.frames.length, frame)));
 }
 
 export function speedNormal() {
@@ -267,15 +267,15 @@ export function speedSlow() {
 }
 
 export function zoomIn() {
-  setStore("zoom", z => z * 1.01);
+  setStore("zoom", (z) => z * 1.01);
 }
 
 export function zoomOut() {
-  setStore("zoom", z => z / 1.01);
+  setStore("zoom", (z) => z / 1.01);
 }
 
 export function toggleDebug() {
-  setStore("isDebug", isDebug => !isDebug);
+  setStore("isDebug", (isDebug) => !isDebug);
 }
 
 export function nextClip() {
@@ -324,37 +324,37 @@ export function jumpPercent(percent: number) {
 
 export function adjust(delta: number) {
   setFrame(
-    pipe(add(delta), frame => wrap(store.replayData!.frames.length, frame))
+    pipe(add(delta), (frame) => wrap(store.replayData!.frames.length, frame))
   );
 }
 
 export function setFilters(filters: Filter[]) {
   setStore("filters", filters);
-  const filterResults = gameSettings().filter(gameSettings => {
+  const filterResults = gameSettings().filter((gameSettings) => {
     const charactersNeeded = map(
       (filters: Filter[]) => filters.length,
       groupBy(
-        filter => filter.label,
-        filters.filter(filter => filter.type === "character")
+        (filter) => filter.label,
+        filters.filter((filter) => filter.type === "character")
       )
     );
     const charactersPass = Object.entries(charactersNeeded).every(
       ([character, amountRequired]) =>
         gameSettings.playerSettings.filter(
-          p => character === characterNameByExternalId[p.externalCharacterId]
+          (p) => character === characterNameByExternalId[p.externalCharacterId]
         ).length == amountRequired
     );
     const stagesToShow = filters
-      .filter(filter => filter.type === "stage")
-      .map(filter => filter.label);
+      .filter((filter) => filter.type === "stage")
+      .map((filter) => filter.label);
     const stagePass =
       stagesToShow.length === 0 ||
       stagesToShow.includes(stageNameByExternalId[gameSettings.stageId]);
     const namesNeeded = filters
-      .filter(filter => filter.type === "codeOrName")
-      .map(filter => filter.label);
-    const namesPass = namesNeeded.every(name =>
-      gameSettings.playerSettings.some(p =>
+      .filter((filter) => filter.type === "codeOrName")
+      .map((filter) => filter.label);
+    const namesPass = namesNeeded.every((name) =>
+      gameSettings.playerSettings.some((p) =>
         [
           p.connectCode?.toLowerCase(),
           p.displayName?.toLowerCase(),
@@ -368,7 +368,7 @@ export function setFilters(filters: Filter[]) {
     "filteredIndexes",
     filters.length === 0
       ? undefined
-      : filterResults.map(settings => gameSettings().indexOf(settings))
+      : filterResults.map((settings) => gameSettings().indexOf(settings))
   );
 }
 
@@ -422,9 +422,9 @@ const startFrame = Number.isNaN(frameParse) ? 0 : frameParse;
 if (url) {
   try {
     fetch(url)
-      .then(response => response.blob())
-      .then(blob => new File([blob], url.split("/").at(-1) ?? "url.slp"))
-      .then(file => load([file], startFrame));
+      .then((response) => response.blob())
+      .then((blob) => new File([blob], url.split("/").at(-1) ?? "url.slp"))
+      .then((file) => load([file], startFrame));
   } catch (e) {
     console.error("Error: could not load replay", url, e);
   }

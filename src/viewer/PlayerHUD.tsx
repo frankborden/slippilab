@@ -15,14 +15,14 @@ export function PlayerHUD(props: { player: number }) {
   const color = createMemo(() => getPlayerColor(props.player));
   const name = createMemo(() =>
     [
-      playerSettings().find(s => s.playerIndex === props.player)?.displayName,
-      playerSettings().find(s => s.playerIndex === props.player)?.connectCode,
-      playerSettings().find(s => s.playerIndex === props.player)?.nametag,
-      playerSettings().find(s => s.playerIndex === props.player)?.playerType ===
-      1
+      playerSettings().find((s) => s.playerIndex === props.player)?.displayName,
+      playerSettings().find((s) => s.playerIndex === props.player)?.connectCode,
+      playerSettings().find((s) => s.playerIndex === props.player)?.nametag,
+      playerSettings().find((s) => s.playerIndex === props.player)
+        ?.playerType === 1
         ? "CPU"
         : characterNameByInternalId[playerState()?.internalCharacterId],
-    ].find(n => n && n.length > 0)
+    ].find((n) => n && n.length > 0)
   );
   return (
     <>
@@ -103,7 +103,7 @@ export function PlayerHUD(props: { player: number }) {
             textContent={
               renderDatas()[
                 playerSettings().findIndex(
-                  ps => ps.playerIndex === props.player
+                  (ps) => ps.playerIndex === props.player
                 )
               ].animationName
             }

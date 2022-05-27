@@ -21,7 +21,7 @@ export function isMatchup(matchup: Matchup): GamePredicate {
 export function isCharacter(character: ExternalCharacterName): GamePredicate {
   return (game: ReplayData, playerIndex: number) =>
     game.settings.playerSettings.some(
-      playerSettings =>
+      (playerSettings) =>
         playerSettings.playerIndex === playerIndex &&
         playerSettings.externalCharacterId ===
           characterNameByExternalId.indexOf(character)
@@ -31,7 +31,7 @@ export function isCharacter(character: ExternalCharacterName): GamePredicate {
 export function vsCharacter(character: ExternalCharacterName): GamePredicate {
   return (game: ReplayData, playerIndex: number) =>
     game.settings.playerSettings.some(
-      playerSettings =>
+      (playerSettings) =>
         playerSettings.playerIndex !== playerIndex &&
         playerSettings.externalCharacterId ===
           characterNameByExternalId.indexOf(character)
@@ -55,15 +55,15 @@ const tournamentStages: Stage[] = [
 export function isTournamentStage(game: ReplayData, _playerIndex: number) {
   return (
     tournamentStages
-      .map(stage => stageNameByExternalId.indexOf(stage))
-      .filter(stageId => stageId === game.settings.stageId).length > 0
+      .map((stage) => stageNameByExternalId.indexOf(stage))
+      .filter((stageId) => stageId === game.settings.stageId).length > 0
   );
 }
 
 export function hasConnectCode(connectCode: string): GamePredicate {
   return (game: ReplayData, playerIndex: number): boolean =>
     game.settings.playerSettings.some(
-      playerSettings =>
+      (playerSettings) =>
         playerSettings.playerIndex === playerIndex &&
         playerSettings.connectCode === connectCode
     ) ?? false;

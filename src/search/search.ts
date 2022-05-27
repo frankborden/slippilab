@@ -29,9 +29,9 @@ export function search(
   query: Query,
   always?: Predicate
 ): Highlight[] {
-  return replay.settings.playerSettings.flatMap(playerSettings => {
+  return replay.settings.playerSettings.flatMap((playerSettings) => {
     const alwaysSequence = always
-      ? replay.frames.map(frame =>
+      ? replay.frames.map((frame) =>
           always(playerSettings.playerIndex, frame.frameNumber, replay)
         )
       : undefined;
@@ -41,8 +41,8 @@ export function search(
     return (
       query
         // apply all the predicates to every frame
-        .map(queryPart =>
-          replay.frames.map(frame =>
+        .map((queryPart) =>
+          replay.frames.map((frame) =>
             queryPart.predicate(
               playerSettings.playerIndex,
               frame.frameNumber,
@@ -79,7 +79,7 @@ export function search(
         .filter(
           (highlight, index, highlights) =>
             index ===
-            highlights.findIndex(h => h.endFrame === highlight.endFrame)
+            highlights.findIndex((h) => h.endFrame === highlight.endFrame)
         )
         // deduplicate by firstFrame. Keep the last one because it's the
         // longest.
@@ -87,7 +87,7 @@ export function search(
           (highlight, index, highlights) =>
             index ===
             findLastIndex(
-              h => h.startFrame === highlight.startFrame,
+              (h) => h.startFrame === highlight.startFrame,
               highlights
             )
         )
@@ -137,7 +137,7 @@ function combineStreaks(
   return (
     aStreaks
       // cross product
-      .flatMap(f => bStreaks.map((s): [Streak, Streak] => [f, s]))
+      .flatMap((f) => bStreaks.map((s): [Streak, Streak] => [f, s]))
       // second streak must start during (or immediately after) first streak
       // unless delayed is true and always streak covers the difference or is
       // absent.

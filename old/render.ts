@@ -1,31 +1,31 @@
-import type { Frame, PlayerSettings, PlayerState } from '@slippilab/common';
-import { actionNameById } from '@slippilab/common';
-import { fetchAnimations } from '../animations';
-import type { CharacterAnimations } from '../animations';
-import { supportedCharactersByInternalId } from '../characters';
-import { characterNamesById, characterNamesByInternalId } from '../common';
-import type { Character } from '../common';
-import type { Render } from '../game';
-import type { Layer, Layers } from '../layer';
+import type { Frame, PlayerSettings, PlayerState } from "@slippilab/common";
+import { actionNameById } from "@slippilab/common";
+import { fetchAnimations } from "../animations";
+import type { CharacterAnimations } from "../animations";
+import { supportedCharactersByInternalId } from "../characters";
+import { characterNamesById, characterNamesByInternalId } from "../common";
+import type { Character } from "../common";
+import type { Render } from "../game";
+import type { Layer, Layers } from "../layer";
 import {
   isInFrame,
   getFacingDirection,
   getFirstFrameOfAnimation,
   getThrowerName,
   getShade,
-} from '../replay';
+} from "../replay";
 
 export const createPlayerRender = async (
   player: PlayerSettings,
   players: PlayerSettings[],
-  isDoubles: boolean,
+  isDoubles: boolean
 ): Promise<Render> => {
   const character = characterNamesById[player.externalCharacterId];
   const animations: { [internalCharacterId: number]: CharacterAnimations } = {};
-  if (character === 'Zelda' || character === 'Sheik') {
+  if (character === "Zelda" || character === "Sheik") {
     animations[19] = await fetchAnimations(18); // Zelda
     animations[7] = await fetchAnimations(19); // Sheik
-  } else if (character === 'Ice Climbers') {
+  } else if (character === "Ice Climbers") {
     animations[10] = await fetchAnimations(14); // Popo
     animations[11] = await fetchAnimations(14); // Nana
   } else {
@@ -38,7 +38,7 @@ export const createPlayerRender = async (
     frame: Frame,
     frames: Frame[],
     isDarkMode: boolean,
-    isDebugMode: boolean,
+    isDebugMode: boolean
   ) => {
     if (!isInFrame(frame, player)) {
       return;
@@ -50,7 +50,7 @@ export const createPlayerRender = async (
       players,
       isDoubles,
       isDarkMode,
-      isDebugMode,
+      isDebugMode
     );
     renderCharacter(
       layers.worldSpace.context,
@@ -60,7 +60,7 @@ export const createPlayerRender = async (
       players,
       isDoubles,
       isDarkMode,
-      animations,
+      animations
     );
     renderShield(
       layers.worldSpace.context,
@@ -68,27 +68,27 @@ export const createPlayerRender = async (
       player,
       players,
       isDoubles,
-      isDarkMode,
+      isDarkMode
     );
     renderShine(layers.worldSpace.context, frame, player);
   };
 };
-const colors = ['#FB2323', '#2266BB', '#FFDD44', '#66BB22'];
+const colors = ["#FB2323", "#2266BB", "#FFDD44", "#66BB22"];
 // darks are untested
 const teamColors = [
-  ['#FB2323', '#FB9999', '#9D0006'],
-  ['#2266BB', '#66AAFF', '#876678'],
-  ['#66BB22', '#AAFF66', '#79740E'],
+  ["#FB2323", "#FB9999", "#9D0006"],
+  ["#2266BB", "#66AAFF", "#876678"],
+  ["#66BB22", "#AAFF66", "#79740E"],
 ];
 
 function getPrimaryColor(
   player: PlayerSettings,
   players: PlayerSettings[],
-  isDoubles: boolean,
+  isDoubles: boolean
 ): string {
   // CPU
   if (player.playerType === 1) {
-    return 'grey';
+    return "grey";
   }
   if (isDoubles) {
     return teamColors[player.teamId][getShade(player.playerIndex, players)];
@@ -99,13 +99,13 @@ function getPrimaryColor(
 
 function getSecondaryColor(
   playerFrame: PlayerState,
-  lCancelStatus: 'successful' | 'missed' | undefined,
+  lCancelStatus: "successful" | "missed" | undefined
 ): string {
-  return playerFrame.hurtboxCollisionState !== 'vulnerable'
-    ? 'blue' // invinc / invuln
-    : lCancelStatus === 'missed'
-    ? 'red' // missed lcanc
-    : 'black';
+  return playerFrame.hurtboxCollisionState !== "vulnerable"
+    ? "blue" // invinc / invuln
+    : lCancelStatus === "missed"
+    ? "red" // missed lcanc
+    : "black";
 }
 
 function renderStocks(
@@ -114,14 +114,14 @@ function renderStocks(
   player: PlayerSettings,
   players: PlayerSettings[],
   isDoubles: boolean,
-  isDarkMode: boolean,
+  isDarkMode: boolean
 ): void {
   // TODO: Handle stock count >4 or non-stock modes
   const playerFrame = frame.players[player.playerIndex].state;
   const stockCount = playerFrame.stocksRemaining;
   screenLayer.context.save();
   screenLayer.context.fillStyle = getPrimaryColor(player, players, isDoubles);
-  screenLayer.context.strokeStyle = isDarkMode ? 'white' : 'black';
+  screenLayer.context.strokeStyle = isDarkMode ? "white" : "black";
   for (let stockIndex = 0; stockIndex < stockCount; stockIndex++) {
     const x = ((stockIndex - 2) * screenLayer.canvas.width) / 40;
     const y = 0;
@@ -141,7 +141,7 @@ function renderPercent(
   player: PlayerSettings,
   players: PlayerSettings[],
   isDoubles: boolean,
-  isDarkMode: boolean,
+  isDarkMode: boolean
 ): void {
   const playerFrame = frame.players[player.playerIndex].state;
   const characterData =
@@ -149,15 +149,15 @@ function renderPercent(
   const actionName = actionNameById[playerFrame.actionStateId];
   const animationName =
     characterData.animationMap.get(actionName) ?? actionName;
-  if (animationName?.match('Dead')) {
+  if (animationName?.match("Dead")) {
     return;
   }
   const percent = `${Math.floor(playerFrame.percent)}%`;
   screenLayer.context.save();
   const fontSize = screenLayer.canvas.height / 15;
   screenLayer.context.font = `900 ${fontSize}px Arial`;
-  screenLayer.context.textAlign = 'center';
-  screenLayer.context.strokeStyle = isDarkMode ? 'white' : 'black';
+  screenLayer.context.textAlign = "center";
+  screenLayer.context.strokeStyle = isDarkMode ? "white" : "black";
   screenLayer.context.fillStyle = getPrimaryColor(player, players, isDoubles);
   const x = 0;
   const y = -screenLayer.canvas.height / 10;
@@ -176,7 +176,7 @@ function renderDebugText(
   players: PlayerSettings[],
   isDoubles: boolean,
   isDarkMode: boolean,
-  isDebugMode: boolean,
+  isDebugMode: boolean
 ) {
   if (!isDebugMode) {
     return;
@@ -190,10 +190,10 @@ function renderDebugText(
   screenLayer.context.translate(x, y);
   const debugTexts: string[] = [];
   function drawPlayerStateDebugText(playerFrame: PlayerState) {
-    screenLayer.context.strokeStyle = isDarkMode ? 'white' : 'black';
+    screenLayer.context.strokeStyle = isDarkMode ? "white" : "black";
     screenLayer.context.fillStyle = getPrimaryColor(player, players, isDoubles);
     screenLayer.context.font = `900 ${debugFontSize}px Verdana`;
-    screenLayer.context.textAlign = 'start';
+    screenLayer.context.textAlign = "start";
     if (playerFrame.isNana) {
       debugTexts.push(`isFollower: ${playerFrame.isNana}`);
     }
@@ -202,7 +202,7 @@ function renderDebugText(
       `actionStateCounter: ${playerFrame.actionStateFrameCounter}`,
       `xPosition: ${playerFrame.xPosition}`,
       `yPosition: ${playerFrame.yPosition}`,
-      '',
+      ""
     );
   }
   drawPlayerStateDebugText(frame.players[player.playerIndex].state);
@@ -224,15 +224,15 @@ function renderPlayerDetails(
   player: PlayerSettings,
   players: PlayerSettings[],
   isDoubles: boolean,
-  isDarkMode: boolean,
+  isDarkMode: boolean
 ): void {
   const playerFrame = frame.players[player.playerIndex].state;
   const character = characterNamesByInternalId[playerFrame.internalCharacterId];
   screenLayer.context.save();
   const fontSize = screenLayer.canvas.height / 30;
   screenLayer.context.font = `900 ${fontSize}px Verdana`;
-  screenLayer.context.textAlign = 'center';
-  screenLayer.context.strokeStyle = isDarkMode ? 'white' : 'black';
+  screenLayer.context.textAlign = "center";
+  screenLayer.context.strokeStyle = isDarkMode ? "white" : "black";
   screenLayer.context.fillStyle = getPrimaryColor(player, players, isDoubles);
   const x = 0;
   const y = -screenLayer.canvas.height / 7.5;
@@ -240,7 +240,7 @@ function renderPlayerDetails(
   // flip text back right-side after global flip
   screenLayer.context.scale(1, -1);
 
-  const fallbackName = player.playerType === 1 ? 'CPU' : character;
+  const fallbackName = player.playerType === 1 ? "CPU" : character;
   const name =
     [player.displayName, player.connectCode, player.nametag].find(Boolean) ??
     fallbackName;
@@ -256,7 +256,7 @@ function getAnimationFrame(
   frame: Frame,
   animations: { [internalCharacterId: number]: CharacterAnimations },
   characterData: Character,
-  worldContext: CanvasRenderingContext2D,
+  worldContext: CanvasRenderingContext2D
 ): string | undefined {
   const character = characterNamesById[player.externalCharacterId];
   const characterAnimations = animations[playerFrame.internalCharacterId];
@@ -268,7 +268,7 @@ function getAnimationFrame(
   } else if (actionName) {
     animationName = characterData.animationMap.get(actionName) ?? actionName;
   }
-  if (animationName?.match('Thrown')) {
+  if (animationName?.match("Thrown")) {
     const direction = animationName.match(/[A-Z][a-z]*$/g);
     const opponent = getThrowerName(player, direction![0], frame);
     animationName = `T${opponent}Throw${direction}`;
@@ -282,9 +282,9 @@ function getAnimationFrame(
       : 0;
   const animationFrames = animationName
     ? characterAnimations[animationName] ??
-      characterAnimations['Appeal'] ??
-      characterAnimations['AppealL']
-    : characterAnimations['Appeal'] ?? characterAnimations['AppealL'];
+      characterAnimations["Appeal"] ??
+      characterAnimations["AppealL"]
+    : characterAnimations["Appeal"] ?? characterAnimations["AppealL"];
   const animationIndex =
     Math.max(Math.floor(playerFrame.actionStateFrameCounter + firstIndex), 0) %
     animationFrames.length;
@@ -297,7 +297,7 @@ function getAnimationFrame(
     playerFrame,
     frames,
     animationName,
-    character,
+    character
   );
   worldContext.scale(facingDirection, 1);
   const isSpacieUpBMovementAction =
@@ -330,7 +330,7 @@ function getAnimationFrame(
   }
 
   const animationString = animationFrames[animationIndex];
-  if (animationString?.startsWith('frame')) {
+  if (animationString?.startsWith("frame")) {
     const referencedFrameIndex = Number(animationString.substr(5));
     return animationFrames[referencedFrameIndex];
   }
@@ -345,7 +345,7 @@ function renderCharacter(
   players: PlayerSettings[],
   isDoubles: boolean,
   isDarkMode: boolean,
-  animations: { [internalCharacterId: number]: CharacterAnimations },
+  animations: { [internalCharacterId: number]: CharacterAnimations }
 ): void {
   function drawPlayerFrame(playerFrame: PlayerState) {
     worldContext.save();
@@ -355,7 +355,7 @@ function renderCharacter(
 
     const lCancelStatus = getFirstFrameOfAnimation(
       playerFrame,
-      frames,
+      frames
     ).lCancelStatus;
     const primaryColor = getPrimaryColor(player, players, isDoubles);
     const secondaryColor = getSecondaryColor(playerFrame, lCancelStatus);
@@ -371,7 +371,7 @@ function renderCharacter(
       frame,
       animations,
       characterData,
-      worldContext,
+      worldContext
     );
     if (!animationFrame) {
       worldContext.restore();
@@ -399,7 +399,7 @@ function renderShield(
   player: PlayerSettings,
   players: PlayerSettings[],
   isDoubles: boolean,
-  isDarkMode: boolean,
+  isDarkMode: boolean
 ): void {
   function drawPlayerFrame(playerFrame: PlayerState) {
     const characterData =
@@ -413,7 +413,7 @@ function renderShield(
     worldContext.save();
     worldContext.globalAlpha = 0.75;
     worldContext.fillStyle = getPrimaryColor(player, players, isDoubles);
-    worldContext.strokeStyle = isDarkMode ? 'white' : 'black';
+    worldContext.strokeStyle = isDarkMode ? "white" : "black";
     const shieldHealthPercent = playerFrame.shieldSize / 60;
     worldContext.translate(playerFrame.xPosition, playerFrame.yPosition);
     worldContext.scale(playerFrame.facingDirection, 1);
@@ -421,7 +421,7 @@ function renderShield(
     worldContext.lineWidth /= characterData.scale;
     worldContext.translate(
       characterData.shieldOffset.x,
-      characterData.shieldOffset.y,
+      characterData.shieldOffset.y
     );
     // TODO: Seems to be some constant added because shield break happens before
     // radius 0.
@@ -443,21 +443,21 @@ function renderShield(
 function renderShine(
   worldContext: CanvasRenderingContext2D,
   frame: Frame,
-  player: PlayerSettings,
+  player: PlayerSettings
 ): void {
   const playerFrame = frame.players[player.playerIndex].state;
   const character = characterNamesByInternalId[playerFrame.internalCharacterId];
   const characterData =
     supportedCharactersByInternalId[playerFrame.internalCharacterId];
   if (
-    (character !== 'Fox' && character !== 'Falco') ||
+    (character !== "Fox" && character !== "Falco") ||
     playerFrame.actionStateId < 360 ||
     playerFrame.actionStateId > 369
   ) {
     return;
   }
   worldContext.save();
-  worldContext.strokeStyle = 'deepskyblue';
+  worldContext.strokeStyle = "deepskyblue";
   worldContext.lineWidth *= 5;
 
   worldContext.translate(playerFrame.xPosition, playerFrame.yPosition);
@@ -466,7 +466,7 @@ function renderShine(
   worldContext.lineWidth /= characterData.scale;
   worldContext.translate(
     characterData.shieldOffset.x,
-    characterData.shieldOffset.y,
+    characterData.shieldOffset.y
   );
   // world space --> shine space
   // shine is just 0.9 * shield size
@@ -487,7 +487,7 @@ function drawHexagon(radius: number, worldContext: CanvasRenderingContext2D) {
   for (var hexPart = 0; hexPart < 6; hexPart++) {
     worldContext.lineTo(
       radius * Math.sin(sixths * (hexPart + 1)),
-      radius * Math.cos(sixths * (hexPart + 1)),
+      radius * Math.cos(sixths * (hexPart + 1))
     );
   }
   worldContext.closePath();
@@ -501,7 +501,7 @@ function renderUi(
   players: PlayerSettings[],
   isDoubles: boolean,
   isDarkMode: boolean,
-  isDebugMode: boolean,
+  isDebugMode: boolean
 ): void {
   screenLayer.context.save();
   renderDebugText(
@@ -511,7 +511,7 @@ function renderUi(
     players,
     isDoubles,
     isDarkMode,
-    isDebugMode,
+    isDebugMode
   );
   const playerUiX = screenLayer.canvas.width * 0.2 * (player.playerIndex + 1);
   const playerUiY = screenLayer.canvas.height / 4;
@@ -524,7 +524,7 @@ function renderUi(
     player,
     players,
     isDoubles,
-    isDarkMode,
+    isDarkMode
   );
 
   screenLayer.context.restore();

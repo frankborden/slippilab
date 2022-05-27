@@ -38,12 +38,12 @@ export function Camera(props: PropsWithChildren) {
     // scale both axes based on the most zoomed out one.
     const scaling = Math.min(640 / xRange, 480 / yRange);
 
-    setCenter(oldCenter => [
+    setCenter((oldCenter) => [
       smooth(oldCenter?.[0] ?? newCenterX, newCenterX, followSpeeds[0]),
       smooth(oldCenter?.[1] ?? newCenterY, newCenterY, followSpeeds[1]),
     ]);
     setScale(
-      oldScaling =>
+      (oldScaling) =>
         store.zoom * smooth(oldScaling ?? 1, scaling, Math.max(...followSpeeds))
     );
   });
