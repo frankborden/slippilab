@@ -83,7 +83,7 @@ export const donkeyKong: Character = {
     ["LightThrowLw4", "LightThrowLw"],
     ["Rebirth", "Entry"],
     ["RebirthWait", "Wait"],
-    ["ReboundStop", ""],
+    ["ReboundStop", "Rebound"],
     ["RunDirect", ""],
     ["ShieldBreakDownD", "DownBoundD"],
     ["ShieldBreakDownU", "DownBoundU"],

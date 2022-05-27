@@ -83,7 +83,7 @@ export const zelda: Character = {
     ["LightThrowLw4", "LightThrowLw"],
     ["Rebirth", "Entry"],
     ["RebirthWait", "Wait1"],
-    ["ReboundStop", ""],
+    ["ReboundStop", "Rebound"],
     ["RunDirect", ""],
     ["ShieldBreakDownD", "DownBoundD"],
     ["ShieldBreakDownU", "DownBoundU"],
