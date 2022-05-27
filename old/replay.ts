@@ -1,36 +1,36 @@
-import type { Frame, PlayerSettings, PlayerState } from "@slippilab/common";
-import { actionNameById } from "@slippilab/common";
-import { isOneIndexed } from "./animations";
-import { characterNamesByInternalId } from "./common";
-import type { CharacterName } from "./common";
+import type { Frame, PlayerSettings, PlayerState } from '@slippilab/common'
+import { actionNameById } from '@slippilab/common'
+import { isOneIndexed } from './animations'
+import { characterNamesByInternalId } from './common'
+import type { CharacterName } from './common'
 
-export function isInFrame(frame: Frame, player: PlayerSettings): boolean {
-  return Boolean(frame.players[player.playerIndex]);
+export function isInFrame (frame: Frame, player: PlayerSettings): boolean {
+  return Boolean(frame.players[player.playerIndex])
 }
 
-export function getFirstFrameOfAnimation(
+export function getFirstFrameOfAnimation (
   playerFrame: PlayerState,
   frames: Frame[]
 ): PlayerState {
-  let frameIndex = playerFrame.frameNumber - 1;
-  let pastConfirmedFrame = playerFrame;
+  let frameIndex = playerFrame.frameNumber - 1
+  let pastConfirmedFrame = playerFrame
   let pastFrameToCheck = playerFrame.isNana
     ? frames[frameIndex]?.players?.[playerFrame.playerIndex]?.nanaState
-    : frames[frameIndex]?.players?.[playerFrame.playerIndex]?.state;
+    : frames[frameIndex]?.players?.[playerFrame.playerIndex]?.state
   while (
     pastFrameToCheck &&
     pastFrameToCheck.actionStateId === playerFrame.actionStateId
   ) {
-    pastConfirmedFrame = pastFrameToCheck;
-    frameIndex--;
+    pastConfirmedFrame = pastFrameToCheck
+    frameIndex--
     pastFrameToCheck = playerFrame.isNana
       ? frames[frameIndex]?.players?.[playerFrame.playerIndex]?.nanaState
-      : frames[frameIndex]?.players?.[playerFrame.playerIndex]?.state;
+      : frames[frameIndex]?.players?.[playerFrame.playerIndex]?.state
   }
-  return pastConfirmedFrame;
+  return pastConfirmedFrame
 }
 
-export function getFrameIndexFromDuration(
+export function getFrameIndexFromDuration (
   playerFrame: PlayerState,
   frames: Frame[],
   player: PlayerSettings
@@ -40,16 +40,16 @@ export function getFrameIndexFromDuration(
     playerFrame.actionStateId
   )
     ? 1
-    : 0;
-  const firstFrame = getFirstFrameOfAnimation(playerFrame, frames);
-  const framesInAnimation = playerFrame.frameNumber - firstFrame.frameNumber;
+    : 0
+  const firstFrame = getFirstFrameOfAnimation(playerFrame, frames)
+  const framesInAnimation = playerFrame.frameNumber - firstFrame.frameNumber
   return (
-    framesInAnimation * (firstFrame.lCancelStatus === "successful" ? 2 : 1) -
+    framesInAnimation * (firstFrame.lCancelStatus === 'successful' ? 2 : 1) -
     firstIndex
-  );
+  )
 }
 
-export function getFacingDirection(
+export function getFacingDirection (
   playerFrame: PlayerState,
   frames: Frame[],
   animationName: string,
@@ -62,33 +62,33 @@ export function getFacingDirection(
   // animation needs to compensate for it. In those cases we need to respect the
   // -current- facingDirection.
   const maybeMidairJumpTurnaround =
-    ["Jigglypuff", "Kirby", "Yoshi"].includes(character) &&
-    animationName.includes("Jump");
+    ['Jigglypuff', 'Kirby', 'Yoshi'].includes(character) &&
+    animationName.includes('Jump')
   const maybeUpBTurnaround =
-    animationName === "SpecialHi" || animationName === "SpecialAirHi";
+    animationName === 'SpecialHi' || animationName === 'SpecialAirHi'
   if (maybeUpBTurnaround || maybeMidairJumpTurnaround) {
-    return playerFrame.facingDirection;
+    return playerFrame.facingDirection
   }
-  return getFirstFrameOfAnimation(playerFrame, frames).facingDirection;
+  return getFirstFrameOfAnimation(playerFrame, frames).facingDirection
 }
 
-export function getThrowerName(
+export function getThrowerName (
   player: PlayerSettings,
   throwDirection: string,
   frame: Frame
 ): string {
-  const throwerAnimationName = `Throw${throwDirection}`;
+  const throwerAnimationName = `Throw${throwDirection}`
   for (let i = 0; i < 4; i++) {
     if (i === player.playerIndex) {
-      continue;
+      continue
     }
-    const otherPlayerFrame = frame.players[i];
+    const otherPlayerFrame = frame.players[i]
     if (!otherPlayerFrame) {
-      continue;
+      continue
     }
-    const otherPlayerStates = [otherPlayerFrame.state];
+    const otherPlayerStates = [otherPlayerFrame.state]
     if (otherPlayerFrame.nanaState) {
-      otherPlayerStates.push(otherPlayerFrame.nanaState);
+      otherPlayerStates.push(otherPlayerFrame.nanaState)
     }
     for (const otherPlayerState of otherPlayerStates) {
       // this could be wrong if there's multiple of the same throw happening. I
@@ -97,29 +97,29 @@ export function getThrowerName(
         actionNameById[otherPlayerState.actionStateId] === throwerAnimationName
       ) {
         const throwerName =
-          characterNamesByInternalId[otherPlayerState.internalCharacterId];
+          characterNamesByInternalId[otherPlayerState.internalCharacterId]
         switch (throwerName) {
-          case "Fox":
-            return "Fox";
-          case "Captain Falcon":
-            return "Captain";
-          case "Falco":
-            return "Falco";
-          case "Jigglypuff":
-            return "Mars";
-          case "Marth":
-            return "Mars";
-          case "Sheik":
-            return "Seak";
+          case 'Fox':
+            return 'Fox'
+          case 'Captain Falcon':
+            return 'Captain'
+          case 'Falco':
+            return 'Falco'
+          case 'Jigglypuff':
+            return 'Mars'
+          case 'Marth':
+            return 'Mars'
+          case 'Sheik':
+            return 'Seak'
         }
       }
     }
   }
-  console.log("Failed to find thrower", player.playerIndex, throwDirection);
-  return "FOX";
+  console.log('Failed to find thrower', player.playerIndex, throwDirection)
+  return 'FOX'
 }
 
-export function getShade(
+export function getShade (
   playerIndex: number,
   players: PlayerSettings[]
 ): number {
@@ -128,5 +128,5 @@ export function getShade(
       player.playerIndex < playerIndex &&
       player.externalCharacterId === players[playerIndex].externalCharacterId &&
       player.teamId === players[playerIndex].teamId
-  ).length;
+  ).length
 }

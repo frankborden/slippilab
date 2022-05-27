@@ -36,38 +36,38 @@
  *
  * Runtime for me: 3.5 hours
  */
-const inputRoot = process.argv[3];
-const outputRoot = process.argv[4];
+const inputRoot = process.argv[3]
+const outputRoot = process.argv[4]
 if (inputRoot === undefined || outputRoot === undefined) {
-  console.log("please provide input and output roots");
-  process.exit(1);
+  console.log('please provide input and output roots')
+  process.exit(1)
 }
 
-await fs.emptyDir(outputRoot);
-const animationDirectories = await fs.readdir(inputRoot);
+await fs.emptyDir(outputRoot)
+const animationDirectories = await fs.readdir(inputRoot)
 for (const animationName of animationDirectories) {
   const trimmedAnimationName = animationName.match(
     /.*_ACTION_(.*)_figatree.*/
-  )[1];
-  const animationInputDirectory = path.join(inputRoot, animationName);
-  const animationOutputDirectory = path.join(outputRoot, trimmedAnimationName);
-  await fs.ensureDir(animationOutputDirectory);
+  )[1]
+  const animationInputDirectory = path.join(inputRoot, animationName)
+  const animationOutputDirectory = path.join(outputRoot, trimmedAnimationName)
+  await fs.ensureDir(animationOutputDirectory)
 
-  const animationBmps = await fs.readdir(animationInputDirectory);
+  const animationBmps = await fs.readdir(animationInputDirectory)
   await Promise.all(
     animationBmps.map((animationBmp) => {
       const frameNumber = Number(
         animationBmp.match(/.*_figatree_([0-9]+)_tmp.bmp/)[1]
-      );
+      )
       const animationBmpInputPath = path.join(
         animationInputDirectory,
         animationBmp
-      );
+      )
       const animationSvgOutputPath = path.join(
         animationOutputDirectory,
         `${frameNumber}.svg`
-      );
-      return $`potrace --svg --opaque ${animationBmpInputPath} -o ${animationSvgOutputPath}`;
+      )
+      return $`potrace --svg --opaque ${animationBmpInputPath} -o ${animationSvgOutputPath}`
     })
-  );
+  )
 }

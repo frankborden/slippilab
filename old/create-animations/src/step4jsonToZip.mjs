@@ -19,11 +19,11 @@
  * Runtime for me: 2 seconds
  */
 
-const inputRoot = process.argv[3];
-const outputRoot = process.argv[4];
+const inputRoot = process.argv[3]
+const outputRoot = process.argv[4]
 if (inputRoot === undefined || outputRoot === undefined) {
-  console.log("please provide input and output roots");
-  process.exit(1);
+  console.log('please provide input and output roots')
+  process.exit(1)
 }
-await fs.emptyDir(outputRoot);
-await $`zip -r9j ${path.join(outputRoot, "animations.zip")} ${inputRoot}`;
+await fs.emptyDir(outputRoot)
+await $`zip -r9j ${path.join(outputRoot, 'animations.zip')} ${inputRoot}`

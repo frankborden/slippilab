@@ -1,87 +1,87 @@
-import { splitEvery } from "rambda";
-import { stageNameByExternalId } from "./common/ids";
-import { GameSettings, parseGameSettings } from "./parser/parser";
+import { splitEvery } from 'rambda'
+import { stageNameByExternalId } from './common/ids'
+import { GameSettings, parseGameSettings } from './parser/parser'
 
 onmessage = async (event) => {
   // Parse in groups of 500 replays at a time to prevent memory issues.
-  const parsedSettings: [File, GameSettings | "skipped" | "failed"][] = [];
-  const fileGroups = splitEvery<File>(500, event.data.payload);
+  const parsedSettings: Array<[File, GameSettings | 'skipped' | 'failed']> = []
+  const fileGroups = splitEvery<File>(500, event.data.payload)
   for (const fileGroup of fileGroups) {
     parsedSettings.push(
       ...(await Promise.all(
         fileGroup.map(
           async (
             file: File
-          ): Promise<[File, GameSettings | "skipped" | "failed"]> => {
+          ): Promise<[File, GameSettings | 'skipped' | 'failed']> => {
             try {
-              const settings = parseGameSettings(await file.arrayBuffer());
+              const settings = parseGameSettings(await file.arrayBuffer())
               if (isLegalGameWithoutCPUs(settings)) {
-                return [file, settings];
+                return [file, settings]
               } else {
-                return [file, "skipped"];
+                return [file, 'skipped']
               }
             } catch (e) {
-              console.error(e);
-              return [file, "failed"];
+              console.error(e)
+              return [file, 'failed']
             } finally {
               // signal progress to the UI
               postMessage({
-                id: event.data.id,
-              });
+                id: event.data.id
+              })
             }
           }
         )
       ))
-    );
+    )
   }
   const goodFilesAndSettings = parsedSettings
     .filter(
       (fileAndSettings): fileAndSettings is [File, GameSettings] =>
-        fileAndSettings[1] !== "failed" && fileAndSettings[1] !== "skipped"
+        fileAndSettings[1] !== 'failed' && fileAndSettings[1] !== 'skipped'
     )
     .sort(([, a], [, b]) =>
       a.startTimestamp > b.startTimestamp
         ? 1
         : a.startTimestamp === b.startTimestamp
-        ? 0
-        : -1
-    );
+          ? 0
+          : -1
+    )
   const failedFilenames = parsedSettings
-    .filter(([, settings]) => settings === "failed")
-    .map(([file]) => file.name);
+    .filter(([, settings]) => settings === 'failed')
+    .map(([file]) => file.name)
   const skipCount = parsedSettings.filter(
-    ([, settings]) => settings === "skipped"
-  ).length;
+    ([, settings]) => settings === 'skipped'
+  ).length
   postMessage({
     id: event.data.id,
     payload: {
       goodFilesAndSettings,
       skipCount,
-      failedFilenames,
-    },
-  });
-};
+      failedFilenames
+    }
+  })
+}
 
-function isLegalGameWithoutCPUs(gameSettings: GameSettings): boolean {
-  const stageName = stageNameByExternalId[gameSettings.stageId];
+function isLegalGameWithoutCPUs (gameSettings: GameSettings): boolean {
+  const stageName = stageNameByExternalId[gameSettings.stageId]
   if (
     ![
-      "Battlefield",
-      "Fountain of Dreams",
+      'Battlefield',
+      'Fountain of Dreams',
       "Yoshi's Story",
-      "Dream Land N64",
-      "Pokémon Stadium",
-      "Final Destination",
+      'Dream Land N64',
+      'Pokémon Stadium',
+      'Final Destination'
     ].includes(stageName)
   ) {
-    return false;
+    return false
   }
   if (
     gameSettings.playerSettings
       .filter((p) => p)
       .some((p) => p.playerType === 1 || p.externalCharacterId >= 26)
   ) {
-    return false;
+    return false
   }
-  return true;
+  return true
 }

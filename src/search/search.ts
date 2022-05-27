@@ -1,43 +1,43 @@
-import { findLastIndex } from "rambda";
-import type { ReplayData } from "../common/types";
-import { Predicate } from "./framePredicates";
+import { findLastIndex } from 'rambda'
+import type { ReplayData } from '../common/types'
+import { Predicate } from './framePredicates'
 
 export interface Highlight {
-  playerIndex: number;
-  startFrame: number;
-  endFrame: number;
+  playerIndex: number
+  startFrame: number
+  endFrame: number
 }
 
 /** */
 export interface QueryPart {
-  predicate: Predicate;
-  minimumLength?: number;
-  delayed?: boolean;
+  predicate: Predicate
+  minimumLength?: number
+  delayed?: boolean
 }
 
 /** */
-export type Query = QueryPart[];
+export type Query = QueryPart[]
 
 /** */
-export type Bounds = [number, number];
+export type Bounds = [number, number]
 
-type Streak = [number, number, number];
+type Streak = [number, number, number]
 
 /** */
-export function search(
+export function search (
   replay: ReplayData,
   query: Query,
   always?: Predicate
 ): Highlight[] {
   return replay.settings.playerSettings.flatMap((playerSettings) => {
-    const alwaysSequence = always
+    const alwaysSequence = (always != null)
       ? replay.frames.map((frame) =>
-          always(playerSettings.playerIndex, frame.frameNumber, replay)
-        )
-      : undefined;
-    const alwaysStreaks = alwaysSequence
+        always(playerSettings.playerIndex, frame.frameNumber, replay)
+      )
+      : undefined
+    const alwaysStreaks = (alwaysSequence != null)
       ? getStreaks(alwaysSequence, 1)
-      : undefined;
+      : undefined
     return (
       query
         // apply all the predicates to every frame
@@ -72,7 +72,7 @@ export function search(
           ([start, _, end]): Highlight => ({
             playerIndex: playerSettings.playerIndex,
             startFrame: start,
-            endFrame: end,
+            endFrame: end
           })
         )
         // deduplicate by endFrame. Keep the first one because it's the longest.
@@ -91,44 +91,44 @@ export function search(
               highlights
             )
         )
-    );
-  });
+    )
+  })
 }
 
 // [start, minimumReached, failed]
-function getStreaks(
+function getStreaks (
   predicateSequence: boolean[],
   minimumLength: number,
   alwaysSequence?: boolean[]
 ): Streak[] {
-  const streaks: Streak[] = [];
-  let startAt: number | undefined;
-  let minimumReachedAt: number | undefined;
+  const streaks: Streak[] = []
+  let startAt: number | undefined
+  let minimumReachedAt: number | undefined
   for (let i = 0; i < predicateSequence.length; i++) {
     if (
       predicateSequence[i] &&
       (alwaysSequence === undefined || alwaysSequence[i])
     ) {
-      startAt = startAt ?? i;
+      startAt = startAt ?? i
       if (i - startAt + 1 >= minimumLength) {
-        minimumReachedAt = minimumReachedAt ?? i;
+        minimumReachedAt = minimumReachedAt ?? i
       }
     } else if (startAt !== undefined) {
       if (minimumReachedAt !== undefined) {
-        streaks.push([startAt, minimumReachedAt, i]);
+        streaks.push([startAt, minimumReachedAt, i])
       }
-      startAt = undefined;
-      minimumReachedAt = undefined;
+      startAt = undefined
+      minimumReachedAt = undefined
     }
   }
   // check for final streak that wasn't terminated
   if (minimumReachedAt !== undefined && startAt !== undefined) {
-    streaks.push([startAt, minimumReachedAt, predicateSequence.length]);
+    streaks.push([startAt, minimumReachedAt, predicateSequence.length])
   }
-  return streaks;
+  return streaks
 }
 
-function combineStreaks(
+function combineStreaks (
   aStreaks: Streak[],
   bStreaks: Streak[],
   delayed: boolean,
@@ -156,7 +156,7 @@ function combineStreaks(
       .map(([[aStart, _1, _2], [_3, bMinimum, bFail]]) => [
         aStart,
         bMinimum,
-        bFail,
+        bFail
       ])
-  );
+  )
 }

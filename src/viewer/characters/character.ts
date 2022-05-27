@@ -1,9 +1,9 @@
-import { ActionName } from "../../common/ids";
+import { ActionName } from '../../common/ids'
 
 export interface Character {
-  scale: number;
-  shieldOffset: [number, number];
+  scale: number
+  shieldOffset: [number, number]
   shieldSize: number; // Model Size * Shield Size attributes
-  animationMap: Map<ActionName, string>;
-  specialsMap: Map<number, string>;
+  animationMap: Map<ActionName, string>
+  specialsMap: Map<number, string>
 }

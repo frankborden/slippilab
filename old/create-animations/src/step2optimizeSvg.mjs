@@ -18,16 +18,16 @@
  * Runtime for me: 4.8 minutes
  */
 
-const inputRoot = process.argv[3];
-const outputRoot = process.argv[4];
+const inputRoot = process.argv[3]
+const outputRoot = process.argv[4]
 if (inputRoot === undefined || outputRoot === undefined) {
-  console.log("please provide input and output roots");
-  process.exit(1);
+  console.log('please provide input and output roots')
+  process.exit(1)
 }
-await fs.emptyDir(outputRoot);
-const animationDirectories = await fs.readdir(inputRoot);
+await fs.emptyDir(outputRoot)
+const animationDirectories = await fs.readdir(inputRoot)
 for (const animationName of animationDirectories) {
-  const animationInputDirectory = path.join(inputRoot, animationName);
-  const animationOutputDirectory = path.join(outputRoot, animationName);
-  await $`svgo -f ${animationInputDirectory} -o ${animationOutputDirectory} -p 1 --multipass --config svgo.config.js`;
+  const animationInputDirectory = path.join(inputRoot, animationName)
+  const animationOutputDirectory = path.join(outputRoot, animationName)
+  await $`svgo -f ${animationInputDirectory} -o ${animationOutputDirectory} -p 1 --multipass --config svgo.config.js`
 }

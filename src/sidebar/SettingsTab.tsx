@@ -7,15 +7,15 @@ import {
   Th,
   Thead,
   Tr,
-  VStack,
-} from "@hope-ui/solid";
+  VStack
+} from '@hope-ui/solid'
 
-export function SettingsTab() {
+export function SettingsTab () {
   return (
     <>
-      <VStack overflowY="auto" gap="$2">
+      <VStack overflowY='auto' gap='$2'>
         <Table>
-          <TableCaption placement="top">Playback Shortcuts</TableCaption>
+          <TableCaption placement='top'>Playback Shortcuts</TableCaption>
           <Thead>
             <Tr>
               <Th>Shortcut</Th>
@@ -88,13 +88,13 @@ export function SettingsTab() {
             </Tr>
             <Tr>
               <Td>
-                <Kbd>[</Kbd>/<Kbd>{"{"}</Kbd>
+                <Kbd>[</Kbd>/<Kbd>{'{'}</Kbd>
               </Td>
               <Td>Play previous file</Td>
             </Tr>
             <Tr>
               <Td>
-                <Kbd>]</Kbd>/<Kbd>{"}"}</Kbd>
+                <Kbd>]</Kbd>/<Kbd>{'}'}</Kbd>
               </Td>
               <Td>Play next file</Td>
             </Tr>
@@ -120,5 +120,5 @@ export function SettingsTab() {
         </Table>
       </VStack>
     </>
-  );
+  )
 }

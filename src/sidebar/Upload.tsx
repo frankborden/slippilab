@@ -1,4 +1,4 @@
-import { load, store } from "../state";
+import { load, store } from '../state'
 import {
   hope,
   Button,
@@ -18,55 +18,55 @@ import {
   HStack,
   Anchor,
   Box,
-  notificationService,
-} from "@hope-ui/solid";
-import { createSignal, Show } from "solid-js";
-import { uploadReplay } from "../supabaseClient";
-import { Copy, FileArrowUp, FolderOpen } from "phosphor-solid";
-import { filterFiles } from "../common/util";
+  notificationService
+} from '@hope-ui/solid'
+import { createSignal, Show } from 'solid-js'
+import { uploadReplay } from '../supabaseClient'
+import { Copy, FileArrowUp, FolderOpen } from 'phosphor-solid'
+import { filterFiles } from '../common/util'
 
-export function Upload() {
-  const { isOpen, onOpen, onClose } = createDisclosure();
-  const [isUploading, setIsUploading] = createSignal(false);
-  const [url, setUrl] = createSignal<string | undefined>();
-  const [error, setError] = createSignal<string | undefined>();
+export function Upload () {
+  const { isOpen, onOpen, onClose } = createDisclosure()
+  const [isUploading, setIsUploading] = createSignal(false)
+  const [url, setUrl] = createSignal<string | undefined>()
+  const [error, setError] = createSignal<string | undefined>()
 
-  let fileInput!: HTMLInputElement;
-  let folderInput!: HTMLInputElement;
+  let fileInput!: HTMLInputElement
+  let folderInput!: HTMLInputElement
 
-  async function onFileSelected(e: Event) {
-    const input = e.target as HTMLInputElement;
+  async function onFileSelected (e: Event) {
+    const input = e.target as HTMLInputElement
 
     if (!input.files?.length) {
-      return;
+      return
     }
-    const files = Array.from(input.files);
-    const filteredFiles = await filterFiles(files);
-    load(filteredFiles);
+    const files = Array.from(input.files)
+    const filteredFiles = await filterFiles(files)
+    load(filteredFiles)
   }
 
-  async function onUpload() {
-    setIsUploading(true);
-    onOpen();
-    const file = store.files[store.currentFile];
-    const { id, data, error } = await uploadReplay(file);
-    if (data) {
-      setUrl(`${window.location.origin}/${id}`);
+  async function onUpload () {
+    setIsUploading(true)
+    onOpen()
+    const file = store.files[store.currentFile]
+    const { id, data, error } = await uploadReplay(file)
+    if (data != null) {
+      setUrl(`${window.location.origin}/${id}`)
     } else {
-      setError("Error uploading file");
-      console.error(error);
+      setError('Error uploading file')
+      console.error(error)
     }
-    setIsUploading(false);
+    setIsUploading(false)
   }
 
   return (
     <>
-      <HStack gap="$2">
+      <HStack gap='$2'>
         <Menu>
           <MenuTrigger
             as={Button}
-            variant="subtle"
-            rightIcon={<FolderOpen size="24" />}
+            variant='subtle'
+            rightIcon={<FolderOpen size='24' />}
           >
             Open
           </MenuTrigger>
@@ -82,8 +82,8 @@ export function Upload() {
         <Show when={store.files.length > 0}>
           <Button
             onClick={onUpload}
-            rightIcon={<FileArrowUp size="24" />}
-            variant="subtle"
+            rightIcon={<FileArrowUp size='24' />}
+            variant='subtle'
           >
             Upload
           </Button>
@@ -99,20 +99,20 @@ export function Upload() {
                     when={url() !== undefined}
                     fallback={<div>{error()}</div>}
                   >
-                    <HStack gap="$4">
+                    <HStack gap='$4'>
                       <Anchor>{url()}</Anchor>
                       <Box
-                        cursor="pointer"
+                        cursor='pointer'
                         onClick={() => {
-                          navigator.clipboard.writeText(url()!);
+                          navigator.clipboard.writeText(url()!)
                           notificationService.show({
-                            status: "success",
+                            status: 'success',
                             duration: 1000,
-                            title: "Link copied",
-                          });
+                            title: 'Link copied'
+                          })
                         }}
                       >
-                        <Copy size={24}></Copy>
+                        <Copy size={24} />
                       </Box>
                     </HStack>
                   </Show>
@@ -125,17 +125,17 @@ export function Upload() {
           </ModalContent>
         </Modal>
         <hope.input
-          display="none"
-          type="file"
-          accept=".slp,.zip"
+          display='none'
+          type='file'
+          accept='.slp,.zip'
           multiple
           ref={fileInput}
           onChange={onFileSelected}
         />
         <hope.input
-          display="none"
-          type="file"
-          // @ts-ignore folder input is not standard, but is supported by all
+          display='none'
+          type='file'
+          // @ts-expect-error folder input is not standard, but is supported by all
           // modern browsers
           webkitDirectory
           ref={folderInput}
@@ -143,5 +143,5 @@ export function Upload() {
         />
       </HStack>
     </>
-  );
+  )
 }
