@@ -107,8 +107,6 @@ export const renderDatas = createMemo(() => {
   });
 });
 
-createEffect(() => console.log(renderDatas()));
-
 function computeRenderData(
   playerIndex: number,
   playerUpdate: PlayerUpdate,
