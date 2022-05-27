@@ -20,14 +20,14 @@
  * --$Animation1.json
  * --$Animation2.json
  * --...
- * 
+ *
  * Runtime for me: 7 seconds
  */
 
 const inputRoot = process.argv[3];
 const outputRoot = process.argv[4];
 if (inputRoot === undefined || outputRoot === undefined) {
-  console.log('please provide input and output roots');
+  console.log("please provide input and output roots");
   process.exit(1);
 }
 await fs.emptyDir(outputRoot);
@@ -38,14 +38,14 @@ for (const animationName of animationDirectories) {
 
   const animationSvgs = await fs.readdir(animationInputDirectory);
   animationSvgs.sort((a, b) =>
-    Number(a.replace('.svg', '')) > Number(b.replace('.svg', '')) ? 1 : -1,
+    Number(a.replace(".svg", "")) > Number(b.replace(".svg", "")) ? 1 : -1
   );
   const paths = [];
   for (const animationSvg of animationSvgs) {
     const animationSvgPath = path.join(animationInputDirectory, animationSvg);
-    const animationSvgContents = await fs.readFile(animationSvgPath, 'utf8');
+    const animationSvgContents = await fs.readFile(animationSvgPath, "utf8");
     const pathMatch = animationSvgContents.match(/d="([^"]*)"/);
-    paths.push(pathMatch?.[1] ?? '');
+    paths.push(pathMatch?.[1] ?? "");
   }
   const dedupedPaths = paths.map((path, index) => {
     const firstIndex = paths.indexOf(path);
