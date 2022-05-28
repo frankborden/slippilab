@@ -1,10 +1,10 @@
-import { createMemo, For, Show } from 'solid-js'
+import { JSX, createMemo, For, Show } from 'solid-js'
 import { characterNameByInternalId } from '../common/ids'
 import { frame, store } from '../state'
 import { playerColors, teamColors } from './colors'
 import { playerSettings, renderDatas } from './viewerState'
 
-export function PlayerHUD (props: { player: number }) {
+export function PlayerHUD (props: { player: number }): JSX.Element {
   const playerState = createMemo(
     () => store.replayData!.frames[frame()].players[props.player]?.state
   )
@@ -22,7 +22,7 @@ export function PlayerHUD (props: { player: number }) {
         ?.playerType === 1
         ? 'CPU'
         : characterNameByInternalId[playerState()?.internalCharacterId]
-    ].find((n) => n && n.length > 0)
+    ].find((n) => n !== undefined && n.length > 0)
   )
   return (
     <>
@@ -117,7 +117,7 @@ export function PlayerHUD (props: { player: number }) {
 }
 
 // TODO: dedupe with same code in Player.tsx
-function getPlayerColor (playerIndex: number) {
+function getPlayerColor (playerIndex: number): string {
   if (store.replayData!.settings.isTeams) {
     const teamId =
       store.replayData!.settings.playerSettings[playerIndex].teamId

@@ -1,6 +1,6 @@
 import { BlobReader, BlobWriter, ZipReader } from '@zip.js/zip.js'
 
-export async function filterFiles (files: File[]) {
+export async function filterFiles (files: File[]): Promise<File[]> {
   const slpFiles = files.filter((file) => file.name.endsWith('.slp'))
   const zipFiles = files.filter((file) => file.name.endsWith('.zip'))
   const blobsFromZips = (await Promise.all(zipFiles.map(unzip)))

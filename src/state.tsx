@@ -77,7 +77,7 @@ createEffect(() => setStore('running', running()))
 export const frame = getFrame
 export const gameSettings = getGameSettings
 
-export async function load (files: File[], startFrame: number = 0) {
+export async function load (files: File[], startFrame: number = 0): Promise<void> {
   const [progress, setProgress] = createSignal(0)
   notificationService.show({
     persistent: true,
@@ -153,7 +153,7 @@ export async function load (files: File[], startFrame: number = 0) {
   }
 }
 
-export async function nextFile () {
+export async function nextFile (): Promise<void> {
   const currentIndex =
     (store.filteredIndexes != null) && store.filteredIndexes.length > 0
       ? store.filteredIndexes.indexOf(store.currentFile)
@@ -181,7 +181,7 @@ export async function nextFile () {
   })
 }
 
-export async function previousFile () {
+export async function previousFile (): Promise<void> {
   const currentIndex =
     (store.filteredIndexes != null) && store.filteredIndexes.length > 0
       ? store.filteredIndexes.indexOf(store.currentFile)
@@ -211,7 +211,7 @@ export async function previousFile () {
   })
 }
 
-export async function setFile (fileIndex: number) {
+export async function setFile (fileIndex: number): Promise<void> {
   const replayData = parseReplay(await store.files[fileIndex].arrayBuffer())
   const clips = {
     killCombo: search(replayData, ...killComboQuery),
@@ -229,19 +229,19 @@ export async function setFile (fileIndex: number) {
   })
 }
 
-export function play () {
+export function play (): void {
   start()
 }
 
-export function pause () {
+export function pause (): void {
   stop()
 }
 
-export function togglePause () {
+export function togglePause (): void {
   store.running ? stop() : start()
 }
 
-export function tick () {
+export function tick (): void {
   setFrame(
     pipe(add(framesPerTick()), (frame) =>
       wrap(store.replayData!.frames.length, frame)
@@ -249,86 +249,86 @@ export function tick () {
   )
 }
 
-export function tickBack () {
+export function tickBack (): void {
   setFrame(pipe(dec, (frame) => wrap(store.replayData!.frames.length, frame)))
 }
 
-export function speedNormal () {
+export function speedNormal (): void {
   setFps(60)
   setFramesPerTick(1)
 }
 
-export function speedFast () {
+export function speedFast (): void {
   setFramesPerTick(2)
 }
 
-export function speedSlow () {
+export function speedSlow (): void {
   setFps(30)
 }
 
-export function zoomIn () {
+export function zoomIn (): void {
   setStore('zoom', (z) => z * 1.01)
 }
 
-export function zoomOut () {
+export function zoomOut (): void {
   setStore('zoom', (z) => z / 1.01)
 }
 
-export function toggleDebug () {
+export function toggleDebug (): void {
   setStore('isDebug', (isDebug) => !isDebug)
 }
 
-export function nextClip () {
+export function nextClip (): void {
   const entries = Array.from(Object.entries(store.clips)).flatMap(
     ([name, clips]) => clips.map((clip): [string, Highlight] => [name, clip])
   )
   const newClipIndex = wrap(entries.length, store.currentClip + 1)
-  const [_, newClip] = entries[newClipIndex]
+  const [, newClip] = entries[newClipIndex]
   batch(() => {
     setStore('currentClip', newClipIndex)
     jump(wrap(store.replayData!.frames.length, newClip.startFrame - 30))
   })
 }
 
-export function previousClip () {
+export function previousClip (): void {
   const entries = Array.from(Object.entries(store.clips)).flatMap(
     ([name, clips]) => clips.map((clip): [string, Highlight] => [name, clip])
   )
   const newClipIndex = wrap(entries.length, store.currentClip - 1)
-  const [_, newClip] = entries[newClipIndex]
+  const [, newClip] = entries[newClipIndex]
   batch(() => {
     setStore('currentClip', newClipIndex)
     jump(wrap(store.replayData!.frames.length, newClip.startFrame - 30))
   })
 }
 
-export function setClip (newClipIndex: number) {
+export function setClip (newClipIndex: number): void {
   const entries = Array.from(Object.entries(store.clips)).flatMap(
     ([name, clips]) => clips.map((clip): [string, Highlight] => [name, clip])
   )
-  const [_, newClip] = entries[newClipIndex]
+  const [, newClip] = entries[newClipIndex]
   batch(() => {
     setStore('currentClip', wrap(entries.length, newClipIndex))
     jump(wrap(store.replayData!.frames.length, newClip.startFrame - 30))
   })
 }
 
-export function jump (target: number) {
+export function jump (target: number): void {
   setFrame(wrap(store.replayData!.frames.length, target))
 }
 
 // percent is [0,1]
-export function jumpPercent (percent: number) {
+export function jumpPercent (percent: number): void {
   setFrame(Math.round(store.replayData!.frames.length * percent))
 }
 
-export function adjust (delta: number) {
+export function adjust (delta: number): void {
   setFrame(
     pipe(add(delta), (frame) => wrap(store.replayData!.frames.length, frame))
   )
 }
 
-export function setFilters (filters: Filter[]) {
+export function setFilters (filters: Filter[]): void {
   setStore('filters', filters)
   const filterResults = gameSettings().filter((gameSettings) => {
     const charactersNeeded = map(
@@ -342,7 +342,7 @@ export function setFilters (filters: Filter[]) {
       ([character, amountRequired]) =>
         gameSettings.playerSettings.filter(
           (p) => character === characterNameByExternalId[p.externalCharacterId]
-        ).length == amountRequired
+        ).length === amountRequired
     )
     const stagesToShow = filters
       .filter((filter) => filter.type === 'stage')
@@ -419,9 +419,9 @@ const url = new URLSearchParams(location.search).get('replayUrl')
 const path = location.pathname.slice(1)
 const frameParse = Number(location.hash.split('#').at(-1))
 const startFrame = Number.isNaN(frameParse) ? 0 : frameParse
-if (url) {
+if (url !== null) {
   try {
-    fetch(url)
+    void fetch(url)
       .then(async (response) => await response.blob())
       .then((blob) => new File([blob], url.split('/').at(-1) ?? 'url.slp'))
       .then(async (file) => await load([file], startFrame))
@@ -429,10 +429,10 @@ if (url) {
     console.error('Error: could not load replay', url, e)
   }
 } else if (path !== '') {
-  downloadReplay(path).then(({ data, error }) => {
+  void downloadReplay(path).then(({ data, error }) => {
     if (data != null) {
       const file = new File([data], `${path}.slp`)
-      load([file], startFrame)
+      return load([file], startFrame)
     }
     if (error != null) {
       console.error('Error: could not load replay', error)

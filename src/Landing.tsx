@@ -11,24 +11,25 @@ import {
   VStack
 } from '@hope-ui/solid'
 import { Flask, FolderOpen } from 'phosphor-solid'
+import { JSX } from 'solid-js'
 import { Links } from './common/Links'
 import { filterFiles } from './common/util'
 import { load } from './state'
 import { loadFromSupabase } from './stateUtil'
 
-export function Landing () {
+export function Landing (): JSX.Element {
   let fileInput!: HTMLInputElement
   let folderInput!: HTMLInputElement
 
-  async function onFileSelected (e: Event) {
+  async function onFileSelected (e: Event): Promise<void> {
     const input = e.target as HTMLInputElement
 
-    if (!input.files?.length) {
+    if (input.files === null || input.files.length === 0) {
       return
     }
     const files = Array.from(input.files)
     const filteredFiles = await filterFiles(files)
-    load(filteredFiles)
+    return await load(filteredFiles)
   }
 
   return (

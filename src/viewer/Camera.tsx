@@ -3,12 +3,13 @@ import {
   createEffect,
   createMemo,
   createSignal,
-  PropsWithChildren
+  JSX,
+  ParentProps
 } from 'solid-js'
 import { frame, store } from '../state'
 import { PlayerUpdate } from '../common/types'
 
-export function Camera (props: PropsWithChildren) {
+export function Camera (props: ParentProps): JSX.Element {
   const [center, setCenter] = createSignal<[number, number] | undefined>()
   const [scale, setScale] = createSignal<number | undefined>()
 
@@ -57,6 +58,6 @@ export function Camera (props: PropsWithChildren) {
   return <g transform={transforms()}>{props.children}</g>
 }
 
-function smooth (from: number, to: number, byPercent: number) {
+function smooth (from: number, to: number, byPercent: number): number {
   return from + (to - from) * byPercent
 }

@@ -1,11 +1,11 @@
 import { modulo, max } from 'rambda'
-import { createEffect, createMemo, createResource } from 'solid-js'
+import { createMemo, createResource } from 'solid-js'
 import {
   actionNameById,
   characterNameByExternalId,
   characterNameByInternalId
 } from '../common/ids'
-import { PlayerUpdate } from '../common/types'
+import { PlayerState, PlayerUpdate } from '../common/types'
 import { frame, store } from '../state'
 import { CharacterAnimations, fetchAnimations } from './animationCache'
 import { actionMapByInternalId } from './characters'
@@ -43,7 +43,7 @@ export const playerSettings = createMemo(
 function adjustExternalCharacterId (
   externalCharacterId: number,
   internalCharacterId: number
-) {
+): number {
   const internalCharacterName = characterNameByInternalId[internalCharacterId]
   // playerSettings is not updated, it only contains the starting
   // transformation.
@@ -59,7 +59,7 @@ function adjustExternalCharacterId (
 
 const adjustedExternalCharacterIds = createMemo(() =>
   playerSettings().map((settings) =>
-    playerUpdates()[settings.playerIndex]
+    playerUpdates()[settings.playerIndex] !== undefined
       ? adjustExternalCharacterId(
         settings.externalCharacterId,
         playerUpdates()[settings.playerIndex].state.internalCharacterId
@@ -83,7 +83,7 @@ const animationsByPlayerIndex = Array.from(Array(4).keys()).map(
 
 export const renderDatas = createMemo(() => {
   return playerUpdates().flatMap((u) => {
-    if (!animationsByPlayerIndex[u.playerIndex]) return []
+    if (animationsByPlayerIndex[u.playerIndex] === undefined) return []
     const renderDatas = []
     renderDatas.push(
       computeRenderData(
@@ -114,7 +114,7 @@ function computeRenderData (
   isNana: boolean
 ): RenderData {
   const playerState = playerUpdate[isNana ? 'nanaState' : 'state']!
-  const startOfActionPlayerState = getPlayerOnFrame(
+  const startOfActionPlayerState: PlayerState = getPlayerOnFrame(
     playerIndex,
     getStartOfAction(playerIndex, frame(), isNana, store.replayData!),
     store.replayData!
@@ -258,7 +258,7 @@ function isSpacieUpB (
   playerIndex: number,
   frameNumber: number,
   isNana: boolean
-) {
+): boolean {
   const state = getPlayerOnFrame(playerIndex, frameNumber, store.replayData!)[
     isNana ? 'nanaState' : 'state'
   ]!
@@ -269,7 +269,7 @@ function isSpacieUpB (
   )
 }
 
-function getPlayerColor (playerIndex: number) {
+function getPlayerColor (playerIndex: number): string {
   if (store.replayData!.settings.isTeams) {
     const teamId =
       store.replayData!.settings.playerSettings[playerIndex].teamId

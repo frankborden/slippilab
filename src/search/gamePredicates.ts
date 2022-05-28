@@ -52,7 +52,9 @@ const tournamentStages: Stage[] = [
   'Pokémon Stadium',
   "Yoshi's Story"
 ]
-export function isTournamentStage (game: ReplayData, _playerIndex: number) {
+export function isTournamentStage (
+  game: ReplayData,
+  _playerIndex: number): boolean {
   return (
     tournamentStages
       .map((stage) => stageNameByExternalId.indexOf(stage))

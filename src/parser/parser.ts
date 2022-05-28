@@ -163,8 +163,8 @@ export function parseReplay (fileBuffer: ArrayBuffer): ReplayData {
   }
 }
 
-function initFrameIfNeeded (frames: Frame[], frameNumber: number) {
-  if (!frames[frameNumber]) {
+function initFrameIfNeeded (frames: Frame[], frameNumber: number): void {
+  if (frames[frameNumber] === undefined) {
     // @ts-expect-error: randomSeed will be populated later if found.
     frames[frameNumber] = {
       frameNumber: frameNumber,
@@ -178,8 +178,8 @@ function initPlayerIfNeeded (
   frames: Frame[],
   frameNumber: number,
   playerIndex: number
-) {
-  if (!frames[frameNumber].players[playerIndex]) {
+): void {
+  if (frames[frameNumber].players[playerIndex] === undefined) {
     // @ts-expect-error: state and inputs will be populated later.
     frames[frameNumber].players[playerIndex] = {
       frameNumber: frameNumber,
@@ -735,7 +735,7 @@ function parsePostFrameUpdateEvent (
       '0.2.0.0',
       offset + 0x22
     ),
-    isGrounded: !readUint(rawData, 8, replayVersion, '2.0.0.0', offset + 0x2f),
+    isGrounded: readUint(rawData, 8, replayVersion, '2.0.0.0', offset + 0x2f) !== 0,
     lastGroundId: readUint(rawData, 8, replayVersion, '2.0.0.0', offset + 0x30),
     jumpsRemaining: readUint(
       rawData,
@@ -1009,7 +1009,7 @@ function isInVersion (
   return true
 }
 
-function toHalfWidth (s: string) {
+function toHalfWidth (s: string): string {
   return s.replace(/[！-～]/g, function (r) {
     return String.fromCharCode(r.charCodeAt(0) - 0xfee0)
   })

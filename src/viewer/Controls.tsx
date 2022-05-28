@@ -21,7 +21,7 @@ import {
 } from '../state'
 import { Box, hope, HStack } from '@hope-ui/solid'
 import { controlsColor } from './colors'
-import { onCleanup, onMount, Show } from 'solid-js'
+import { onCleanup, onMount, Show, JSX } from 'solid-js'
 import {
   ClockClockwise,
   ClockCounterClockwise,
@@ -33,7 +33,7 @@ import {
   Rewind
 } from 'phosphor-solid'
 
-export function Controls () {
+export function Controls (): JSX.Element {
   onMount(() => {
     window.addEventListener('keydown', onKeyDown)
     window.addEventListener('keyup', onKeyUp)
@@ -43,7 +43,7 @@ export function Controls () {
     window.addEventListener('keyup', onKeyUp)
   })
 
-  function onKeyDown ({ key }: KeyboardEvent) {
+  function onKeyDown ({ key }: KeyboardEvent): void {
     switch (key) {
       case 'k':
       case ' ':
@@ -75,8 +75,7 @@ export function Controls () {
       case '7':
       case '8':
       case '9':
-        const percent = Number(key) * 0.1 // convert 3 => 30%
-        jumpPercent(percent)
+        jumpPercent(Number(key) * 0.1) // convert 3 => 30%
         break
       case 'ArrowUp':
         speedSlow()
@@ -94,11 +93,11 @@ export function Controls () {
         break
       case ']':
       case '}':
-        nextFile()
+        void nextFile()
         break
       case '[':
       case '{':
-        previousFile()
+        void previousFile()
         break
       case "'":
       case '"':
@@ -114,7 +113,7 @@ export function Controls () {
     }
   }
 
-  function onKeyUp ({ key }: KeyboardEvent) {
+  function onKeyUp ({ key }: KeyboardEvent): void {
     switch (key) {
       case 'ArrowUp':
       case 'ArrowDown':

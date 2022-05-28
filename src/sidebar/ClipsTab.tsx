@@ -1,15 +1,15 @@
 import { Badge, Box, Center, HStack, useColorModeValue } from '@hope-ui/solid'
-import { createMemo } from 'solid-js'
+import { JSX, createMemo } from 'solid-js'
 import { Picker } from '../common/Picker'
 import { Highlight } from '../search/search'
 import { setClip, store } from '../state'
 
-export function ClipsTab () {
+export function ClipsTab (): JSX.Element {
   const playerColors = useColorModeValue(
     ['red', 'blue', 'gold', 'green'],
     ['darkred', 'darkblue', 'darkgoldenrod', 'darkgreen']
   )
-  function renderClip ([name, clip]: [string, Highlight]) {
+  function renderClip ([name, clip]: [string, Highlight]): JSX.Element {
     const index = Object.keys(store.clips).indexOf(name)
     const nameColorScheme = (
       [

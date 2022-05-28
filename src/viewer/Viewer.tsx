@@ -1,7 +1,7 @@
-import { createMemo, For, Show } from 'solid-js'
+import { createMemo, For, Show, JSX } from 'solid-js'
 import { Camera } from './Camera'
 import { Controls } from './Controls'
-import { HUD } from './HUD'
+import { Hud } from './Hud'
 import { Players } from './Player'
 import { Stage } from './Stage'
 import { frame, store } from '../state'
@@ -9,12 +9,7 @@ import { Item } from './Item'
 import { hope } from '@hope-ui/solid'
 import { backgroundColor } from './colors'
 
-export function Viewer () {
-  const playerIndexes = createMemo(() =>
-    store.replayData?.settings.playerSettings
-      .filter(Boolean)
-      .map((playerSettings) => playerSettings.playerIndex)
-  )
+export function Viewer (): JSX.Element {
   const items = createMemo(() => store.replayData?.frames[frame()].items)
   return (
     <Show when={store.replayData}>
@@ -31,7 +26,7 @@ export function Viewer () {
           <Players />
           <For each={items()}>{(item) => <Item item={item} />}</For>
         </Camera>
-        <HUD />
+        <Hud />
         <Controls />
       </hope.svg>
     </Show>

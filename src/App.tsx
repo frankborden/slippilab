@@ -5,23 +5,23 @@ import { Sidebar } from './sidebar/Sidebar'
 import { createDropzone } from '@solid-primitives/upload'
 import { load, store } from './state'
 import '@thisbeyond/solid-select/style.css'
-import { Show } from 'solid-js'
+import { Show, JSX } from 'solid-js'
 import { Landing } from './Landing'
 import { filterFiles } from './common/util'
 
-export function App () {
+export function App (): JSX.Element {
   // Get started fetching the most popular characters
-  fetchAnimations(20) // Falco
-  fetchAnimations(2) // Fox
-  fetchAnimations(0) // Falcon
-  fetchAnimations(9) // Marth
+  void fetchAnimations(20) // Falco
+  void fetchAnimations(2) // Fox
+  void fetchAnimations(0) // Falcon
+  void fetchAnimations(9) // Marth
 
   // Make the whole screen a dropzone
   const { setRef: dropzoneRef } = createDropzone({
     onDrop: async (uploads) => {
       const files = uploads.map((upload) => upload.file)
       const filteredFiles = await filterFiles(files)
-      load(filteredFiles)
+      return await load(filteredFiles)
     }
   })
 

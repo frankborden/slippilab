@@ -1,9 +1,10 @@
 import { Tab, TabList, TabPanel, Tabs } from '@hope-ui/solid'
+import { JSX } from 'solid-js'
 import { ClipsTab } from './ClipsTab'
 import { ReplaysTab } from './ReplaysTab'
 import { SettingsTab } from './SettingsTab'
 
-export function Sidebar () {
+export function Sidebar (): JSX.Element {
   return (
     <>
       <Tabs height='$full' display='flex' flexDirection='column'>

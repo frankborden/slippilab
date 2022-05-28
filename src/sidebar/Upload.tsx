@@ -20,12 +20,12 @@ import {
   Box,
   notificationService
 } from '@hope-ui/solid'
-import { createSignal, Show } from 'solid-js'
+import { createSignal, JSX, Show } from 'solid-js'
 import { uploadReplay } from '../supabaseClient'
 import { Copy, FileArrowUp, FolderOpen } from 'phosphor-solid'
 import { filterFiles } from '../common/util'
 
-export function Upload () {
+export function Upload (): JSX.Element {
   const { isOpen, onOpen, onClose } = createDisclosure()
   const [isUploading, setIsUploading] = createSignal(false)
   const [url, setUrl] = createSignal<string | undefined>()
@@ -34,18 +34,18 @@ export function Upload () {
   let fileInput!: HTMLInputElement
   let folderInput!: HTMLInputElement
 
-  async function onFileSelected (e: Event) {
+  async function onFileSelected (e: Event): Promise<void> {
     const input = e.target as HTMLInputElement
 
-    if (!input.files?.length) {
+    if (input.files === null || input.files.length === 0) {
       return
     }
     const files = Array.from(input.files)
     const filteredFiles = await filterFiles(files)
-    load(filteredFiles)
+    return await load(filteredFiles)
   }
 
-  async function onUpload () {
+  async function onUpload (): Promise<void> {
     setIsUploading(true)
     onOpen()
     const file = store.files[store.currentFile]
@@ -104,7 +104,7 @@ export function Upload () {
                       <Box
                         cursor='pointer'
                         onClick={() => {
-                          navigator.clipboard.writeText(url()!)
+                          void navigator.clipboard.writeText(url()!)
                           notificationService.show({
                             status: 'success',
                             duration: 1000,

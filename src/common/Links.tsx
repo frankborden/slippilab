@@ -6,8 +6,9 @@ import {
   useColorModeValue,
   VStack
 } from '@hope-ui/solid'
+import { JSX } from 'solid-js'
 
-export function Links () {
+export function Links (): JSX.Element {
   const githubIconFillColor = useColorModeValue('black', 'white')
   return (
     <VStack gap='$2'>

@@ -1,11 +1,11 @@
-import { createMemo, For, Show } from 'solid-js'
+import { createMemo, For, Show, JSX } from 'solid-js'
 import { characterNameByExternalId } from '../common/ids'
 import { store } from '../state'
 import { PlayerUpdate } from '../common/types'
 import { RenderData, renderDatas } from './viewerState'
 import { getPlayerOnFrame, getStartOfAction } from './viewerUtil'
 
-export function Players () {
+export function Players (): JSX.Element {
   return (
     <>
       <For each={renderDatas()}>
@@ -38,7 +38,7 @@ function Shield (props: {
   renderData: RenderData
   playerUpdate: PlayerUpdate
   isNana: boolean
-}) {
+}): JSX.Element {
   // [0,60]
   const shieldHealth = createMemo(
     () => props.playerUpdate[props.isNana ? 'nanaState' : 'state']!.shieldSize
@@ -61,7 +61,9 @@ function Shield (props: {
         ),
         store.replayData!
       ).inputs.processed.anyTrigger
-      : props.playerUpdate.inputs.processed.anyTrigger || 1
+      : props.playerUpdate.inputs.processed.anyTrigger === 0
+        ? 1
+        : props.playerUpdate.inputs.processed.anyTrigger
   )
   // Formulas from https://www.ssbwiki.com/Shield#Shield_statistics
   const triggerStrengthMultiplier = createMemo(
@@ -98,7 +100,7 @@ function Shield (props: {
   )
 }
 
-function Shine (props: { renderData: RenderData, playerUpdate: PlayerUpdate }) {
+function Shine (props: { renderData: RenderData, playerUpdate: PlayerUpdate }): JSX.Element {
   const characterName = createMemo(
     () =>
       characterNameByExternalId[
@@ -130,7 +132,7 @@ function Shine (props: { renderData: RenderData, playerUpdate: PlayerUpdate }) {
   )
 }
 
-function Hexagon (props: { x: number, y: number, r: number }) {
+function Hexagon (props: { x: number, y: number, r: number }): JSX.Element {
   const hexagonHole = 0.6
   const sideX = Math.sin((2 * Math.PI) / 6)
   const sideY = 0.5

@@ -1,7 +1,7 @@
 import { Badge, Box, Button, hope, HStack, VStack } from '@hope-ui/solid'
 import { createOptions, Select } from '@thisbeyond/solid-select'
 import { groupBy } from 'rambda'
-import { createMemo, Show } from 'solid-js'
+import { createMemo, Show, JSX } from 'solid-js'
 import {
   characterNameByExternalId,
   ExternalStageName,
@@ -34,7 +34,7 @@ const filterProps = createOptions(
     createable: (code) => ({ type: 'codeOrName', label: code })
   }
 )
-export function ReplaysTab () {
+export function ReplaysTab (): JSX.Element {
   const filteredGameSettings = createMemo(() =>
     store.filteredIndexes === undefined
       ? gameSettings()
@@ -99,13 +99,13 @@ export function ReplaysTab () {
   )
 }
 
-function GameInfo (props: { gameSettings: GameSettings }) {
-  function playerString (player: PlayerSettings) {
+function GameInfo (props: { gameSettings: GameSettings }): JSX.Element {
+  function playerString (player: PlayerSettings): string {
     const name = [player.displayName, player.connectCode, player.nametag].find(
       (s) => s?.length > 0
     )
     const character = characterNameByExternalId[player.externalCharacterId]
-    return name ? `${name}(${character})` : character
+    return name !== undefined ? `${name}(${character})` : character
   }
 
   return (
@@ -134,7 +134,7 @@ function GameInfo (props: { gameSettings: GameSettings }) {
   )
 }
 
-function StageBadge (props: { stage: ExternalStageName }) {
+function StageBadge (props: { stage: ExternalStageName }): JSX.Element {
   const abbreviations: Partial<{ [key in ExternalStageName]: string }> = {
     'Final Destination': 'FD',
     'Pokémon Stadium': 'PS',

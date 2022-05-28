@@ -1,9 +1,9 @@
 import { randallColor, stageColor } from './colors'
-import { createMemo, For, Match, Switch } from 'solid-js'
+import { createMemo, For, JSX, Match, Switch } from 'solid-js'
 import { stageNameByExternalId } from '../common/ids'
 import { frame, store } from '../state'
 
-export function Stage () {
+export function Stage (): JSX.Element {
   const stageName = createMemo(
     () => stageNameByExternalId[store.replayData!.settings.stageId]
   )
@@ -31,7 +31,7 @@ export function Stage () {
   )
 }
 
-function Battlefield () {
+function Battlefield (): JSX.Element {
   const mainStage = [
     '-68.4, 0',
     ' 68.4, 0',
@@ -80,7 +80,7 @@ function Battlefield () {
   )
 }
 
-function Dreamland () {
+function Dreamland (): JSX.Element {
   const mainStage = [
     '-76.5, -11',
     '-77.25, 0',
@@ -118,7 +118,7 @@ function Dreamland () {
   )
 }
 
-function FinalDestination () {
+function FinalDestination (): JSX.Element {
   const mainStage = [
     '-85.6, 0',
     '85.6, 0',
@@ -155,7 +155,7 @@ function FinalDestination () {
   )
 }
 
-function YoshisStory () {
+function YoshisStory (): JSX.Element {
   const mainStage = [
     '-54, -91',
     '-54, -47',
@@ -201,7 +201,7 @@ function YoshisStory () {
       419: [-32.76515197753906, 90.73107147216797],
       420: [-32.49260711669922, 90.92455291748047],
       421: [-32.16635513305664, 91.06437683105469],
-      422: [-31.840103149414062, 91.20419311523438],
+      422: [-31.84010314941406, 91.20419311523438],
       423: [-31.513851165771484, 91.3440170288086],
       469: [-15.1948881149292, 91.3371353149414],
       470: [-14.868742942810059, 91.1973648071289],
@@ -211,7 +211,7 @@ function YoshisStory () {
       474: [-13.869664192199707, 90.36917877197266],
       475: [-13.772183418273926, 90.02799224853516],
       476: [-13.674698829650879, 89.68680572509766],
-      1069: [-31.590042114257812, -103.554931640625],
+      1069: [-31.59004211425781, -103.554931640625],
       1070: [-31.907413482666016, -103.39625549316406],
       1071: [-32.22478485107422, -103.23756408691406],
       1072: [-32.54215621948242, -103.07887268066406],
@@ -221,10 +221,10 @@ function YoshisStory () {
       1016: [-13.679760932922363, -101.919677734375],
       1017: [-13.819535255432129, -102.24581909179688],
       1018: [-13.959305763244629, -102.57196044921875],
-      1019: [-14.099089622497559, -102.89810180664062],
-      1020: [-14.320136070251465, -103.14761352539062],
-      1021: [-14.6375150680542, -103.30630493164062],
-      1022: [-14.954894065856934, -103.46499633789062]
+      1019: [-14.099089622497559, -102.8981018066406],
+      1020: [-14.320136070251465, -103.1476135253906],
+      1021: [-14.6375150680542, -103.3063049316406],
+      1022: [-14.954894065856934, -103.4649963378906]
     }
     // return frameNumber to -123 based.
     const frameInLap = (frame() - 123 + 1200) % 1200
@@ -258,7 +258,7 @@ function YoshisStory () {
       return [left, right]
     }
     if (frameInLap > 423 && frameInLap < 469) {
-      const start = -31.160232543945312
+      const start = -31.16023254394531
       const speed = 0.354839325
       const frameInSection = frameInLap - 424
       const y = start + speed * frameInSection
@@ -296,7 +296,7 @@ function YoshisStory () {
   )
 }
 
-function FountainOfDreams () {
+function FountainOfDreams (): JSX.Element {
   const mainStage = [
     '-63.33, 0.62',
     '-53.5, 0.62',
@@ -367,7 +367,7 @@ function FountainOfDreams () {
   )
 }
 
-function PokemonStadium () {
+function PokemonStadium (): JSX.Element {
   const mainStage = [
     '87.75, 0',
     '87.75, -4',

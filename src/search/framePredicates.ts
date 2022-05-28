@@ -99,7 +99,7 @@ export function isGrabbed (
   playerIndex: number,
   frameNumber: number,
   replay: ReplayData
-) {
+): boolean {
   const state = replay.frames[frameNumber].players[playerIndex]?.state
   if (state === undefined) {
     return true
@@ -112,7 +112,7 @@ export function isInGroundedControl (
   playerIndex: number,
   frameNumber: number,
   replay: ReplayData
-) {
+): boolean {
   const state = replay.frames[frameNumber].players[playerIndex]?.state
   if (state === undefined) {
     return true
@@ -129,7 +129,7 @@ export function isInHitstun (
   playerIndex: number,
   frameNumber: number,
   replay: ReplayData
-) {
+): boolean {
   const state = replay.frames[frameNumber].players[playerIndex]?.state
   if (state === undefined) {
     return false
@@ -144,7 +144,7 @@ export function isInShieldstun (
   playerIndex: number,
   frameNumber: number,
   replay: ReplayData
-) {
+): boolean {
   const state = replay.frames[frameNumber].players[playerIndex]?.state
   if (state === undefined) {
     return false
@@ -156,7 +156,7 @@ export function isCrouching (
   playerIndex: number,
   frameNumber: number,
   replay: ReplayData
-) {
+): boolean {
   const state = replay.frames[frameNumber].players[playerIndex]?.state
   if (state === undefined) {
     return false
@@ -169,7 +169,7 @@ export function isDead (
   playerIndex: number,
   frameNumber: number,
   replay: ReplayData
-) {
+): boolean {
   const state = replay.frames[frameNumber].players[playerIndex]?.state
   if (state === undefined) {
     return true
@@ -181,7 +181,7 @@ export function isOffstage (
   playerIndex: number,
   frameNumber: number,
   replay: ReplayData
-) {
+): boolean {
   const currentStageData = stageData[replay.settings.stageId]
   if (currentStageData === undefined) {
     return false

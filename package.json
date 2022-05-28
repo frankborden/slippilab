@@ -28,5 +28,10 @@
     "rambda": "^7.1.4",
     "solid-js": "^1.4.2",
     "solid-transition-group": "^0.0.10"
+  },
+  "ts-standard": {
+    "ignore": [
+      "**/old/"
+    ]
   }
 }

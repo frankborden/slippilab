@@ -1,8 +1,8 @@
-import { createMemo } from 'solid-js'
+import { JSX, createMemo } from 'solid-js'
 import { frame, store } from '../state'
 import { timerColor } from './colors'
 
-export function Timer () {
+export function Timer (): JSX.Element {
   const meleeHundredths = [
     '00',
     '02',

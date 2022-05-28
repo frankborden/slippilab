@@ -6,7 +6,7 @@ export function Picker<T> (props: {
   render: (item: T, index: number) => JSX.Element
   onClick: (item: T, index: number) => unknown
   selected: (item: T, index: number) => boolean
-}) {
+}): JSX.Element {
   const borderColor = useColorModeValue('$primary9', 'white')
   return (
     <>

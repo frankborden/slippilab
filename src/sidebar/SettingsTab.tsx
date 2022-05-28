@@ -9,8 +9,9 @@ import {
   Tr,
   VStack
 } from '@hope-ui/solid'
+import { JSX } from 'solid-js'
 
-export function SettingsTab () {
+export function SettingsTab (): JSX.Element {
   return (
     <>
       <VStack overflowY='auto' gap='$2'>
