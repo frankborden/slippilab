@@ -10,7 +10,7 @@ import { frame, store } from '../state'
 import { CharacterAnimations, fetchAnimations } from './animationCache'
 import { actionMapByInternalId } from './characters'
 import { Character } from './characters/character'
-import { teamColors, playerColors } from './colors'
+import { teamShadesByTeamId, playerColors } from './colors'
 import { getPlayerOnFrame, getStartOfAction } from './viewerUtil'
 
 export interface RenderData {
@@ -271,9 +271,9 @@ function isSpacieUpB (
 
 function getPlayerColor (playerIndex: number): string {
   if (store.replayData!.settings.isTeams) {
-    const teamId =
-      store.replayData!.settings.playerSettings[playerIndex].teamId
-    return teamColors[teamId]
+    const settings =
+      store.replayData!.settings.playerSettings[playerIndex]
+    return teamShadesByTeamId[settings.teamId][settings.teamShade]
   }
   return playerColors[playerIndex]
 }

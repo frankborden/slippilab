@@ -1,7 +1,7 @@
 import { JSX, createMemo, For, Show } from 'solid-js'
 import { characterNameByInternalId } from '../common/ids'
 import { frame, store } from '../state'
-import { playerColors, teamColors } from './colors'
+import { playerColors, teamShadesByTeamId } from './colors'
 import { playerSettings, renderDatas } from './viewerState'
 
 export function PlayerHUD (props: { player: number }): JSX.Element {
@@ -116,12 +116,12 @@ export function PlayerHUD (props: { player: number }): JSX.Element {
   )
 }
 
-// TODO: dedupe with same code in Player.tsx
+// TODO: dedupe with same code in viewerState.tsx
 function getPlayerColor (playerIndex: number): string {
   if (store.replayData!.settings.isTeams) {
-    const teamId =
-      store.replayData!.settings.playerSettings[playerIndex].teamId
-    return teamColors[teamId]
+    const settings =
+      store.replayData!.settings.playerSettings[playerIndex]
+    return teamShadesByTeamId[settings.teamId][settings.teamShade]
   }
   return playerColors[playerIndex]
 }
