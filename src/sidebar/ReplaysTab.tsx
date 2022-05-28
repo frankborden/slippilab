@@ -1,7 +1,7 @@
-import { Badge, Box, Button, hope, HStack, VStack } from '@hope-ui/solid'
+import { Badge, Box, hope, HStack, VStack } from '@hope-ui/solid'
 import { createOptions, Select } from '@thisbeyond/solid-select'
 import { groupBy } from 'rambda'
-import { createMemo, Show, JSX } from 'solid-js'
+import { createMemo, JSX } from 'solid-js'
 import {
   characterNameByExternalId,
   ExternalStageName,
@@ -11,15 +11,13 @@ import { Picker } from '../common/Picker'
 import { GameSettings, PlayerSettings } from '../common/types'
 import {
   gameSettings,
-  nextFile,
-  previousFile,
   setFile,
   setFilters,
   store
 } from '../state'
 import { Upload } from './Upload'
 import './select.css'
-import { ArrowLeft, ArrowRight } from 'phosphor-solid'
+import { NowPlaying } from './NowPlaying'
 
 const filterProps = createOptions(
   [
@@ -44,56 +42,35 @@ export function ReplaysTab (): JSX.Element {
   return (
     <>
       <VStack height='$full' gap='$2'>
-        <HStack width='$full' justifyContent='space-between'>
-          <Upload />
-          <HStack gap='$2'>
-            <Show when={store.files.length > 0}>
-              <Button
-                onClick={previousFile}
-                variant='subtle'
-                leftIcon={<ArrowLeft size='24' />}
-              >
-                Previous
-              </Button>
-              <Button
-                onClick={nextFile}
-                variant='subtle'
-                rightIcon={<ArrowRight size='24' />}
-              >
-                Next
-              </Button>
-            </Show>
-          </HStack>
-        </HStack>
-        <Show when={store.files.length > 0}>
-          <Box
+        <Upload />
+        <Box
+          width='$full'
+          onkeydown={(e: Event) => e.stopPropagation()}
+          onkeyup={(e: Event) => e.stopPropagation()}
+        >
+          <HopeSelect
+            class='custom'
             width='$full'
-            onkeydown={(e: Event) => e.stopPropagation()}
-            onkeyup={(e: Event) => e.stopPropagation()}
-          >
-            <HopeSelect
-              class='custom'
-              width='$full'
-              placeholder='Filter'
-              multiple
-              {...filterProps}
-              initialValue={store.filters}
-              onChange={setFilters}
-            />
-          </Box>
-          <Box width='$full' overflowY='auto'>
-            <Picker
-              items={filteredGameSettings()}
-              render={(gameSettings: GameSettings) => (
-                <GameInfo gameSettings={gameSettings} />
-              )}
-              onClick={async (_, index) =>
-                await setFile(gameSettings().indexOf(filteredGameSettings()[index]))}
-              selected={(settings) =>
-                gameSettings().indexOf(settings) === store.currentFile}
-            />
-          </Box>
-        </Show>
+            placeholder='Filter'
+            multiple
+            {...filterProps}
+            initialValue={store.filters}
+            onChange={setFilters}
+          />
+        </Box>
+        <Box width='$full' overflowY='auto'>
+          <Picker
+            items={filteredGameSettings()}
+            render={(gameSettings: GameSettings) => (
+              <GameInfo gameSettings={gameSettings} />
+            )}
+            onClick={async (_, index) =>
+              await setFile(gameSettings().indexOf(filteredGameSettings()[index]))}
+            selected={(settings) =>
+              gameSettings().indexOf(settings) === store.currentFile}
+          />
+        </Box>
+        <NowPlaying />
       </VStack>
     </>
   )

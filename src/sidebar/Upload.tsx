@@ -61,7 +61,7 @@ export function Upload (): JSX.Element {
 
   return (
     <>
-      <HStack gap='$2'>
+      <HStack gap='$2' width='$full' justifyContent='space-between'>
         <Menu>
           <MenuTrigger
             as={Button}
