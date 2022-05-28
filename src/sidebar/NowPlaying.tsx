@@ -41,9 +41,13 @@ export function NowPlaying (): JSX.Element {
       />
       <VStack alignItems='start'>
         <Box>File: {info().name}</Box>
-        <Box>Date: {info().date}</Box>
-        <Box>Platform: {info().platform}</Box>
-        <Show when={info().console !== undefined}>
+        <Show when={info().date}>
+          <Box>Date: {info().date}</Box>
+        </Show>
+        <Show when={info().platform}>
+          <Box>Platform: {info().platform}</Box>
+        </Show>
+        <Show when={info().console}>
           <Box>Console: {info().console}</Box>
         </Show>
         <Show when={info().players !== ''}>

@@ -96,6 +96,7 @@ export async function load (files: File[], startFrame: number = 0): Promise<void
       </Notification>
     )
   })
+  stop()
   const {
     goodFilesAndSettings,
     skipCount,
