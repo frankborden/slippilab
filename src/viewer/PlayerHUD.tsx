@@ -1,12 +1,15 @@
 import { JSX, createMemo, For, Show } from 'solid-js'
 import { characterNameByInternalId } from '../common/ids'
-import { frame, store } from '../state'
+import { frame, store, StoreWithReplay } from '../state'
 import { playerColors, teamShadesByTeamId } from './colors'
 import { playerSettings, renderDatas } from './viewerState'
 
 export function PlayerHUD (props: { player: number }): JSX.Element {
   const playerState = createMemo(
-    () => store.replayData!.frames[frame()].players[props.player]?.state
+    () =>
+      (store as StoreWithReplay).replayData.frames[frame()].players[
+        props.player
+      ]?.state
   )
   const position = createMemo(() => ({
     x: -30 + 20 * props.player, // ports at: -30%, -10%, 10%, 30%
@@ -118,8 +121,9 @@ export function PlayerHUD (props: { player: number }): JSX.Element {
 
 // TODO: dedupe with same code in viewerState.tsx
 function getPlayerColor (playerIndex: number): string {
-  if (store.replayData!.settings.isTeams) {
-    const settings = store.replayData!.settings.playerSettings[playerIndex]
+  if ((store as StoreWithReplay).replayData.settings.isTeams) {
+    const settings = (store as StoreWithReplay).replayData.settings
+      .playerSettings[playerIndex]
     return teamShadesByTeamId[settings.teamId][settings.teamShade]
   }
   return playerColors[playerIndex]

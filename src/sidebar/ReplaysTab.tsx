@@ -1,7 +1,7 @@
 import { Badge, Box, hope, HStack, VStack } from '@hope-ui/solid'
 import { createOptions, Select } from '@thisbeyond/solid-select'
 import { groupBy } from 'rambda'
-import { createMemo, JSX } from 'solid-js'
+import { createMemo, For, JSX } from 'solid-js'
 import {
   characterNameByExternalId,
   ExternalStageName,
@@ -88,20 +88,28 @@ function GameInfo (props: { gameSettings: GameSettings }): JSX.Element {
         <StageBadge stage={stageNameByExternalId[props.gameSettings.stageId]} />
         <VStack flexGrow='1'>
           {props.gameSettings.isTeams
-            ? Object.values(
-              groupBy(
-                (p) => String(p.teamId),
-                props.gameSettings.playerSettings.filter((s) => s)
+            ? (
+              <For
+                each={Object.values(
+                  groupBy(
+                    (p) => String(p.teamId),
+                    props.gameSettings.playerSettings.filter((s) => s)
+                  )
+                )}
+              >
+                {(team) => (
+                  <Box color={['red', 'blue', 'green'][team[0].teamId]}>
+                    {team.map(playerString).join(' + ')}
+                  </Box>
+                )}
+              </For>
               )
-            ).map((team) => (
-              <Box color={['red', 'blue', 'green'][team[0].teamId]}>
-                {team.map(playerString).join(' + ')}
-              </Box>
-            ))
-            : props.gameSettings.playerSettings
-              .filter((s) => s)
-              .map(playerString)
-              .join(' vs ')}
+            : (
+                props.gameSettings.playerSettings
+                  .filter((s) => s)
+                  .map(playerString)
+                  .join(' vs ')
+              )}
         </VStack>
       </HStack>
     </>

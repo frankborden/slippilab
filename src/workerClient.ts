@@ -1,3 +1,5 @@
+import { GameSettings } from './common/types'
+
 const worker = new Worker(new URL('./worker.ts', import.meta.url), {
   type: 'module'
 })
@@ -17,10 +19,18 @@ export async function send<P, R> (
   })
 }
 worker.onmessage = (event) => {
-  if (event.data.payload) {
-    resolvers.get(event.data.id)!(event.data.payload)
+  if ((event.data.payload as Payload) !== undefined) {
+    resolvers.get(event.data.id)?.(event.data.payload)
   } else {
     // progress
-    callbacks.get(event.data.id)!()
+    callbacks.get(event.data.id)?.()
   }
 }
+
+type Payload =
+  | {
+    goodFilesAndSettings: Array<[File, GameSettings]>
+    skipCount: number
+    failedFilenames: string[]
+  }
+  | undefined

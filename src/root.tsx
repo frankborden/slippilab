@@ -41,13 +41,17 @@ const config: HopeThemeConfig = {
     }
   }
 }
-render(
-  () => (
-    <HopeProvider config={config}>
-      <NotificationsProvider>
-        <App />
-      </NotificationsProvider>
-    </HopeProvider>
-  ),
-  document.querySelector('#root')!
-)
+
+const root = document.querySelector('#root')
+if (root !== null) {
+  render(
+    () => (
+      <HopeProvider config={config}>
+        <NotificationsProvider>
+          <App />
+        </NotificationsProvider>
+      </HopeProvider>
+    ),
+    root
+  )
+}

@@ -6,7 +6,7 @@ import {
   JSX,
   ParentProps
 } from 'solid-js'
-import { frame, store } from '../state'
+import { frame, store, StoreWithReplay } from '../state'
 import { PlayerUpdate } from '../common/types'
 
 export function Camera (props: ParentProps): JSX.Element {
@@ -18,7 +18,7 @@ export function Camera (props: ParentProps): JSX.Element {
     const padding = [25, 25]
     const minimums = [100, 100]
 
-    const currentFrame = store.replayData!.frames[frame()]
+    const currentFrame = (store as StoreWithReplay).replayData.frames[frame()]
     const focuses = pipe(
       filter((player: PlayerUpdate) => Boolean(player)),
       map((player: PlayerUpdate) => ({

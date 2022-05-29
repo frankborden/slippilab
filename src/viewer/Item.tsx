@@ -1,7 +1,7 @@
 import { createMemo, For, JSX, Match, Switch } from 'solid-js'
 import { itemNamesById } from '../common/ids'
 import { ItemUpdate, PlayerUpdate } from '../common/types'
-import { store } from '../state'
+import { store, StoreWithReplay } from '../state'
 
 // TODO: characters projectiles
 
@@ -198,11 +198,15 @@ function FoxLaser (props: { item: ItemUpdate }): JSX.Element {
         }
         x2={
           props.item.xPosition +
-          hitboxOffsets.at(-1)! * props.item.facingDirection * rotations()[0]
+          hitboxOffsets[hitboxOffsets.length - 1] *
+            props.item.facingDirection *
+            rotations()[0]
         }
         y2={
           props.item.yPosition +
-          hitboxOffsets.at(-1)! * props.item.facingDirection * rotations()[1]
+          hitboxOffsets[hitboxOffsets.length - 1] *
+            props.item.facingDirection *
+            rotations()[1]
         }
         stroke='red'
       />
@@ -239,8 +243,14 @@ function FalcoLaser (props: { item: ItemUpdate }): JSX.Element {
       <line
         x1={props.item.xPosition + hitboxOffsets[0] * rotations()[0]}
         y1={props.item.yPosition + hitboxOffsets[0] * rotations()[1]}
-        x2={props.item.xPosition + hitboxOffsets.at(-1)! * rotations()[0]}
-        y2={props.item.yPosition + hitboxOffsets.at(-1)! * rotations()[1]}
+        x2={
+          props.item.xPosition +
+          hitboxOffsets[hitboxOffsets.length - 1] * rotations()[0]
+        }
+        y2={
+          props.item.yPosition +
+          hitboxOffsets[hitboxOffsets.length - 1] * rotations()[1]
+        }
         stroke='red'
       />
       <For each={hitboxOffsets}>
@@ -271,5 +281,7 @@ function FlyGuy (props: { item: ItemUpdate }): JSX.Element {
 }
 
 function getOwner (item: ItemUpdate): PlayerUpdate {
-  return store.replayData!.frames[item.frameNumber].players[item.owner]
+  return (store as StoreWithReplay).replayData.frames[item.frameNumber].players[
+    item.owner
+  ]
 }

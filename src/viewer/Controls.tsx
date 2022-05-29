@@ -17,7 +17,8 @@ import {
   toggleDebug,
   nextClip,
   previousClip,
-  store
+  store,
+  StoreWithReplay
 } from '../state'
 import { Box, hope, HStack } from '@hope-ui/solid'
 import { controlsColor } from './colors'
@@ -200,7 +201,7 @@ export function Controls (): JSX.Element {
           }}
           ref={seekbarInput}
           value={frame()}
-          max={store.replayData!.frames.length - 1}
+          max={(store as StoreWithReplay).replayData.frames.length - 1}
           onInput={() => jump(Number(seekbarInput.value))}
         />
         <HStack gap='$2'>

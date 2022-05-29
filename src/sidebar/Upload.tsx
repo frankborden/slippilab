@@ -104,7 +104,9 @@ export function Upload (): JSX.Element {
                       <Box
                         cursor='pointer'
                         onClick={() => {
-                          void navigator.clipboard.writeText(url()!)
+                          const link = url()
+                          if (link === undefined) return
+                          void navigator.clipboard.writeText(link)
                           notificationService.show({
                             status: 'success',
                             duration: 1000,

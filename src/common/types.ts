@@ -92,6 +92,8 @@ export interface PlayerUpdate {
   nanaState?: PlayerState
 }
 
+export type PlayerUpdateWithNana = Required<PlayerUpdate>
+
 export interface PlayerInputs {
   frameNumber: number
   playerIndex: number

@@ -38,7 +38,7 @@ import {
   stageNameByExternalId
 } from './common/ids'
 
-interface Store {
+export interface Store {
   isDebug: boolean
   zoom: number
   currentFile: number
@@ -50,6 +50,8 @@ interface Store {
   filters: Filter[]
   filteredIndexes?: number[]
 }
+
+export type StoreWithReplay = Store & Required<Pick<Store, 'replayData'>>
 
 export type Filter =
   | { type: 'character', label: ExternalCharacterName }
@@ -196,9 +198,7 @@ export async function previousFile (): Promise<void> {
         wrap(store.filteredIndexes.length, currentIndex - 1)
       ]
       : wrap(store.files.length, currentIndex - 1)
-  const replayData = parseReplay(
-    await store.files[previousIndex].arrayBuffer()
-  )
+  const replayData = parseReplay(await store.files[previousIndex].arrayBuffer())
   const clips = {
     killCombo: search(replayData, ...killComboQuery),
     shieldGrab: search(replayData, ...shieldGrabQuery),
@@ -248,13 +248,17 @@ export function togglePause (): void {
 export function tick (): void {
   setFrame(
     pipe(add(framesPerTick()), (frame) =>
-      wrap(store.replayData!.frames.length, frame)
+      wrap((store as StoreWithReplay).replayData.frames.length, frame)
     )
   )
 }
 
 export function tickBack (): void {
-  setFrame(pipe(dec, (frame) => wrap(store.replayData!.frames.length, frame)))
+  setFrame(
+    pipe(dec, (frame) =>
+      wrap((store as StoreWithReplay).replayData.frames.length, frame)
+    )
+  )
 }
 
 export function speedNormal (): void {
@@ -290,7 +294,12 @@ export function nextClip (): void {
   const [, newClip] = entries[newClipIndex]
   batch(() => {
     setStore('currentClip', newClipIndex)
-    jump(wrap(store.replayData!.frames.length, newClip.startFrame - 30))
+    jump(
+      wrap(
+        (store as StoreWithReplay).replayData.frames.length,
+        newClip.startFrame - 30
+      )
+    )
   })
 }
 
@@ -302,7 +311,12 @@ export function previousClip (): void {
   const [, newClip] = entries[newClipIndex]
   batch(() => {
     setStore('currentClip', newClipIndex)
-    jump(wrap(store.replayData!.frames.length, newClip.startFrame - 30))
+    jump(
+      wrap(
+        (store as StoreWithReplay).replayData.frames.length,
+        newClip.startFrame - 30
+      )
+    )
   })
 }
 
@@ -313,22 +327,31 @@ export function setClip (newClipIndex: number): void {
   const [, newClip] = entries[newClipIndex]
   batch(() => {
     setStore('currentClip', wrap(entries.length, newClipIndex))
-    jump(wrap(store.replayData!.frames.length, newClip.startFrame - 30))
+    jump(
+      wrap(
+        (store as StoreWithReplay).replayData.frames.length,
+        newClip.startFrame - 30
+      )
+    )
   })
 }
 
 export function jump (target: number): void {
-  setFrame(wrap(store.replayData!.frames.length, target))
+  setFrame(wrap((store as StoreWithReplay).replayData.frames.length, target))
 }
 
 // percent is [0,1]
 export function jumpPercent (percent: number): void {
-  setFrame(Math.round(store.replayData!.frames.length * percent))
+  setFrame(
+    Math.round((store as StoreWithReplay).replayData.frames.length * percent)
+  )
 }
 
 export function adjust (delta: number): void {
   setFrame(
-    pipe(add(delta), (frame) => wrap(store.replayData!.frames.length, frame))
+    pipe(add(delta), (frame) =>
+      wrap((store as StoreWithReplay).replayData.frames.length, frame)
+    )
   )
 }
 

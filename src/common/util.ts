@@ -13,7 +13,10 @@ export async function unzip (zipFile: File): Promise<File[]> {
   const entries = await new ZipReader(new BlobReader(zipFile)).getEntries()
   return await Promise.all(
     entries
-      .filter((entry) => !entry.filename.split('/').at(-1)?.startsWith('.'))
+      // filter out some Apple-related hidden files I sometimes saw.
+      .filter(
+        (entry) => !(entry.filename.split('/').at(-1)?.startsWith('.') ?? true)
+      )
       .map(
         async (entry) =>
           await (entry.getData?.(new BlobWriter()) as Promise<Blob>).then(

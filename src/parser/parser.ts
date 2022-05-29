@@ -39,13 +39,15 @@ const firstVersion = '0.1.0.0'
 export function parseGameSettings (fileBuffer: ArrayBuffer): GameSettings {
   let rawBuffer = fileBuffer
   let rawOffset = 15
-  let metadata: any
+  let metadata: undefined | any
   try {
     const baseJson = decode(fileBuffer, { useTypedArrays: true })
     metadata = baseJson.metadata
     rawBuffer = baseJson.raw.buffer
     rawOffset = baseJson.raw.byteOffset
-  } catch (e) {}
+  } catch (e) {
+    console.debug('file likely did not contain metadata', e)
+  }
 
   const rawData = new DataView(
     rawBuffer,
@@ -87,7 +89,7 @@ export function parseReplay (fileBuffer: ArrayBuffer): ReplayData {
     0x01 + commandPayloadSizes[0x35],
     metadata
   )
-  let gameEnding: GameEnding
+  let gameEnding: GameEnding | undefined
   const replayVersion = gameSettings.replayFormatVersion
   let offset =
     0x00 + commandPayloadSizes[0x35] + 0x01 + commandPayloadSizes[0x36] + 0x01
@@ -98,69 +100,93 @@ export function parseReplay (fileBuffer: ArrayBuffer): ReplayData {
     const command = readUint(rawData, 8, replayVersion, firstVersion, offset)
     switch (command) {
       case 0x37:
-        const playerInputs = parsePreFrameUpdateEvent(
-          rawData,
-          offset,
-          replayVersion
-        )
-        // Some older versions don't have the Frame Start Event so we have to
-        // potentially initialize the frame in both places.
-        initFrameIfNeeded(frames, playerInputs.frameNumber)
-        initPlayerIfNeeded(
-          frames,
-          playerInputs.frameNumber,
-          playerInputs.playerIndex
-        )
-        if (playerInputs.isNana) {
-          frames[playerInputs.frameNumber].players[
-            playerInputs.playerIndex
-          ].nanaInputs = playerInputs
-        } else {
-          frames[playerInputs.frameNumber].players[
-            playerInputs.playerIndex
-          ].inputs = playerInputs
-        }
+        handlePreFrameUpdateEvent(rawData, offset, replayVersion, frames)
         break
       case 0x38:
-        const playerState = parsePostFrameUpdateEvent(
-          rawData,
-          offset,
-          replayVersion
-        )
-        if (playerState.isNana) {
-          frames[playerState.frameNumber].players[
-            playerState.playerIndex
-          ].nanaState = playerState
-        } else {
-          frames[playerState.frameNumber].players[
-            playerState.playerIndex
-          ].state = playerState
-        }
+        handlePostFrameUpdateEvent(rawData, offset, replayVersion, frames)
         break
       case 0x39:
         gameEnding = parseGameEndEvent(rawData, offset, replayVersion)
         break
       case 0x3a:
-        const { frameNumber, randomSeed } = parseFrameStartEvent(
-          rawData,
-          offset,
-          replayVersion
-        )
-        initFrameIfNeeded(frames, frameNumber)
-        frames[frameNumber].randomSeed = randomSeed
+        handleFrameStartEvent(rawData, offset, replayVersion, frames)
         break
       case 0x3b:
-        const itemUpdate = parseItemUpdateEvent(rawData, offset, replayVersion)
-        frames[itemUpdate.frameNumber].items.push(itemUpdate)
+        handleItemUpdateEvent(rawData, offset, replayVersion, frames)
         break
     }
     offset = offset + commandPayloadSizes[command] + 0x01
   }
+  if (gameEnding === undefined) {
+    throw new Error('Game Ending not found')
+  }
   return {
     settings: gameSettings,
     frames: frames,
-    ending: gameEnding!
+    ending: gameEnding
   }
+}
+
+function handlePreFrameUpdateEvent (
+  rawData: DataView,
+  offset: number,
+  replayVersion: string,
+  frames: Frame[]
+): void {
+  const playerInputs = parsePreFrameUpdateEvent(rawData, offset, replayVersion)
+  // Some older versions don't have the Frame Start Event so we have to
+  // potentially initialize the frame in both places.
+  initFrameIfNeeded(frames, playerInputs.frameNumber)
+  initPlayerIfNeeded(frames, playerInputs.frameNumber, playerInputs.playerIndex)
+  if (playerInputs.isNana) {
+    frames[playerInputs.frameNumber].players[
+      playerInputs.playerIndex
+    ].nanaInputs = playerInputs
+  } else {
+    frames[playerInputs.frameNumber].players[playerInputs.playerIndex].inputs =
+      playerInputs
+  }
+}
+
+function handlePostFrameUpdateEvent (
+  rawData: DataView,
+  offset: number,
+  replayVersion: string,
+  frames: Frame[]
+): void {
+  const playerState = parsePostFrameUpdateEvent(rawData, offset, replayVersion)
+  if (playerState.isNana) {
+    frames[playerState.frameNumber].players[playerState.playerIndex].nanaState =
+      playerState
+  } else {
+    frames[playerState.frameNumber].players[playerState.playerIndex].state =
+      playerState
+  }
+}
+
+function handleFrameStartEvent (
+  rawData: DataView,
+  offset: number,
+  replayVersion: string,
+  frames: Frame[]
+): void {
+  const { frameNumber, randomSeed } = parseFrameStartEvent(
+    rawData,
+    offset,
+    replayVersion
+  )
+  initFrameIfNeeded(frames, frameNumber)
+  frames[frameNumber].randomSeed = randomSeed
+}
+
+function handleItemUpdateEvent (
+  rawData: DataView,
+  offset: number,
+  replayVersion: string,
+  frames: Frame[]
+): void {
+  const itemUpdate = parseItemUpdateEvent(rawData, offset, replayVersion)
+  frames[itemUpdate.frameNumber].items.push(itemUpdate)
 }
 
 function initFrameIfNeeded (frames: Frame[], frameNumber: number): void {
@@ -360,9 +386,7 @@ function parseGameStartEvent (
       offset + 0x35
     )
   }
-  if (metadata?.consoleNick) {
-    settings.consoleNickname = metadata.consoleNick
-  }
+  settings.consoleNickname = metadata?.consoleNick
   for (let playerIndex = 0; playerIndex < 4; playerIndex++) {
     const playerType = readUint(
       rawData,

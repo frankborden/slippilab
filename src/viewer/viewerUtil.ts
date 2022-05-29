@@ -1,4 +1,4 @@
-import { PlayerUpdate, ReplayData } from '../common/types'
+import { PlayerUpdate, PlayerUpdateWithNana, ReplayData } from '../common/types'
 
 export function getStartOfAction (
   playerIndex: number,
@@ -6,11 +6,13 @@ export function getStartOfAction (
   isNana: boolean,
   replayData: ReplayData
 ): number {
-  let earliestStateOfAction = getPlayerOnFrame(
-    playerIndex,
-    currentFrame,
-    replayData
-  )[isNana ? 'nanaState' : 'state']!
+  let earliestStateOfAction = (
+    getPlayerOnFrame(
+      playerIndex,
+      currentFrame,
+      replayData
+    ) as PlayerUpdateWithNana
+  )[isNana ? 'nanaState' : 'state']
   while (true) {
     const testEarlierState = getPlayerOnFrame(
       playerIndex,

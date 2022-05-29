@@ -1,5 +1,5 @@
 import { JSX, createMemo } from 'solid-js'
-import { frame, store } from '../state'
+import { frame, store, StoreWithReplay } from '../state'
 import { timerColor } from './colors'
 
 export function Timer (): JSX.Element {
@@ -66,7 +66,10 @@ export function Timer (): JSX.Element {
     '99'
   ]
   const time = createMemo(() => {
-    const frames = store.replayData!.settings.timerStart * 60 - frame() + 123
+    const frames =
+      (store as StoreWithReplay).replayData.settings.timerStart * 60 -
+      frame() +
+      123
     const minutes = Math.floor(frames / (60 * 60))
       .toString()
       .padStart(2, '0')

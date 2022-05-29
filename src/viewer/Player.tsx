@@ -1,7 +1,7 @@
 import { createMemo, For, Show, JSX } from 'solid-js'
 import { characterNameByExternalId } from '../common/ids'
-import { store } from '../state'
-import { PlayerUpdate } from '../common/types'
+import { store, StoreWithReplay } from '../state'
+import { PlayerUpdate, PlayerUpdateWithNana } from '../common/types'
 import { RenderData, renderDatas } from './viewerState'
 import { getPlayerOnFrame, getStartOfAction } from './viewerUtil'
 
@@ -41,7 +41,10 @@ function Shield (props: {
 }): JSX.Element {
   // [0,60]
   const shieldHealth = createMemo(
-    () => props.playerUpdate[props.isNana ? 'nanaState' : 'state']!.shieldSize
+    () =>
+      (props.playerUpdate as PlayerUpdateWithNana)[
+        props.isNana ? 'nanaState' : 'state'
+      ].shieldSize
   )
   // [0,1]. If 0 is received, set to 1 because user may have released shield
   // during a Guard-related animation. As an example, a shield must stay active
@@ -57,9 +60,9 @@ function Shield (props: {
           props.playerUpdate.playerIndex,
           props.playerUpdate.frameNumber,
           props.isNana,
-          store.replayData!
+          (store as StoreWithReplay).replayData
         ),
-        store.replayData!
+        (store as StoreWithReplay).replayData
       ).inputs.processed.anyTrigger
       : props.playerUpdate.inputs.processed.anyTrigger === 0
         ? 1
@@ -84,8 +87,9 @@ function Shield (props: {
           cx={
             props.renderData.position[0] +
             props.renderData.characterData.shieldOffset[0] *
-              props.playerUpdate[props.isNana ? 'nanaState' : 'state']!
-                .facingDirection
+              (props.playerUpdate as PlayerUpdateWithNana)[
+                props.isNana ? 'nanaState' : 'state'
+              ].facingDirection
           }
           cy={
             props.renderData.position[1] +
@@ -107,7 +111,7 @@ function Shine (props: {
   const characterName = createMemo(
     () =>
       characterNameByExternalId[
-        store.replayData!.settings.playerSettings[
+        (store as StoreWithReplay).replayData.settings.playerSettings[
           props.playerUpdate.playerIndex
         ].externalCharacterId
       ]

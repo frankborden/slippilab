@@ -1,11 +1,14 @@
 import { randallColor, stageColor } from './colors'
 import { createMemo, For, JSX, Match, Switch } from 'solid-js'
 import { stageNameByExternalId } from '../common/ids'
-import { frame, store } from '../state'
+import { frame, store, StoreWithReplay } from '../state'
 
 export function Stage (): JSX.Element {
   const stageName = createMemo(
-    () => stageNameByExternalId[store.replayData!.settings.stageId]
+    () =>
+      stageNameByExternalId[
+        (store as StoreWithReplay).replayData.settings.stageId
+      ]
   )
   return (
     <Switch>
@@ -354,7 +357,10 @@ function FountainOfDreams (): JSX.Element {
           />
         )}
       </For>
-      <polyline points={platforms.at(-1)!.join(' ')} stroke={stageColor} />
+      <polyline
+        points={platforms[platforms.length - 1].join(' ')}
+        stroke={stageColor}
+      />
       <rect
         x={blastzones[0][0]}
         y={blastzones[0][1]}

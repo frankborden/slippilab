@@ -5,8 +5,12 @@ import {
   characterNameByExternalId,
   characterNameByInternalId
 } from '../common/ids'
-import { PlayerState, PlayerUpdate } from '../common/types'
-import { frame, store } from '../state'
+import {
+  PlayerState,
+  PlayerUpdate,
+  PlayerUpdateWithNana
+} from '../common/types'
+import { frame, store, StoreWithReplay } from '../state'
 import { CharacterAnimations, fetchAnimations } from './animationCache'
 import { actionMapByInternalId } from './characters'
 import { Character } from './characters/character'
@@ -113,12 +117,21 @@ function computeRenderData (
   animations: CharacterAnimations | undefined,
   isNana: boolean
 ): RenderData {
-  const playerState = playerUpdate[isNana ? 'nanaState' : 'state']!
-  const startOfActionPlayerState: PlayerState = getPlayerOnFrame(
-    playerIndex,
-    getStartOfAction(playerIndex, frame(), isNana, store.replayData!),
-    store.replayData!
-  )[isNana ? 'nanaState' : 'state']!
+  const playerState = (playerUpdate as PlayerUpdateWithNana)[
+    isNana ? 'nanaState' : 'state'
+  ]
+  const startOfActionPlayerState: PlayerState = (
+    getPlayerOnFrame(
+      playerIndex,
+      getStartOfAction(
+        playerIndex,
+        frame(),
+        isNana,
+        (store as StoreWithReplay).replayData
+      ),
+      (store as StoreWithReplay).replayData
+    ) as PlayerUpdateWithNana
+  )[isNana ? 'nanaState' : 'state']
   const actionName = actionNameById[playerState.actionStateId]
 
   const characterData = actionMapByInternalId[playerState.internalCharacterId]
@@ -137,11 +150,13 @@ function computeRenderData (
   // To save animation file size, duplicate frames just reference earlier
   // matching frames such as "frame20".
   const animationPathOrFrameReference = animationFrames?.[frameIndex]
-  const path = animationPathOrFrameReference?.startsWith('frame')
-    ? animationFrames?.[
-      Number(animationPathOrFrameReference.slice('frame'.length))
-    ]
-    : animationPathOrFrameReference
+  const path =
+    animationPathOrFrameReference !== undefined &&
+    (animationPathOrFrameReference.startsWith('frame') ?? false)
+      ? animationFrames?.[
+        Number(animationPathOrFrameReference.slice('frame'.length))
+      ]
+      : animationPathOrFrameReference
   const rotation =
     animationName === 'DamageFlyRoll'
       ? getDamageFlyRollRotation(playerIndex, frame(), isNana)
@@ -195,16 +210,20 @@ function getDamageFlyRollRotation (
   frameNumber: number,
   isNana: boolean
 ): number {
-  const currentState = getPlayerOnFrame(
-    playerIndex,
-    frameNumber,
-    store.replayData!
-  )[isNana ? 'nanaState' : 'state']!
-  const previousState = getPlayerOnFrame(
-    playerIndex,
-    frameNumber - 1,
-    store.replayData!
-  )[isNana ? 'nanaState' : 'state']!
+  const currentState = (
+    getPlayerOnFrame(
+      playerIndex,
+      frameNumber,
+      (store as StoreWithReplay).replayData
+    ) as PlayerUpdateWithNana
+  )[isNana ? 'nanaState' : 'state']
+  const previousState = (
+    getPlayerOnFrame(
+      playerIndex,
+      frameNumber - 1,
+      (store as StoreWithReplay).replayData
+    ) as PlayerUpdateWithNana
+  )[isNana ? 'nanaState' : 'state']
   const deltaX = currentState.xPosition - previousState.xPosition
   const deltaY = currentState.yPosition - previousState.yPosition
   return (Math.atan2(deltaY, deltaX) * 180) / Math.PI - 90
@@ -223,8 +242,13 @@ function getSpacieUpBRotation (
 ): number {
   const startOfActionPlayer = getPlayerOnFrame(
     playerIndex,
-    getStartOfAction(playerIndex, currentFrame, isNana, store.replayData!),
-    store.replayData!
+    getStartOfAction(
+      playerIndex,
+      currentFrame,
+      isNana,
+      (store as StoreWithReplay).replayData
+    ),
+    (store as StoreWithReplay).replayData
   )
   const joystickDegrees =
     ((startOfActionPlayer.inputs.processed.joystickY === 0 &&
@@ -238,7 +262,9 @@ function getSpacieUpBRotation (
     Math.PI
   return (
     joystickDegrees -
-    (startOfActionPlayer[isNana ? 'nanaState' : 'state']!.facingDirection === -1
+    ((startOfActionPlayer as PlayerUpdateWithNana)[
+      isNana ? 'nanaState' : 'state'
+    ].facingDirection === -1
       ? 180
       : 0)
   )
@@ -259,9 +285,13 @@ function isSpacieUpB (
   frameNumber: number,
   isNana: boolean
 ): boolean {
-  const state = getPlayerOnFrame(playerIndex, frameNumber, store.replayData!)[
-    isNana ? 'nanaState' : 'state'
-  ]!
+  const state = (
+    getPlayerOnFrame(
+      playerIndex,
+      frameNumber,
+      (store as StoreWithReplay).replayData
+    ) as PlayerUpdateWithNana
+  )[isNana ? 'nanaState' : 'state']
   const character = characterNameByInternalId[state.internalCharacterId]
   return (
     ['Fox', 'Falco'].includes(character) &&
@@ -270,8 +300,9 @@ function isSpacieUpB (
 }
 
 function getPlayerColor (playerIndex: number): string {
-  if (store.replayData!.settings.isTeams) {
-    const settings = store.replayData!.settings.playerSettings[playerIndex]
+  if ((store as StoreWithReplay).replayData.settings.isTeams) {
+    const settings = (store as StoreWithReplay).replayData.settings
+      .playerSettings[playerIndex]
     return teamShadesByTeamId[settings.teamId][settings.teamShade]
   }
   return playerColors[playerIndex]

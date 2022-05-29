@@ -11,7 +11,7 @@ export const fetchAnimations = async (
   externalCharacterId: number
 ): Promise<CharacterAnimations> => {
   if (animationsCache.has(externalCharacterId)) {
-    return animationsCache.get(externalCharacterId)!
+    return animationsCache.get(externalCharacterId) as CharacterAnimations
   }
   const animations = await load(
     characterZipUrlByExternalId[externalCharacterId]

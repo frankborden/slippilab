@@ -41,21 +41,18 @@ export function NowPlaying (): JSX.Element {
         icon={<ArrowLeft size='24' />}
       />
       <VStack alignItems='start'>
-        <Box>File: {info().name}</Box>
+        <Box>{info().name}</Box>
         <Show when={info().date}>
-          <Box>Date: {info().date}</Box>
+          <Box>{info().date}</Box>
         </Show>
         <Show when={info().platform}>
-          <Box>Platform: {info().platform}</Box>
+          <Box>{info().platform}</Box>
         </Show>
         <Show when={info().console}>
           <Box>Console: {info().console}</Box>
         </Show>
         <Show when={info().players !== ''}>
-          <HStack gap='$2'>
-            <Box>Players:</Box>
-            <Text css={{ 'white-space': 'pre-line' }}>{info().players}</Text>
-          </HStack>
+          <Text css={{ 'white-space': 'pre-line' }}>{info().players}</Text>
         </Show>
       </VStack>
       <IconButton
