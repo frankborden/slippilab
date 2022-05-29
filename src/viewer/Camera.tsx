@@ -45,7 +45,7 @@ export function Camera (props: ParentProps): JSX.Element {
     ])
     setScale(
       (oldScaling) =>
-        store.zoom * smooth(oldScaling ?? 1, scaling, Math.max(...followSpeeds))
+        store.zoom * smooth(oldScaling ?? 5, scaling, Math.max(...followSpeeds))
     )
   })
   const transforms = createMemo(() =>
