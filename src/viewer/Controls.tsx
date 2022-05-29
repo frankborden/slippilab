@@ -23,14 +23,14 @@ import { Box, hope, HStack } from '@hope-ui/solid'
 import { controlsColor } from './colors'
 import { onCleanup, onMount, Show, JSX } from 'solid-js'
 import {
+  ArrowFatLineLeft,
+  ArrowFatLineRight,
   ClockClockwise,
   ClockCounterClockwise,
-  FastForward,
   MagnifyingGlassMinus,
   MagnifyingGlassPlus,
   Pause,
-  Play,
-  Rewind
+  Play
 } from 'phosphor-solid'
 
 export function Controls (): JSX.Element {
@@ -149,7 +149,7 @@ export function Controls (): JSX.Element {
             weight='fill'
             onClick={() => adjust(-120)}
           />
-          <Rewind
+          <ArrowFatLineLeft
             style={{ cursor: 'pointer' }}
             size={32}
             weight='fill'
@@ -176,7 +176,7 @@ export function Controls (): JSX.Element {
               onClick={() => togglePause()}
             />
           </Show>
-          <FastForward
+          <ArrowFatLineRight
             style={{ cursor: 'pointer' }}
             size={32}
             weight='fill'
