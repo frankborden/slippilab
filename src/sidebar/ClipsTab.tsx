@@ -29,7 +29,8 @@ export function ClipsTab (): JSX.Element {
             <Badge
               color='white'
               backgroundColor={playerColors()[clip.playerIndex]}
-            >{`P${clip.playerIndex + 1}`}
+            >
+              {`P${clip.playerIndex + 1}`}
             </Badge>
             <Badge colorScheme={nameColorScheme}>{name}</Badge>
           </HStack>

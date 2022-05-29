@@ -271,8 +271,7 @@ function isSpacieUpB (
 
 function getPlayerColor (playerIndex: number): string {
   if (store.replayData!.settings.isTeams) {
-    const settings =
-      store.replayData!.settings.playerSettings[playerIndex]
+    const settings = store.replayData!.settings.playerSettings[playerIndex]
     return teamShadesByTeamId[settings.teamId][settings.teamShade]
   }
   return playerColors[playerIndex]

@@ -1,7 +1,9 @@
 import { BlobReader, TextWriter, ZipReader } from '@zip.js/zip.js'
 
 export type AnimationFrames = string[]
-export interface CharacterAnimations { [animationName: string]: AnimationFrames }
+export interface CharacterAnimations {
+  [animationName: string]: AnimationFrames
+}
 
 const animationsCache = new Map<number, CharacterAnimations>()
 

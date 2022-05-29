@@ -14,10 +14,11 @@ export async function unzip (zipFile: File): Promise<File[]> {
   return await Promise.all(
     entries
       .filter((entry) => !entry.filename.split('/').at(-1)?.startsWith('.'))
-      .map(async (entry) =>
-        await (entry.getData?.(new BlobWriter()) as Promise<Blob>).then(
-          (blob) => new File([blob], entry.filename)
-        )
+      .map(
+        async (entry) =>
+          await (entry.getData?.(new BlobWriter()) as Promise<Blob>).then(
+            (blob) => new File([blob], entry.filename)
+          )
       )
   )
 }

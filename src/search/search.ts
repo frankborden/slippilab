@@ -30,14 +30,14 @@ export function search (
   always?: Predicate
 ): Highlight[] {
   return replay.settings.playerSettings.flatMap((playerSettings) => {
-    const alwaysSequence = (always != null)
-      ? replay.frames.map((frame) =>
-        always(playerSettings.playerIndex, frame.frameNumber, replay)
-      )
-      : undefined
-    const alwaysStreaks = (alwaysSequence != null)
-      ? getStreaks(alwaysSequence, 1)
-      : undefined
+    const alwaysSequence =
+      always != null
+        ? replay.frames.map((frame) =>
+          always(playerSettings.playerIndex, frame.frameNumber, replay)
+        )
+        : undefined
+    const alwaysStreaks =
+      alwaysSequence != null ? getStreaks(alwaysSequence, 1) : undefined
     return (
       query
         // apply all the predicates to every frame

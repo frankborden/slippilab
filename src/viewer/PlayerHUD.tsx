@@ -119,8 +119,7 @@ export function PlayerHUD (props: { player: number }): JSX.Element {
 // TODO: dedupe with same code in viewerState.tsx
 function getPlayerColor (playerIndex: number): string {
   if (store.replayData!.settings.isTeams) {
-    const settings =
-      store.replayData!.settings.playerSettings[playerIndex]
+    const settings = store.replayData!.settings.playerSettings[playerIndex]
     return teamShadesByTeamId[settings.teamId][settings.teamShade]
   }
   return playerColors[playerIndex]

@@ -9,12 +9,7 @@ import {
 } from '../common/ids'
 import { Picker } from '../common/Picker'
 import { GameSettings, PlayerSettings } from '../common/types'
-import {
-  gameSettings,
-  setFile,
-  setFilters,
-  store
-} from '../state'
+import { gameSettings, setFile, setFilters, store } from '../state'
 import { Upload } from './Upload'
 import './select.css'
 import { NowPlaying } from './NowPlaying'
@@ -65,7 +60,9 @@ export function ReplaysTab (): JSX.Element {
               <GameInfo gameSettings={gameSettings} />
             )}
             onClick={async (_, index) =>
-              await setFile(gameSettings().indexOf(filteredGameSettings()[index]))}
+              await setFile(
+                gameSettings().indexOf(filteredGameSettings()[index])
+              )}
             selected={(settings) =>
               gameSettings().indexOf(settings) === store.currentFile}
           />

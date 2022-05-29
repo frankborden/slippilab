@@ -100,7 +100,10 @@ function Shield (props: {
   )
 }
 
-function Shine (props: { renderData: RenderData, playerUpdate: PlayerUpdate }): JSX.Element {
+function Shine (props: {
+  renderData: RenderData
+  playerUpdate: PlayerUpdate
+}): JSX.Element {
   const characterName = createMemo(
     () =>
       characterNameByExternalId[
@@ -169,11 +172,7 @@ function Hexagon (props: { x: number, y: number, r: number }): JSX.Element {
           <polygon points={maskPoints()} fill='black' />
         </mask>
       </defs>
-      <polygon
-        points={points()}
-        fill='#8abce9'
-        mask='url(#innerHexagon)'
-      />
+      <polygon points={points()} fill='#8abce9' mask='url(#innerHexagon)' />
     </>
   )
 }

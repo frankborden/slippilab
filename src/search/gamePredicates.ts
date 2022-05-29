@@ -54,7 +54,8 @@ const tournamentStages: Stage[] = [
 ]
 export function isTournamentStage (
   game: ReplayData,
-  _playerIndex: number): boolean {
+  _playerIndex: number
+): boolean {
   return (
     tournamentStages
       .map((stage) => stageNameByExternalId.indexOf(stage))

@@ -735,7 +735,8 @@ function parsePostFrameUpdateEvent (
       '0.2.0.0',
       offset + 0x22
     ),
-    isGrounded: readUint(rawData, 8, replayVersion, '2.0.0.0', offset + 0x2f) !== 0,
+    isGrounded:
+      readUint(rawData, 8, replayVersion, '2.0.0.0', offset + 0x2f) !== 0,
     lastGroundId: readUint(rawData, 8, replayVersion, '2.0.0.0', offset + 0x30),
     jumpsRemaining: readUint(
       rawData,

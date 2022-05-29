@@ -77,7 +77,10 @@ createEffect(() => setStore('running', running()))
 export const frame = getFrame
 export const gameSettings = getGameSettings
 
-export async function load (files: File[], startFrame: number = 0): Promise<void> {
+export async function load (
+  files: File[],
+  startFrame: number = 0
+): Promise<void> {
   const [progress, setProgress] = createSignal(0)
   notificationService.show({
     persistent: true,
@@ -156,11 +159,11 @@ export async function load (files: File[], startFrame: number = 0): Promise<void
 
 export async function nextFile (): Promise<void> {
   const currentIndex =
-    (store.filteredIndexes != null) && store.filteredIndexes.length > 0
+    store.filteredIndexes != null && store.filteredIndexes.length > 0
       ? store.filteredIndexes.indexOf(store.currentFile)
       : store.currentFile
   const nextIndex =
-    (store.filteredIndexes != null) && store.filteredIndexes.length > 0
+    store.filteredIndexes != null && store.filteredIndexes.length > 0
       ? store.filteredIndexes[
         wrap(store.filteredIndexes.length, currentIndex + 1)
       ]
@@ -184,11 +187,11 @@ export async function nextFile (): Promise<void> {
 
 export async function previousFile (): Promise<void> {
   const currentIndex =
-    (store.filteredIndexes != null) && store.filteredIndexes.length > 0
+    store.filteredIndexes != null && store.filteredIndexes.length > 0
       ? store.filteredIndexes.indexOf(store.currentFile)
       : store.currentFile
   const previousIndex =
-    (store.filteredIndexes != null) && store.filteredIndexes.length > 0
+    store.filteredIndexes != null && store.filteredIndexes.length > 0
       ? store.filteredIndexes[
         wrap(store.filteredIndexes.length, currentIndex - 1)
       ]

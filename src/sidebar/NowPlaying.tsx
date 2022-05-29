@@ -13,21 +13,22 @@ export function NowPlaying (): JSX.Element {
       : `P${p.port}(${characterNameByExternalId[p.externalCharacterId]})`
   }
   const info = createMemo(() => {
-    return (store.replayData === undefined)
+    return store.replayData === undefined
       ? {}
       : {
           name: store.files[store.currentFile].name,
-          date: new Date(store.replayData.settings.startTimestamp).toLocaleString(),
+          date: new Date(
+            store.replayData.settings.startTimestamp
+          ).toLocaleString(),
           platform: store.replayData.settings.platform,
           console: store.replayData.settings.consoleNickname,
-          players: (
-            Object.values(
-              groupBy(
-                (p) => String(p.teamId),
-                store.replayData.settings.playerSettings.filter((p) => p)
-              )
-            ))
-            .map(players => players.map(player).join(', '))
+          players: Object.values(
+            groupBy(
+              (p) => String(p.teamId),
+              store.replayData.settings.playerSettings.filter((p) => p)
+            )
+          )
+            .map((players) => players.map(player).join(', '))
             .join('\n')
         }
   })
