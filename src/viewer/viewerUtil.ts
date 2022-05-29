@@ -1,6 +1,10 @@
-import { PlayerUpdate, PlayerUpdateWithNana, ReplayData } from '../common/types'
+import {
+  PlayerUpdate,
+  PlayerUpdateWithNana,
+  ReplayData,
+} from "../common/types";
 
-export function getStartOfAction (
+export function getStartOfAction(
   playerIndex: number,
   currentFrame: number,
   isNana: boolean,
@@ -12,27 +16,27 @@ export function getStartOfAction (
       currentFrame,
       replayData
     ) as PlayerUpdateWithNana
-  )[isNana ? 'nanaState' : 'state']
+  )[isNana ? "nanaState" : "state"];
   while (true) {
     const testEarlierState = getPlayerOnFrame(
       playerIndex,
       earliestStateOfAction.frameNumber - 1,
       replayData
-    )?.[isNana ? 'nanaState' : 'state']
+    )?.[isNana ? "nanaState" : "state"];
     if (
       testEarlierState === undefined ||
       testEarlierState.actionStateId !== earliestStateOfAction.actionStateId
     ) {
-      return earliestStateOfAction.frameNumber
+      return earliestStateOfAction.frameNumber;
     }
-    earliestStateOfAction = testEarlierState
+    earliestStateOfAction = testEarlierState;
   }
 }
 
-export function getPlayerOnFrame (
+export function getPlayerOnFrame(
   playerIndex: number,
   frameNumber: number,
   replayData: ReplayData
 ): PlayerUpdate {
-  return replayData.frames[frameNumber]?.players[playerIndex]
+  return replayData.frames[frameNumber]?.players[playerIndex];
 }

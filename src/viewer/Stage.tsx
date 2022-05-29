@@ -1,202 +1,202 @@
-import { randallColor, stageColor } from './colors'
-import { createMemo, For, JSX, Match, Switch } from 'solid-js'
-import { stageNameByExternalId } from '../common/ids'
-import { frame, store, StoreWithReplay } from '../state'
+import { randallColor, stageColor } from "./colors";
+import { createMemo, For, JSX, Match, Switch } from "solid-js";
+import { stageNameByExternalId } from "../common/ids";
+import { frame, store, StoreWithReplay } from "../state";
 
-export function Stage (): JSX.Element {
+export function Stage(): JSX.Element {
   const stageName = createMemo(
     () =>
       stageNameByExternalId[
         (store as StoreWithReplay).replayData.settings.stageId
       ]
-  )
+  );
   return (
     <Switch>
-      <Match when={stageName() === 'Battlefield'}>
+      <Match when={stageName() === "Battlefield"}>
         <Battlefield />
       </Match>
-      <Match when={stageName() === 'Dream Land N64'}>
+      <Match when={stageName() === "Dream Land N64"}>
         <Dreamland />
       </Match>
-      <Match when={stageName() === 'Final Destination'}>
+      <Match when={stageName() === "Final Destination"}>
         <FinalDestination />
       </Match>
       <Match when={stageName() === "Yoshi's Story"}>
         <YoshisStory />
       </Match>
-      <Match when={stageName() === 'Fountain of Dreams'}>
+      <Match when={stageName() === "Fountain of Dreams"}>
         <FountainOfDreams />
       </Match>
-      <Match when={stageName() === 'Pokémon Stadium'}>
+      <Match when={stageName() === "Pokémon Stadium"}>
         <PokemonStadium />
       </Match>
     </Switch>
-  )
+  );
 }
 
-function Battlefield (): JSX.Element {
+function Battlefield(): JSX.Element {
   const mainStage = [
-    '-68.4, 0',
-    ' 68.4, 0',
-    '65, -6',
-    '36, -19',
-    '39, -21',
-    '33, -25',
-    '30, -29',
-    '29, -35',
-    '10, -40',
-    '10, -30',
-    '-10, -30',
-    '-10, -40',
-    '-29, -35',
-    '-30, -29',
-    '-33, -25',
-    '-39, -21',
-    '-36, -19',
-    '-65, -6',
-    '-68.4, 0'
-  ]
+    "-68.4, 0",
+    " 68.4, 0",
+    "65, -6",
+    "36, -19",
+    "39, -21",
+    "33, -25",
+    "30, -29",
+    "29, -35",
+    "10, -40",
+    "10, -30",
+    "-10, -30",
+    "-10, -40",
+    "-29, -35",
+    "-30, -29",
+    "-33, -25",
+    "-39, -21",
+    "-36, -19",
+    "-65, -6",
+    "-68.4, 0",
+  ];
   const platforms = [
-    ['-57.6, 27.2', '-20, 27.2'],
-    ['20, 27.2', '57.6, 27.2'],
-    ['-18.8, 54.4', '18.8, 54.4']
-  ]
+    ["-57.6, 27.2", "-20, 27.2"],
+    ["20, 27.2", "57.6, 27.2"],
+    ["-18.8, 54.4", "18.8, 54.4"],
+  ];
   const blastzones = [
     [-224, -108.8],
-    [224, 200]
-  ]
+    [224, 200],
+  ];
   return (
     <>
-      <polyline points={mainStage.join(' ')} fill={stageColor} />
+      <polyline points={mainStage.join(" ")} fill={stageColor} />
       <For each={platforms}>
-        {(points) => <polyline points={points.join(' ')} stroke={stageColor} />}
+        {(points) => <polyline points={points.join(" ")} stroke={stageColor} />}
       </For>
       <rect
         x={blastzones[0][0]}
         y={blastzones[0][1]}
         width={blastzones[1][0] - blastzones[0][0]}
         height={blastzones[1][1] - blastzones[0][1]}
-        fill='none'
+        fill="none"
         stroke={stageColor}
       />
     </>
-  )
+  );
 }
 
-function Dreamland (): JSX.Element {
+function Dreamland(): JSX.Element {
   const mainStage = [
-    '-76.5, -11',
-    '-77.25, 0',
-    '77.25, 0',
-    '76.5, -11',
-    '76.5, -11',
-    '65.75, -36',
-    '-65.75, -36',
-    '-76.5, -11'
-  ]
+    "-76.5, -11",
+    "-77.25, 0",
+    "77.25, 0",
+    "76.5, -11",
+    "76.5, -11",
+    "65.75, -36",
+    "-65.75, -36",
+    "-76.5, -11",
+  ];
   const platforms = [
-    ['-61.393, 30.142', '-31.725, 30.142'],
-    ['31.704, 30.243', '63.075, 30.243'],
-    ['-19.018, 51.425', '19.017, 51.425']
-  ]
+    ["-61.393, 30.142", "-31.725, 30.142"],
+    ["31.704, 30.243", "63.075, 30.243"],
+    ["-19.018, 51.425", "19.017, 51.425"],
+  ];
   const blastzones = [
     [-255, -123],
-    [255, 250]
-  ]
+    [255, 250],
+  ];
   return (
     <>
-      <polyline points={mainStage.join(' ')} fill={stageColor} />
+      <polyline points={mainStage.join(" ")} fill={stageColor} />
       <For each={platforms}>
-        {(points) => <polyline points={points.join(' ')} stroke={stageColor} />}
+        {(points) => <polyline points={points.join(" ")} stroke={stageColor} />}
       </For>
       <rect
         x={blastzones[0][0]}
         y={blastzones[0][1]}
         width={blastzones[1][0] - blastzones[0][0]}
         height={blastzones[1][1] - blastzones[0][1]}
-        fill='none'
+        fill="none"
         stroke={stageColor}
       />
     </>
-  )
+  );
 }
 
-function FinalDestination (): JSX.Element {
+function FinalDestination(): JSX.Element {
   const mainStage = [
-    '-85.6, 0',
-    '85.6, 0',
-    '85.6, -10',
-    '65, -20',
-    '65, -30',
-    '60, -47',
-    '50, -55',
-    '45, -56',
-    '-45, -56',
-    '-50, -55',
-    '-60, -47',
-    '-65, -30',
-    '-65, -20',
-    '-85.6, -10',
-    '-85.6, 0'
-  ]
+    "-85.6, 0",
+    "85.6, 0",
+    "85.6, -10",
+    "65, -20",
+    "65, -30",
+    "60, -47",
+    "50, -55",
+    "45, -56",
+    "-45, -56",
+    "-50, -55",
+    "-60, -47",
+    "-65, -30",
+    "-65, -20",
+    "-85.6, -10",
+    "-85.6, 0",
+  ];
   const blastzones = [
     [-246, -140],
-    [246, 188]
-  ]
+    [246, 188],
+  ];
   return (
     <>
-      <polyline points={mainStage.join(' ')} fill={stageColor} />
+      <polyline points={mainStage.join(" ")} fill={stageColor} />
       <rect
         x={blastzones[0][0]}
         y={blastzones[0][1]}
         width={blastzones[1][0] - blastzones[0][0]}
         height={blastzones[1][1] - blastzones[0][1]}
-        fill='none'
+        fill="none"
         stroke={stageColor}
       />
     </>
-  )
+  );
 }
 
-function YoshisStory (): JSX.Element {
+function YoshisStory(): JSX.Element {
   const mainStage = [
-    '-54, -91',
-    '-54, -47',
-    '-53, -46',
-    '-53, -31',
-    '-54, -30',
-    '-54, -28',
-    '-53, -27',
-    '-53, -12',
-    '-53, -12',
-    '-54, -11',
-    '-55, -8',
-    '-56, -7',
-    '-56, -3.5',
-    '-39, 0',
-    '39, 0',
-    '56, -3.5',
-    '56, -7',
-    '55, -8',
-    '54, -11',
-    '53, -12',
-    '53, -27',
-    '54, -28',
-    '54, -30',
-    '53, -31',
-    '53, -46',
-    '54, -47',
-    '54, -91',
-    '-54, -91'
-  ]
+    "-54, -91",
+    "-54, -47",
+    "-53, -46",
+    "-53, -31",
+    "-54, -30",
+    "-54, -28",
+    "-53, -27",
+    "-53, -12",
+    "-53, -12",
+    "-54, -11",
+    "-55, -8",
+    "-56, -7",
+    "-56, -3.5",
+    "-39, 0",
+    "39, 0",
+    "56, -3.5",
+    "56, -7",
+    "55, -8",
+    "54, -11",
+    "53, -12",
+    "53, -27",
+    "54, -28",
+    "54, -30",
+    "53, -31",
+    "53, -46",
+    "54, -47",
+    "54, -91",
+    "-54, -91",
+  ];
   const platforms = [
-    ['-59.5, 23.45', '-28, 23.45'],
-    ['28, 23.45', '59.5, 23.45'],
-    ['-15.75, 42', '15.75, 42']
-  ]
+    ["-59.5, 23.45", "-28, 23.45"],
+    ["28, 23.45", "59.5, 23.45"],
+    ["-15.75, 42", "15.75, 42"],
+  ];
   const randall = createMemo(() => {
     const cornerPositions: {
-      [frameCount: number]: [y: number, xLeft: number]
+      [frameCount: number]: [y: number, xLeft: number];
     } = {
       416: [-33.184478759765625, 89.75263977050781],
       417: [-33.04470443725586, 90.07878112792969],
@@ -227,138 +227,138 @@ function YoshisStory (): JSX.Element {
       1019: [-14.099089622497559, -102.8981018066406],
       1020: [-14.320136070251465, -103.1476135253906],
       1021: [-14.6375150680542, -103.3063049316406],
-      1022: [-14.954894065856934, -103.4649963378906]
-    }
+      1022: [-14.954894065856934, -103.4649963378906],
+    };
     // return frameNumber to -123 based.
-    const frameInLap = (frame() - 123 + 1200) % 1200
-    const randallWidth = 11.9
+    const frameInLap = (frame() - 123 + 1200) % 1200;
+    const randallWidth = 11.9;
 
     if (frameInLap > 476 && frameInLap < 1016) {
-      const start = 101.235443115234
-      const speed = -0.35484
-      const frameInSection = frameInLap - 477
-      const y = -13.64989
-      const left = [start - randallWidth + speed * frameInSection, y]
-      const right = [start + speed * frameInSection, y]
-      return [left, right]
+      const start = 101.235443115234;
+      const speed = -0.35484;
+      const frameInSection = frameInLap - 477;
+      const y = -13.64989;
+      const left = [start - randallWidth + speed * frameInSection, y];
+      const right = [start + speed * frameInSection, y];
+      return [left, right];
     }
     if (frameInLap > 1022 && frameInLap < 1069) {
-      const start = -15.2778692245483
-      const speed = -0.354839325
-      const frameInSection = frameInLap - 1023
-      const y = start + speed * frameInSection
-      const left = [-103.6, y]
-      const right = [-91.7, y]
-      return [left, right]
+      const start = -15.2778692245483;
+      const speed = -0.354839325;
+      const frameInSection = frameInLap - 1023;
+      const y = start + speed * frameInSection;
+      const left = [-103.6, y];
+      const right = [-91.7, y];
+      return [left, right];
     }
     if (frameInLap > 1075 || frameInLap < 416) {
-      const start = -101.850006103516
-      const speed = 0.35484
-      const frameInSection = frameInLap + (frameInLap < 416 ? 125 : -1076)
-      const y = -33.2489
-      const left = [start + speed * frameInSection, y]
-      const right = [start + randallWidth + speed * frameInSection, y]
-      return [left, right]
+      const start = -101.850006103516;
+      const speed = 0.35484;
+      const frameInSection = frameInLap + (frameInLap < 416 ? 125 : -1076);
+      const y = -33.2489;
+      const left = [start + speed * frameInSection, y];
+      const right = [start + randallWidth + speed * frameInSection, y];
+      return [left, right];
     }
     if (frameInLap > 423 && frameInLap < 469) {
-      const start = -31.16023254394531
-      const speed = 0.354839325
-      const frameInSection = frameInLap - 424
-      const y = start + speed * frameInSection
-      const left = [91.35, y]
-      const right = [103.25, y]
-      return [left, right]
+      const start = -31.16023254394531;
+      const speed = 0.354839325;
+      const frameInSection = frameInLap - 424;
+      const y = start + speed * frameInSection;
+      const left = [91.35, y];
+      const right = [103.25, y];
+      return [left, right];
     }
 
-    const position = cornerPositions[frameInLap]
-    const y = position[0]
-    const left = [position[1], y]
-    const right = [position[1] + randallWidth, y]
-    return [left, right]
-  })
+    const position = cornerPositions[frameInLap];
+    const y = position[0];
+    const left = [position[1], y];
+    const right = [position[1] + randallWidth, y];
+    return [left, right];
+  });
   const blastzones = [
     [-175.7, -91],
-    [173.6, 169]
-  ]
+    [173.6, 169],
+  ];
   return (
     <>
-      <polyline points={mainStage.join(' ')} fill={stageColor} />
+      <polyline points={mainStage.join(" ")} fill={stageColor} />
       <For each={platforms}>
-        {(points) => <polyline points={points.join(' ')} stroke={stageColor} />}
+        {(points) => <polyline points={points.join(" ")} stroke={stageColor} />}
       </For>
-      <polyline points={randall().join(' ')} stroke={randallColor} />
+      <polyline points={randall().join(" ")} stroke={randallColor} />
       <rect
         x={blastzones[0][0]}
         y={blastzones[0][1]}
         width={blastzones[1][0] - blastzones[0][0]}
         height={blastzones[1][1] - blastzones[0][1]}
-        fill='none'
+        fill="none"
         stroke={stageColor}
       />
     </>
-  )
+  );
 }
 
-function FountainOfDreams (): JSX.Element {
+function FountainOfDreams(): JSX.Element {
   const mainStage = [
-    '-63.33, 0.62',
-    '-53.5, 0.62',
-    '-51, 0',
-    '51, 0',
-    '53.5, 0.62',
-    '63.33, 0.62',
-    '63.35, 0.62',
-    '63.35, -4.5',
-    '59.33, -15',
-    '56.9, -19.5',
-    '55, -27',
-    '52, -32',
-    '48, -38',
-    '41, -42',
-    '19, -49.5',
-    '13, -54.5',
-    '10, -62',
-    '8.8, -72',
-    '8.8, -150',
-    '-8.8, -150',
-    '-8.8, -72',
-    '-10, -62',
-    '-13, -54.5',
-    '-19, -49.5',
-    '-41, -42',
-    '-48, -38',
-    '-52, -32',
-    '-55, -27',
-    '-56.9, -19.5',
-    '-59.33, -15',
-    '-63.35, -4.5',
-    '-63.35, 0.62',
-    '-63.35, -4.5',
-    '-63.33, 0.62'
-  ]
+    "-63.33, 0.62",
+    "-53.5, 0.62",
+    "-51, 0",
+    "51, 0",
+    "53.5, 0.62",
+    "63.33, 0.62",
+    "63.35, 0.62",
+    "63.35, -4.5",
+    "59.33, -15",
+    "56.9, -19.5",
+    "55, -27",
+    "52, -32",
+    "48, -38",
+    "41, -42",
+    "19, -49.5",
+    "13, -54.5",
+    "10, -62",
+    "8.8, -72",
+    "8.8, -150",
+    "-8.8, -150",
+    "-8.8, -72",
+    "-10, -62",
+    "-13, -54.5",
+    "-19, -49.5",
+    "-41, -42",
+    "-48, -38",
+    "-52, -32",
+    "-55, -27",
+    "-56.9, -19.5",
+    "-59.33, -15",
+    "-63.35, -4.5",
+    "-63.35, 0.62",
+    "-63.35, -4.5",
+    "-63.33, 0.62",
+  ];
   const platforms = [
-    ['-49.5, 16.125', '-21, 16.125'],
-    ['21, 22.125', '49.5, 22.125'],
-    ['-14.25, 42.75', '14.25, 42.75']
-  ]
+    ["-49.5, 16.125", "-21, 16.125"],
+    ["21, 22.125", "49.5, 22.125"],
+    ["-14.25, 42.75", "14.25, 42.75"],
+  ];
   const blastzones = [
     [-198.75, -146.25],
-    [198.75, 202.5]
-  ]
+    [198.75, 202.5],
+  ];
   return (
     <>
-      <polyline points={mainStage.join(' ')} fill={stageColor} />
+      <polyline points={mainStage.join(" ")} fill={stageColor} />
       <For each={platforms.slice(0, 2)}>
         {(points) => (
           <polyline
-            points={points.join(' ')}
-            stroke-dasharray='2,4'
+            points={points.join(" ")}
+            stroke-dasharray="2,4"
             stroke={stageColor}
           />
         )}
       </For>
       <polyline
-        points={platforms[platforms.length - 1].join(' ')}
+        points={platforms[platforms.length - 1].join(" ")}
         stroke={stageColor}
       />
       <rect
@@ -366,55 +366,55 @@ function FountainOfDreams (): JSX.Element {
         y={blastzones[0][1]}
         width={blastzones[1][0] - blastzones[0][0]}
         height={blastzones[1][1] - blastzones[0][1]}
-        fill='none'
+        fill="none"
         stroke={stageColor}
       />
     </>
-  )
+  );
 }
 
-function PokemonStadium (): JSX.Element {
+function PokemonStadium(): JSX.Element {
   const mainStage = [
-    '87.75, 0',
-    '87.75, -4',
-    '73.75, -15',
-    '73.75, -17.75',
-    '60, -17.75',
-    '60, -38',
-    '15, -60',
-    '15, -112',
-    '-15, -112',
-    '-15, -60',
-    '-60, -38',
-    '-60, -17.75',
-    '-73.75, -17.75',
-    '-73.75, -15',
-    '-87.75, -4',
-    '-87.75, 0',
-    '87.75, 0'
-  ]
+    "87.75, 0",
+    "87.75, -4",
+    "73.75, -15",
+    "73.75, -17.75",
+    "60, -17.75",
+    "60, -38",
+    "15, -60",
+    "15, -112",
+    "-15, -112",
+    "-15, -60",
+    "-60, -38",
+    "-60, -17.75",
+    "-73.75, -17.75",
+    "-73.75, -15",
+    "-87.75, -4",
+    "-87.75, 0",
+    "87.75, 0",
+  ];
   const platforms = [
-    ['-55, 25', '-25, 25'],
-    ['25, 25', '55, 25']
-  ]
+    ["-55, 25", "-25, 25"],
+    ["25, 25", "55, 25"],
+  ];
   const blastzones = [
     [-230, -111],
-    [230, 180]
-  ]
+    [230, 180],
+  ];
   return (
     <>
-      <polyline points={mainStage.join(' ')} fill={stageColor} />
+      <polyline points={mainStage.join(" ")} fill={stageColor} />
       <For each={platforms}>
-        {(points) => <polyline points={points.join(' ')} stroke={stageColor} />}
+        {(points) => <polyline points={points.join(" ")} stroke={stageColor} />}
       </For>
       <rect
         x={blastzones[0][0]}
         y={blastzones[0][1]}
         width={blastzones[1][0] - blastzones[0][0]}
         height={blastzones[1][1] - blastzones[0][1]}
-        fill='none'
+        fill="none"
         stroke={stageColor}
       />
     </>
-  )
+  );
 }

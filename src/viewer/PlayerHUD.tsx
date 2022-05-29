@@ -1,21 +1,21 @@
-import { JSX, createMemo, For, Show } from 'solid-js'
-import { characterNameByInternalId } from '../common/ids'
-import { frame, store, StoreWithReplay } from '../state'
-import { playerColors, teamShadesByTeamId } from './colors'
-import { playerSettings, renderDatas } from './viewerState'
+import { JSX, createMemo, For, Show } from "solid-js";
+import { characterNameByInternalId } from "../common/ids";
+import { frame, store, StoreWithReplay } from "../state";
+import { playerColors, teamShadesByTeamId } from "./colors";
+import { playerSettings, renderDatas } from "./viewerState";
 
-export function PlayerHUD (props: { player: number }): JSX.Element {
+export function PlayerHUD(props: { player: number }): JSX.Element {
   const playerState = createMemo(
     () =>
       (store as StoreWithReplay).replayData.frames[frame()].players[
         props.player
       ]?.state
-  )
+  );
   const position = createMemo(() => ({
     x: -30 + 20 * props.player, // ports at: -30%, -10%, 10%, 30%
-    y: 40 // y% is flipped by css to make the text right-side up.
-  }))
-  const color = createMemo(() => getPlayerColor(props.player))
+    y: 40, // y% is flipped by css to make the text right-side up.
+  }));
+  const color = createMemo(() => getPlayerColor(props.player));
   const name = createMemo(() =>
     [
       playerSettings().find((s) => s.playerIndex === props.player)?.displayName,
@@ -23,10 +23,10 @@ export function PlayerHUD (props: { player: number }): JSX.Element {
       playerSettings().find((s) => s.playerIndex === props.player)?.nametag,
       playerSettings().find((s) => s.playerIndex === props.player)
         ?.playerType === 1
-        ? 'CPU'
-        : characterNameByInternalId[playerState()?.internalCharacterId]
+        ? "CPU"
+        : characterNameByInternalId[playerState()?.internalCharacterId],
     ].find((n) => n !== undefined && n.length > 0)
-  )
+  );
   return (
     <>
       <Show when={playerState()}>
@@ -37,72 +37,72 @@ export function PlayerHUD (props: { player: number }): JSX.Element {
               cy={`-${position().y}%`}
               r={5}
               fill={color()}
-              stroke='black'
+              stroke="black"
             />
           )}
         </For>
         <text
-          style={{ font: 'bold 15px sans-serif', transform: 'scaleY(-1)' }}
+          style={{ font: "bold 15px sans-serif", transform: "scaleY(-1)" }}
           x={`${position().x}%`}
           y={`${position().y + 4}%`}
-          text-anchor='middle'
+          text-anchor="middle"
           textContent={`${Math.floor(playerState().percent)}%`}
           fill={color()}
-          stroke='black'
+          stroke="black"
         />
         <text
-          style={{ font: 'bold 15px sans-serif', transform: 'scaleY(-1)' }}
+          style={{ font: "bold 15px sans-serif", transform: "scaleY(-1)" }}
           x={`${position().x}%`}
           y={`${position().y + 7}%`}
-          text-anchor='middle'
+          text-anchor="middle"
           textContent={name()}
           fill={color()}
-          stroke='black'
+          stroke="black"
         />
         <Show when={store.isDebug}>
           <text
-            style={{ font: 'bold 15px sans-serif', transform: 'scaleY(-1)' }}
+            style={{ font: "bold 15px sans-serif", transform: "scaleY(-1)" }}
             x={`${position().x}%`}
-            y='-40%'
-            text-anchor='middle'
+            y="-40%"
+            text-anchor="middle"
             textContent={`State ID: ${playerState().actionStateId}`}
             fill={color()}
-            stroke='black'
+            stroke="black"
           />
           <text
-            style={{ font: 'bold 15px sans-serif', transform: 'scaleY(-1)' }}
+            style={{ font: "bold 15px sans-serif", transform: "scaleY(-1)" }}
             x={`${position().x}%`}
-            y='-37%'
-            text-anchor='middle'
+            y="-37%"
+            text-anchor="middle"
             textContent={`State Frame: ${parseFloat(
               playerState().actionStateFrameCounter.toFixed(4)
             )}`}
             fill={color()}
-            stroke='black'
+            stroke="black"
           />
           <text
-            style={{ font: 'bold 15px sans-serif', transform: 'scaleY(-1)' }}
+            style={{ font: "bold 15px sans-serif", transform: "scaleY(-1)" }}
             x={`${position().x}%`}
-            y='-34%'
-            text-anchor='middle'
+            y="-34%"
+            text-anchor="middle"
             textContent={`X: ${parseFloat(playerState().xPosition.toFixed(4))}`}
             fill={color()}
-            stroke='black'
+            stroke="black"
           />
           <text
-            style={{ font: 'bold 15px sans-serif', transform: 'scaleY(-1)' }}
+            style={{ font: "bold 15px sans-serif", transform: "scaleY(-1)" }}
             x={`${position().x}%`}
-            y='-31%'
-            text-anchor='middle'
+            y="-31%"
+            text-anchor="middle"
             textContent={`Y: ${parseFloat(playerState().yPosition.toFixed(4))}`}
             fill={color()}
-            stroke='black'
+            stroke="black"
           />
           <text
-            style={{ font: 'bold 15px sans-serif', transform: 'scaleY(-1)' }}
+            style={{ font: "bold 15px sans-serif", transform: "scaleY(-1)" }}
             x={`${position().x}%`}
-            y='-28%'
-            text-anchor='middle'
+            y="-28%"
+            text-anchor="middle"
             textContent={
               renderDatas()[
                 playerSettings().findIndex(
@@ -111,20 +111,20 @@ export function PlayerHUD (props: { player: number }): JSX.Element {
               ].animationName
             }
             fill={color()}
-            stroke='black'
+            stroke="black"
           />
         </Show>
       </Show>
     </>
-  )
+  );
 }
 
 // TODO: dedupe with same code in viewerState.tsx
-function getPlayerColor (playerIndex: number): string {
+function getPlayerColor(playerIndex: number): string {
   if ((store as StoreWithReplay).replayData.settings.isTeams) {
     const settings = (store as StoreWithReplay).replayData.settings
-      .playerSettings[playerIndex]
-    return teamShadesByTeamId[settings.teamId][settings.teamShade]
+      .playerSettings[playerIndex];
+    return teamShadesByTeamId[settings.teamId][settings.teamShade];
   }
-  return playerColors[playerIndex]
+  return playerColors[playerIndex];
 }

@@ -1,16 +1,16 @@
-import { Box, HStack, IconButton, Text, VStack } from '@hope-ui/solid'
-import { ArrowLeft, ArrowRight } from 'phosphor-solid'
-import { groupBy } from 'rambda'
-import { createMemo, JSX, Show } from 'solid-js'
-import { characterNameByExternalId } from '../common/ids'
-import { PlayerSettings } from '../common/types'
-import { nextFile, previousFile, store } from '../state'
+import { Box, HStack, IconButton, Text, VStack } from "@hope-ui/solid";
+import { ArrowLeft, ArrowRight } from "phosphor-solid";
+import { groupBy } from "rambda";
+import { createMemo, JSX, Show } from "solid-js";
+import { characterNameByExternalId } from "../common/ids";
+import { PlayerSettings } from "../common/types";
+import { nextFile, previousFile, store } from "../state";
 
-export function NowPlaying (): JSX.Element {
-  function player (p: PlayerSettings): string {
-    return p.displayName !== '' && p.connectCode !== ''
+export function NowPlaying(): JSX.Element {
+  function player(p: PlayerSettings): string {
+    return p.displayName !== "" && p.connectCode !== ""
       ? `${p.displayName}(${p.connectCode})`
-      : `P${p.port}(${characterNameByExternalId[p.externalCharacterId]})`
+      : `P${p.port}(${characterNameByExternalId[p.externalCharacterId]})`;
   }
   const info = createMemo(() => {
     return store.replayData === undefined
@@ -28,19 +28,19 @@ export function NowPlaying (): JSX.Element {
               store.replayData.settings.playerSettings.filter((p) => p)
             )
           )
-            .map((players) => players.map(player).join(', '))
-            .join('\n')
-        }
-  })
+            .map((players) => players.map(player).join(", "))
+            .join("\n"),
+        };
+  });
   return (
-    <HStack width='$full' justifyContent='space-between' gap='$2'>
+    <HStack width="$full" justifyContent="space-between" gap="$2">
       <IconButton
-        aria-label='Previous File'
+        aria-label="Previous File"
         onClick={previousFile}
-        variant='subtle'
-        icon={<ArrowLeft size='24' />}
+        variant="subtle"
+        icon={<ArrowLeft size="24" />}
       />
-      <VStack alignItems='start'>
+      <VStack alignItems="start">
         <Box>{info().name}</Box>
         <Show when={info().date}>
           <Box>{info().date}</Box>
@@ -51,16 +51,16 @@ export function NowPlaying (): JSX.Element {
         <Show when={info().console}>
           <Box>Console: {info().console}</Box>
         </Show>
-        <Show when={info().players !== ''}>
-          <Text css={{ 'white-space': 'pre-line' }}>{info().players}</Text>
+        <Show when={info().players !== ""}>
+          <Text css={{ "white-space": "pre-line" }}>{info().players}</Text>
         </Show>
       </VStack>
       <IconButton
-        aria-label='Next File'
+        aria-label="Next File"
         onClick={nextFile}
-        variant='subtle'
-        icon={<ArrowRight size='24' />}
+        variant="subtle"
+        icon={<ArrowRight size="24" />}
       />
     </HStack>
-  )
+  );
 }

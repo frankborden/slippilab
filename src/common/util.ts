@@ -1,21 +1,21 @@
-import { BlobReader, BlobWriter, ZipReader } from '@zip.js/zip.js'
+import { BlobReader, BlobWriter, ZipReader } from "@zip.js/zip.js";
 
-export async function filterFiles (files: File[]): Promise<File[]> {
-  const slpFiles = files.filter((file) => file.name.endsWith('.slp'))
-  const zipFiles = files.filter((file) => file.name.endsWith('.zip'))
+export async function filterFiles(files: File[]): Promise<File[]> {
+  const slpFiles = files.filter((file) => file.name.endsWith(".slp"));
+  const zipFiles = files.filter((file) => file.name.endsWith(".zip"));
   const blobsFromZips = (await Promise.all(zipFiles.map(unzip)))
     .flat()
-    .filter((file) => file.name.endsWith('.slp'))
-  return [...slpFiles, ...blobsFromZips]
+    .filter((file) => file.name.endsWith(".slp"));
+  return [...slpFiles, ...blobsFromZips];
 }
 
-export async function unzip (zipFile: File): Promise<File[]> {
-  const entries = await new ZipReader(new BlobReader(zipFile)).getEntries()
+export async function unzip(zipFile: File): Promise<File[]> {
+  const entries = await new ZipReader(new BlobReader(zipFile)).getEntries();
   return await Promise.all(
     entries
       // filter out some Apple-related hidden files I sometimes saw.
       .filter(
-        (entry) => !(entry.filename.split('/').at(-1)?.startsWith('.') ?? true)
+        (entry) => !(entry.filename.split("/").at(-1)?.startsWith(".") ?? true)
       )
       .map(
         async (entry) =>
@@ -23,5 +23,5 @@ export async function unzip (zipFile: File): Promise<File[]> {
             (blob) => new File([blob], entry.filename)
           )
       )
-  )
+  );
 }

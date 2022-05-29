@@ -1,17 +1,17 @@
-import { createMemo, For, JSX, Match, Switch } from 'solid-js'
-import { itemNamesById } from '../common/ids'
-import { ItemUpdate, PlayerUpdate } from '../common/types'
-import { store, StoreWithReplay } from '../state'
+import { createMemo, For, JSX, Match, Switch } from "solid-js";
+import { itemNamesById } from "../common/ids";
+import { ItemUpdate, PlayerUpdate } from "../common/types";
+import { store, StoreWithReplay } from "../state";
 
 // TODO: characters projectiles
 
 // Note: Most items coordinates and sizes are divided by 256 to convert them
 // from hitboxspace to worldspace.
-export function Item (props: { item: ItemUpdate }): JSX.Element {
-  const itemName = createMemo(() => itemNamesById[props.item.typeId])
+export function Item(props: { item: ItemUpdate }): JSX.Element {
+  const itemName = createMemo(() => itemNamesById[props.item.typeId]);
   return (
     <Switch>
-      <Match when={itemName() === 'Needle(thrown)'}>
+      <Match when={itemName() === "Needle(thrown)"}>
         <Needle item={props.item} />
       </Match>
       <Match when={itemName() === "Fox's Laser"}>
@@ -20,7 +20,7 @@ export function Item (props: { item: ItemUpdate }): JSX.Element {
       <Match when={itemName() === "Falco's Laser"}>
         <FalcoLaser item={props.item} />
       </Match>
-      <Match when={itemName() === 'Turnip'}>
+      <Match when={itemName() === "Turnip"}>
         <Turnip item={props.item} />
       </Match>
       <Match when={itemName() === "Yoshi's egg(thrown)"}>
@@ -32,7 +32,7 @@ export function Item (props: { item: ItemUpdate }): JSX.Element {
       <Match when={itemName() === "Mario's fire"}>
         <MarioFireball item={props.item} />
       </Match>
-      <Match when={itemName() === 'Missile'}>
+      <Match when={itemName() === "Missile"}>
         <Missile item={props.item} />
       </Match>
       <Match when={itemName() === "Samus's bomb"}>
@@ -41,29 +41,29 @@ export function Item (props: { item: ItemUpdate }): JSX.Element {
       <Match when={itemName() === "Samus's chargeshot"}>
         <SamusChargeshot item={props.item} />
       </Match>
-      <Match when={itemName() === 'Shyguy (Heiho)'}>
+      <Match when={itemName() === "Shyguy (Heiho)"}>
         <FlyGuy item={props.item} />
       </Match>
     </Switch>
-  )
+  );
 }
 
-function SamusChargeshot (props: { item: ItemUpdate }): JSX.Element {
+function SamusChargeshot(props: { item: ItemUpdate }): JSX.Element {
   // charge levels go 0 to 7
-  const hitboxesByChargeLevel = [300, 400, 500, 600, 700, 800, 900, 1200]
+  const hitboxesByChargeLevel = [300, 400, 500, 600, 700, 800, 900, 1200];
   return (
     <>
       <circle
         cx={props.item.xPosition}
         cy={props.item.yPosition}
         r={hitboxesByChargeLevel[props.item.chargeShotChargeLevel] / 256}
-        fill='darkgray'
+        fill="darkgray"
       />
     </>
-  )
+  );
 }
 
-function SamusBomb (props: { item: ItemUpdate }): JSX.Element {
+function SamusBomb(props: { item: ItemUpdate }): JSX.Element {
   // states: 1 = falling, 3 = exploding
   return (
     <>
@@ -71,13 +71,13 @@ function SamusBomb (props: { item: ItemUpdate }): JSX.Element {
         cx={props.item.xPosition}
         cy={props.item.yPosition}
         r={(props.item.state === 3 ? 1536 : 500) / 256}
-        fill='darkgray'
+        fill="darkgray"
       />
     </>
-  )
+  );
 }
 
-function Missile (props: { item: ItemUpdate }): JSX.Element {
+function Missile(props: { item: ItemUpdate }): JSX.Element {
   // samusMissileTypes: 0 = homing missile, 1 = smash missile
   return (
     <>
@@ -85,41 +85,41 @@ function Missile (props: { item: ItemUpdate }): JSX.Element {
         cx={props.item.xPosition}
         cy={props.item.yPosition}
         r={(props.item.samusMissileType === 0 ? 500 : 600) / 256}
-        fill='darkgray'
+        fill="darkgray"
       />
     </>
-  )
+  );
 }
 
-function MarioFireball (props: { item: ItemUpdate }): JSX.Element {
+function MarioFireball(props: { item: ItemUpdate }): JSX.Element {
   return (
     <>
       <circle
         cx={props.item.xPosition}
         cy={props.item.yPosition}
         r={600 / 256}
-        fill='darkgray'
+        fill="darkgray"
       />
     </>
-  )
+  );
 }
 
-function LuigiFireball (props: { item: ItemUpdate }): JSX.Element {
+function LuigiFireball(props: { item: ItemUpdate }): JSX.Element {
   return (
     <>
       <circle
         cx={props.item.xPosition}
         cy={props.item.yPosition}
         r={500 / 256}
-        fill='darkgray'
+        fill="darkgray"
       />
     </>
-  )
+  );
 }
 
-function YoshiEgg (props: { item: ItemUpdate }): JSX.Element {
+function YoshiEgg(props: { item: ItemUpdate }): JSX.Element {
   // states: 0 = held, 1 = thrown, 2 = exploded
-  const ownerState = createMemo(() => getOwner(props.item).state)
+  const ownerState = createMemo(() => getOwner(props.item).state);
   return (
     <>
       <circle
@@ -132,17 +132,17 @@ function YoshiEgg (props: { item: ItemUpdate }): JSX.Element {
             : props.item.yPosition
         }
         r={props.item.state === 2 ? 2500 / 256 : 1000 / 256}
-        fill='darkgray'
+        fill="darkgray"
         opacity={props.item.state === 1 ? 1 : 0.5}
       />
     </>
-  )
+  );
 }
 
-function Turnip (props: { item: ItemUpdate }): JSX.Element {
+function Turnip(props: { item: ItemUpdate }): JSX.Element {
   // states: 0 = held, 1 = bouncing?, 2 = thrown
   // face: props.item.peachTurnipFace
-  const ownerState = createMemo(() => getOwner(props.item).state)
+  const ownerState = createMemo(() => getOwner(props.item).state);
   return (
     <>
       <circle
@@ -155,36 +155,36 @@ function Turnip (props: { item: ItemUpdate }): JSX.Element {
             : props.item.yPosition
         }
         r={600 / 256}
-        fill='darkgray'
+        fill="darkgray"
         opacity={props.item.state === 0 ? 0.5 : 1}
       />
     </>
-  )
+  );
 }
 
-function Needle (props: { item: ItemUpdate }): JSX.Element {
+function Needle(props: { item: ItemUpdate }): JSX.Element {
   return (
     <>
       <circle
         cx={props.item.xPosition}
         cy={props.item.yPosition}
         r={500 / 256}
-        fill='darkgray'
+        fill="darkgray"
       />
     </>
-  )
+  );
 }
 
-function FoxLaser (props: { item: ItemUpdate }): JSX.Element {
+function FoxLaser(props: { item: ItemUpdate }): JSX.Element {
   // There is a 4th hitbox for the first frame only at -3600 (hitboxspace) with
   // size 400 / 256 that I am skipping.
-  const hitboxOffsets = [-200, -933, -1666].map((x) => x / 256)
-  const hitboxSize = 300 / 256
+  const hitboxOffsets = [-200, -933, -1666].map((x) => x / 256);
+  const hitboxSize = 300 / 256;
   // Throws and deflected lasers are not straight horizontal
   const rotations = createMemo(() => {
-    const direction = Math.atan2(props.item.yVelocity, props.item.xVelocity)
-    return [Math.cos(direction), Math.sin(direction)]
-  })
+    const direction = Math.atan2(props.item.yVelocity, props.item.xVelocity);
+    return [Math.cos(direction), Math.sin(direction)];
+  });
   return (
     <>
       <line
@@ -208,7 +208,7 @@ function FoxLaser (props: { item: ItemUpdate }): JSX.Element {
             props.item.facingDirection *
             rotations()[1]
         }
-        stroke='red'
+        stroke="red"
       />
       <For each={hitboxOffsets}>
         {(hitboxOffset) => (
@@ -222,22 +222,22 @@ function FoxLaser (props: { item: ItemUpdate }): JSX.Element {
               hitboxOffset * props.item.facingDirection * rotations()[1]
             }
             r={hitboxSize}
-            fill='red'
+            fill="red"
           />
         )}
       </For>
     </>
-  )
+  );
 }
 
-function FalcoLaser (props: { item: ItemUpdate }): JSX.Element {
-  const hitboxOffsets = [-200, -933, -1666, -2400].map((x) => x / 256)
-  const hitboxSize = 300 / 256
+function FalcoLaser(props: { item: ItemUpdate }): JSX.Element {
+  const hitboxOffsets = [-200, -933, -1666, -2400].map((x) => x / 256);
+  const hitboxSize = 300 / 256;
   // Throws and deflected lasers are not straight horizontal
   const rotations = createMemo(() => {
-    const direction = Math.atan2(props.item.yVelocity, props.item.xVelocity)
-    return [Math.cos(direction), Math.sin(direction)]
-  })
+    const direction = Math.atan2(props.item.yVelocity, props.item.xVelocity);
+    return [Math.cos(direction), Math.sin(direction)];
+  });
   return (
     <>
       <line
@@ -251,7 +251,7 @@ function FalcoLaser (props: { item: ItemUpdate }): JSX.Element {
           props.item.yPosition +
           hitboxOffsets[hitboxOffsets.length - 1] * rotations()[1]
         }
-        stroke='red'
+        stroke="red"
       />
       <For each={hitboxOffsets}>
         {(hitboxOffset) => (
@@ -259,29 +259,29 @@ function FalcoLaser (props: { item: ItemUpdate }): JSX.Element {
             cx={props.item.xPosition + hitboxOffset * rotations()[0]}
             cy={props.item.yPosition + hitboxOffset * rotations()[1]}
             r={hitboxSize}
-            fill='red'
+            fill="red"
           />
         )}
       </For>
     </>
-  )
+  );
 }
 
-function FlyGuy (props: { item: ItemUpdate }): JSX.Element {
+function FlyGuy(props: { item: ItemUpdate }): JSX.Element {
   return (
     <>
       <circle
         cx={props.item.xPosition}
         cy={props.item.yPosition}
         r={5 * 0.85}
-        fill='#aa0000'
+        fill="#aa0000"
       />
     </>
-  )
+  );
 }
 
-function getOwner (item: ItemUpdate): PlayerUpdate {
+function getOwner(item: ItemUpdate): PlayerUpdate {
   return (store as StoreWithReplay).replayData.frames[item.frameNumber].players[
     item.owner
-  ]
+  ];
 }
