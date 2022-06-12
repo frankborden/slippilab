@@ -1,5 +1,5 @@
 import { Badge, Center, useColorModeValue } from "@hope-ui/solid";
-import { JSX, createMemo } from "solid-js";
+import { createMemo } from "solid-js";
 import { Picker } from "../common/Picker";
 import { Highlight } from "../search/search";
 import { setClip, store } from "../state";

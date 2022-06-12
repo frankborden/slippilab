@@ -1,4 +1,4 @@
-import { createMemo, For, JSX, Match, Switch } from "solid-js";
+import { createMemo, For, Match, Switch } from "solid-js";
 import { itemNamesById } from "../common/ids";
 import { ItemUpdate, PlayerUpdate } from "../common/types";
 import { store, StoreWithReplay } from "../state";

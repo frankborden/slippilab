@@ -1,4 +1,4 @@
-import { JSX, createMemo } from "solid-js";
+import { createMemo } from "solid-js";
 import { frame, store, StoreWithReplay } from "../state";
 import { timerColor } from "./colors";
 

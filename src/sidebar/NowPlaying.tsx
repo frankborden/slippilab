@@ -1,7 +1,7 @@
 import { IconButton } from "@hope-ui/solid";
 import { ArrowLeft, ArrowRight } from "phosphor-solid";
 import { groupBy } from "rambda";
-import { createMemo, JSX, Show } from "solid-js";
+import { createMemo, Show } from "solid-js";
 import { characterNameByExternalId } from "../common/ids";
 import { PlayerSettings } from "../common/types";
 import { nextFile, previousFile, store } from "../state";

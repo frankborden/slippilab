@@ -1,5 +1,5 @@
 import { randallColor, stageColor } from "./colors";
-import { createMemo, For, JSX, Match, Switch } from "solid-js";
+import { createMemo, For, Match, Switch } from "solid-js";
 import { stageNameByExternalId } from "../common/ids";
 import { frame, store, StoreWithReplay } from "../state";
 

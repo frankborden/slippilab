@@ -1,4 +1,4 @@
-import { createMemo, For, Show, JSX } from "solid-js";
+import { createMemo, For, Show } from "solid-js";
 import { characterNameByExternalId } from "../common/ids";
 import { store, StoreWithReplay } from "../state";
 import { PlayerUpdate, PlayerUpdateWithNana } from "../common/types";

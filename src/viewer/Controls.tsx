@@ -20,7 +20,7 @@ import {
   store,
   StoreWithReplay,
 } from "../state";
-import { onCleanup, onMount, Show, JSX } from "solid-js";
+import { onCleanup, onMount, Show } from "solid-js";
 import {
   ArrowFatLineLeft,
   ArrowFatLineRight,

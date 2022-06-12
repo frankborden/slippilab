@@ -4,7 +4,7 @@ import { Sidebar } from "./sidebar/Sidebar";
 import { createDropzone } from "@solid-primitives/upload";
 import { load, store } from "./state";
 import "@thisbeyond/solid-select/style.css";
-import { Show, JSX } from "solid-js";
+import { Show } from "solid-js";
 import { Landing } from "./Landing";
 import { filterFiles } from "./common/util";
 

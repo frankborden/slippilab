@@ -16,7 +16,7 @@ import {
   MenuItem,
   notificationService,
 } from "@hope-ui/solid";
-import { createSignal, JSX, Show } from "solid-js";
+import { createSignal, Show } from "solid-js";
 import { uploadReplay } from "../supabaseClient";
 import { Copy, FileArrowUp, FolderOpen } from "phosphor-solid";
 import { filterFiles } from "../common/util";

@@ -8,7 +8,6 @@ import {
   Thead,
   Tr,
 } from "@hope-ui/solid";
-import { JSX } from "solid-js";
 
 export function SettingsTab() {
   return (

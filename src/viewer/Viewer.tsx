@@ -1,4 +1,4 @@
-import { createMemo, For, Show, JSX } from "solid-js";
+import { createMemo, For, Show } from "solid-js";
 import { Camera } from "./Camera";
 import { Controls } from "./Controls";
 import { Hud } from "./Hud";

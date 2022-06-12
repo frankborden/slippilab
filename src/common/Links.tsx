@@ -1,5 +1,4 @@
 import { useColorModeValue } from "@hope-ui/solid";
-import { JSX } from "solid-js";
 
 export function Links() {
   const githubIconFillColor = useColorModeValue("black", "white");

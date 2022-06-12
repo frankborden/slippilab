@@ -1,11 +1,5 @@
 import { filter, map, pipe, prop } from "rambda";
-import {
-  createEffect,
-  createMemo,
-  createSignal,
-  JSX,
-  ParentProps,
-} from "solid-js";
+import { createEffect, createMemo, createSignal, ParentProps } from "solid-js";
 import { frame, store, StoreWithReplay } from "../state";
 import { PlayerUpdate } from "../common/types";
 

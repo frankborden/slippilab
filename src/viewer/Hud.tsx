@@ -1,4 +1,4 @@
-import { createMemo, JSX } from "solid-js";
+import { createMemo } from "solid-js";
 import { For } from "solid-js/web";
 import { PlayerHUD } from "./PlayerHUD";
 import { store, StoreWithReplay } from "../state";

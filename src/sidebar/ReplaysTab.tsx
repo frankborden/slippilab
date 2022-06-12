@@ -1,7 +1,7 @@
 import { Badge, Box, hope } from "@hope-ui/solid";
 import { createOptions, Select } from "@thisbeyond/solid-select";
 import { groupBy } from "rambda";
-import { createMemo, For, JSX } from "solid-js";
+import { createMemo, For } from "solid-js";
 import {
   characterNameByExternalId,
   ExternalStageName,

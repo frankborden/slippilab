@@ -6,7 +6,6 @@ import {
   MenuTrigger,
 } from "@hope-ui/solid";
 import { Flask, FolderOpen } from "phosphor-solid";
-import { JSX } from "solid-js";
 import { Links } from "./common/Links";
 import { filterFiles } from "./common/util";
 import { load } from "./state";

@@ -1,4 +1,4 @@
-import { JSX, createMemo, For, Show } from "solid-js";
+import { createMemo, For, Show } from "solid-js";
 import { characterNameByInternalId } from "../common/ids";
 import { frame, store, StoreWithReplay } from "../state";
 import { playerColors, teamShadesByTeamId } from "./colors";
