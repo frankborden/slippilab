@@ -3,7 +3,7 @@ import { createMemo, For, JSX, Match, Switch } from "solid-js";
 import { stageNameByExternalId } from "../common/ids";
 import { frame, store, StoreWithReplay } from "../state";
 
-export function Stage(): JSX.Element {
+export function Stage() {
   const stageName = createMemo(
     () =>
       stageNameByExternalId[
@@ -34,7 +34,7 @@ export function Stage(): JSX.Element {
   );
 }
 
-function Battlefield(): JSX.Element {
+function Battlefield() {
   const mainStage = [
     "-68.4, 0",
     " 68.4, 0",
@@ -83,7 +83,7 @@ function Battlefield(): JSX.Element {
   );
 }
 
-function Dreamland(): JSX.Element {
+function Dreamland() {
   const mainStage = [
     "-76.5, -11",
     "-77.25, 0",
@@ -121,7 +121,7 @@ function Dreamland(): JSX.Element {
   );
 }
 
-function FinalDestination(): JSX.Element {
+function FinalDestination() {
   const mainStage = [
     "-85.6, 0",
     "85.6, 0",
@@ -158,7 +158,7 @@ function FinalDestination(): JSX.Element {
   );
 }
 
-function YoshisStory(): JSX.Element {
+function YoshisStory() {
   const mainStage = [
     "-54, -91",
     "-54, -47",
@@ -299,7 +299,7 @@ function YoshisStory(): JSX.Element {
   );
 }
 
-function FountainOfDreams(): JSX.Element {
+function FountainOfDreams() {
   const mainStage = [
     "-63.33, 0.62",
     "-53.5, 0.62",
@@ -373,7 +373,7 @@ function FountainOfDreams(): JSX.Element {
   );
 }
 
-function PokemonStadium(): JSX.Element {
+function PokemonStadium() {
   const mainStage = [
     "87.75, 0",
     "87.75, -4",

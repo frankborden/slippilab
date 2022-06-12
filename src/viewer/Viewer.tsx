@@ -9,7 +9,7 @@ import { Item } from "./Item";
 import { hope } from "@hope-ui/solid";
 import { backgroundColor } from "./colors";
 
-export function Viewer(): JSX.Element {
+export function Viewer() {
   const items = createMemo(() => store.replayData?.frames[frame()].items);
   return (
     <Show when={store.replayData}>

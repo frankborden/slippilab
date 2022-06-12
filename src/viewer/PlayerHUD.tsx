@@ -4,7 +4,7 @@ import { frame, store, StoreWithReplay } from "../state";
 import { playerColors, teamShadesByTeamId } from "./colors";
 import { playerSettings, renderDatas } from "./viewerState";
 
-export function PlayerHUD(props: { player: number }): JSX.Element {
+export function PlayerHUD(props: { player: number }) {
   const playerState = createMemo(
     () =>
       (store as StoreWithReplay).replayData.frames[frame()].players[

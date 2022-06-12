@@ -20,8 +20,6 @@ import {
   store,
   StoreWithReplay,
 } from "../state";
-import { Box, hope, HStack } from "@hope-ui/solid";
-import { controlsColor } from "./colors";
 import { onCleanup, onMount, Show, JSX } from "solid-js";
 import {
   ArrowFatLineLeft,
@@ -34,7 +32,7 @@ import {
   Play,
 } from "phosphor-solid";
 
-export function Controls(): JSX.Element {
+export function Controls() {
   onMount(() => {
     window.addEventListener("keydown", onKeyDown);
     window.addEventListener("keyup", onKeyUp);
@@ -133,17 +131,11 @@ export function Controls(): JSX.Element {
       width="100%"
       height="100%"
     >
-      <HStack
-        justifyContent="space-evenly"
-        gap="$4"
-        paddingLeft="$2"
-        paddingRight="$4"
-        color={controlsColor}
-      >
-        <Box width="6ch" textAlign="end">
+      <div class="flex items-center justify-evenly gap-4 pl-2 pr-4 text-[#262925]">
+        <div class="w-[6ch] text-end">
           {store.isDebug ? frame() - 123 : frame()}
-        </Box>
-        <HStack gap="$2">
+        </div>
+        <div class="flex items-center gap-2">
           <ClockCounterClockwise
             style={{ cursor: "pointer" }}
             size={32}
@@ -192,19 +184,16 @@ export function Controls(): JSX.Element {
             weight="fill"
             onClick={() => adjust(120)}
           />
-        </HStack>
-        <hope.input
+        </div>
+        <input
+          class="flex-grow accent-green-900"
           type="range"
-          width="$lg"
-          css={{
-            "accent-color": "var(--hope-colors-primary9)",
-          }}
           ref={seekbarInput}
           value={frame()}
           max={(store as StoreWithReplay).replayData.frames.length - 1}
           onInput={() => jump(Number(seekbarInput.value))}
         />
-        <HStack gap="$2">
+        <div class="flex items-center gap-2">
           <MagnifyingGlassMinus
             style={{ cursor: "pointer" }}
             size={32}
@@ -216,8 +205,8 @@ export function Controls(): JSX.Element {
             size={32}
             onClick={() => zoomIn()}
           />
-        </HStack>
-      </HStack>
+        </div>
+      </div>
     </foreignObject>
   );
 }

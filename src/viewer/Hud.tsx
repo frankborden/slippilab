@@ -4,7 +4,7 @@ import { PlayerHUD } from "./PlayerHUD";
 import { store, StoreWithReplay } from "../state";
 import { Timer } from "./Timer";
 
-export function Hud(): JSX.Element {
+export function Hud() {
   const playerIndexes = createMemo(() =>
     (store as StoreWithReplay).replayData.settings.playerSettings
       .filter(Boolean)

@@ -1,15 +1,15 @@
-import { Badge, Box, Center, HStack, useColorModeValue } from "@hope-ui/solid";
+import { Badge, Center, useColorModeValue } from "@hope-ui/solid";
 import { JSX, createMemo } from "solid-js";
 import { Picker } from "../common/Picker";
 import { Highlight } from "../search/search";
 import { setClip, store } from "../state";
 
-export function ClipsTab(): JSX.Element {
+export function ClipsTab() {
   const playerColors = useColorModeValue(
     ["red", "blue", "gold", "green"],
     ["darkred", "darkblue", "darkgoldenrod", "darkgreen"]
   );
-  function renderClip([name, clip]: [string, Highlight]): JSX.Element {
+  function renderClip([name, clip]: [string, Highlight]) {
     const index = Object.keys(store.clips).indexOf(name);
     const nameColorScheme = (
       [
@@ -24,8 +24,8 @@ export function ClipsTab(): JSX.Element {
     )[index % 7];
     return (
       <>
-        <HStack width="$full">
-          <HStack gap="$1">
+        <div class="flex w-full items-center">
+          <div class="flex items-center gap-1">
             <Badge
               color="white"
               backgroundColor={playerColors()[clip.playerIndex]}
@@ -33,9 +33,9 @@ export function ClipsTab(): JSX.Element {
               {`P${clip.playerIndex + 1}`}
             </Badge>
             <Badge colorScheme={nameColorScheme}>{name}</Badge>
-          </HStack>
+          </div>
           <Center flexGrow="1">{`${clip.startFrame}-${clip.endFrame}`}</Center>
-        </HStack>
+        </div>
       </>
     );
   }
@@ -46,14 +46,14 @@ export function ClipsTab(): JSX.Element {
   });
   return (
     <>
-      <Box overflowY="auto">
+      <div class="overflow-y-auto">
         <Picker
           items={entries()}
           render={renderClip}
           onClick={(_, index) => setClip(index)}
           selected={(_, index) => index === store.currentClip}
         />
-      </Box>
+      </div>
     </>
   );
 }

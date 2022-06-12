@@ -7,7 +7,7 @@ import {
 } from "@hope-ui/solid";
 
 const config: HopeThemeConfig = {
-  initialColorMode: "system",
+  initialColorMode: "light",
   lightTheme: {
     colors: {
       primary1: "#fbfefb",

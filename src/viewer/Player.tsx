@@ -5,7 +5,7 @@ import { PlayerUpdate, PlayerUpdateWithNana } from "../common/types";
 import { RenderData, renderDatas } from "./viewerState";
 import { getPlayerOnFrame, getStartOfAction } from "./viewerUtil";
 
-export function Players(): JSX.Element {
+export function Players() {
   return (
     <>
       <For each={renderDatas()}>
@@ -38,7 +38,7 @@ function Shield(props: {
   renderData: RenderData;
   playerUpdate: PlayerUpdate;
   isNana: boolean;
-}): JSX.Element {
+}) {
   // [0,60]
   const shieldHealth = createMemo(
     () =>
@@ -104,10 +104,7 @@ function Shield(props: {
   );
 }
 
-function Shine(props: {
-  renderData: RenderData;
-  playerUpdate: PlayerUpdate;
-}): JSX.Element {
+function Shine(props: { renderData: RenderData; playerUpdate: PlayerUpdate }) {
   const characterName = createMemo(
     () =>
       characterNameByExternalId[
@@ -139,7 +136,7 @@ function Shine(props: {
   );
 }
 
-function Hexagon(props: { x: number; y: number; r: number }): JSX.Element {
+function Hexagon(props: { x: number; y: number; r: number }) {
   const hexagonHole = 0.6;
   const sideX = Math.sin((2 * Math.PI) / 6);
   const sideY = 0.5;

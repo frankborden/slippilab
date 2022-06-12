@@ -1,4 +1,4 @@
-import { Badge, Box, hope, HStack, VStack } from "@hope-ui/solid";
+import { Badge, Box, hope } from "@hope-ui/solid";
 import { createOptions, Select } from "@thisbeyond/solid-select";
 import { groupBy } from "rambda";
 import { createMemo, For, JSX } from "solid-js";
@@ -27,7 +27,7 @@ const filterProps = createOptions(
     createable: (code) => ({ type: "codeOrName", label: code }),
   }
 );
-export function ReplaysTab(): JSX.Element {
+export function ReplaysTab() {
   const filteredGameSettings = createMemo(() =>
     store.filteredIndexes === undefined
       ? gameSettings()
@@ -36,10 +36,10 @@ export function ReplaysTab(): JSX.Element {
   const HopeSelect = hope(Select);
   return (
     <>
-      <VStack height="$full" gap="$2">
+      <div class="flex h-full flex-col items-center gap-2">
         <Upload />
-        <Box
-          width="$full"
+        <div
+          class="w-full"
           onkeydown={(e: Event) => e.stopPropagation()}
           onkeyup={(e: Event) => e.stopPropagation()}
         >
@@ -52,8 +52,8 @@ export function ReplaysTab(): JSX.Element {
             initialValue={store.filters}
             onChange={setFilters}
           />
-        </Box>
-        <Box width="$full" overflowY="auto">
+        </div>
+        <div class="w-full overflow-y-auto">
           <Picker
             items={filteredGameSettings()}
             render={(gameSettings: GameSettings) => (
@@ -68,14 +68,14 @@ export function ReplaysTab(): JSX.Element {
               gameSettings().indexOf(settings) === store.currentFile
             }
           />
-        </Box>
+        </div>
         <NowPlaying />
-      </VStack>
+      </div>
     </>
   );
 }
 
-function GameInfo(props: { gameSettings: GameSettings }): JSX.Element {
+function GameInfo(props: { gameSettings: GameSettings }) {
   function playerString(player: PlayerSettings): string {
     const name = [player.displayName, player.connectCode, player.nametag].find(
       (s) => s?.length > 0
@@ -86,9 +86,9 @@ function GameInfo(props: { gameSettings: GameSettings }): JSX.Element {
 
   return (
     <>
-      <HStack width="$full">
+      <div class="flex w-full items-center">
         <StageBadge stage={stageNameByExternalId[props.gameSettings.stageId]} />
-        <VStack flexGrow="1">
+        <div class="flex flex-grow flex-col items-center">
           {props.gameSettings.isTeams ? (
             <For
               each={Object.values(
@@ -110,13 +110,13 @@ function GameInfo(props: { gameSettings: GameSettings }): JSX.Element {
               .map(playerString)
               .join(" vs ")
           )}
-        </VStack>
-      </HStack>
+        </div>
+      </div>
     </>
   );
 }
 
-function StageBadge(props: { stage: ExternalStageName }): JSX.Element {
+function StageBadge(props: { stage: ExternalStageName }) {
   const abbreviations: Partial<{ [key in ExternalStageName]: string }> = {
     "Final Destination": "FD",
     "Pokémon Stadium": "PS",

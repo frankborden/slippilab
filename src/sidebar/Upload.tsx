@@ -1,6 +1,5 @@
 import { load, store } from "../state";
 import {
-  hope,
   Button,
   Center,
   createDisclosure,
@@ -15,9 +14,6 @@ import {
   MenuTrigger,
   MenuContent,
   MenuItem,
-  HStack,
-  Anchor,
-  Box,
   notificationService,
 } from "@hope-ui/solid";
 import { createSignal, JSX, Show } from "solid-js";
@@ -25,7 +21,7 @@ import { uploadReplay } from "../supabaseClient";
 import { Copy, FileArrowUp, FolderOpen } from "phosphor-solid";
 import { filterFiles } from "../common/util";
 
-export function Upload(): JSX.Element {
+export function Upload() {
   const { isOpen, onOpen, onClose } = createDisclosure();
   const [isUploading, setIsUploading] = createSignal(false);
   const [url, setUrl] = createSignal<string | undefined>();
@@ -61,7 +57,7 @@ export function Upload(): JSX.Element {
 
   return (
     <>
-      <HStack gap="$2" width="$full" justifyContent="space-between">
+      <div class="flex w-full items-center justify-between gap-2">
         <Menu>
           <MenuTrigger
             as={Button}
@@ -99,10 +95,10 @@ export function Upload(): JSX.Element {
                     when={url() !== undefined}
                     fallback={<div>{error()}</div>}
                   >
-                    <HStack gap="$4">
-                      <Anchor>{url()}</Anchor>
-                      <Box
-                        cursor="pointer"
+                    <div class="flex items-center gap-4">
+                      <a href={url()}>{url()}</a>
+                      <div
+                        class="cursor-pointer"
                         onClick={() => {
                           const link = url();
                           if (link === undefined) return;
@@ -115,8 +111,8 @@ export function Upload(): JSX.Element {
                         }}
                       >
                         <Copy size={24} />
-                      </Box>
-                    </HStack>
+                      </div>
+                    </div>
                   </Show>
                 </Show>
               </Center>
@@ -126,16 +122,16 @@ export function Upload(): JSX.Element {
             </ModalFooter>
           </ModalContent>
         </Modal>
-        <hope.input
-          display="none"
+        <input
+          class="hidden"
           type="file"
           accept=".slp,.zip"
           multiple
           ref={fileInput}
           onChange={onFileSelected}
         />
-        <hope.input
-          display="none"
+        <input
+          class="hidden"
           type="file"
           // @ts-expect-error folder input is not standard, but is supported by all
           // modern browsers
@@ -143,7 +139,7 @@ export function Upload(): JSX.Element {
           ref={folderInput}
           onChange={onFileSelected}
         />
-      </HStack>
+      </div>
     </>
   );
 }

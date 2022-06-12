@@ -9,7 +9,7 @@ import {
 import { frame, store, StoreWithReplay } from "../state";
 import { PlayerUpdate } from "../common/types";
 
-export function Camera(props: ParentProps): JSX.Element {
+export function Camera(props: ParentProps) {
   const [center, setCenter] = createSignal<[number, number] | undefined>();
   const [scale, setScale] = createSignal<number | undefined>();
 

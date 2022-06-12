@@ -26,7 +26,6 @@ import {
   Center,
   CircularProgress,
   CircularProgressIndicator,
-  HStack,
   Notification,
   notificationService,
   NotificationTitle,
@@ -88,7 +87,7 @@ export async function load(
     persistent: true,
     render: () => (
       <Notification>
-        <HStack width="$full">
+        <div class="flex w-full items-center">
           <CircularProgress value={(100 * progress()) / files.length}>
             <CircularProgressIndicator />
           </CircularProgress>
@@ -97,7 +96,7 @@ export async function load(
               {`Parsing ${files.length} file(s)`}
             </NotificationTitle>
           </Center>
-        </HStack>
+        </div>
       </Notification>
     ),
   });

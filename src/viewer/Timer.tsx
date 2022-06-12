@@ -2,7 +2,7 @@ import { JSX, createMemo } from "solid-js";
 import { frame, store, StoreWithReplay } from "../state";
 import { timerColor } from "./colors";
 
-export function Timer(): JSX.Element {
+export function Timer() {
   const meleeHundredths = [
     "00",
     "02",

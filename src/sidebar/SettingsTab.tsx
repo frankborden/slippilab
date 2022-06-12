@@ -7,14 +7,13 @@ import {
   Th,
   Thead,
   Tr,
-  VStack,
 } from "@hope-ui/solid";
 import { JSX } from "solid-js";
 
-export function SettingsTab(): JSX.Element {
+export function SettingsTab() {
   return (
     <>
-      <VStack overflowY="auto" gap="$2">
+      <div class="flex flex-col items-center gap-2 overflow-y-auto">
         <Table>
           <TableCaption placement="top">Playback Shortcuts</TableCaption>
           <Thead>
@@ -119,7 +118,7 @@ export function SettingsTab(): JSX.Element {
             </Tr>
           </Tbody>
         </Table>
-      </VStack>
+      </div>
     </>
   );
 }

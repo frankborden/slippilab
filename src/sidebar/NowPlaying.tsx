@@ -1,4 +1,4 @@
-import { Box, HStack, IconButton, Text, VStack } from "@hope-ui/solid";
+import { IconButton } from "@hope-ui/solid";
 import { ArrowLeft, ArrowRight } from "phosphor-solid";
 import { groupBy } from "rambda";
 import { createMemo, JSX, Show } from "solid-js";
@@ -6,7 +6,7 @@ import { characterNameByExternalId } from "../common/ids";
 import { PlayerSettings } from "../common/types";
 import { nextFile, previousFile, store } from "../state";
 
-export function NowPlaying(): JSX.Element {
+export function NowPlaying() {
   function player(p: PlayerSettings): string {
     return p.displayName !== "" && p.connectCode !== ""
       ? `${p.displayName}(${p.connectCode})`
@@ -33,34 +33,34 @@ export function NowPlaying(): JSX.Element {
         };
   });
   return (
-    <HStack width="$full" justifyContent="space-between" gap="$2">
+    <div class="flex w-full items-center justify-between gap-2">
       <IconButton
         aria-label="Previous File"
         onClick={previousFile}
         variant="subtle"
         icon={<ArrowLeft size="24" />}
       />
-      <VStack alignItems="start">
-        <Box>{info().name}</Box>
+      <div class="flex flex-col items-start">
+        <div>{info().name}</div>
         <Show when={info().date}>
-          <Box>{info().date}</Box>
+          <div>{info().date}</div>
         </Show>
         <Show when={info().platform}>
-          <Box>{info().platform}</Box>
+          <div>{info().platform}</div>
         </Show>
         <Show when={info().console}>
-          <Box>Console: {info().console}</Box>
+          <div>Console: {info().console}</div>
         </Show>
         <Show when={info().players !== ""}>
-          <Text css={{ "white-space": "pre-line" }}>{info().players}</Text>
+          <div class="whitespace-pre-line">{info().players}</div>
         </Show>
-      </VStack>
+      </div>
       <IconButton
         aria-label="Next File"
         onClick={nextFile}
         variant="subtle"
         icon={<ArrowRight size="24" />}
       />
-    </HStack>
+    </div>
   );
 }

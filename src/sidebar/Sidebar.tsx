@@ -4,7 +4,7 @@ import { ClipsTab } from "./ClipsTab";
 import { ReplaysTab } from "./ReplaysTab";
 import { SettingsTab } from "./SettingsTab";
 
-export function Sidebar(): JSX.Element {
+export function Sidebar() {
   return (
     <>
       <Tabs height="$full" display="flex" flexDirection="column">

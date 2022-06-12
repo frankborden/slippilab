@@ -7,7 +7,7 @@ import { store, StoreWithReplay } from "../state";
 
 // Note: Most items coordinates and sizes are divided by 256 to convert them
 // from hitboxspace to worldspace.
-export function Item(props: { item: ItemUpdate }): JSX.Element {
+export function Item(props: { item: ItemUpdate }) {
   const itemName = createMemo(() => itemNamesById[props.item.typeId]);
   return (
     <Switch>
@@ -48,7 +48,7 @@ export function Item(props: { item: ItemUpdate }): JSX.Element {
   );
 }
 
-function SamusChargeshot(props: { item: ItemUpdate }): JSX.Element {
+function SamusChargeshot(props: { item: ItemUpdate }) {
   // charge levels go 0 to 7
   const hitboxesByChargeLevel = [300, 400, 500, 600, 700, 800, 900, 1200];
   return (
@@ -63,7 +63,7 @@ function SamusChargeshot(props: { item: ItemUpdate }): JSX.Element {
   );
 }
 
-function SamusBomb(props: { item: ItemUpdate }): JSX.Element {
+function SamusBomb(props: { item: ItemUpdate }) {
   // states: 1 = falling, 3 = exploding
   return (
     <>
@@ -77,7 +77,7 @@ function SamusBomb(props: { item: ItemUpdate }): JSX.Element {
   );
 }
 
-function Missile(props: { item: ItemUpdate }): JSX.Element {
+function Missile(props: { item: ItemUpdate }) {
   // samusMissileTypes: 0 = homing missile, 1 = smash missile
   return (
     <>
@@ -91,7 +91,7 @@ function Missile(props: { item: ItemUpdate }): JSX.Element {
   );
 }
 
-function MarioFireball(props: { item: ItemUpdate }): JSX.Element {
+function MarioFireball(props: { item: ItemUpdate }) {
   return (
     <>
       <circle
@@ -104,7 +104,7 @@ function MarioFireball(props: { item: ItemUpdate }): JSX.Element {
   );
 }
 
-function LuigiFireball(props: { item: ItemUpdate }): JSX.Element {
+function LuigiFireball(props: { item: ItemUpdate }) {
   return (
     <>
       <circle
@@ -117,7 +117,7 @@ function LuigiFireball(props: { item: ItemUpdate }): JSX.Element {
   );
 }
 
-function YoshiEgg(props: { item: ItemUpdate }): JSX.Element {
+function YoshiEgg(props: { item: ItemUpdate }) {
   // states: 0 = held, 1 = thrown, 2 = exploded
   const ownerState = createMemo(() => getOwner(props.item).state);
   return (
@@ -139,7 +139,7 @@ function YoshiEgg(props: { item: ItemUpdate }): JSX.Element {
   );
 }
 
-function Turnip(props: { item: ItemUpdate }): JSX.Element {
+function Turnip(props: { item: ItemUpdate }) {
   // states: 0 = held, 1 = bouncing?, 2 = thrown
   // face: props.item.peachTurnipFace
   const ownerState = createMemo(() => getOwner(props.item).state);
@@ -162,7 +162,7 @@ function Turnip(props: { item: ItemUpdate }): JSX.Element {
   );
 }
 
-function Needle(props: { item: ItemUpdate }): JSX.Element {
+function Needle(props: { item: ItemUpdate }) {
   return (
     <>
       <circle
@@ -175,7 +175,7 @@ function Needle(props: { item: ItemUpdate }): JSX.Element {
   );
 }
 
-function FoxLaser(props: { item: ItemUpdate }): JSX.Element {
+function FoxLaser(props: { item: ItemUpdate }) {
   // There is a 4th hitbox for the first frame only at -3600 (hitboxspace) with
   // size 400 / 256 that I am skipping.
   const hitboxOffsets = [-200, -933, -1666].map((x) => x / 256);
@@ -230,7 +230,7 @@ function FoxLaser(props: { item: ItemUpdate }): JSX.Element {
   );
 }
 
-function FalcoLaser(props: { item: ItemUpdate }): JSX.Element {
+function FalcoLaser(props: { item: ItemUpdate }) {
   const hitboxOffsets = [-200, -933, -1666, -2400].map((x) => x / 256);
   const hitboxSize = 300 / 256;
   // Throws and deflected lasers are not straight horizontal
@@ -267,7 +267,7 @@ function FalcoLaser(props: { item: ItemUpdate }): JSX.Element {
   );
 }
 
-function FlyGuy(props: { item: ItemUpdate }): JSX.Element {
+function FlyGuy(props: { item: ItemUpdate }) {
   return (
     <>
       <circle

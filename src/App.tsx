@@ -1,6 +1,5 @@
 import { Viewer } from "./viewer/Viewer";
 import { fetchAnimations } from "./viewer/animationCache";
-import { Box, Flex } from "@hope-ui/solid";
 import { Sidebar } from "./sidebar/Sidebar";
 import { createDropzone } from "@solid-primitives/upload";
 import { load, store } from "./state";
@@ -9,7 +8,7 @@ import { Show, JSX } from "solid-js";
 import { Landing } from "./Landing";
 import { filterFiles } from "./common/util";
 
-export function App(): JSX.Element {
+export function App() {
   // Get started fetching the most popular characters
   void fetchAnimations(20); // Falco
   void fetchAnimations(2); // Fox
@@ -27,16 +26,16 @@ export function App(): JSX.Element {
 
   return (
     <>
-      <Flex ref={dropzoneRef} width="$screenW" height="$screenH">
+      <div class="flex h-screen w-screen" ref={dropzoneRef}>
         <Show when={store.files.length > 0} fallback={<Landing />}>
-          <Box flexGrow="1">
+          <div class="flex-grow">
             <Sidebar />
-          </Box>
-          <Box>
+          </div>
+          <div>
             <Viewer />
-          </Box>
+          </div>
         </Show>
-      </Flex>
+      </div>
     </>
   );
 }
