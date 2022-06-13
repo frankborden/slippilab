@@ -14,7 +14,6 @@ import { frame, store, StoreWithReplay } from "../state";
 import { CharacterAnimations, fetchAnimations } from "./animationCache";
 import { actionMapByInternalId } from "./characters";
 import { Character } from "./characters/character";
-import { teamShadesByTeamId, playerColors } from "./colors";
 import { getPlayerOnFrame, getStartOfAction } from "./viewerUtil";
 
 export interface RenderData {
@@ -300,10 +299,16 @@ function isSpacieUpB(
 }
 
 function getPlayerColor(playerIndex: number): string {
+  // https://www.radix-ui.com/docs/colors/palette-composition/the-scales
   if ((store as StoreWithReplay).replayData.settings.isTeams) {
     const settings = (store as StoreWithReplay).replayData.settings
       .playerSettings[playerIndex];
-    return teamShadesByTeamId[settings.teamId][settings.teamShade];
+    return [
+      ["#aa2429", "#e5484d"], // redDark8, redDark9
+      ["#0954a5", "#0091ff"], // blueDark8, blueDark9
+      ["#236e4a", "#46a758"], // greenDark8, greenDark9
+    ][settings.teamId][settings.teamShade];
   }
-  return playerColors[playerIndex];
+  // redDark8, blueDark8, yellowDark11, greenDark8
+  return ["#aa2429", "#0954a5", "#f0c000", "#236e4a"][playerIndex];
 }

@@ -96,11 +96,7 @@ function GameInfo(props: { gameSettings: GameSettings }) {
                 )
               )}
             >
-              {(team) => (
-                <div color={["red", "blue", "green"][team[0].teamId]}>
-                  {team.map(playerString).join(" + ")}
-                </div>
-              )}
+              {(team) => <div>{team.map(playerString).join(" + ")}</div>}
             </For>
           ) : (
             props.gameSettings.playerSettings

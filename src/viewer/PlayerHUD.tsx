@@ -1,7 +1,6 @@
 import { createMemo, For, Show } from "solid-js";
 import { characterNameByInternalId } from "../common/ids";
 import { frame, store, StoreWithReplay } from "../state";
-import { playerColors, teamShadesByTeamId } from "./colors";
 import { playerSettings, renderDatas } from "./viewerState";
 
 export function PlayerHUD(props: { player: number }) {
@@ -15,7 +14,13 @@ export function PlayerHUD(props: { player: number }) {
     x: -30 + 20 * props.player, // ports at: -30%, -10%, 10%, 30%
     y: 40, // y% is flipped by css to make the text right-side up.
   }));
-  const color = createMemo(() => getPlayerColor(props.player));
+  const color = createMemo(
+    () =>
+      // getPlayerColor(props.player));
+      renderDatas()[
+        playerSettings().findIndex((ps) => ps.playerIndex === props.player)
+      ].innerColor
+  );
   const name = createMemo(() =>
     [
       playerSettings().find((s) => s.playerIndex === props.player)?.displayName,
@@ -117,14 +122,4 @@ export function PlayerHUD(props: { player: number }) {
       </Show>
     </>
   );
-}
-
-// TODO: dedupe with same code in viewerState.tsx
-function getPlayerColor(playerIndex: number): string {
-  if ((store as StoreWithReplay).replayData.settings.isTeams) {
-    const settings = (store as StoreWithReplay).replayData.settings
-      .playerSettings[playerIndex];
-    return teamShadesByTeamId[settings.teamId][settings.teamShade];
-  }
-  return playerColors[playerIndex];
 }
