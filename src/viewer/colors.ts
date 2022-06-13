@@ -9,18 +9,3 @@ export const teamShadesByTeamId = [
   ["#0954a5", "#0091ff"], // blueDark8, blueDark9
   ["#236e4a", "#46a758"], // greenDark8, greenDark9
 ];
-
-// oliveDark4
-export const timerColor = "#262925";
-
-// olive6
-export const backgroundColor = "#e0e4e0";
-
-// grayDark9
-export const randallColor = "#707070";
-
-// oliveDark4
-export const controlsColor = "#262925";
-
-// oliveDark4
-export const stageColor = "#262925";

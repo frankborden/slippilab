@@ -1,6 +1,5 @@
 import { createMemo } from "solid-js";
 import { frame, store, StoreWithReplay } from "../state";
-import { timerColor } from "./colors";
 
 export function Timer() {
   const meleeHundredths = [
@@ -85,7 +84,7 @@ export function Timer() {
       text-anchor="middle"
       y="-42%"
       textContent={time()}
-      fill={timerColor}
+      class="fill-slate-800"
     />
   );
 }

@@ -1,4 +1,3 @@
-import { randallColor, stageColor } from "./colors";
 import { createMemo, For, Match, Switch } from "solid-js";
 import { stageNameByExternalId } from "../common/ids";
 import { frame, store, StoreWithReplay } from "../state";
@@ -67,9 +66,11 @@ function Battlefield() {
   ];
   return (
     <>
-      <polyline points={mainStage.join(" ")} fill={stageColor} />
+      <polyline points={mainStage.join(" ")} class="fill-slate-800" />
       <For each={platforms}>
-        {(points) => <polyline points={points.join(" ")} stroke={stageColor} />}
+        {(points) => (
+          <polyline points={points.join(" ")} class="stroke-slate-800" />
+        )}
       </For>
       <rect
         x={blastzones[0][0]}
@@ -77,7 +78,7 @@ function Battlefield() {
         width={blastzones[1][0] - blastzones[0][0]}
         height={blastzones[1][1] - blastzones[0][1]}
         fill="none"
-        stroke={stageColor}
+        class="stroke-slate-800"
       />
     </>
   );
@@ -105,9 +106,11 @@ function Dreamland() {
   ];
   return (
     <>
-      <polyline points={mainStage.join(" ")} fill={stageColor} />
+      <polyline points={mainStage.join(" ")} class="fill-slate-800" />
       <For each={platforms}>
-        {(points) => <polyline points={points.join(" ")} stroke={stageColor} />}
+        {(points) => (
+          <polyline points={points.join(" ")} class="stroke-slate-800" />
+        )}
       </For>
       <rect
         x={blastzones[0][0]}
@@ -115,7 +118,7 @@ function Dreamland() {
         width={blastzones[1][0] - blastzones[0][0]}
         height={blastzones[1][1] - blastzones[0][1]}
         fill="none"
-        stroke={stageColor}
+        class="stroke-slate-800"
       />
     </>
   );
@@ -145,14 +148,14 @@ function FinalDestination() {
   ];
   return (
     <>
-      <polyline points={mainStage.join(" ")} fill={stageColor} />
+      <polyline points={mainStage.join(" ")} class="fill-slate-800" />
       <rect
         x={blastzones[0][0]}
         y={blastzones[0][1]}
         width={blastzones[1][0] - blastzones[0][0]}
         height={blastzones[1][1] - blastzones[0][1]}
         fill="none"
-        stroke={stageColor}
+        class="stroke-slate-800"
       />
     </>
   );
@@ -282,18 +285,23 @@ function YoshisStory() {
   ];
   return (
     <>
-      <polyline points={mainStage.join(" ")} fill={stageColor} />
+      <polyline
+        points={mainStage.join(" ")}
+        class="stroke-slate-800 fill-slate-800"
+      />
       <For each={platforms}>
-        {(points) => <polyline points={points.join(" ")} stroke={stageColor} />}
+        {(points) => (
+          <polyline points={points.join(" ")} class="stroke-slate-800" />
+        )}
       </For>
-      <polyline points={randall().join(" ")} stroke={randallColor} />
+      <polyline points={randall().join(" ")} class="stroke-slate-400" />
       <rect
         x={blastzones[0][0]}
         y={blastzones[0][1]}
         width={blastzones[1][0] - blastzones[0][0]}
         height={blastzones[1][1] - blastzones[0][1]}
         fill="none"
-        stroke={stageColor}
+        class="stroke-slate-800"
       />
     </>
   );
@@ -347,19 +355,19 @@ function FountainOfDreams() {
   ];
   return (
     <>
-      <polyline points={mainStage.join(" ")} fill={stageColor} />
+      <polyline points={mainStage.join(" ")} class="fill-slate-800" />
       <For each={platforms.slice(0, 2)}>
         {(points) => (
           <polyline
             points={points.join(" ")}
             stroke-dasharray="2,4"
-            stroke={stageColor}
+            class="stroke-slate-800"
           />
         )}
       </For>
       <polyline
         points={platforms[platforms.length - 1].join(" ")}
-        stroke={stageColor}
+        class="stroke-slate-800"
       />
       <rect
         x={blastzones[0][0]}
@@ -367,7 +375,7 @@ function FountainOfDreams() {
         width={blastzones[1][0] - blastzones[0][0]}
         height={blastzones[1][1] - blastzones[0][1]}
         fill="none"
-        stroke={stageColor}
+        class="stroke-slate-800"
       />
     </>
   );
@@ -403,9 +411,11 @@ function PokemonStadium() {
   ];
   return (
     <>
-      <polyline points={mainStage.join(" ")} fill={stageColor} />
+      <polyline points={mainStage.join(" ")} class="fill-slate-800" />
       <For each={platforms}>
-        {(points) => <polyline points={points.join(" ")} stroke={stageColor} />}
+        {(points) => (
+          <polyline points={points.join(" ")} class="stroke-slate-800" />
+        )}
       </For>
       <rect
         x={blastzones[0][0]}
@@ -413,7 +423,7 @@ function PokemonStadium() {
         width={blastzones[1][0] - blastzones[0][0]}
         height={blastzones[1][1] - blastzones[0][1]}
         fill="none"
-        stroke={stageColor}
+        class="stroke-slate-800"
       />
     </>
   );

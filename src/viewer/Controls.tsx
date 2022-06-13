@@ -121,7 +121,7 @@ export function Controls() {
       width="100%"
       height="100%"
     >
-      <div class="flex items-center justify-evenly gap-4 pl-2 pr-4 text-[#262925]">
+      <div class="flex items-center justify-evenly gap-4 pl-2 pr-4 text-slate-800">
         <div class="w-[6ch] text-end">
           {store.isDebug ? frame() - 123 : frame()}
         </div>
