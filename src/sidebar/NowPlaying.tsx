@@ -1,6 +1,6 @@
-import { IconButton } from "@hope-ui/solid";
 import { groupBy } from "rambda";
 import { createMemo, Show } from "solid-js";
+import { Button } from "../common/Button";
 import { characterNameByExternalId } from "../common/ids";
 import { PlayerSettings } from "../common/types";
 import { nextFile, previousFile, store } from "../state";
@@ -33,19 +33,11 @@ export function NowPlaying() {
   });
   return (
     <div class="flex w-full items-center justify-between gap-2">
-      <IconButton
-        aria-label="Previous File"
-        onClick={previousFile}
-        variant="subtle"
-        icon={
-          <div
-            class="material-icons cursor-pointer text-4xl"
-            aria-label="Open previous replay"
-          >
-            navigate_before
-          </div>
-        }
-      />
+      <Button onClick={previousFile}>
+        <div class="material-icons cursor-pointer text-4xl">
+          navigate_before
+        </div>
+      </Button>
       <div class="flex flex-col items-start">
         <div>{info().name}</div>
         <Show when={info().date}>
@@ -61,19 +53,9 @@ export function NowPlaying() {
           <div class="whitespace-pre-line">{info().players}</div>
         </Show>
       </div>
-      <IconButton
-        aria-label="Next File"
-        onClick={nextFile}
-        variant="subtle"
-        icon={
-          <div
-            class="material-icons cursor-pointer text-4xl"
-            aria-label="Open next replay"
-          >
-            navigate_next
-          </div>
-        }
-      />
+      <Button onClick={nextFile}>
+        <div class="material-icons cursor-pointer text-4xl">navigate_next</div>
+      </Button>
     </div>
   );
 }
