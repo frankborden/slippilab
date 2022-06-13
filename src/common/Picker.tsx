@@ -1,4 +1,4 @@
-import { Button, useColorModeValue } from "@hope-ui/solid";
+import { Button } from "@hope-ui/solid";
 import { For, JSX } from "solid-js";
 
 export function Picker<T>(props: {
@@ -7,7 +7,6 @@ export function Picker<T>(props: {
   onClick: (item: T, index: number) => unknown;
   selected: (item: T, index: number) => boolean;
 }) {
-  const borderColor = useColorModeValue("$primary9", "white");
   return (
     <>
       <div class="flex flex-col items-center">
@@ -15,7 +14,7 @@ export function Picker<T>(props: {
           {(item, index) => (
             <Button
               size="sm"
-              borderColor={borderColor()}
+              borderColor={"$primary9"}
               borderWidth="1px"
               borderStyle="solid"
               paddingTop="$1"

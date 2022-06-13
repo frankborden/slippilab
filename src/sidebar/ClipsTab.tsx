@@ -1,14 +1,10 @@
-import { Badge, Center, useColorModeValue } from "@hope-ui/solid";
+import { Badge, Center } from "@hope-ui/solid";
 import { createMemo } from "solid-js";
 import { Picker } from "../common/Picker";
 import { Highlight } from "../search/search";
 import { setClip, store } from "../state";
 
 export function ClipsTab() {
-  const playerColors = useColorModeValue(
-    ["red", "blue", "gold", "green"],
-    ["darkred", "darkblue", "darkgoldenrod", "darkgreen"]
-  );
   function renderClip([name, clip]: [string, Highlight]) {
     const index = Object.keys(store.clips).indexOf(name);
     const nameColorScheme = (
@@ -28,7 +24,9 @@ export function ClipsTab() {
           <div class="flex items-center gap-1">
             <Badge
               color="white"
-              backgroundColor={playerColors()[clip.playerIndex]}
+              backgroundColor={
+                ["red", "blue", "gold", "green"][clip.playerIndex]
+              }
             >
               {`P${clip.playerIndex + 1}`}
             </Badge>
