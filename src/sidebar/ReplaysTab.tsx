@@ -1,4 +1,4 @@
-import { Badge, Box, hope } from "@hope-ui/solid";
+import { Badge } from "@hope-ui/solid";
 import { createOptions, Select } from "@thisbeyond/solid-select";
 import { groupBy } from "rambda";
 import { createMemo, For } from "solid-js";
@@ -33,7 +33,6 @@ export function ReplaysTab() {
       ? gameSettings()
       : store.filteredIndexes.map((i) => gameSettings()[i])
   );
-  const HopeSelect = hope(Select);
   return (
     <>
       <div class="flex h-full flex-col items-center gap-2">
@@ -43,9 +42,8 @@ export function ReplaysTab() {
           onkeydown={(e: Event) => e.stopPropagation()}
           onkeyup={(e: Event) => e.stopPropagation()}
         >
-          <HopeSelect
-            class="custom"
-            width="$full"
+          <Select
+            class="custom w-full"
             placeholder="Filter"
             multiple
             {...filterProps}
@@ -99,9 +97,9 @@ function GameInfo(props: { gameSettings: GameSettings }) {
               )}
             >
               {(team) => (
-                <Box color={["red", "blue", "green"][team[0].teamId]}>
+                <div color={["red", "blue", "green"][team[0].teamId]}>
                   {team.map(playerString).join(" + ")}
-                </Box>
+                </div>
               )}
             </For>
           ) : (

@@ -6,20 +6,15 @@ import { Players } from "./Player";
 import { Stage } from "./Stage";
 import { frame, store } from "../state";
 import { Item } from "./Item";
-import { hope } from "@hope-ui/solid";
-import { backgroundColor } from "./colors";
 
 export function Viewer() {
   const items = createMemo(() => store.replayData?.frames[frame()].items);
   return (
     <Show when={store.replayData}>
-      <hope.svg
-        viewBox="-365 -300 730 600"
-        backgroundColor={backgroundColor}
-        height="$full"
-        width="$full"
+      <svg
         /* up = positive y axis */
-        transform="scaleY(-1)"
+        class="h-full w-full bg-[#e0e4e0] -scale-y-100"
+        viewBox="-365 -300 730 600"
       >
         <Camera>
           <Stage />
@@ -28,7 +23,7 @@ export function Viewer() {
         </Camera>
         <Hud />
         <Controls />
-      </hope.svg>
+      </svg>
     </Show>
   );
 }
