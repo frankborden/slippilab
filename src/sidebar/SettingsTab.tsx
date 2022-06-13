@@ -1,5 +1,3 @@
-import { Kbd } from "@hope-ui/solid";
-
 export function SettingsTab() {
   return (
     <>
@@ -15,96 +13,170 @@ export function SettingsTab() {
           <tbody>
             <tr>
               <td>
-                <Kbd>space</Kbd>/<Kbd>K</Kbd>
+                <kbd class="border bg-slate-50 border-slate-400 px-1 rounded">
+                  space
+                </kbd>
+                /
+                <kbd class="border bg-slate-50 border-slate-400 px-1 rounded">
+                  K
+                </kbd>
               </td>
-              <td>Toggle pause</td>
+              <td class="pl-3">Toggle pause</td>
             </tr>
             <tr>
               <td>
-                <Kbd>LeftArrow</Kbd>/<Kbd>J</Kbd>
+                <kbd class="border bg-slate-50 border-slate-400 px-1 rounded">
+                  LeftArrow
+                </kbd>
+                /
+                <kbd class="border bg-slate-50 border-slate-400 px-1 rounded">
+                  J
+                </kbd>
               </td>
-              <td>Rewind 2 seconds</td>
+              <td class="pl-3">Rewind 2 seconds</td>
             </tr>
             <tr>
               <td>
-                <Kbd>RightArrow</Kbd>/<Kbd>L</Kbd>
+                <kbd class="border bg-slate-50 border-slate-400 px-1 rounded">
+                  RightArrow
+                </kbd>
+                /
+                <kbd class="border bg-slate-50 border-slate-400 px-1 rounded">
+                  L
+                </kbd>
               </td>
-              <td>Skip ahead 2 seconds</td>
+              <td class="pl-3">Skip ahead 2 seconds</td>
             </tr>
 
             <tr>
               <td>
-                <Kbd>0</Kbd>-<Kbd>9</Kbd>
+                <kbd class="border bg-slate-50 border-slate-400 px-1 rounded">
+                  0
+                </kbd>
+                -
+                <kbd class="border bg-slate-50 border-slate-400 px-1 rounded">
+                  9
+                </kbd>
               </td>
-              <td>
-                Jump to xx%. For example, press <Kbd>3</Kbd> for 30%
+              <td class="pl-3">
+                Jump to xx%. For example, press{" "}
+                <kbd class="border bg-slate-50 border-slate-400 px-1 rounded">
+                  3
+                </kbd>{" "}
+                for 30%
               </td>
             </tr>
             <tr>
               <td>
-                <Kbd>.</Kbd>
+                <kbd class="border bg-slate-50 border-slate-400 px-1 rounded">
+                  .
+                </kbd>
               </td>
-              <td>Next frame (pauses if not paused)</td>
+              <td class="pl-3">Next frame (pauses if not paused)</td>
             </tr>
             <tr>
               <td>
-                <Kbd>,</Kbd>
+                <kbd class="border bg-slate-50 border-slate-400 px-1 rounded">
+                  ,
+                </kbd>
               </td>
-              <td>Previous frame (pauses if not paused)</td>
+              <td class="pl-3">Previous frame (pauses if not paused)</td>
             </tr>
             <tr>
               <td>
-                <Kbd>UpArrow</Kbd>
+                <kbd class="border bg-slate-50 border-slate-400 px-1 rounded">
+                  UpArrow
+                </kbd>
               </td>
-              <td>Slow speed</td>
+              <td class="pl-3">Slow speed</td>
             </tr>
             <tr>
               <td>
-                <Kbd>DownArrow</Kbd>
+                <kbd class="border bg-slate-50 border-slate-400 px-1 rounded">
+                  DownArrow
+                </kbd>
               </td>
-              <td>Fast speed</td>
+              <td class="pl-3">Fast speed</td>
             </tr>
             <tr>
               <td>
-                <Kbd>+</Kbd>/<Kbd>=</Kbd>
+                <kbd class="border bg-slate-50 border-slate-400 px-1 rounded">
+                  +
+                </kbd>
+                /
+                <kbd class="border bg-slate-50 border-slate-400 px-1 rounded">
+                  =
+                </kbd>
               </td>
-              <td>Zoom in</td>
+              <td class="pl-3">Zoom in</td>
             </tr>
             <tr>
               <td>
-                <Kbd>-</Kbd>/<Kbd>_</Kbd>
+                <kbd class="border bg-slate-50 border-slate-400 px-1 rounded">
+                  -
+                </kbd>
+                /
+                <kbd class="border bg-slate-50 border-slate-400 px-1 rounded">
+                  _
+                </kbd>
               </td>
-              <td>Zoom out</td>
+              <td class="pl-3">Zoom out</td>
             </tr>
             <tr>
               <td>
-                <Kbd>[</Kbd>/<Kbd>{"{"}</Kbd>
+                <kbd class="border bg-slate-50 border-slate-400 px-1 rounded">
+                  [
+                </kbd>
+                /
+                <kbd class="border bg-slate-50 border-slate-400 px-1 rounded">
+                  {"{"}
+                </kbd>
               </td>
-              <td>Play previous file</td>
+              <td class="pl-3">Play previous file</td>
             </tr>
             <tr>
               <td>
-                <Kbd>]</Kbd>/<Kbd>{"}"}</Kbd>
+                <kbd class="border bg-slate-50 border-slate-400 px-1 rounded">
+                  ]
+                </kbd>
+                /
+                <kbd class="border bg-slate-50 border-slate-400 px-1 rounded">
+                  {"}"}
+                </kbd>
               </td>
-              <td>Play next file</td>
+              <td class="pl-3">Play next file</td>
             </tr>
             <tr>
               <td>
-                <Kbd>;</Kbd>/<Kbd>:</Kbd>
+                <kbd class="border bg-slate-50 border-slate-400 px-1 rounded">
+                  ;
+                </kbd>
+                /
+                <kbd class="border bg-slate-50 border-slate-400 px-1 rounded">
+                  :
+                </kbd>
               </td>
-              <td>Play previous clip</td>
+              <td class="pl-3">Play previous clip</td>
             </tr>
             <tr>
               <td>
-                <Kbd>'</Kbd>/<Kbd>"</Kbd>
+                <kbd class="border bg-slate-50 border-slate-400 px-1 rounded">
+                  '
+                </kbd>
+                /
+                <kbd class="border bg-slate-50 border-slate-400 px-1 rounded">
+                  "
+                </kbd>
               </td>
-              <td>Play next clip</td>
+              <td class="pl-3">Play next clip</td>
             </tr>
             <tr>
               <td>
-                <Kbd>d</Kbd>
+                <kbd class="border bg-slate-50 border-slate-400 px-1 rounded">
+                  d
+                </kbd>
               </td>
-              <td>Toggle debug output</td>
+              <td class="pl-3">Toggle debug output</td>
             </tr>
           </tbody>
         </table>
