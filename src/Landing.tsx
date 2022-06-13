@@ -1,10 +1,5 @@
-import {
-  Button,
-  Menu,
-  MenuContent,
-  MenuItem,
-  MenuTrigger,
-} from "@hope-ui/solid";
+import { Menu, MenuContent, MenuItem, MenuTrigger } from "@hope-ui/solid";
+import { Button } from "./common/Button";
 import { Links } from "./common/Links";
 import { filterFiles } from "./common/util";
 import { load } from "./state";
@@ -59,19 +54,16 @@ export function Landing() {
               </div>
               <div>
                 <Menu>
-                  <MenuTrigger
-                    as={Button}
-                    variant="subtle"
-                    rightIcon={
+                  <MenuTrigger as={Button}>
+                    <div class="text-md flex items-center gap-2">
+                      Start
                       <div
-                        class="material-icons text-xl"
+                        class="material-icons"
                         aria-label="Open File or Folder"
                       >
                         folder_open
                       </div>
-                    }
-                  >
-                    Start
+                    </div>
                   </MenuTrigger>
                   <MenuContent>
                     <MenuItem

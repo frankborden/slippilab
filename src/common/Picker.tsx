@@ -13,7 +13,7 @@ export function Picker<T>(props: {
         <For each={props.items}>
           {(item, index) => (
             <Button
-              class="w-full border border-solid border-blue-300 py-1 whitespace-normal"
+              class="w-full whitespace-normal border border-solid border-blue-300 py-1"
               selected={props.selected(item, index())}
               onClick={() => props.onClick(item, index())}
             >

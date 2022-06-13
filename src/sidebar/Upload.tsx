@@ -57,19 +57,13 @@ export function Upload() {
     <>
       <div class="flex w-full items-center justify-between gap-2">
         <Menu>
-          <MenuTrigger
-            as={Button}
-            variant="subtle"
-            rightIcon={
-              <div
-                class="material-icons text-xl"
-                aria-label="Open File or Folder"
-              >
+          <MenuTrigger as={Button}>
+            <div class="flex h-5 items-center gap-2">
+              Open
+              <div class="material-icons" aria-label="Open File or Folder">
                 folder_open
               </div>
-            }
-          >
-            Open
+            </div>
           </MenuTrigger>
           <MenuContent>
             <MenuItem disabled={false} onSelect={() => fileInput.click()}>
@@ -81,10 +75,7 @@ export function Upload() {
           </MenuContent>
         </Menu>
         <Show when={store.files.length > 0}>
-          <Button
-            class="border border-solid border-blue-300 py-1 whitespace-normal"
-            onClick={onUpload}
-          >
+          <Button class="whitespace-normal py-1" onClick={onUpload}>
             <div class="flex items-center gap-2">
               Upload
               <div class="material-icons-outlined" aria-label="Upload File">
