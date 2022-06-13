@@ -9,15 +9,12 @@ import {
   ModalHeader,
   ModalOverlay,
   Spinner,
-  Menu,
-  MenuTrigger,
-  MenuContent,
-  MenuItem,
   notificationService,
 } from "@hope-ui/solid";
 import { createSignal, Show } from "solid-js";
 import { uploadReplay } from "../supabaseClient";
 import { filterFiles } from "../common/util";
+import { OpenMenu } from "../common/OpenMenu";
 
 export function Upload() {
   const { isOpen, onOpen, onClose } = createDisclosure();
@@ -56,24 +53,7 @@ export function Upload() {
   return (
     <>
       <div class="flex w-full items-center justify-between gap-2">
-        <Menu>
-          <MenuTrigger as={Button}>
-            <div class="flex h-5 items-center gap-2">
-              Open
-              <div class="material-icons" aria-label="Open File or Folder">
-                folder_open
-              </div>
-            </div>
-          </MenuTrigger>
-          <MenuContent>
-            <MenuItem disabled={false} onSelect={() => fileInput.click()}>
-              Files
-            </MenuItem>
-            <MenuItem disabled={false} onSelect={() => folderInput.click()}>
-              Folder
-            </MenuItem>
-          </MenuContent>
-        </Menu>
+        <OpenMenu name={"Open"} />
         <Show when={store.files.length > 0}>
           <Button class="whitespace-normal py-1" onClick={onUpload}>
             <div class="flex items-center gap-2">

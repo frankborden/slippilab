@@ -1,25 +1,7 @@
-import { Menu, MenuContent, MenuItem, MenuTrigger } from "@hope-ui/solid";
-import { Button } from "./common/Button";
 import { Links } from "./common/Links";
-import { filterFiles } from "./common/util";
-import { load } from "./state";
-import { loadFromSupabase } from "./stateUtil";
+import { OpenMenu } from "./common/OpenMenu";
 
 export function Landing() {
-  let fileInput!: HTMLInputElement;
-  let folderInput!: HTMLInputElement;
-
-  async function onFileSelected(e: Event): Promise<void> {
-    const input = e.target as HTMLInputElement;
-
-    if (input.files === null || input.files.length === 0) {
-      return;
-    }
-    const files = Array.from(input.files);
-    const filteredFiles = await filterFiles(files);
-    return await load(filteredFiles);
-  }
-
   return (
     <div class="h-full w-full p-4">
       <div class="flex h-full w-full flex-col content-center items-center justify-between">
@@ -33,7 +15,9 @@ export function Landing() {
               />
             </svg>
             <div class="flex flex-col items-center gap-20">
+              {/* spacer */}
               <div />
+              {/* spacer */}
               <div />
               <div class="flex w-max items-center">
                 <svg width="95" height="128" viewBox="0 0 955 1280">
@@ -52,41 +36,7 @@ export function Landing() {
                 </svg>
                 <div class="text-5xl">Slippi Lab</div>
               </div>
-              <div>
-                <Menu>
-                  <MenuTrigger as={Button}>
-                    <div class="text-md flex items-center gap-2">
-                      Start
-                      <div
-                        class="material-icons"
-                        aria-label="Open File or Folder"
-                      >
-                        folder_open
-                      </div>
-                    </div>
-                  </MenuTrigger>
-                  <MenuContent>
-                    <MenuItem
-                      disabled={false}
-                      onSelect={() => fileInput.click()}
-                    >
-                      Open file(s)
-                    </MenuItem>
-                    <MenuItem
-                      disabled={false}
-                      onSelect={() => folderInput.click()}
-                    >
-                      Open folder
-                    </MenuItem>
-                    <MenuItem
-                      disabled={false}
-                      onSelect={async () => await loadFromSupabase("sample")}
-                    >
-                      Load demo
-                    </MenuItem>
-                  </MenuContent>
-                </Menu>
-              </div>
+              <OpenMenu name={"Start"} />
             </div>
             <svg class="aspect-square flex-grow" viewBox="0 -3 30 27">
               <path
@@ -101,23 +51,6 @@ export function Landing() {
           <Links />
         </div>
       </div>
-      <input
-        class="hidden"
-        type="file"
-        accept=".slp,.zip"
-        multiple
-        ref={fileInput}
-        onChange={onFileSelected}
-      />
-      <input
-        class="hidden"
-        type="file"
-        // @ts-expect-error folder input is not standard, but is supported by all
-        // modern browsers
-        webkitDirectory
-        ref={folderInput}
-        onChange={onFileSelected}
-      />
     </div>
   );
 }
