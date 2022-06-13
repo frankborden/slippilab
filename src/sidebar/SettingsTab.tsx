@@ -13,11 +13,11 @@ export function SettingsTab() {
           <tbody>
             <tr>
               <td>
-                <kbd class="border bg-slate-50 border-slate-400 px-1 rounded">
+                <kbd class="rounded border border-slate-400 bg-slate-50 px-1">
                   space
                 </kbd>
                 /
-                <kbd class="border bg-slate-50 border-slate-400 px-1 rounded">
+                <kbd class="rounded border border-slate-400 bg-slate-50 px-1">
                   K
                 </kbd>
               </td>
@@ -25,11 +25,11 @@ export function SettingsTab() {
             </tr>
             <tr>
               <td>
-                <kbd class="border bg-slate-50 border-slate-400 px-1 rounded">
+                <kbd class="rounded border border-slate-400 bg-slate-50 px-1">
                   LeftArrow
                 </kbd>
                 /
-                <kbd class="border bg-slate-50 border-slate-400 px-1 rounded">
+                <kbd class="rounded border border-slate-400 bg-slate-50 px-1">
                   J
                 </kbd>
               </td>
@@ -37,11 +37,11 @@ export function SettingsTab() {
             </tr>
             <tr>
               <td>
-                <kbd class="border bg-slate-50 border-slate-400 px-1 rounded">
+                <kbd class="rounded border border-slate-400 bg-slate-50 px-1">
                   RightArrow
                 </kbd>
                 /
-                <kbd class="border bg-slate-50 border-slate-400 px-1 rounded">
+                <kbd class="rounded border border-slate-400 bg-slate-50 px-1">
                   L
                 </kbd>
               </td>
@@ -50,17 +50,17 @@ export function SettingsTab() {
 
             <tr>
               <td>
-                <kbd class="border bg-slate-50 border-slate-400 px-1 rounded">
+                <kbd class="rounded border border-slate-400 bg-slate-50 px-1">
                   0
                 </kbd>
                 -
-                <kbd class="border bg-slate-50 border-slate-400 px-1 rounded">
+                <kbd class="rounded border border-slate-400 bg-slate-50 px-1">
                   9
                 </kbd>
               </td>
               <td class="pl-3">
                 Jump to xx%. For example, press{" "}
-                <kbd class="border bg-slate-50 border-slate-400 px-1 rounded">
+                <kbd class="rounded border border-slate-400 bg-slate-50 px-1">
                   3
                 </kbd>{" "}
                 for 30%
@@ -68,7 +68,7 @@ export function SettingsTab() {
             </tr>
             <tr>
               <td>
-                <kbd class="border bg-slate-50 border-slate-400 px-1 rounded">
+                <kbd class="rounded border border-slate-400 bg-slate-50 px-1">
                   .
                 </kbd>
               </td>
@@ -76,7 +76,7 @@ export function SettingsTab() {
             </tr>
             <tr>
               <td>
-                <kbd class="border bg-slate-50 border-slate-400 px-1 rounded">
+                <kbd class="rounded border border-slate-400 bg-slate-50 px-1">
                   ,
                 </kbd>
               </td>
@@ -84,7 +84,7 @@ export function SettingsTab() {
             </tr>
             <tr>
               <td>
-                <kbd class="border bg-slate-50 border-slate-400 px-1 rounded">
+                <kbd class="rounded border border-slate-400 bg-slate-50 px-1">
                   UpArrow
                 </kbd>
               </td>
@@ -92,7 +92,7 @@ export function SettingsTab() {
             </tr>
             <tr>
               <td>
-                <kbd class="border bg-slate-50 border-slate-400 px-1 rounded">
+                <kbd class="rounded border border-slate-400 bg-slate-50 px-1">
                   DownArrow
                 </kbd>
               </td>
@@ -100,11 +100,11 @@ export function SettingsTab() {
             </tr>
             <tr>
               <td>
-                <kbd class="border bg-slate-50 border-slate-400 px-1 rounded">
+                <kbd class="rounded border border-slate-400 bg-slate-50 px-1">
                   +
                 </kbd>
                 /
-                <kbd class="border bg-slate-50 border-slate-400 px-1 rounded">
+                <kbd class="rounded border border-slate-400 bg-slate-50 px-1">
                   =
                 </kbd>
               </td>
@@ -112,11 +112,11 @@ export function SettingsTab() {
             </tr>
             <tr>
               <td>
-                <kbd class="border bg-slate-50 border-slate-400 px-1 rounded">
+                <kbd class="rounded border border-slate-400 bg-slate-50 px-1">
                   -
                 </kbd>
                 /
-                <kbd class="border bg-slate-50 border-slate-400 px-1 rounded">
+                <kbd class="rounded border border-slate-400 bg-slate-50 px-1">
                   _
                 </kbd>
               </td>
@@ -124,11 +124,11 @@ export function SettingsTab() {
             </tr>
             <tr>
               <td>
-                <kbd class="border bg-slate-50 border-slate-400 px-1 rounded">
+                <kbd class="rounded border border-slate-400 bg-slate-50 px-1">
                   [
                 </kbd>
                 /
-                <kbd class="border bg-slate-50 border-slate-400 px-1 rounded">
+                <kbd class="rounded border border-slate-400 bg-slate-50 px-1">
                   {"{"}
                 </kbd>
               </td>
@@ -136,11 +136,11 @@ export function SettingsTab() {
             </tr>
             <tr>
               <td>
-                <kbd class="border bg-slate-50 border-slate-400 px-1 rounded">
+                <kbd class="rounded border border-slate-400 bg-slate-50 px-1">
                   ]
                 </kbd>
                 /
-                <kbd class="border bg-slate-50 border-slate-400 px-1 rounded">
+                <kbd class="rounded border border-slate-400 bg-slate-50 px-1">
                   {"}"}
                 </kbd>
               </td>
@@ -148,11 +148,11 @@ export function SettingsTab() {
             </tr>
             <tr>
               <td>
-                <kbd class="border bg-slate-50 border-slate-400 px-1 rounded">
+                <kbd class="rounded border border-slate-400 bg-slate-50 px-1">
                   ;
                 </kbd>
                 /
-                <kbd class="border bg-slate-50 border-slate-400 px-1 rounded">
+                <kbd class="rounded border border-slate-400 bg-slate-50 px-1">
                   :
                 </kbd>
               </td>
@@ -160,11 +160,11 @@ export function SettingsTab() {
             </tr>
             <tr>
               <td>
-                <kbd class="border bg-slate-50 border-slate-400 px-1 rounded">
+                <kbd class="rounded border border-slate-400 bg-slate-50 px-1">
                   '
                 </kbd>
                 /
-                <kbd class="border bg-slate-50 border-slate-400 px-1 rounded">
+                <kbd class="rounded border border-slate-400 bg-slate-50 px-1">
                   "
                 </kbd>
               </td>
@@ -172,7 +172,7 @@ export function SettingsTab() {
             </tr>
             <tr>
               <td>
-                <kbd class="border bg-slate-50 border-slate-400 px-1 rounded">
+                <kbd class="rounded border border-slate-400 bg-slate-50 px-1">
                   d
                 </kbd>
               </td>
