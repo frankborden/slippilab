@@ -23,7 +23,6 @@ import {
 import { downloadReplay } from "./supabaseClient";
 import { send } from "./workerClient";
 import {
-  Center,
   CircularProgress,
   CircularProgressIndicator,
   Notification,
@@ -91,11 +90,11 @@ export async function load(
           <CircularProgress value={(100 * progress()) / files.length}>
             <CircularProgressIndicator />
           </CircularProgress>
-          <Center flexGrow={1}>
+          <div class="flex flex-grow justify-center items-center">
             <NotificationTitle>
               {`Parsing ${files.length} file(s)`}
             </NotificationTitle>
-          </Center>
+          </div>
         </div>
       </Notification>
     ),

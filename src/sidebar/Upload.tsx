@@ -1,7 +1,6 @@
 import { load, store } from "../state";
 import {
   Button,
-  Center,
   createDisclosure,
   Modal,
   ModalBody,
@@ -85,7 +84,10 @@ export function Upload() {
           <Button
             onClick={onUpload}
             rightIcon={
-              <div class="material-icons-outlined text-xl" aria-label="Upload File">
+              <div
+                class="material-icons-outlined text-xl"
+                aria-label="Upload File"
+              >
                 cloud_upload
               </div>
             }
@@ -99,7 +101,7 @@ export function Upload() {
           <ModalContent>
             <ModalHeader>Replay Upload</ModalHeader>
             <ModalBody>
-              <Center>
+              <div class="flex justify-center items-center">
                 <Show when={!isUploading()} fallback={<Spinner />}>
                   <Show
                     when={url() !== undefined}
@@ -130,7 +132,7 @@ export function Upload() {
                     </div>
                   </Show>
                 </Show>
-              </Center>
+              </div>
             </ModalBody>
             <ModalFooter>
               <Button onClick={onClose}>Close</Button>

@@ -1,4 +1,4 @@
-import { Badge, Center } from "@hope-ui/solid";
+import { Badge } from "@hope-ui/solid";
 import { createMemo } from "solid-js";
 import { Picker } from "../common/Picker";
 import { Highlight } from "../search/search";
@@ -32,7 +32,9 @@ export function ClipsTab() {
             </Badge>
             <Badge colorScheme={nameColorScheme}>{name}</Badge>
           </div>
-          <Center flexGrow="1">{`${clip.startFrame}-${clip.endFrame}`}</Center>
+          <div class="flex flex-grow justify-center items-center">
+            {`${clip.startFrame}-${clip.endFrame}`}
+          </div>
         </div>
       </>
     );
