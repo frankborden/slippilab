@@ -32,7 +32,7 @@ export function ClipsTab() {
             </Badge>
             <Badge colorScheme={nameColorScheme}>{name}</Badge>
           </div>
-          <div class="flex flex-grow justify-center items-center">
+          <div class="flex flex-grow items-center justify-center">
             {`${clip.startFrame}-${clip.endFrame}`}
           </div>
         </div>

@@ -127,14 +127,14 @@ export function Controls() {
         </div>
         <div class="flex items-center gap-2">
           <div
-            class="material-icons text-3xl cursor-pointer"
+            class="material-icons cursor-pointer text-3xl"
             onClick={() => adjust(-120)}
             aria-label="Rewind 2 seconds"
           >
             history
           </div>
           <div
-            class="material-icons text-3xl cursor-pointer"
+            class="material-icons cursor-pointer text-3xl"
             onClick={() => {
               pause();
               tickBack();
@@ -147,7 +147,7 @@ export function Controls() {
             when={store.running}
             fallback={
               <div
-                class="material-icons text-4xl cursor-pointer"
+                class="material-icons cursor-pointer text-4xl"
                 onClick={() => {
                   togglePause();
                   // tick();
@@ -165,7 +165,7 @@ export function Controls() {
             }
           >
             <div
-              class="material-icons text-4xl cursor-pointer"
+              class="material-icons cursor-pointer text-4xl"
               onClick={() => {
                 togglePause();
                 // tick();
@@ -176,7 +176,7 @@ export function Controls() {
             </div>
           </Show>
           <div
-            class="material-icons text-3xl cursor-pointer"
+            class="material-icons cursor-pointer text-3xl"
             onClick={() => {
               pause();
               tick();
@@ -186,7 +186,7 @@ export function Controls() {
             rotate_right
           </div>
           <div
-            class="material-icons text-3xl cursor-pointer"
+            class="material-icons cursor-pointer text-3xl"
             onClick={() => adjust(120)}
             aria-label="Skip ahead 2 seconds"
           >
@@ -203,14 +203,14 @@ export function Controls() {
         />
         <div class="flex items-center gap-2">
           <div
-            class="material-icons text-4xl cursor-pointer"
+            class="material-icons cursor-pointer text-4xl"
             onClick={() => zoomOut()}
             aria-label="Zoom out"
           >
             zoom_out
           </div>
           <div
-            class="material-icons text-4xl cursor-pointer"
+            class="material-icons cursor-pointer text-4xl"
             onClick={() => zoomIn()}
             aria-label="Zoom in"
           >

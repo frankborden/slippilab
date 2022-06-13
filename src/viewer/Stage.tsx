@@ -287,7 +287,7 @@ function YoshisStory() {
     <>
       <polyline
         points={mainStage.join(" ")}
-        class="stroke-slate-800 fill-slate-800"
+        class="fill-slate-800 stroke-slate-800"
       />
       <For each={platforms}>
         {(points) => (

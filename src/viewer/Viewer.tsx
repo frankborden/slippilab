@@ -13,7 +13,7 @@ export function Viewer() {
     <Show when={store.replayData}>
       <svg
         /* up = positive y axis */
-        class="h-full w-full bg-slate-50 -scale-y-100"
+        class="h-full w-full -scale-y-100 bg-slate-50"
         viewBox="-365 -300 730 600"
       >
         <Camera>

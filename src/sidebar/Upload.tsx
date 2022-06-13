@@ -1,6 +1,6 @@
 import { load, store } from "../state";
+import { Button } from "../common/Button";
 import {
-  Button,
   createDisclosure,
   Modal,
   ModalBody,
@@ -82,18 +82,15 @@ export function Upload() {
         </Menu>
         <Show when={store.files.length > 0}>
           <Button
+            class="border border-solid border-blue-300 py-1 whitespace-normal"
             onClick={onUpload}
-            rightIcon={
-              <div
-                class="material-icons-outlined text-xl"
-                aria-label="Upload File"
-              >
+          >
+            <div class="flex items-center gap-2">
+              Upload
+              <div class="material-icons-outlined" aria-label="Upload File">
                 cloud_upload
               </div>
-            }
-            variant="subtle"
-          >
-            Upload
+            </div>
           </Button>
         </Show>
         <Modal opened={isOpen()} onClose={onClose}>
@@ -101,7 +98,7 @@ export function Upload() {
           <ModalContent>
             <ModalHeader>Replay Upload</ModalHeader>
             <ModalBody>
-              <div class="flex justify-center items-center">
+              <div class="flex items-center justify-center">
                 <Show when={!isUploading()} fallback={<Spinner />}>
                   <Show
                     when={url() !== undefined}
@@ -123,7 +120,7 @@ export function Upload() {
                         }}
                       >
                         <div
-                          class="material-icons text-4xl cursor-pointer"
+                          class="material-icons cursor-pointer text-4xl"
                           aria-label="Copy URL"
                         >
                           content_copy

@@ -90,7 +90,7 @@ export async function load(
           <CircularProgress value={(100 * progress()) / files.length}>
             <CircularProgressIndicator />
           </CircularProgress>
-          <div class="flex flex-grow justify-center items-center">
+          <div class="flex flex-grow items-center justify-center">
             <NotificationTitle>
               {`Parsing ${files.length} file(s)`}
             </NotificationTitle>

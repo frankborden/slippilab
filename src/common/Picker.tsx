@@ -1,5 +1,5 @@
-import { Button } from "@hope-ui/solid";
 import { For, JSX } from "solid-js";
+import { Button } from "./Button";
 
 export function Picker<T>(props: {
   items: T[];
@@ -13,16 +13,8 @@ export function Picker<T>(props: {
         <For each={props.items}>
           {(item, index) => (
             <Button
-              size="sm"
-              borderColor={"$primary9"}
-              borderWidth="1px"
-              borderStyle="solid"
-              paddingTop="$1"
-              paddingBottom="$1"
-              width="100%"
-              height="initial"
-              css={{ "white-space": "normal" }}
-              variant={props.selected(item, index()) ? "solid" : "outline"}
+              class="w-full border border-solid border-blue-300 py-1 whitespace-normal"
+              selected={props.selected(item, index())}
               onClick={() => props.onClick(item, index())}
             >
               {props.render(item, index())}

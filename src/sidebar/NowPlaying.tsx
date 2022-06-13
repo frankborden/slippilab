@@ -39,7 +39,7 @@ export function NowPlaying() {
         variant="subtle"
         icon={
           <div
-            class="material-icons text-4xl cursor-pointer"
+            class="material-icons cursor-pointer text-4xl"
             aria-label="Open previous replay"
           >
             navigate_before
@@ -67,7 +67,7 @@ export function NowPlaying() {
         variant="subtle"
         icon={
           <div
-            class="material-icons text-4xl cursor-pointer"
+            class="material-icons cursor-pointer text-4xl"
             aria-label="Open next replay"
           >
             navigate_next
