@@ -1,5 +1,4 @@
 import { IconButton } from "@hope-ui/solid";
-import { ArrowLeft, ArrowRight } from "phosphor-solid";
 import { groupBy } from "rambda";
 import { createMemo, Show } from "solid-js";
 import { characterNameByExternalId } from "../common/ids";
@@ -38,7 +37,14 @@ export function NowPlaying() {
         aria-label="Previous File"
         onClick={previousFile}
         variant="subtle"
-        icon={<ArrowLeft size="24" />}
+        icon={
+          <div
+            class="material-icons text-4xl cursor-pointer"
+            aria-label="Open previous replay"
+          >
+            navigate_before
+          </div>
+        }
       />
       <div class="flex flex-col items-start">
         <div>{info().name}</div>
@@ -59,7 +65,14 @@ export function NowPlaying() {
         aria-label="Next File"
         onClick={nextFile}
         variant="subtle"
-        icon={<ArrowRight size="24" />}
+        icon={
+          <div
+            class="material-icons text-4xl cursor-pointer"
+            aria-label="Open next replay"
+          >
+            navigate_next
+          </div>
+        }
       />
     </div>
   );

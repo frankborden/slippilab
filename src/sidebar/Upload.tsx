@@ -18,7 +18,6 @@ import {
 } from "@hope-ui/solid";
 import { createSignal, Show } from "solid-js";
 import { uploadReplay } from "../supabaseClient";
-import { Copy, FileArrowUp, FolderOpen } from "phosphor-solid";
 import { filterFiles } from "../common/util";
 
 export function Upload() {
@@ -62,7 +61,14 @@ export function Upload() {
           <MenuTrigger
             as={Button}
             variant="subtle"
-            rightIcon={<FolderOpen size="24" />}
+            rightIcon={
+              <div
+                class="material-icons text-xl"
+                aria-label="Open File or Folder"
+              >
+                folder_open
+              </div>
+            }
           >
             Open
           </MenuTrigger>
@@ -78,7 +84,11 @@ export function Upload() {
         <Show when={store.files.length > 0}>
           <Button
             onClick={onUpload}
-            rightIcon={<FileArrowUp size="24" />}
+            rightIcon={
+              <div class="material-icons-outlined text-xl" aria-label="Upload File">
+                cloud_upload
+              </div>
+            }
             variant="subtle"
           >
             Upload
@@ -110,7 +120,12 @@ export function Upload() {
                           });
                         }}
                       >
-                        <Copy size={24} />
+                        <div
+                          class="material-icons text-4xl cursor-pointer"
+                          aria-label="Copy URL"
+                        >
+                          content_copy
+                        </div>
                       </div>
                     </div>
                   </Show>

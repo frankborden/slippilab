@@ -10,7 +10,6 @@ specifiers:
   '@thisbeyond/solid-select': ^0.11.0
   '@zip.js/zip.js': ^2.4.15
   autoprefixer: ^10.4.7
-  phosphor-solid: ^1.1.5
   postcss: ^8.4.14
   prettier: ^2.6.2
   prettier-plugin-tailwindcss: ^0.1.11
@@ -31,7 +30,6 @@ dependencies:
   '@supabase/supabase-js': 1.35.3
   '@thisbeyond/solid-select': 0.11.0_solid-js@1.4.4
   '@zip.js/zip.js': 2.4.15
-  phosphor-solid: 1.1.5
   rambda: 7.1.4
   solid-js: 1.4.4
   solid-transition-group: 0.0.10_solid-js@1.4.4
@@ -1258,15 +1256,6 @@ packages:
   /path-parse/1.0.7:
     resolution: {integrity: sha512-LDJzPVEEEPR+y48z93A0Ed0yXb8pAByGWo/k5YYdYgpY2/2EsOsksJrq7lOHxryrVOn1ejG6oAp8ahvOIQD8sw==}
     dev: true
-
-  /phosphor-solid/1.1.5:
-    resolution: {integrity: sha512-FNvvkJytLTYrsvzafgkv/jUhsWOuiXAUcJevX/BD+bs0vATVoO1JCpEToFkVnYY8gkIWrT8Mojwzqb1mFTFQgw==}
-    engines: {node: '>=10'}
-    peerDependencies:
-      react: '>=16'
-    dependencies:
-      solid-js: 1.4.4
-    dev: false
 
   /picocolors/1.0.0:
     resolution: {integrity: sha512-1fygroTLlHu66zi26VoTDv8yRgm0Fccecssto+MhsZ0D/DGW2sm8E8AjW7NU5VVTRt5GxbeZ5qBuJr+HyLYkjQ==}

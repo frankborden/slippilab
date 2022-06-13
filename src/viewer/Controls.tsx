@@ -21,16 +21,6 @@ import {
   StoreWithReplay,
 } from "../state";
 import { onCleanup, onMount, Show } from "solid-js";
-import {
-  ArrowFatLineLeft,
-  ArrowFatLineRight,
-  ClockClockwise,
-  ClockCounterClockwise,
-  MagnifyingGlassMinus,
-  MagnifyingGlassPlus,
-  Pause,
-  Play,
-} from "phosphor-solid";
 
 export function Controls() {
   onMount(() => {
@@ -136,54 +126,72 @@ export function Controls() {
           {store.isDebug ? frame() - 123 : frame()}
         </div>
         <div class="flex items-center gap-2">
-          <ClockCounterClockwise
-            style={{ cursor: "pointer" }}
-            size={32}
-            weight="fill"
+          <div
+            class="material-icons text-3xl cursor-pointer"
             onClick={() => adjust(-120)}
-          />
-          <ArrowFatLineLeft
-            style={{ cursor: "pointer" }}
-            size={32}
-            weight="fill"
+            aria-label="Rewind 2 seconds"
+          >
+            history
+          </div>
+          <div
+            class="material-icons text-3xl cursor-pointer"
             onClick={() => {
               pause();
               tickBack();
             }}
-          />
+            aria-label="Rewind 1 frame"
+          >
+            rotate_left
+          </div>
           <Show
             when={store.running}
             fallback={
-              <Play
-                style={{ cursor: "pointer" }}
-                size={32}
-                weight="fill"
-                onClick={() => togglePause()}
-              />
+              <div
+                class="material-icons text-4xl cursor-pointer"
+                onClick={() => {
+                  togglePause();
+                  // tick();
+                }}
+                aria-label="Resume playback"
+              >
+                play_arrow
+              </div>
+              // <Play
+              //   style={{ cursor: "pointer" }}
+              //   size={32}
+              //   weight="fill"
+              //   onClick={() => togglePause()}
+              // />
             }
           >
-            <Pause
-              style={{ cursor: "pointer" }}
-              size={32}
-              weight="fill"
-              onClick={() => togglePause()}
-            />
+            <div
+              class="material-icons text-4xl cursor-pointer"
+              onClick={() => {
+                togglePause();
+                // tick();
+              }}
+              aria-label="pause playback"
+            >
+              pause
+            </div>
           </Show>
-          <ArrowFatLineRight
-            style={{ cursor: "pointer" }}
-            size={32}
-            weight="fill"
+          <div
+            class="material-icons text-3xl cursor-pointer"
             onClick={() => {
               pause();
               tick();
             }}
-          />
-          <ClockClockwise
-            style={{ cursor: "pointer" }}
-            size={32}
-            weight="fill"
+            aria-label="Skip ahead 1 frame"
+          >
+            rotate_right
+          </div>
+          <div
+            class="material-icons text-3xl cursor-pointer"
             onClick={() => adjust(120)}
-          />
+            aria-label="Skip ahead 2 seconds"
+          >
+            update
+          </div>
         </div>
         <input
           class="flex-grow accent-green-900"
@@ -194,17 +202,20 @@ export function Controls() {
           onInput={() => jump(Number(seekbarInput.value))}
         />
         <div class="flex items-center gap-2">
-          <MagnifyingGlassMinus
-            style={{ cursor: "pointer" }}
-            size={32}
+          <div
+            class="material-icons text-4xl cursor-pointer"
             onClick={() => zoomOut()}
-          />
-          <MagnifyingGlassPlus
-            style={{ cursor: "pointer" }}
-            weight="bold"
-            size={32}
+            aria-label="Zoom out"
+          >
+            zoom_out
+          </div>
+          <div
+            class="material-icons text-4xl cursor-pointer"
             onClick={() => zoomIn()}
-          />
+            aria-label="Zoom in"
+          >
+            zoom_in
+          </div>
         </div>
       </div>
     </foreignObject>
