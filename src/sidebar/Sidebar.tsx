@@ -10,31 +10,27 @@ export function Sidebar() {
       <div class="flex h-full flex-col overflow-y-auto">
         <nav class="mb-3 flex border-b-2 border-slate-200">
           <a
-            class={`flex-grow cursor-pointer rounded-md py-2 px-10 text-center decoration-blue-600 underline-offset-8 hover:bg-blue-100 ${
-              currentTab() === 0 ? "text-blue-600 underline" : ""
-            }`}
+            class="flex-grow cursor-pointer rounded-md py-2 px-10 text-center decoration-blue-600 underline-offset-8 hover:bg-blue-100"
+            classList={{ "text-blue-600 underline": currentTab() === 0 }}
             onClick={() => setTab(0)}
           >
             Replays
           </a>
           <a
-            class={`flex-grow cursor-pointer rounded-md py-2  px-10 text-center decoration-blue-600 underline-offset-8 hover:bg-blue-100 ${
-              currentTab() === 1 ? "text-blue-600 underline" : ""
-            }`}
+            class="flex-grow cursor-pointer rounded-md py-2  px-10 text-center decoration-blue-600 underline-offset-8 hover:bg-blue-100"
+            classList={{ "text-blue-600 underline": currentTab() === 1 }}
             onClick={() => setTab(1)}
           >
             Clips
           </a>
           <a
-            class={`flex-grow cursor-pointer rounded-md py-2 px-10 text-center decoration-blue-600 underline-offset-8 hover:bg-blue-100 ${
-              currentTab() === 2 ? "text-blue-600 underline" : ""
-            }`}
+            class="flex-grow cursor-pointer rounded-md py-2 px-10 text-center decoration-blue-600 underline-offset-8 hover:bg-blue-100"
+            classList={{ "text-blue-600 underline": currentTab() === 2 }}
             onClick={() => setTab(2)}
           >
             Settings
           </a>
         </nav>
-        {/* <div class="flex flex-grow flex-col overflow-y-auto"></div> */}
         <Switch>
           <Match when={currentTab() === 0}>
             <ReplaysTab />
