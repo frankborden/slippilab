@@ -6,7 +6,7 @@ export function Badge(props: {
 }) {
   return (
     <span
-      class={`text-sm font-medium mr-2 px-2.5 py-0.5 rounded ${
+      class={`mr-2 rounded px-2.5 py-0.5 text-sm font-medium ${
         props.class ? props.class : ""
       }`}
     >

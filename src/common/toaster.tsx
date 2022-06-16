@@ -13,7 +13,7 @@ function Toast(props: { actor: any }) {
     // @ts-ignore
     <div
       {...api().rootProps}
-      class="flex gap-5 border rounded p-3 bg-slate-50 items-center"
+      class="flex items-center gap-5 rounded border bg-slate-50 p-3"
     >
       <div class="flex flex-col gap-3">
         {/* @ts-ignore */}
@@ -21,7 +21,7 @@ function Toast(props: { actor: any }) {
         {api()?.render()}
       </div>
       <Button
-        class="material-icons cursor-pointer text-lg px-1 py-0"
+        class="material-icons cursor-pointer px-1 py-0 text-lg"
         onClick={api().dismiss}
       >
         close

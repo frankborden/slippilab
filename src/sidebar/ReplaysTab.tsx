@@ -42,7 +42,7 @@ export function ReplaysTab() {
           onkeyup={(e: Event) => e.stopPropagation()}
         >
           <Select
-            class="w-full border border-blue-600 rounded bg-white"
+            class="w-full rounded border border-blue-600 bg-white"
             placeholder="Filter"
             multiple
             {...filterProps}
@@ -127,7 +127,7 @@ function StageBadge(props: { stage: ExternalStageName }) {
     "Dream Land N64": "bg-orange-600 text-orange-100",
   };
   return (
-    <Badge class={colors[props.stage] ?? "text-black bg-white"}>
+    <Badge class={colors[props.stage] ?? "bg-white text-black"}>
       {abbreviations[props.stage] ?? "??"}
     </Badge>
   );

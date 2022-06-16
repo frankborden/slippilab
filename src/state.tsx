@@ -81,7 +81,7 @@ export async function load(
     title: "Parsing files",
     duration: Infinity,
     render: () => (
-      <div class="flex gap-3 items-center">
+      <div class="flex items-center gap-3">
         <ProgressCircle percent={(progress() * 100) / files.length} />
         {progress()}/{files.length}
       </div>

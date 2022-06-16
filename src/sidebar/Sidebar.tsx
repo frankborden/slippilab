@@ -7,7 +7,7 @@ export function Sidebar() {
   const [currentTab, setTab] = createSignal<number>(0);
   return (
     <>
-      <div class="flex flex-col h-full overflow-y-auto">
+      <div class="flex h-full flex-col overflow-y-auto">
         <nav class="mb-3 flex border-b-2 border-slate-200">
           <a
             class={`flex-grow cursor-pointer rounded-md py-2 px-10 text-center decoration-blue-600 underline-offset-8 hover:bg-blue-100 ${
@@ -34,7 +34,7 @@ export function Sidebar() {
             Settings
           </a>
         </nav>
-        <div class="flex flex-col flex-grow overflow-y-auto"></div>
+        <div class="flex flex-grow flex-col overflow-y-auto"></div>
         <Switch>
           <Match when={currentTab() === 0}>
             <ReplaysTab />

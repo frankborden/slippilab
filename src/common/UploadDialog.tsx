@@ -58,17 +58,17 @@ export function UploadDialog() {
           {/* @ts-ignore */}
           <div
             {...dialogApi().backdropProps}
-            class="absolute top-0 w-screen h-screen left-0 bg-slate-800 opacity-25"
+            class="absolute top-0 left-0 h-screen w-screen bg-slate-800 opacity-25"
           />
           {/* @ts-ignore */}
           <div
             {...dialogApi().underlayProps}
-            class="absolute top-0 left-0 flex w-full h-full justify-center items-center"
+            class="absolute top-0 left-0 flex h-full w-full items-center justify-center"
           >
             {/* @ts-ignore */}
             <div
               {...dialogApi().contentProps}
-              class="bg-slate-50 border border-slate-700 rounded p-4 flex flex-col gap-4"
+              class="flex flex-col gap-4 rounded border border-slate-700 bg-slate-50 p-4"
             >
               {/* @ts-ignore */}
               <h1 {...dialogApi().titleProps} class="text-lg">
@@ -76,12 +76,12 @@ export function UploadDialog() {
               </h1>
               {/* @ts-ignore */}
               <div {...dialogApi().descriptionProps}>
-                <div class="flex gap-2 justify-center items-center">
+                <div class="flex items-center justify-center gap-2">
                   <Show when={!isUploading()} fallback={<SpinnerCircle />}>
                     <Show when={url()} fallback={error()}>
                       <code class="text-sm">{url()}</code>
                       <Button
-                        class="material-icons cursor-pointer text-lg px-1 py-0"
+                        class="material-icons cursor-pointer px-1 py-0 text-lg"
                         onClick={() => {
                           const link = url();
                           if (link === undefined) return;
