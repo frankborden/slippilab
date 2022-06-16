@@ -1,4 +1,3 @@
-import { Badge } from "@hope-ui/solid";
 import { createOptions, Select } from "@thisbeyond/solid-select";
 import { groupBy } from "rambda";
 import { createMemo, For } from "solid-js";
@@ -13,6 +12,7 @@ import { gameSettings, setFile, setFilters, store } from "../state";
 import { Upload } from "./Upload";
 import "./select.css";
 import { NowPlaying } from "./NowPlaying";
+import { Badge } from "../common/Badge";
 
 const filterProps = createOptions(
   [
@@ -120,15 +120,15 @@ function StageBadge(props: { stage: ExternalStageName }) {
     "Dream Land N64": "DL",
   };
   const colors: Partial<{ [key in ExternalStageName]: string }> = {
-    "Final Destination": "fuchsia",
-    "Pokémon Stadium": "blue",
-    Battlefield: "dimgray",
-    "Fountain of Dreams": "darkviolet",
-    "Yoshi's Story": "green",
-    "Dream Land N64": "chocolate",
+    "Final Destination": "bg-fuchsia-600 text-fuchsia-100",
+    "Pokémon Stadium": "bg-blue-700 text-blue-100",
+    Battlefield: "bg-slate-600 text-slate-100",
+    "Fountain of Dreams": "bg-purple-700 text-purple-100",
+    "Yoshi's Story": "bg-green-700 text-green-100",
+    "Dream Land N64": "bg-orange-600 text-orange-100",
   };
   return (
-    <Badge backgroundColor={colors[props.stage] ?? "black"} color="white">
+    <Badge class={colors[props.stage] ?? "text-black bg-white"}>
       {abbreviations[props.stage] ?? "??"}
     </Badge>
   );
