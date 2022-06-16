@@ -11,6 +11,7 @@ specifiers:
   '@zag-js/dialog': ^0.1.7
   '@zag-js/menu': ^0.1.7
   '@zag-js/solid': ^0.1.8
+  '@zag-js/toast': ^0.1.7
   '@zip.js/zip.js': ^2.4.15
   autoprefixer: ^10.4.7
   postcss: ^8.4.14
@@ -35,6 +36,7 @@ dependencies:
   '@zag-js/dialog': 0.1.7_vite@2.9.12
   '@zag-js/menu': 0.1.7_vite@2.9.12
   '@zag-js/solid': 0.1.8_solid-js@1.4.4+vite@2.9.12
+  '@zag-js/toast': 0.1.7_vite@2.9.12
   '@zip.js/zip.js': 2.4.15
   rambda: 7.1.4
   solid-js: 1.4.4
@@ -653,6 +655,22 @@ packages:
       hyphenate-style-name: 1.0.4
       solid-js: 1.4.4
       valtio: 1.6.1_vite@2.9.12
+    transitivePeerDependencies:
+      - '@babel/helper-module-imports'
+      - '@babel/types'
+      - aslemammad-vite-plugin-macro
+      - babel-plugin-macros
+      - react
+      - vite
+    dev: false
+
+  /@zag-js/toast/0.1.7_vite@2.9.12:
+    resolution: {integrity: sha512-GG2igPmmIPjEWvBmbdNpTt6FAmPqMWnA+7QiR8PiX5eGFGYxZzVgQt1qOYQ3RR399qa3G+UBuCkAV1uev2DAkA==}
+    dependencies:
+      '@zag-js/core': 0.1.6_vite@2.9.12
+      '@zag-js/dom-utils': 0.1.4
+      '@zag-js/types': 0.1.2
+      '@zag-js/utils': 0.1.2
     transitivePeerDependencies:
       - '@babel/helper-module-imports'
       - '@babel/types'

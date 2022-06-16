@@ -30,6 +30,7 @@
     "@zag-js/dialog": "^0.1.7",
     "@zag-js/menu": "^0.1.7",
     "@zag-js/solid": "^0.1.8",
+    "@zag-js/toast": "^0.1.7",
     "@zip.js/zip.js": "^2.4.15",
     "rambda": "^7.1.4",
     "solid-js": "^1.4.4",

@@ -5,7 +5,7 @@ import { createEffect, createMemo, createSignal, on, Show } from "solid-js";
 import { Button } from "./Button";
 import { store } from "../state";
 import { uploadReplay } from "../supabaseClient";
-import { Spinner } from "@hope-ui/solid";
+import { SpinnerCircle } from "./SpinnerCircle";
 
 export function UploadDialog() {
   const [dialogState, dialogSend] = useMachine(dialog.machine);
@@ -68,7 +68,7 @@ export function UploadDialog() {
             {/* @ts-ignore */}
             <div
               {...dialogApi().contentProps}
-              class="bg-slate-50 border border-slate-700 rounded w-6 p-4"
+              class="bg-slate-50 border border-slate-700 rounded p-4 flex flex-col gap-4"
             >
               {/* @ts-ignore */}
               <h1 {...dialogApi().titleProps} class="text-lg">
@@ -77,7 +77,7 @@ export function UploadDialog() {
               {/* @ts-ignore */}
               <div {...dialogApi().descriptionProps}>
                 <div class="flex gap-2 justify-center items-center">
-                  <Show when={!isUploading()} fallback={<Spinner />}>
+                  <Show when={!isUploading()} fallback={<SpinnerCircle />}>
                     <Show when={url()} fallback={error()}>
                       <code class="text-sm">{url()}</code>
                       <Button

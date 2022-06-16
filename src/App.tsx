@@ -7,6 +7,7 @@ import "@thisbeyond/solid-select/style.css";
 import { Show } from "solid-js";
 import { Landing } from "./Landing";
 import { filterFiles } from "./common/util";
+import { ToastGroup } from "./common/toaster";
 
 export function App() {
   // Get started fetching the most popular characters
@@ -36,6 +37,7 @@ export function App() {
           </div>
         </Show>
       </div>
+      <ToastGroup />
     </>
   );
 }

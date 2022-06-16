@@ -1,6 +1,6 @@
 import createRAF, { targetFPS } from "@solid-primitives/raf";
 import { add, dec, groupBy, inc, map, pipe } from "rambda";
-import { batch, createEffect, createSignal } from "solid-js";
+import { batch, createEffect, createSignal, For } from "solid-js";
 import { createStore, SetStoreFunction } from "solid-js/store";
 import { parseReplay } from "./parser/parser";
 import { GameSettings, ReplayData } from "./common/types";
@@ -23,18 +23,13 @@ import {
 import { downloadReplay } from "./supabaseClient";
 import { send } from "./workerClient";
 import {
-  CircularProgress,
-  CircularProgressIndicator,
-  Notification,
-  notificationService,
-  NotificationTitle,
-} from "@hope-ui/solid";
-import {
   characterNameByExternalId,
   ExternalCharacterName,
   ExternalStageName,
   stageNameByExternalId,
 } from "./common/ids";
+import { createToast, dismissToast } from "./common/toaster";
+import { ProgressCircle } from "./common/ProgressCircle";
 
 export interface Store {
   isDebug: boolean;
@@ -82,22 +77,16 @@ export async function load(
   startFrame: number = 0
 ): Promise<void> {
   const [progress, setProgress] = createSignal(0);
-  notificationService.show({
-    persistent: true,
+  const toastId = createToast({
+    title: "Parsing files",
+    duration: 99999999,
     render: () => (
-      <Notification>
-        <div class="flex w-full items-center">
-          <CircularProgress value={(100 * progress()) / files.length}>
-            <CircularProgressIndicator />
-          </CircularProgress>
-          <div class="flex flex-grow items-center justify-center">
-            <NotificationTitle>
-              {`Parsing ${files.length} file(s)`}
-            </NotificationTitle>
-          </div>
-        </div>
-      </Notification>
+      <div class="flex gap-3 items-center">
+        <ProgressCircle percent={(progress() * 100) / files.length} />
+        {progress()}/{files.length}
+      </div>
     ),
+    placement: "bottom-end",
   });
   stop();
   const {
@@ -106,7 +95,7 @@ export async function load(
     failedFilenames,
   }: {
     goodFilesAndSettings: Array<[File, GameSettings]>;
-    failedFilenames: File[];
+    failedFilenames: string[];
     skipCount: number;
   } = await send(files, () => setProgress(inc));
   batch(() => {
@@ -140,19 +129,26 @@ export async function load(
   } catch (e) {
     console.error(e);
   }
-  notificationService.clear();
+  dismissToast(toastId);
   if (failedFilenames.length > 0) {
-    notificationService.show({
-      status: "danger",
-      persistent: true,
+    createToast({
       title: `Failed to parse ${failedFilenames.length} file(s)`,
-      description: failedFilenames.join("\n"),
+      duration: 2000,
+      render: () => (
+        <div class="flex flex-col">
+          <For each={failedFilenames}>
+            {(failedFilename) => <div>{failedFilename}</div>}
+          </For>
+        </div>
+      ),
+      placement: "bottom-end",
     });
   }
   if (skipCount > 0) {
-    notificationService.show({
-      status: "info",
+    createToast({
       title: `Skipped ${skipCount} file(s) with CPUs or illegal stages`,
+      duration: 2000,
+      placement: "bottom-end",
     });
   }
 }
