@@ -34,7 +34,7 @@ export function Sidebar() {
             Settings
           </a>
         </nav>
-        <div class="flex flex-grow flex-col overflow-y-auto"></div>
+        {/* <div class="flex flex-grow flex-col overflow-y-auto"></div> */}
         <Switch>
           <Match when={currentTab() === 0}>
             <ReplaysTab />
