@@ -86,7 +86,7 @@ export async function load(
         {progress()}/{files.length}
       </div>
     ),
-    placement: "bottom-end",
+    placement: "top-end",
   });
   stop();
   const {
@@ -141,14 +141,14 @@ export async function load(
           </For>
         </div>
       ),
-      placement: "bottom-end",
+      placement: "top-end",
     });
   }
   if (skipCount > 0) {
     createToast({
       title: `Skipped ${skipCount} file(s) with CPUs or illegal stages`,
       duration: 2000,
-      placement: "bottom-end",
+      placement: "top-end",
     });
   }
 }

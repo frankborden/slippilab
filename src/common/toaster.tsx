@@ -1,4 +1,4 @@
-import { useActor, useMachine, useSetup } from "@zag-js/solid";
+import { PropTypes, useActor, useMachine, useSetup } from "@zag-js/solid";
 import * as toast from "@zag-js/toast";
 import { createMemo, For } from "solid-js";
 import { Portal } from "solid-js/web";
@@ -7,16 +7,14 @@ import { Button } from "./Button";
 function Toast(props: { actor: any }) {
   const [state, send] = useActor(props.actor);
   // @ts-ignore
-  const api = createMemo(() => toast.connect(state, send));
+  const api = createMemo(() => toast.connect<PropTypes>(state, send));
 
   return (
-    // @ts-ignore
     <div
       {...api().rootProps}
       class="flex items-center gap-5 rounded border bg-slate-50 p-3"
     >
       <div class="flex flex-col gap-3">
-        {/* @ts-ignore */}
         <div {...api().titleProps}>{api().title}</div>
         {api()?.render()}
       </div>

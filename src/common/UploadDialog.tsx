@@ -1,6 +1,6 @@
 import * as dialog from "@zag-js/dialog";
 import { Portal } from "solid-js/web";
-import { useMachine, useSetup, normalizeProps } from "@zag-js/solid";
+import { useMachine, useSetup, normalizeProps, PropTypes } from "@zag-js/solid";
 import { createEffect, createMemo, createSignal, on, Show } from "solid-js";
 import { Button } from "./Button";
 import { store } from "../state";
@@ -11,7 +11,7 @@ export function UploadDialog() {
   const [dialogState, dialogSend] = useMachine(dialog.machine);
   const dialogRef = useSetup({ send: dialogSend, id: "uploadDialog" });
   const dialogApi = createMemo(() =>
-    dialog.connect(dialogState, dialogSend, normalizeProps)
+    dialog.connect<PropTypes>(dialogState, dialogSend, normalizeProps)
   );
   const isDialogOpen = createMemo(() => dialogApi().isOpen);
   const isDialogClosed = createMemo(() => !dialogApi().isOpen);
@@ -55,26 +55,21 @@ export function UploadDialog() {
       </Button>
       {dialogApi().isOpen && (
         <Portal>
-          {/* @ts-ignore */}
           <div
             {...dialogApi().backdropProps}
             class="absolute top-0 left-0 h-screen w-screen bg-slate-800 opacity-25"
           />
-          {/* @ts-ignore */}
           <div
             {...dialogApi().underlayProps}
             class="absolute top-0 left-0 flex h-full w-full items-center justify-center"
           >
-            {/* @ts-ignore */}
             <div
               {...dialogApi().contentProps}
               class="flex flex-col gap-4 rounded border border-slate-700 bg-slate-50 p-4"
             >
-              {/* @ts-ignore */}
               <h1 {...dialogApi().titleProps} class="text-lg">
                 Replay Upload
               </h1>
-              {/* @ts-ignore */}
               <div {...dialogApi().descriptionProps}>
                 <div class="flex items-center justify-center gap-2">
                   <Show when={!isUploading()} fallback={<SpinnerCircle />}>
@@ -97,7 +92,6 @@ export function UploadDialog() {
                 </div>
               </div>
               <div class="flex justify-end">
-                {/* @ts-ignore */}
                 <Button {...dialogApi().closeButtonProps}>Close</Button>
               </div>
             </div>

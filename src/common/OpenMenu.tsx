@@ -1,5 +1,5 @@
 import * as menu from "@zag-js/menu";
-import { normalizeProps, useMachine, useSetup } from "@zag-js/solid";
+import { normalizeProps, useMachine, useSetup, PropTypes } from "@zag-js/solid";
 import { createMemo } from "solid-js";
 import { load } from "../state";
 import { loadFromSupabase } from "../stateUtil";
@@ -12,7 +12,7 @@ export function OpenMenu(props: { name: string }) {
   );
   const menuRef = useSetup({ send: menuSend, id: "1" });
   const menuApi = createMemo(() =>
-    menu.connect(menuState, menuSend, normalizeProps)
+    menu.connect<PropTypes>(menuState, menuSend, normalizeProps)
   );
 
   let fileInput!: HTMLInputElement;
@@ -32,7 +32,6 @@ export function OpenMenu(props: { name: string }) {
   return (
     <>
       <div ref={menuRef}>
-        {/* @ts-ignore */}
         <Button
           {...menuApi().triggerProps}
           class="text-md flex items-center gap-2"
@@ -42,9 +41,7 @@ export function OpenMenu(props: { name: string }) {
             folder_open
           </div>
         </Button>
-        {/* @ts-ignore */}
         <div {...menuApi().positionerProps} class="z-10 bg-white opacity-100">
-          {/* @ts-ignore */}
           <ul
             {...menuApi().contentProps}
             class="flex flex-col border border-slate-300"
@@ -62,21 +59,18 @@ export function OpenMenu(props: { name: string }) {
               }
             }}
           >
-            {/* @ts-ignore */}
             <li
               {...menuApi().getItemProps({ id: "file" })}
               class="w-full cursor-pointer py-2 px-4 hover:bg-slate-200"
             >
               Open File(s)
             </li>
-            {/* @ts-ignore */}
             <li
               {...menuApi().getItemProps({ id: "folder" })}
               class="w-full cursor-pointer py-2 px-4 hover:bg-slate-200"
             >
               Open Folder
             </li>
-            {/* @ts-ignore */}
             <li
               {...menuApi().getItemProps({ id: "demo" })}
               class="w-full cursor-pointer py-2 px-4 hover:bg-slate-200"
