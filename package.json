@@ -20,7 +20,6 @@
     "vite-plugin-solid": "^2.2.6"
   },
   "dependencies": {
-    "@hope-ui/solid": "^0.6.2",
     "@shelacek/ubjson": "^1.1.1",
     "@solid-primitives/raf": "^2.1.0",
     "@solid-primitives/upload": "^0.0.101",

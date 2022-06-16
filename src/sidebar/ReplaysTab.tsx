@@ -10,7 +10,6 @@ import { Picker } from "../common/Picker";
 import { GameSettings, PlayerSettings } from "../common/types";
 import { gameSettings, setFile, setFilters, store } from "../state";
 import { Upload } from "./Upload";
-import "./select.css";
 import { NowPlaying } from "./NowPlaying";
 import { Badge } from "../common/Badge";
 
@@ -43,7 +42,7 @@ export function ReplaysTab() {
           onkeyup={(e: Event) => e.stopPropagation()}
         >
           <Select
-            class="custom w-full"
+            class="w-full border border-blue-600 rounded bg-white"
             placeholder="Filter"
             multiple
             {...filterProps}
