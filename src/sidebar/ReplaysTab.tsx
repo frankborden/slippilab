@@ -34,7 +34,7 @@ export function ReplaysTab() {
   );
   return (
     <>
-      <div class="flex h-full flex-col items-center gap-2">
+      <div class="flex h-full flex-col items-center gap-2 overflow-y-auto">
         <Upload />
         <div
           class="w-full"

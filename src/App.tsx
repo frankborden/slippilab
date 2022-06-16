@@ -29,7 +29,7 @@ export function App() {
     <>
       <div class="flex h-screen w-screen" ref={dropzoneRef}>
         <Show when={store.files.length > 0} fallback={<Landing />}>
-          <div class="flex-grow">
+          <div class="flex-grow h-full overflow-y-auto">
             <Sidebar />
           </div>
           <div>

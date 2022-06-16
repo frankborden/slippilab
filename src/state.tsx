@@ -79,7 +79,7 @@ export async function load(
   const [progress, setProgress] = createSignal(0);
   const toastId = createToast({
     title: "Parsing files",
-    duration: 99999999,
+    duration: Infinity,
     render: () => (
       <div class="flex gap-3 items-center">
         <ProgressCircle percent={(progress() * 100) / files.length} />
