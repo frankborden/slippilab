@@ -74,7 +74,10 @@ const adjustedExternalCharacterIds = createMemo(() =>
 const animationsByPlayerIndex = Array.from(Array(4).keys()).map(
   (i) =>
     createResource(
-      () => playerSettings().find((p) => p.playerIndex === i),
+      () =>
+        adjustedExternalCharacterIds()[
+          playerSettings().findIndex((p) => p.playerIndex === i)
+        ],
       async () =>
         await fetchAnimations(
           adjustedExternalCharacterIds()[
