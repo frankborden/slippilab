@@ -2,12 +2,12 @@ import { Viewer } from "./viewer/Viewer";
 import { fetchAnimations } from "./viewer/animationCache";
 import { Sidebar } from "./sidebar/Sidebar";
 import { createDropzone } from "@solid-primitives/upload";
-import { load, store } from "./state";
-import "@thisbeyond/solid-select/style.css";
+import { load, store } from "~/state";
 import { Show } from "solid-js";
-import { Landing } from "./Landing";
-import { filterFiles } from "./common/util";
-import { ToastGroup } from "./common/toaster";
+import { Landing } from "~/Landing";
+import { filterFiles } from "~/common/util";
+import { ToastGroup } from "~/common/toaster";
+import "@thisbeyond/solid-select/style.css";
 
 export function App() {
   // Get started fetching the most popular characters

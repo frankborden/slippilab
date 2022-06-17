@@ -1,9 +1,9 @@
-import type { ReplayData } from "../common/types";
+import type { ReplayData } from "~/common/types";
 import {
   characterNameByExternalId,
   stageNameByExternalId,
   ExternalCharacterName,
-} from "../common/ids";
+} from "~/common/ids";
 
 export type GamePredicate = (game: ReplayData, playerIndex: number) => boolean;
 

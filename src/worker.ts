@@ -1,6 +1,6 @@
 import { splitEvery } from "rambda";
-import { stageNameByExternalId } from "./common/ids";
-import { GameSettings, parseGameSettings } from "./parser/parser";
+import { stageNameByExternalId } from "~/common/ids";
+import { GameSettings, parseGameSettings } from "~/parser/parser";
 
 onmessage = async (event) => {
   // Parse in groups of 500 replays at a time to prevent memory issues.

@@ -1,6 +1,6 @@
-import { Character } from "./character";
+import { Character } from "~/viewer/characters/character";
+import { ActionName } from "~/common/ids";
 
-import { ActionName } from "../../common/ids";
 export const zelda: Character = {
   scale: 1.26,
   shieldOffset: [0.541, 6.969],

@@ -1,7 +1,7 @@
 import { createSignal, Match, Switch } from "solid-js";
-import { ClipsTab } from "./ClipsTab";
-import { ReplaysTab } from "./ReplaysTab";
-import { SettingsTab } from "./SettingsTab";
+import { ClipsTab } from "~/sidebar/ClipsTab";
+import { ReplaysTab } from "~/sidebar/ReplaysTab";
+import { SettingsTab } from "~/sidebar/SettingsTab";
 
 export function Sidebar() {
   const [currentTab, setTab] = createSignal<number>(0);

@@ -1,6 +1,6 @@
-import { Character } from "./character";
+import { Character } from "~/viewer/characters/character";
+import { ActionName } from "~/common/ids";
 
-import { ActionName } from "../../common/ids";
 export const ganondorf: Character = {
   scale: 1.08,
   shieldOffset: [0.2, 10.447], // TODO

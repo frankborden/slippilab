@@ -9,7 +9,7 @@ import type {
   PlayerState,
   PlayerUpdate,
   ReplayData,
-} from "../common/types";
+} from "~/common/types";
 export type {
   Frame,
   GameEnding,

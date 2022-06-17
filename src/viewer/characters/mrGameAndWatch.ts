@@ -1,6 +1,6 @@
-import { Character } from "./character";
+import { Character } from "~/viewer/characters/character";
+import { ActionName } from "~/common/ids";
 
-import { ActionName } from "../../common/ids";
 export const mrGameAndWatch: Character = {
   scale: 1.02,
   shieldOffset: [0, 4.828], // TODO

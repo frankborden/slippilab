@@ -1,6 +1,6 @@
-import { actionNameById, attackNamesById } from "../common/ids";
-import type { ActionName, AttackName } from "../common/ids";
-import type { ReplayData } from "../common/types";
+import { actionNameById, attackNamesById } from "~/common/ids";
+import type { ActionName, AttackName } from "~/common/ids";
+import type { ReplayData } from "~/common/types";
 
 export type Predicate = (
   playerIndex: number,

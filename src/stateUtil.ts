@@ -1,5 +1,5 @@
-import { load } from "./state";
-import { downloadReplay } from "./supabaseClient";
+import { load } from "~/state";
+import { downloadReplay } from "~/supabaseClient";
 
 export async function loadFromSupabase(id: string): Promise<void> {
   const { data, error } = await downloadReplay(id);

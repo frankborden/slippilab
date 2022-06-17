@@ -1,4 +1,4 @@
-import { ActionName } from "../../common/ids";
+import { ActionName } from "~/common/ids";
 
 export interface Character {
   scale: number;

@@ -1,5 +1,5 @@
-import { Character } from "./character";
-import { ActionName } from "../../common/ids";
+import { Character } from "~/viewer/characters/character";
+import { ActionName } from "~/common/ids";
 
 export const link: Character = {
   scale: 1.22,

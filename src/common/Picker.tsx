@@ -1,5 +1,5 @@
 import { For, JSX } from "solid-js";
-import { Button } from "./Button";
+import { Button } from "~/common/Button";
 
 export function Picker<T>(props: {
   items: T[];

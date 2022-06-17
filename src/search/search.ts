@@ -1,6 +1,6 @@
 import { findLastIndex } from "rambda";
-import type { ReplayData } from "../common/types";
-import { Predicate } from "./framePredicates";
+import type { ReplayData } from "~/common/types";
+import { Predicate } from "~/search/framePredicates";
 
 export interface Highlight {
   playerIndex: number;

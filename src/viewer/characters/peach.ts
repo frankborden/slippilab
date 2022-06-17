@@ -1,6 +1,6 @@
-import { Character } from "./character";
+import { Character } from "~/viewer/characters/character";
+import { ActionName } from "~/common/ids";
 
-import { ActionName } from "../../common/ids";
 export const peach: Character = {
   scale: 1.15,
   shieldOffset: [5 / 4.5, 34 / 4.5], // guess

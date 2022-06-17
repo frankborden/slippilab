@@ -4,17 +4,17 @@ import {
   actionNameById,
   characterNameByExternalId,
   characterNameByInternalId,
-} from "../common/ids";
+} from "~/common/ids";
 import {
   PlayerState,
   PlayerUpdate,
   PlayerUpdateWithNana,
-} from "../common/types";
-import { frame, store, StoreWithReplay } from "../state";
-import { CharacterAnimations, fetchAnimations } from "./animationCache";
-import { actionMapByInternalId } from "./characters";
-import { Character } from "./characters/character";
-import { getPlayerOnFrame, getStartOfAction } from "./viewerUtil";
+} from "~/common/types";
+import { frame, store, StoreWithReplay } from "~/state";
+import { CharacterAnimations, fetchAnimations } from "~/viewer/animationCache";
+import { actionMapByInternalId } from "~/viewer/characters";
+import { Character } from "~/viewer/characters/character";
+import { getPlayerOnFrame, getStartOfAction } from "~/viewer/viewerUtil";
 
 export interface RenderData {
   playerUpdate: PlayerUpdate;

@@ -1,6 +1,6 @@
-import { Character } from "./character";
+import { Character } from "~/viewer/characters/character";
+import { ActionName } from "~/common/ids";
 
-import { ActionName } from "../../common/ids";
 export const jigglypuff: Character = {
   scale: 0.94,
   shieldOffset: [0, 4.828],

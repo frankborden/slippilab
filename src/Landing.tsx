@@ -1,5 +1,5 @@
-import { Links } from "./common/Links";
-import { OpenMenu } from "./common/OpenMenu";
+import { Links } from "~/common/Links";
+import { OpenMenu } from "~/common/OpenMenu";
 
 export function Landing() {
   return (

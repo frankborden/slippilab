@@ -2,10 +2,10 @@ import * as dialog from "@zag-js/dialog";
 import { Portal } from "solid-js/web";
 import { useMachine, useSetup, normalizeProps, PropTypes } from "@zag-js/solid";
 import { createEffect, createMemo, createSignal, on, Show } from "solid-js";
-import { Button } from "./Button";
-import { store } from "../state";
-import { uploadReplay } from "../supabaseClient";
-import { SpinnerCircle } from "./SpinnerCircle";
+import { Button } from "~/common/Button";
+import { store } from "~/state";
+import { uploadReplay } from "~/supabaseClient";
+import { SpinnerCircle } from "~/common/SpinnerCircle";
 
 export function UploadDialog() {
   const [dialogState, dialogSend] = useMachine(dialog.machine);

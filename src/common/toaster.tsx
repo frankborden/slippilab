@@ -2,7 +2,7 @@ import { PropTypes, useActor, useMachine, useSetup } from "@zag-js/solid";
 import * as toast from "@zag-js/toast";
 import { createMemo, For } from "solid-js";
 import { Portal } from "solid-js/web";
-import { Button } from "./Button";
+import { Button } from "~/common/Button";
 
 function Toast(props: { actor: any }) {
   const [state, send] = useActor(props.actor);

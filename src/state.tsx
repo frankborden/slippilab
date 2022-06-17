@@ -2,9 +2,9 @@ import createRAF, { targetFPS } from "@solid-primitives/raf";
 import { add, dec, groupBy, inc, map, pipe } from "rambda";
 import { batch, createEffect, createSignal, For } from "solid-js";
 import { createStore, SetStoreFunction } from "solid-js/store";
-import { parseReplay } from "./parser/parser";
-import { GameSettings, ReplayData } from "./common/types";
-import { Highlight, Query, search } from "./search/search";
+import { parseReplay } from "~/parser/parser";
+import { GameSettings, ReplayData } from "~/common/types";
+import { Highlight, Query, search } from "~/search/search";
 import {
   action,
   all,
@@ -19,17 +19,17 @@ import {
   not,
   opponent,
   Predicate,
-} from "./search/framePredicates";
-import { downloadReplay } from "./supabaseClient";
-import { send } from "./workerClient";
+} from "~/search/framePredicates";
+import { downloadReplay } from "~/supabaseClient";
+import { send } from "~/workerClient";
 import {
   characterNameByExternalId,
   ExternalCharacterName,
   ExternalStageName,
   stageNameByExternalId,
-} from "./common/ids";
-import { createToast, dismissToast } from "./common/toaster";
-import { ProgressCircle } from "./common/ProgressCircle";
+} from "~/common/ids";
+import { createToast, dismissToast } from "~/common/toaster";
+import { ProgressCircle } from "~/common/ProgressCircle";
 
 export interface Store {
   isDebug: boolean;

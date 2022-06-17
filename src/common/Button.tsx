@@ -1,4 +1,4 @@
-import { createEffect, splitProps } from "solid-js";
+import { splitProps } from "solid-js";
 
 export function Button(props: any) {
   const [classProp, selectedProp, otherProps] = splitProps(
@@ -6,12 +6,11 @@ export function Button(props: any) {
     ["class"],
     ["selected"]
   );
-  createEffect(() => console.log(classProp));
 
   return (
     <button
       {...otherProps}
-      class={`inline-flex justify-center rounded-md border border-transparent px-4 py-2 text-sm font-medium  focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
+      class={`inline-flex justify-center rounded-md border border-transparent px-4 py-2 text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
         classProp?.class ?? ""
       }`}
       classList={{

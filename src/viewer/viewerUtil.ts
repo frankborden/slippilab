@@ -2,7 +2,7 @@ import {
   PlayerUpdate,
   PlayerUpdateWithNana,
   ReplayData,
-} from "../common/types";
+} from "~/common/types";
 
 export function getStartOfAction(
   playerIndex: number,

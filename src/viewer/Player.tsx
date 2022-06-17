@@ -1,9 +1,9 @@
 import { createMemo, For, Show } from "solid-js";
-import { characterNameByExternalId } from "../common/ids";
-import { store, StoreWithReplay } from "../state";
-import { PlayerUpdate, PlayerUpdateWithNana } from "../common/types";
-import { RenderData, renderDatas } from "./viewerState";
-import { getPlayerOnFrame, getStartOfAction } from "./viewerUtil";
+import { characterNameByExternalId } from "~/common/ids";
+import { store, StoreWithReplay } from "~/state";
+import { PlayerUpdate, PlayerUpdateWithNana } from "~/common/types";
+import { RenderData, renderDatas } from "~/viewer/viewerState";
+import { getPlayerOnFrame, getStartOfAction } from "~/viewer/viewerUtil";
 
 export function Players() {
   return (

@@ -1,6 +1,6 @@
-import { Character } from "./character";
+import { Character } from "~/viewer/characters/character";
+import { ActionName } from "~/common/ids";
 
-import { ActionName } from "../../common/ids";
 export const roy: Character = {
   scale: 1.08,
   shieldOffset: [0.893, 7.257], // TODO

@@ -1,8 +1,8 @@
 import { createMemo } from "solid-js";
-import { Badge } from "../common/Badge";
-import { Picker } from "../common/Picker";
-import { Highlight } from "../search/search";
-import { setClip, store } from "../state";
+import { Badge } from "~/common/Badge";
+import { Picker } from "~/common/Picker";
+import { Highlight } from "~/search/search";
+import { setClip, store } from "~/state";
 
 export function ClipsTab() {
   const entries = createMemo(() => {

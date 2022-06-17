@@ -1,6 +1,6 @@
-import { Character } from "./character";
+import { Character } from "~/viewer/characters/character";
+import { ActionName } from "~/common/ids";
 
-import { ActionName } from "../../common/ids";
 export const pichu: Character = {
   scale: 0.5,
   shieldOffset: [2.724, 9.003], // TODO

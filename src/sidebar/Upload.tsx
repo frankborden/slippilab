@@ -1,7 +1,7 @@
-import { store } from "../state";
 import { Show } from "solid-js";
-import { OpenMenu } from "../common/OpenMenu";
-import { UploadDialog } from "../common/UploadDialog";
+import { store } from "~/state";
+import { OpenMenu } from "~/common/OpenMenu";
+import { UploadDialog } from "~/common/UploadDialog";
 
 export function Upload() {
   return (

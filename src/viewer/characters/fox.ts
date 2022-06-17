@@ -1,5 +1,5 @@
-import { Character } from "./character";
-import { ActionName } from "../../common/ids";
+import { Character } from "~/viewer/characters/character";
+import { ActionName } from "~/common/ids";
 
 export const fox: Character = {
   scale: 0.96,
