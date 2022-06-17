@@ -1,4 +1,4 @@
-import { load } from "~/state";
+import { load } from "~/state/state";
 import { downloadReplay } from "~/supabaseClient";
 
 export async function loadFromSupabase(id: string): Promise<void> {

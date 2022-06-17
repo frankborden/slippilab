@@ -1,7 +1,7 @@
 import { createMemo } from "solid-js";
 import { For } from "solid-js/web";
 import { PlayerHUD } from "~/viewer/PlayerHUD";
-import { store, StoreWithReplay } from "~/state";
+import { store, StoreWithReplay } from "~/state/state";
 import { Timer } from "~/viewer/Timer";
 
 export function Hud() {

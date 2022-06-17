@@ -1,6 +1,6 @@
 import { createMemo, For, Show } from "solid-js";
 import { characterNameByInternalId } from "~/common/ids";
-import { store, StoreWithReplay } from "~/state";
+import { store, StoreWithReplay } from "~/state/state";
 import { playerSettings, renderDatas } from "~/viewer/viewerState";
 
 export function PlayerHUD(props: { player: number }) {

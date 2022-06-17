@@ -1,8 +1,8 @@
-import { Viewer } from "./viewer/Viewer";
-import { fetchAnimations } from "./viewer/animationCache";
-import { Sidebar } from "./sidebar/Sidebar";
+import { Viewer } from "~/viewer/Viewer";
+import { fetchAnimations } from "~/viewer/animationCache";
+import { Sidebar } from "~/sidebar/Sidebar";
 import { createDropzone } from "@solid-primitives/upload";
-import { load, store } from "~/state";
+import { load, store } from "~/state/state";
 import { Show } from "solid-js";
 import { Landing } from "~/Landing";
 import { filterFiles } from "~/common/util";

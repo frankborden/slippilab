@@ -3,7 +3,7 @@ import { createMemo, Show } from "solid-js";
 import { Button } from "~/common/Button";
 import { characterNameByExternalId } from "~/common/ids";
 import { PlayerSettings } from "~/common/types";
-import { nextFile, previousFile, store } from "~/state";
+import { nextFile, previousFile, store } from "~/state/state";
 
 export function NowPlaying() {
   function player(p: PlayerSettings): string {

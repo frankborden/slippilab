@@ -1,5 +1,5 @@
 import { Show } from "solid-js";
-import { store } from "~/state";
+import { store } from "~/state/state";
 import { OpenMenu } from "~/common/OpenMenu";
 import { UploadDialog } from "~/common/UploadDialog";
 

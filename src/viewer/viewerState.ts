@@ -10,7 +10,7 @@ import {
   PlayerUpdate,
   PlayerUpdateWithNana,
 } from "~/common/types";
-import { store, StoreWithReplay } from "~/state";
+import { store, StoreWithReplay } from "~/state/state";
 import { CharacterAnimations, fetchAnimations } from "~/viewer/animationCache";
 import { actionMapByInternalId } from "~/viewer/characters";
 import { Character } from "~/viewer/characters/character";

@@ -3,7 +3,7 @@ import { Portal } from "solid-js/web";
 import { useMachine, useSetup, normalizeProps, PropTypes } from "@zag-js/solid";
 import { createEffect, createMemo, createSignal, on, Show } from "solid-js";
 import { Button } from "~/common/Button";
-import { store } from "~/state";
+import { store } from "~/state/state";
 import { uploadReplay } from "~/supabaseClient";
 import { SpinnerCircle } from "~/common/SpinnerCircle";
 

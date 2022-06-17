@@ -1,5 +1,5 @@
 import { createMemo, For, Show } from "solid-js";
-import { store } from "~/state";
+import { store } from "~/state/state";
 import { Camera } from "~/viewer/Camera";
 import { Controls } from "~/viewer/Controls";
 import { Hud } from "~/viewer/Hud";

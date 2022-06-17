@@ -18,7 +18,7 @@ import {
   previousClip,
   store,
   StoreWithReplay,
-} from "~/state";
+} from "~/state/state";
 import { onCleanup, onMount, Show } from "solid-js";
 
 export function Controls() {

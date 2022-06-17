@@ -1,6 +1,6 @@
 import { filter, map, pipe, prop } from "rambda";
 import { createEffect, createMemo, createSignal, ParentProps } from "solid-js";
-import { store, StoreWithReplay } from "~/state";
+import { store, StoreWithReplay } from "~/state/state";
 import { PlayerUpdate } from "~/common/types";
 
 export function Camera(props: ParentProps) {

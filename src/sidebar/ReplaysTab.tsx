@@ -8,7 +8,7 @@ import {
 } from "~/common/ids";
 import { Picker } from "~/common/Picker";
 import { GameSettings, PlayerSettings } from "~/common/types";
-import { setFile, setFilters, store } from "~/state";
+import { setFile, setFilters, store } from "~/state/state";
 import { Upload } from "~/sidebar/Upload";
 import { NowPlaying } from "~/sidebar/NowPlaying";
 import { Badge } from "~/common/Badge";
