@@ -24,7 +24,6 @@
     "@shelacek/ubjson": "^1.1.1",
     "@solid-primitives/raf": "^2.1.0",
     "@solid-primitives/upload": "^0.0.101",
-    "@stitches/core": "^1.2.8",
     "@supabase/supabase-js": "^1.35.3",
     "@thisbeyond/solid-select": "^0.11.0",
     "@zag-js/dialog": "^0.1.7",
