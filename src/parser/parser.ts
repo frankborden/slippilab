@@ -145,8 +145,10 @@ function handlePreFrameUpdateEvent(
   if (playerInputs.isNana) {
     frames[playerInputs.frameNumber].players[
       playerInputs.playerIndex
+      // @ts-ignore will only be readonly once parser is done
     ].nanaInputs = playerInputs;
   } else {
+    // @ts-ignore will only be readonly once parser is done
     frames[playerInputs.frameNumber].players[playerInputs.playerIndex].inputs =
       playerInputs;
   }
@@ -160,9 +162,11 @@ function handlePostFrameUpdateEvent(
 ): void {
   const playerState = parsePostFrameUpdateEvent(rawData, offset, replayVersion);
   if (playerState.isNana) {
+    // @ts-ignore will only be readonly once parser is done
     frames[playerState.frameNumber].players[playerState.playerIndex].nanaState =
       playerState;
   } else {
+    // @ts-ignore will only be readonly once parser is done
     frames[playerState.frameNumber].players[playerState.playerIndex].state =
       playerState;
   }
@@ -180,6 +184,7 @@ function handleFrameStartEvent(
     replayVersion
   );
   initFrameIfNeeded(frames, frameNumber);
+  // @ts-ignore will only be readonly once parser is done
   frames[frameNumber].randomSeed = randomSeed;
 }
 
@@ -390,6 +395,7 @@ function parseGameStartEvent(
       offset + 0x35
     ),
   };
+  // @ts-ignore will only be readonly once parser is done
   settings.consoleNickname = metadata?.consoleNick;
   for (let playerIndex = 0; playerIndex < 4; playerIndex++) {
     const playerType = readUint(

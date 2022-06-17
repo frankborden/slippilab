@@ -4,22 +4,7 @@ import { batch, createEffect, createSignal, For } from "solid-js";
 import { createStore, SetStoreFunction } from "solid-js/store";
 import { parseReplay } from "~/parser/parser";
 import { GameSettings, ReplayData } from "~/common/types";
-import { Highlight, Query, search } from "~/search/search";
-import {
-  action,
-  all,
-  either,
-  isCrouching,
-  isDead,
-  isGrabbed,
-  isInGroundedControl,
-  isInHitstun,
-  isInShieldstun,
-  isOffstage,
-  not,
-  opponent,
-  Predicate,
-} from "~/search/framePredicates";
+import { Highlight, search } from "~/search/search";
 import { downloadReplay } from "~/supabaseClient";
 import { send } from "~/workerClient";
 import {
@@ -30,6 +15,7 @@ import {
 } from "~/common/ids";
 import { createToast, dismissToast } from "~/common/toaster";
 import { ProgressCircle } from "~/common/ProgressCircle";
+import { queries } from "~/search/queries";
 
 export interface Store {
   isDebug: boolean;
@@ -110,13 +96,7 @@ export async function load(
       const replayData: ReplayData = parseReplay(
         await store.files[0].arrayBuffer()
       );
-      const clips = {
-        killCombo: search(replayData, ...killComboQuery),
-        shieldGrab: search(replayData, ...shieldGrabQuery),
-        crouchCancel: search(replayData, ...crouchCancelQuery),
-        edgeguard: search(replayData, ...edgeguardQuery),
-        grabPunish: search(replayData, ...grabPunishQuery),
-      };
+      const clips = map((query) => search(replayData, ...query), queries);
       batch(() => {
         setStore("replayData", replayData);
         setStore("clips", clips);
@@ -165,13 +145,7 @@ export async function nextFile(): Promise<void> {
         ]
       : wrap(store.files.length, currentIndex + 1);
   const replayData = parseReplay(await store.files[nextIndex].arrayBuffer());
-  const clips = {
-    killCombo: search(replayData, ...killComboQuery),
-    shieldGrab: search(replayData, ...shieldGrabQuery),
-    crouchCancel: search(replayData, ...crouchCancelQuery),
-    edgeguard: search(replayData, ...edgeguardQuery),
-    grabPunish: search(replayData, ...grabPunishQuery),
-  };
+  const clips = map((query) => search(replayData, ...query), queries);
   batch(() => {
     setStore("currentFile", nextIndex);
     setStore("replayData", replayData);
@@ -195,13 +169,7 @@ export async function previousFile(): Promise<void> {
   const replayData = parseReplay(
     await store.files[previousIndex].arrayBuffer()
   );
-  const clips = {
-    killCombo: search(replayData, ...killComboQuery),
-    shieldGrab: search(replayData, ...shieldGrabQuery),
-    crouchCancel: search(replayData, ...crouchCancelQuery),
-    edgeguard: search(replayData, ...edgeguardQuery),
-    grabPunish: search(replayData, ...grabPunishQuery),
-  };
+  const clips = map((query) => search(replayData, ...query), queries);
   batch(() => {
     setStore("currentFile", previousIndex);
     setStore("replayData", replayData);
@@ -213,13 +181,7 @@ export async function previousFile(): Promise<void> {
 
 export async function setFile(fileIndex: number): Promise<void> {
   const replayData = parseReplay(await store.files[fileIndex].arrayBuffer());
-  const clips = {
-    killCombo: search(replayData, ...killComboQuery),
-    shieldGrab: search(replayData, ...shieldGrabQuery),
-    crouchCancel: search(replayData, ...crouchCancelQuery),
-    edgeguard: search(replayData, ...edgeguardQuery),
-    grabPunish: search(replayData, ...grabPunishQuery),
-  };
+  const clips = map((query) => search(replayData, ...query), queries);
   batch(() => {
     setStore("currentFile", fileIndex);
     setStore("replayData", replayData);
@@ -398,43 +360,6 @@ export function setFilters(filters: Filter[]): void {
 function wrap(max: number, targetFrame: number): number {
   return (targetFrame + max) % max;
 }
-
-const killComboQuery: [Query, Predicate?] = [
-  [
-    { predicate: opponent(isInHitstun) },
-    { predicate: opponent(isDead), delayed: true },
-  ],
-  not(opponent(isInGroundedControl)),
-];
-const grabPunishQuery: [Query, Predicate?] = [
-  [
-    { predicate: opponent(isGrabbed) },
-    {
-      predicate: all(
-        not(opponent(isDead)),
-        either(not(opponent(isInGroundedControl)), opponent(isOffstage))
-      ),
-    },
-  ],
-];
-const edgeguardQuery: [Query, Predicate?] = [
-  [
-    { predicate: opponent(isOffstage) },
-    { predicate: not(opponent(isInHitstun)), delayed: true },
-    { predicate: opponent(isInHitstun), delayed: true },
-  ],
-  not(opponent(isInGroundedControl)),
-];
-const crouchCancelQuery: [Query, Predicate?] = [
-  [{ predicate: isCrouching }, { predicate: isInHitstun }],
-];
-const shieldGrabQuery: [Query, Predicate?] = [
-  [
-    { predicate: isInShieldstun },
-    { predicate: action("Catch"), delayed: true },
-  ],
-  either(action("Guard"), action("Catch"), action("GuardSetOff")),
-];
 
 // load a file from query params if provided. Otherwise start playing the sample
 // match.
