@@ -61,14 +61,17 @@ function adjustExternalCharacterId(
 }
 
 const adjustedExternalCharacterIds = createMemo(() =>
-  playerSettings().map((settings) =>
-    playerUpdates()[settings.playerIndex] !== undefined
+  playerSettings().map((settings) => {
+    const update = playerUpdates().find(
+      (update) => update.playerIndex === settings.playerIndex
+    );
+    return update !== undefined
       ? adjustExternalCharacterId(
           settings.externalCharacterId,
-          playerUpdates()[settings.playerIndex].state.internalCharacterId
+          update.state.internalCharacterId
         )
-      : settings.externalCharacterId
-  )
+      : settings.externalCharacterId;
+  })
 );
 
 const animationsByPlayerIndex = Array.from(Array(4).keys()).map(
@@ -76,14 +79,11 @@ const animationsByPlayerIndex = Array.from(Array(4).keys()).map(
     createResource(
       () =>
         adjustedExternalCharacterIds()[
-          playerSettings().findIndex((p) => p.playerIndex === i)
+          playerSettings()
+            .filter((p) => p)
+            .findIndex((p) => p.playerIndex === i)
         ],
-      async () =>
-        await fetchAnimations(
-          adjustedExternalCharacterIds()[
-            playerSettings().findIndex((p) => p.playerIndex === i)
-          ]
-        )
+      fetchAnimations
     )[0]
 );
 
