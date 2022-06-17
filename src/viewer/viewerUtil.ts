@@ -1,8 +1,4 @@
-import {
-  PlayerUpdate,
-  PlayerUpdateWithNana,
-  ReplayData,
-} from "~/common/types";
+import { PlayerUpdate, PlayerUpdateWithNana, ReplayData } from "~/common/types";
 
 export function getStartOfAction(
   playerIndex: number,

@@ -1,5 +1,5 @@
 import { createMemo } from "solid-js";
-import { frame, store, StoreWithReplay } from "~/state";
+import { store, StoreWithReplay } from "~/state";
 
 export function Timer() {
   const meleeHundredths = [
@@ -67,7 +67,7 @@ export function Timer() {
   const time = createMemo(() => {
     const frames =
       (store as StoreWithReplay).replayData.settings.timerStart * 60 -
-      frame() +
+      store.frame +
       123;
     const minutes = Math.floor(frames / (60 * 60))
       .toString()

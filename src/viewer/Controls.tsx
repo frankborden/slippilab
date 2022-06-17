@@ -1,6 +1,5 @@
 import {
   adjust,
-  frame,
   speedFast,
   jump,
   jumpPercent,
@@ -123,7 +122,7 @@ export function Controls() {
     >
       <div class="flex items-center justify-evenly gap-4 pl-2 pr-4 text-slate-800">
         <div class="w-[6ch] text-end">
-          {store.isDebug ? frame() - 123 : frame()}
+          {store.isDebug ? store.frame - 123 : store.frame}
         </div>
         <div class="flex items-center gap-2">
           <div
@@ -197,7 +196,7 @@ export function Controls() {
           class="flex-grow accent-green-900"
           type="range"
           ref={seekbarInput}
-          value={frame()}
+          value={store.frame}
           max={(store as StoreWithReplay).replayData.frames.length - 1}
           onInput={() => jump(Number(seekbarInput.value))}
         />

@@ -8,7 +8,7 @@ import {
 } from "~/common/ids";
 import { Picker } from "~/common/Picker";
 import { GameSettings, PlayerSettings } from "~/common/types";
-import { gameSettings, setFile, setFilters, store } from "~/state";
+import { setFile, setFilters, store } from "~/state";
 import { Upload } from "~/sidebar/Upload";
 import { NowPlaying } from "~/sidebar/NowPlaying";
 import { Badge } from "~/common/Badge";
@@ -29,8 +29,8 @@ const filterProps = createOptions(
 export function ReplaysTab() {
   const filteredGameSettings = createMemo(() =>
     store.filteredIndexes === undefined
-      ? gameSettings()
-      : store.filteredIndexes.map((i) => gameSettings()[i])
+      ? store.gameSettings
+      : store.filteredIndexes.map((i) => store.gameSettings[i])
   );
   return (
     <>
@@ -58,11 +58,11 @@ export function ReplaysTab() {
             )}
             onClick={async (_, index) =>
               await setFile(
-                gameSettings().indexOf(filteredGameSettings()[index])
+                store.gameSettings.indexOf(filteredGameSettings()[index])
               )
             }
             selected={(settings) =>
-              gameSettings().indexOf(settings) === store.currentFile
+              store.gameSettings.indexOf(settings) === store.currentFile
             }
           />
         </div>

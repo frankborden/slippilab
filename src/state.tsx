@@ -28,6 +28,10 @@ export interface Store {
   running: boolean;
   filters: Filter[];
   filteredIndexes?: number[];
+  frame: number;
+  fps: number;
+  framesPerTick: number;
+  gameSettings: GameSettings[];
 }
 
 export type StoreWithReplay = Store & Required<Pick<Store, "replayData">>;
@@ -46,17 +50,18 @@ const [getStore, setStore] = createStore<Store>({
   clips: {},
   running: false,
   filters: [],
+  frame: 0,
+  fps: 60,
+  framesPerTick: 1,
+  gameSettings: [],
 }) as [Store, SetStoreFunction<Store>];
 export const store = getStore;
 
-const [getGameSettings, setGameSettings] = createSignal<GameSettings[]>([]);
-const [getFrame, setFrame] = createSignal(0);
-const [fps, setFps] = createSignal(60);
-const [framesPerTick, setFramesPerTick] = createSignal(1);
-const [running, start, stop] = createRAF(targetFPS(tick, fps));
+function setFrame(frame: number | ((frame: number) => number)) {
+  setStore("frame", frame);
+}
+const [running, start, stop] = createRAF(targetFPS(tick, () => store.fps));
 createEffect(() => setStore("running", running()));
-export const frame = getFrame;
-export const gameSettings = getGameSettings;
 
 export async function load(
   files: File[],
@@ -85,7 +90,10 @@ export async function load(
     skipCount: number;
   } = await send(files, () => setProgress(inc));
   batch(() => {
-    setGameSettings(goodFilesAndSettings.map(([, settings]) => settings));
+    setStore(
+      "gameSettings",
+      goodFilesAndSettings.map(([, settings]) => settings)
+    );
     setStore(
       "files",
       goodFilesAndSettings.map(([file]) => file)
@@ -205,7 +213,7 @@ export function togglePause(): void {
 
 export function tick(): void {
   setFrame(
-    pipe(add(framesPerTick()), (frame) =>
+    pipe(add(store.framesPerTick), (frame) =>
       wrap((store as StoreWithReplay).replayData.frames.length, frame)
     )
   );
@@ -220,16 +228,16 @@ export function tickBack(): void {
 }
 
 export function speedNormal(): void {
-  setFps(60);
-  setFramesPerTick(1);
+  setStore("fps", 60);
+  setStore("framesPerTick", 1);
 }
 
 export function speedFast(): void {
-  setFramesPerTick(2);
+  setStore("framesPerTick", 2);
 }
 
 export function speedSlow(): void {
-  setFps(30);
+  setStore("fps", 30);
 }
 
 export function zoomIn(): void {
@@ -315,7 +323,7 @@ export function adjust(delta: number): void {
 
 export function setFilters(filters: Filter[]): void {
   setStore("filters", filters);
-  const filterResults = gameSettings().filter((gameSettings) => {
+  const filterResults = store.gameSettings.filter((gameSettings) => {
     const charactersNeeded = map(
       (filters: Filter[]) => filters.length,
       groupBy(
@@ -353,7 +361,7 @@ export function setFilters(filters: Filter[]): void {
     "filteredIndexes",
     filters.length === 0
       ? undefined
-      : filterResults.map((settings) => gameSettings().indexOf(settings))
+      : filterResults.map((settings) => store.gameSettings.indexOf(settings))
   );
 }
 

@@ -1,5 +1,5 @@
 import { createMemo, For, Show } from "solid-js";
-import { frame, store } from "~/state";
+import { store } from "~/state";
 import { Camera } from "~/viewer/Camera";
 import { Controls } from "~/viewer/Controls";
 import { Hud } from "~/viewer/Hud";
@@ -8,7 +8,7 @@ import { Stage } from "~/viewer/Stage";
 import { Item } from "~/viewer/Item";
 
 export function Viewer() {
-  const items = createMemo(() => store.replayData?.frames[frame()].items);
+  const items = createMemo(() => store.replayData?.frames[store.frame].items);
   return (
     <Show when={store.replayData}>
       <svg

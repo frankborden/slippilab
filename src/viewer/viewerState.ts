@@ -10,7 +10,7 @@ import {
   PlayerUpdate,
   PlayerUpdateWithNana,
 } from "~/common/types";
-import { frame, store, StoreWithReplay } from "~/state";
+import { store, StoreWithReplay } from "~/state";
 import { CharacterAnimations, fetchAnimations } from "~/viewer/animationCache";
 import { actionMapByInternalId } from "~/viewer/characters";
 import { Character } from "~/viewer/characters/character";
@@ -33,7 +33,7 @@ export interface RenderData {
 }
 
 const playerUpdates = createMemo(
-  () => store.replayData?.frames[frame()].players.filter((p) => p) ?? []
+  () => store.replayData?.frames[store.frame].players.filter((p) => p) ?? []
 );
 
 export const playerSettings = createMemo(
@@ -127,7 +127,7 @@ function computeRenderData(
       playerIndex,
       getStartOfAction(
         playerIndex,
-        frame(),
+        store.frame,
         isNana,
         (store as StoreWithReplay).replayData
       ),
@@ -161,9 +161,9 @@ function computeRenderData(
       : animationPathOrFrameReference;
   const rotation =
     animationName === "DamageFlyRoll"
-      ? getDamageFlyRollRotation(playerIndex, frame(), isNana)
-      : isSpacieUpB(playerIndex, frame(), isNana)
-      ? getSpacieUpBRotation(playerIndex, frame(), isNana)
+      ? getDamageFlyRollRotation(playerIndex, store.frame, isNana)
+      : isSpacieUpB(playerIndex, store.frame, isNana)
+      ? getSpacieUpBRotation(playerIndex, store.frame, isNana)
       : 0;
   // Some animations naturally turn the player around, but facingDirection
   // updates partway through the animation and incorrectly flips the

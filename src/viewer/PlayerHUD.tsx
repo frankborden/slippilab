@@ -1,12 +1,12 @@
 import { createMemo, For, Show } from "solid-js";
 import { characterNameByInternalId } from "~/common/ids";
-import { frame, store, StoreWithReplay } from "~/state";
+import { store, StoreWithReplay } from "~/state";
 import { playerSettings, renderDatas } from "~/viewer/viewerState";
 
 export function PlayerHUD(props: { player: number }) {
   const playerState = createMemo(
     () =>
-      (store as StoreWithReplay).replayData.frames[frame()].players[
+      (store as StoreWithReplay).replayData.frames[store.frame].players[
         props.player
       ]?.state
   );

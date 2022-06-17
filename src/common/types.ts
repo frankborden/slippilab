@@ -39,7 +39,13 @@ export interface GameSettings {
   readonly isSingleButtonMode: boolean;
   readonly timerCountsDuringPause: boolean;
   readonly bombRain: boolean;
-  readonly itemSpawnRate: "off" | "very low" | "low" | "medium" | "high" | "very high";
+  readonly itemSpawnRate:
+    | "off"
+    | "very low"
+    | "low"
+    | "medium"
+    | "high"
+    | "very high";
   readonly selfDestructScoreValue: number;
   readonly timerStart: number;
   readonly damageRatio: number;

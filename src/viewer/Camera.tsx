@@ -1,6 +1,6 @@
 import { filter, map, pipe, prop } from "rambda";
 import { createEffect, createMemo, createSignal, ParentProps } from "solid-js";
-import { frame, store, StoreWithReplay } from "~/state";
+import { store, StoreWithReplay } from "~/state";
 import { PlayerUpdate } from "~/common/types";
 
 export function Camera(props: ParentProps) {
@@ -12,7 +12,9 @@ export function Camera(props: ParentProps) {
     const padding = [25, 25];
     const minimums = [100, 100];
 
-    const currentFrame = (store as StoreWithReplay).replayData.frames[frame()];
+    const currentFrame = (store as StoreWithReplay).replayData.frames[
+      store.frame
+    ];
     const focuses = pipe(
       filter((player: PlayerUpdate) => Boolean(player)),
       map((player: PlayerUpdate) => ({
