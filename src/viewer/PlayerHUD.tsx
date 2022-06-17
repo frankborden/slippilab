@@ -16,10 +16,11 @@ export function PlayerHUD(props: { player: number }) {
   }));
   const color = createMemo(
     () =>
-      // getPlayerColor(props.player));
-      renderDatas()[
-        playerSettings().findIndex((ps) => ps.playerIndex === props.player)
-      ].innerColor
+      renderDatas().find(
+        (renderData) =>
+          renderData.playerUpdate.playerIndex === props.player &&
+          !renderData.isNana
+      )?.innerColor
   );
   const name = createMemo(() =>
     [
