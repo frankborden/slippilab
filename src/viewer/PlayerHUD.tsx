@@ -114,7 +114,7 @@ export function PlayerHUD(props: { player: number }) {
                 playerSettings().findIndex(
                   (ps) => ps.playerIndex === props.player
                 )
-              ].animationName
+              ]?.animationName
             }
             fill={color()}
             stroke="black"
