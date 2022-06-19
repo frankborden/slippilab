@@ -1,10 +1,10 @@
 import * as menu from "@zag-js/menu";
 import { normalizeProps, useMachine, useSetup, PropTypes } from "@zag-js/solid";
 import { createMemo } from "solid-js";
-import { load } from "~/state/state";
 import { loadFromSupabase } from "~/stateUtil";
 import { Button } from "~/common/Button";
 import { filterFiles } from "~/common/util";
+import { load } from "~/state/fileStore";
 
 export function OpenMenu(props: { name: string }) {
   const [menuState, menuSend] = useMachine(

@@ -1,7 +1,7 @@
 import { createMemo, For, Match, Switch } from "solid-js";
 import { itemNamesById } from "~/common/ids";
 import { ItemUpdate, PlayerUpdate } from "~/common/types";
-import { store, StoreWithReplay } from "~/state/state";
+import { replayStore } from "~/state/replayStore";
 
 // TODO: characters projectiles
 
@@ -281,7 +281,5 @@ function FlyGuy(props: { item: ItemUpdate }) {
 }
 
 function getOwner(item: ItemUpdate): PlayerUpdate {
-  return (store as StoreWithReplay).replayData.frames[item.frameNumber].players[
-    item.owner
-  ];
+  return replayStore.replayData!.frames[item.frameNumber].players[item.owner];
 }

@@ -1,6 +1,6 @@
 import { createOptions, Select } from "@thisbeyond/solid-select";
 import { groupBy } from "rambda";
-import { createMemo, For } from "solid-js";
+import { For } from "solid-js";
 import {
   characterNameByExternalId,
   ExternalStageName,
@@ -8,10 +8,10 @@ import {
 } from "~/common/ids";
 import { Picker } from "~/common/Picker";
 import { GameSettings, PlayerSettings } from "~/common/types";
-import { setFile, setFilters, store } from "~/state/state";
 import { Upload } from "~/sidebar/Upload";
 import { NowPlaying } from "~/sidebar/NowPlaying";
 import { Badge } from "~/common/Badge";
+import { select, selectionStore, setFilters } from "~/state/selectionStore";
 
 const filterProps = createOptions(
   [
@@ -27,11 +27,6 @@ const filterProps = createOptions(
   }
 );
 export function ReplaysTab() {
-  const filteredGameSettings = createMemo(() =>
-    store.filteredIndexes === undefined
-      ? store.gameSettings
-      : store.filteredIndexes.map((i) => store.gameSettings[i])
-  );
   return (
     <>
       <div class="flex h-full flex-col items-center gap-2 overflow-y-auto">
@@ -46,23 +41,20 @@ export function ReplaysTab() {
             placeholder="Filter"
             multiple
             {...filterProps}
-            initialValue={store.filters}
+            initialValue={selectionStore.filters}
             onChange={setFilters}
           />
         </div>
         <div class="w-full overflow-y-auto">
           <Picker
-            items={filteredGameSettings()}
-            render={(gameSettings: GameSettings) => (
+            items={selectionStore.filteredFilesAndSettings}
+            render={([file, gameSettings]) => (
               <GameInfo gameSettings={gameSettings} />
             )}
-            onClick={async (_, index) =>
-              await setFile(
-                store.gameSettings.indexOf(filteredGameSettings()[index])
-              )
-            }
-            selected={(settings) =>
-              store.gameSettings.indexOf(settings) === store.currentFile
+            onClick={(fileAndSettings) => select(fileAndSettings)}
+            selected={([file, gameSettings]) =>
+              selectionStore.selectedFileAndSettings?.[0] === file &&
+              selectionStore.selectedFileAndSettings?.[1] === gameSettings
             }
           />
         </div>

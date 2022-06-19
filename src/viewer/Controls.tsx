@@ -1,25 +1,21 @@
+import { onCleanup, onMount, Show } from "solid-js";
 import {
   adjust,
-  speedFast,
   jump,
   jumpPercent,
+  nextHighlight,
   pause,
-  speedSlow,
-  tick,
-  tickBack,
-  togglePause,
+  previousHighlight,
+  replayStore,
+  speedFast,
   speedNormal,
-  zoomOut,
-  zoomIn,
-  nextFile,
-  previousFile,
+  speedSlow,
   toggleDebug,
-  nextClip,
-  previousClip,
-  store,
-  StoreWithReplay,
-} from "~/state/state";
-import { onCleanup, onMount, Show } from "solid-js";
+  togglePause,
+  zoomIn,
+  zoomOut,
+} from "~/state/replayStore";
+import { nextFile, previousFile } from "~/state/selectionStore";
 
 export function Controls() {
   onMount(() => {
@@ -47,11 +43,11 @@ export function Controls() {
         break;
       case ".":
         pause();
-        tick();
+        adjust(1);
         break;
       case ",":
         pause();
-        tickBack();
+        adjust(-1);
         break;
       case "0":
       case "1":
@@ -89,11 +85,11 @@ export function Controls() {
         break;
       case "'":
       case '"':
-        nextClip();
+        nextHighlight();
         break;
       case ";":
       case ":":
-        previousClip();
+        previousHighlight();
         break;
       case "d":
         toggleDebug();
@@ -122,7 +118,7 @@ export function Controls() {
     >
       <div class="flex items-center justify-evenly gap-4 pl-2 pr-4 text-slate-800">
         <div class="w-[6ch] text-end">
-          {store.isDebug ? store.frame - 123 : store.frame}
+          {replayStore.isDebug ? replayStore.frame - 123 : replayStore.frame}
         </div>
         <div class="flex items-center gap-2">
           <div
@@ -136,39 +132,27 @@ export function Controls() {
             class="material-icons cursor-pointer text-3xl"
             onClick={() => {
               pause();
-              tickBack();
+              adjust(-1);
             }}
             aria-label="Rewind 1 frame"
           >
             rotate_left
           </div>
           <Show
-            when={store.running}
+            when={replayStore.running}
             fallback={
               <div
                 class="material-icons cursor-pointer text-4xl"
-                onClick={() => {
-                  togglePause();
-                  // tick();
-                }}
+                onClick={() => togglePause()}
                 aria-label="Resume playback"
               >
                 play_arrow
               </div>
-              // <Play
-              //   style={{ cursor: "pointer" }}
-              //   size={32}
-              //   weight="fill"
-              //   onClick={() => togglePause()}
-              // />
             }
           >
             <div
               class="material-icons cursor-pointer text-4xl"
-              onClick={() => {
-                togglePause();
-                // tick();
-              }}
+              onClick={() => togglePause()}
               aria-label="pause playback"
             >
               pause
@@ -178,7 +162,7 @@ export function Controls() {
             class="material-icons cursor-pointer text-3xl"
             onClick={() => {
               pause();
-              tick();
+              adjust(1);
             }}
             aria-label="Skip ahead 1 frame"
           >
@@ -196,8 +180,8 @@ export function Controls() {
           class="flex-grow accent-green-900"
           type="range"
           ref={seekbarInput}
-          value={store.frame}
-          max={(store as StoreWithReplay).replayData.frames.length - 1}
+          value={replayStore.frame}
+          max={replayStore.replayData!.frames.length - 1}
           onInput={() => jump(Number(seekbarInput.value))}
         />
         <div class="flex items-center gap-2">

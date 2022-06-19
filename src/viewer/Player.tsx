@@ -1,14 +1,12 @@
 import { createMemo, For, Show } from "solid-js";
 import { characterNameByExternalId } from "~/common/ids";
-import { store, StoreWithReplay } from "~/state/state";
-import { PlayerUpdate, PlayerUpdateWithNana } from "~/common/types";
-import { RenderData, renderDatas } from "~/viewer/viewerState";
+import { RenderData, replayStore } from "~/state/replayStore";
 import { getPlayerOnFrame, getStartOfAction } from "~/viewer/viewerUtil";
 
 export function Players() {
   return (
     <>
-      <For each={renderDatas()}>
+      <For each={replayStore.renderDatas}>
         {(renderData) => (
           <>
             <path
@@ -18,15 +16,8 @@ export function Players() {
               stroke-width={2}
               stroke={renderData.outerColor}
             />
-            <Shield
-              renderData={renderData}
-              playerUpdate={renderData.playerUpdate}
-              isNana={renderData.isNana}
-            />
-            <Shine
-              renderData={renderData}
-              playerUpdate={renderData.playerUpdate}
-            />
+            <Shield renderData={renderData} />
+            <Shine renderData={renderData} />
           </>
         )}
       </For>
@@ -34,17 +25,10 @@ export function Players() {
   );
 }
 
-function Shield(props: {
-  renderData: RenderData;
-  playerUpdate: PlayerUpdate;
-  isNana: boolean;
-}) {
+function Shield(props: { renderData: RenderData }) {
   // [0,60]
   const shieldHealth = createMemo(
-    () =>
-      (props.playerUpdate as PlayerUpdateWithNana)[
-        props.isNana ? "nanaState" : "state"
-      ].shieldSize
+    () => props.renderData.playerState.shieldSize
   );
   // [0,1]. If 0 is received, set to 1 because user may have released shield
   // during a Guard-related animation. As an example, a shield must stay active
@@ -55,18 +39,16 @@ function Shield(props: {
   const triggerStrength = createMemo(() =>
     props.renderData.animationName === "GuardDamage"
       ? getPlayerOnFrame(
-          props.playerUpdate.playerIndex,
+          props.renderData.playerSettings.playerIndex,
           getStartOfAction(
-            props.playerUpdate.playerIndex,
-            props.playerUpdate.frameNumber,
-            props.isNana,
-            (store as StoreWithReplay).replayData
+            props.renderData.playerState,
+            replayStore.replayData!
           ),
-          (store as StoreWithReplay).replayData
+          replayStore.replayData!
         ).inputs.processed.anyTrigger
-      : props.playerUpdate.inputs.processed.anyTrigger === 0
+      : props.renderData.playerInputs.processed.anyTrigger === 0
       ? 1
-      : props.playerUpdate.inputs.processed.anyTrigger
+      : props.renderData.playerInputs.processed.anyTrigger
   );
   // Formulas from https://www.ssbwiki.com/Shield#Shield_statistics
   const triggerStrengthMultiplier = createMemo(
@@ -85,14 +67,12 @@ function Shield(props: {
         <circle
           // TODO: shield tilts
           cx={
-            props.renderData.position[0] +
+            props.renderData.playerState.xPosition +
             props.renderData.characterData.shieldOffset[0] *
-              (props.playerUpdate as PlayerUpdateWithNana)[
-                props.isNana ? "nanaState" : "state"
-              ].facingDirection
+              props.renderData.playerState.facingDirection
           }
           cy={
-            props.renderData.position[1] +
+            props.renderData.playerState.yPosition +
             props.renderData.characterData.shieldOffset[1]
           }
           r={props.renderData.characterData.shieldSize * shieldSizeMultiplier()}
@@ -104,13 +84,11 @@ function Shield(props: {
   );
 }
 
-function Shine(props: { renderData: RenderData; playerUpdate: PlayerUpdate }) {
+function Shine(props: { renderData: RenderData }) {
   const characterName = createMemo(
     () =>
       characterNameByExternalId[
-        (store as StoreWithReplay).replayData.settings.playerSettings[
-          props.playerUpdate.playerIndex
-        ].externalCharacterId
+        props.renderData.playerSettings.externalCharacterId
       ]
   );
   return (
@@ -123,10 +101,10 @@ function Shine(props: { renderData: RenderData; playerUpdate: PlayerUpdate }) {
         }
       >
         <Hexagon
-          x={props.renderData.position[0]}
+          x={props.renderData.playerState.xPosition}
           // TODO get true shine position, shieldY * 3/4 is a guess.
           y={
-            props.renderData.position[1] +
+            props.renderData.playerState.yPosition +
             (props.renderData.characterData.shieldOffset[1] * 3) / 4
           }
           r={6}

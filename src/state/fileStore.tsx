@@ -4,13 +4,9 @@ import { createStore } from "solid-js/store";
 import { ProgressCircle } from "~/common/ProgressCircle";
 import { createToast, dismissToast } from "~/common/toaster";
 import { GameSettings } from "~/common/types";
+import { downloadReplay } from "~/supabaseClient";
 import { send } from "~/workerClient";
 
-/**
- * Holds the user's opened files and parses each file's game settings via web
- * worker. Unparseable files are discarded. Parse progress is surfaced in a
- * toast.
- */
 export interface FileStore {
   files: File[];
   gameSettings: GameSettings[];
@@ -82,4 +78,31 @@ export async function load(files: File[]): Promise<void> {
       placement: "top-end",
     });
   }
+}
+
+// load a file from query params if provided. Otherwise start playing the sample
+// match.
+const url = new URLSearchParams(location.search).get("replayUrl");
+const path = location.pathname.slice(1);
+// const frameParse = Number(location.hash.split("#").at(-1));
+// const startFrame = Number.isNaN(frameParse) ? 0 : frameParse;
+if (url !== null) {
+  try {
+    void fetch(url)
+      .then(async (response) => await response.blob())
+      .then((blob) => new File([blob], url.split("/").at(-1) ?? "url.slp"))
+      .then(async (file) => await load([file]));
+  } catch (e) {
+    console.error("Error: could not load replay", url, e);
+  }
+} else if (path !== "") {
+  void downloadReplay(path).then(({ data, error }) => {
+    if (data != null) {
+      const file = new File([data], `${path}.slp`);
+      return load([file]);
+    }
+    if (error != null) {
+      console.error("Error: could not load replay", error);
+    }
+  });
 }

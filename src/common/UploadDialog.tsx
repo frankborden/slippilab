@@ -3,9 +3,9 @@ import { Portal } from "solid-js/web";
 import { useMachine, useSetup, normalizeProps, PropTypes } from "@zag-js/solid";
 import { createEffect, createMemo, createSignal, on, Show } from "solid-js";
 import { Button } from "~/common/Button";
-import { store } from "~/state/state";
 import { uploadReplay } from "~/supabaseClient";
 import { SpinnerCircle } from "~/common/SpinnerCircle";
+import { selectionStore } from "~/state/selectionStore";
 
 export function UploadDialog() {
   const [dialogState, dialogSend] = useMachine(dialog.machine);
@@ -26,7 +26,7 @@ export function UploadDialog() {
       isDialogOpen,
       async () => {
         setIsUploading(true);
-        const file = store.files[store.currentFile];
+        const [file] = selectionStore.selectedFileAndSettings!;
         const { id, data, error } = await uploadReplay(file);
         if (data != null) {
           setUrl(`${window.location.origin}/${id}`);

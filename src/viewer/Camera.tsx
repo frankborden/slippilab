@@ -1,7 +1,7 @@
 import { filter, map, pipe, prop } from "rambda";
 import { createEffect, createMemo, createSignal, ParentProps } from "solid-js";
-import { store, StoreWithReplay } from "~/state/state";
 import { PlayerUpdate } from "~/common/types";
+import { replayStore } from "~/state/replayStore";
 
 export function Camera(props: ParentProps) {
   const [center, setCenter] = createSignal<[number, number] | undefined>();
@@ -12,9 +12,7 @@ export function Camera(props: ParentProps) {
     const padding = [25, 25];
     const minimums = [100, 100];
 
-    const currentFrame = (store as StoreWithReplay).replayData.frames[
-      store.frame
-    ];
+    const currentFrame = replayStore.replayData!.frames[replayStore.frame];
     const focuses = pipe(
       filter((player: PlayerUpdate) => Boolean(player)),
       map((player: PlayerUpdate) => ({
@@ -41,7 +39,8 @@ export function Camera(props: ParentProps) {
     ]);
     setScale(
       (oldScaling) =>
-        store.zoom * smooth(oldScaling ?? 5, scaling, Math.max(...followSpeeds))
+        replayStore.zoom *
+        smooth(oldScaling ?? 5, scaling, Math.max(...followSpeeds))
     );
   });
   const transforms = createMemo(() =>

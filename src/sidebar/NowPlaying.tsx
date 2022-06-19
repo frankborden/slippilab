@@ -3,7 +3,8 @@ import { createMemo, Show } from "solid-js";
 import { Button } from "~/common/Button";
 import { characterNameByExternalId } from "~/common/ids";
 import { PlayerSettings } from "~/common/types";
-import { nextFile, previousFile, store } from "~/state/state";
+import { replayStore } from "~/state/replayStore";
+import { nextFile, previousFile, selectionStore } from "~/state/selectionStore";
 
 export function NowPlaying() {
   function player(p: PlayerSettings): string {
@@ -12,19 +13,19 @@ export function NowPlaying() {
       : `P${p.port}(${characterNameByExternalId[p.externalCharacterId]})`;
   }
   const info = createMemo(() => {
-    return store.replayData === undefined
+    return replayStore.replayData === undefined
       ? {}
       : {
-          name: store.files[store.currentFile].name,
+          name: selectionStore.selectedFileAndSettings![0].name,
           date: new Date(
-            store.replayData.settings.startTimestamp
+            replayStore.replayData.settings.startTimestamp
           ).toLocaleString(),
-          platform: store.replayData.settings.platform,
-          console: store.replayData.settings.consoleNickname,
+          platform: replayStore.replayData.settings.platform,
+          console: replayStore.replayData.settings.consoleNickname,
           players: Object.values(
             groupBy(
               (p) => String(p.teamId),
-              store.replayData.settings.playerSettings.filter((p) => p)
+              replayStore.replayData.settings.playerSettings.filter((p) => p)
             )
           )
             .map((players) => players.map(player).join(", "))

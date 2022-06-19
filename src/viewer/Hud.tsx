@@ -1,13 +1,13 @@
 import { createMemo } from "solid-js";
 import { For } from "solid-js/web";
+import { replayStore } from "~/state/replayStore";
 import { PlayerHUD } from "~/viewer/PlayerHUD";
-import { store, StoreWithReplay } from "~/state/state";
 import { Timer } from "~/viewer/Timer";
 
 export function Hud() {
   const playerIndexes = createMemo(() =>
-    (store as StoreWithReplay).replayData.settings.playerSettings
-      .filter(Boolean)
+    replayStore
+      .replayData!.settings.playerSettings.filter(Boolean)
       .map((playerSettings) => playerSettings.playerIndex)
   );
   return (

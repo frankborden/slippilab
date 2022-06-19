@@ -2,12 +2,12 @@ import { createMemo } from "solid-js";
 import { Badge } from "~/common/Badge";
 import { Picker } from "~/common/Picker";
 import { Highlight } from "~/search/search";
-import { setClip, store } from "~/state/state";
+import { replayStore, selectHighlight } from "~/state/replayStore";
 
 export function ClipsTab() {
   const entries = createMemo(() => {
-    return Array.from(Object.entries(store.clips)).flatMap(([name, clips]) =>
-      clips.map((clip): [string, Highlight] => [name, clip])
+    return Array.from(Object.entries(replayStore.highlights)).flatMap(
+      ([name, clips]) => clips.map((clip): [string, Highlight] => [name, clip])
     );
   });
   return (
@@ -16,8 +16,11 @@ export function ClipsTab() {
         <Picker
           items={entries()}
           render={ClipRow}
-          onClick={(_, index) => setClip(index)}
-          selected={(_, index) => index === store.currentClip}
+          onClick={(nameAndHighlight) => selectHighlight(nameAndHighlight)}
+          selected={([name, highlight]) =>
+            replayStore.selectedHighlight?.[0] === name &&
+            replayStore.selectedHighlight?.[1] === highlight
+          }
         />
       </div>
     </>
@@ -25,7 +28,7 @@ export function ClipsTab() {
 }
 
 function ClipRow(props: [string, Highlight]) {
-  const index = Object.keys(store.clips).indexOf(props[0]);
+  const index = Object.keys(replayStore.highlights).indexOf(props[0]);
   const typeColor = [
     "bg-purple-700 text-purple-100",
     "bg-blue-700 text-blue-100",

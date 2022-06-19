@@ -1,24 +1,27 @@
-import { PlayerUpdate, PlayerUpdateWithNana, ReplayData } from "~/common/types";
+import {
+  PlayerState,
+  PlayerUpdate,
+  PlayerUpdateWithNana,
+  ReplayData,
+} from "~/common/types";
 
 export function getStartOfAction(
-  playerIndex: number,
-  currentFrame: number,
-  isNana: boolean,
+  playerState: PlayerState,
   replayData: ReplayData
 ): number {
   let earliestStateOfAction = (
     getPlayerOnFrame(
-      playerIndex,
-      currentFrame,
+      playerState.playerIndex,
+      playerState.frameNumber,
       replayData
     ) as PlayerUpdateWithNana
-  )[isNana ? "nanaState" : "state"];
+  )[playerState.isNana ? "nanaState" : "state"];
   while (true) {
     const testEarlierState = getPlayerOnFrame(
-      playerIndex,
+      playerState.playerIndex,
       earliestStateOfAction.frameNumber - 1,
       replayData
-    )?.[isNana ? "nanaState" : "state"];
+    )?.[playerState.isNana ? "nanaState" : "state"];
     if (
       testEarlierState === undefined ||
       testEarlierState.actionStateId !== earliestStateOfAction.actionStateId
