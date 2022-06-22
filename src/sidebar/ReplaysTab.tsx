@@ -9,7 +9,6 @@ import {
 import { Picker } from "~/common/Picker";
 import { GameSettings, PlayerSettings } from "~/common/types";
 import { Upload } from "~/sidebar/Upload";
-import { NowPlaying } from "~/sidebar/NowPlaying";
 import { Badge } from "~/common/Badge";
 import { select, selectionStore, setFilters } from "~/state/selectionStore";
 
@@ -30,7 +29,6 @@ export function ReplaysTab() {
   return (
     <>
       <div class="flex h-full flex-col items-center gap-2 overflow-y-auto">
-        <Upload />
         <div
           class="w-full"
           onkeydown={(e: Event) => e.stopPropagation()}
@@ -58,7 +56,7 @@ export function ReplaysTab() {
             }
           />
         </div>
-        <NowPlaying />
+        <Upload />
       </div>
     </>
   );

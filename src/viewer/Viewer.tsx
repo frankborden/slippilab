@@ -15,7 +15,7 @@ export function Viewer() {
     <Show when={replayStore.replayData}>
       <svg
         /* up = positive y axis */
-        class="h-full w-full -scale-y-100 bg-slate-50"
+        class="-scale-y-100 bg-slate-50 flex-shrink"
         viewBox="-365 -300 730 600"
       >
         <Camera>

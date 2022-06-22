@@ -12,7 +12,7 @@ export function ClipsTab() {
   });
   return (
     <>
-      <div class="overflow-y-auto">
+      <div class="h-full overflow-y-auto">
         <Picker
           items={entries()}
           render={ClipRow}
