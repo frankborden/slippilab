@@ -19,7 +19,12 @@ export function ClipsTab() {
           onClick={(nameAndHighlight) => selectHighlight(nameAndHighlight)}
           selected={([name, highlight]) =>
             replayStore.selectedHighlight?.[0] === name &&
-            replayStore.selectedHighlight?.[1] === highlight
+            replayStore.selectedHighlight?.[1].startFrame ===
+              highlight.startFrame &&
+            replayStore.selectedHighlight?.[1].endFrame ===
+              highlight.endFrame &&
+            replayStore.selectedHighlight?.[1].playerIndex ===
+              highlight.playerIndex
           }
         ></Picker>
       ),
@@ -34,11 +39,7 @@ export function ClipsTab() {
   );
 
   return (
-    <div
-      class="h-full overflow-y-auto flex flex-col gap-0"
-      ref={ref}
-      {...api().rootProps}
-    >
+    <div ref={ref} {...api().rootProps}>
       <For each={data()}>
         {(item) => (
           <div {...api().getItemProps({ value: item.title })}>
