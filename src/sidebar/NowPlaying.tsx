@@ -8,7 +8,6 @@ import { nextFile, previousFile, selectionStore } from "~/state/selectionStore";
 
 export function NowPlaying() {
   function player(p: PlayerSettings): string {
-    console.log(p.displayName, p.displayName === "");
     return p.displayName?.length > 0 && p.connectCode?.length > 0
       ? `${p.displayName}(${p.connectCode})`
       : `P${p.port}(${characterNameByExternalId[p.externalCharacterId]})`;
