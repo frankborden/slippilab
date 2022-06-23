@@ -26,6 +26,7 @@
     "@solid-primitives/upload": "^0.0.101",
     "@supabase/supabase-js": "^1.35.3",
     "@thisbeyond/solid-select": "^0.11.0",
+    "@zag-js/accordion": "^0.1.8",
     "@zag-js/dialog": "^0.1.7",
     "@zag-js/menu": "^0.1.7",
     "@zag-js/solid": "^0.1.8",

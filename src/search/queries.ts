@@ -53,9 +53,9 @@ const shieldGrabQuery: [Query, Predicate?] = [
 ];
 
 export const queries: Record<string, [Query, Predicate?]> = {
-  "Kill Combo": killComboQuery,
-  "Grab Punish": grabPunishQuery,
-  "Edgeguard Attempt": edgeguardQuery,
-  "Crouch Cancel": crouchCancelQuery,
-  "Shield Grab Attempt": shieldGrabQuery,
+  "Kill Combos": killComboQuery,
+  "Grab Punishes": grabPunishQuery,
+  "Edgeguard Attempts": edgeguardQuery,
+  "Crouch Cancels": crouchCancelQuery,
+  "Shield Grab Attempts": shieldGrabQuery,
 };

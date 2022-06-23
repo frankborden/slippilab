@@ -6,6 +6,7 @@ specifiers:
   '@solid-primitives/upload': ^0.0.101
   '@supabase/supabase-js': ^1.35.3
   '@thisbeyond/solid-select': ^0.11.0
+  '@zag-js/accordion': ^0.1.8
   '@zag-js/dialog': ^0.1.7
   '@zag-js/menu': ^0.1.7
   '@zag-js/solid': ^0.1.8
@@ -30,6 +31,7 @@ dependencies:
   '@solid-primitives/upload': 0.0.101_solid-js@1.4.4
   '@supabase/supabase-js': 1.35.3
   '@thisbeyond/solid-select': 0.11.0_solid-js@1.4.4
+  '@zag-js/accordion': 0.1.8_vite@2.9.12
   '@zag-js/dialog': 0.1.7_vite@2.9.12
   '@zag-js/menu': 0.1.7_vite@2.9.12
   '@zag-js/solid': 0.1.8_solid-js@1.4.4+vite@2.9.12
@@ -532,6 +534,14 @@ packages:
     resolution: {integrity: sha512-JCB8C6SnDoQf0cNycqd/35A7MjcnK+ZTqE7judS6o7utxUCg6imJg3QK2qzHKszlTjcj2cn+NwMB2i96ubpj7w==}
     dev: false
 
+  /@types/react/18.0.13:
+    resolution: {integrity: sha512-psqptIYQxGUFuGYwP3KCFVtPTkMpIcrqFmtKblWEUQhLuYLpHBwJkXhjp6eHfDM5IbyskY4x7qQpLedEsPkHlA==}
+    dependencies:
+      '@types/prop-types': 15.7.5
+      '@types/scheduler': 0.16.2
+      csstype: 3.1.0
+    dev: false
+
   /@types/react/18.0.14:
     resolution: {integrity: sha512-x4gGuASSiWmo0xjDLpm5mPb52syZHJx02VKbqUKdLmKtAwIh63XClGsiTI1K6DO5q7ox4xAsQrU+Gl3+gGXF9Q==}
     dependencies:
@@ -542,6 +552,22 @@ packages:
 
   /@types/scheduler/0.16.2:
     resolution: {integrity: sha512-hppQEBDmlwhFAXKJX2KnWLYu5yMfi91yazPb2l+lbJiwW+wdo1gNeRA+3RgNSO39WYX2euey41KEwnqesU2Jew==}
+    dev: false
+
+  /@zag-js/accordion/0.1.8_vite@2.9.12:
+    resolution: {integrity: sha512-ZlZJxG0rkRwlHVhPujHNmehBXdznUJAVmn0sDTP3UvcOIFiv42pNfEm9py7pYJ9Ywxu6GQub/BskC6RREU0Jpw==}
+    dependencies:
+      '@zag-js/core': 0.1.6_vite@2.9.12
+      '@zag-js/dom-utils': 0.1.5
+      '@zag-js/types': 0.2.0
+      '@zag-js/utils': 0.1.2
+    transitivePeerDependencies:
+      - '@babel/helper-module-imports'
+      - '@babel/types'
+      - aslemammad-vite-plugin-macro
+      - babel-plugin-macros
+      - react
+      - vite
     dev: false
 
   /@zag-js/aria-hidden/0.1.0:
@@ -586,6 +612,13 @@ packages:
     resolution: {integrity: sha512-RlTc/6corfgfiMQmBd6s5jrgoFo2RGLHdwUXBHRS4hDf/MapCEtsnsv5yZWKOTTd2631w5JqI3t01x0zmBZAVA==}
     dependencies:
       '@types/react': 18.0.14
+      '@zag-js/utils': 0.1.2
+    dev: false
+
+  /@zag-js/dom-utils/0.1.5:
+    resolution: {integrity: sha512-4hhDUy1/GEtDDwrw0i1tLmhzdpFZMas0wbKSuGd0suG0Vz+5LLNsET4laTfD81WS36MX8ZUdpltKyCya+AdYRw==}
+    dependencies:
+      '@types/react': 18.0.13
       '@zag-js/utils': 0.1.2
     dev: false
 
@@ -663,6 +696,10 @@ packages:
 
   /@zag-js/types/0.1.2:
     resolution: {integrity: sha512-GkWSnbsEI5CtNU0aSh2SPbYBoaB5agt9MTFtIVWHgq3QPpK5KO50AntCDdCJr7FaF/XPH8m3V0rWixZ5QUeO5w==}
+    dev: false
+
+  /@zag-js/types/0.2.0:
+    resolution: {integrity: sha512-VF3pJYtIGnfBGz+HuMq9+XCnn8MHE4WabH51m0VFRr2MVme/Of/gA6bL3xKrn2Rj1Uw8Xk601SIt7mJ6A186Bw==}
     dev: false
 
   /@zag-js/utils/0.1.2:
