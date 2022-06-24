@@ -1,5 +1,5 @@
 import { OpenMenu } from "~/common/OpenMenu";
-import { UploadDialog } from "~/common/UploadDialog";
+import { UploadDialog } from "~/sidebar/UploadDialog";
 
 export function Upload() {
   return (

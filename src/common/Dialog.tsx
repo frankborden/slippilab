@@ -47,7 +47,7 @@ export function DialogContents(props: { children?: any }) {
   return (
     <dialog
       ref={setDialogRef()}
-      class="rounded-lg backdrop:bg-slate-800 backdrop:opacity-30 flex flex-col gap-4"
+      class="rounded-lg backdrop:bg-gray-500 backdrop:opacity-75 flex flex-col gap-4"
       onClick={(e) => e.target === dialogRef()?.() && dialogRef()?.()?.close()}
     >
       {props.children}

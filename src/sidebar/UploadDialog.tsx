@@ -62,8 +62,8 @@ export function UploadDialog() {
               <Match when={state() === "done"}>
                 <Show when={url()} fallback={error()}>
                   <code class="text-sm">{url()}</code>
-                  <Button
-                    class="material-icons cursor-pointer px-1 py-0 text-lg"
+                  <div
+                    class="material-icons cursor-pointer px-1 py-0 text-lg bg-slate-100 rounded"
                     onClick={() => {
                       const link = url();
                       if (link === undefined) return;
@@ -72,12 +72,14 @@ export function UploadDialog() {
                     }}
                   >
                     content_copy
-                  </Button>
-                  <Show when={isUrlCopied()}>Copied!</Show>
+                  </div>
                 </Show>
               </Match>
             </Switch>
           </div>
+          <Show when={isUrlCopied()}>
+            <div class="text-center">Copied!</div>
+          </Show>
         </div>
         <DialogClose>
           <div class="flex justify-end">
