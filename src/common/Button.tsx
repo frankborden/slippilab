@@ -1,6 +1,8 @@
-import { splitProps } from "solid-js";
+import { JSX, splitProps } from "solid-js";
 
-export function Button(props: any) {
+export function Button(
+  props: JSX.HTMLAttributes<HTMLButtonElement> & { selected?: boolean }
+) {
   const [classProp, selectedProp, otherProps] = splitProps(
     props,
     ["class"],
@@ -10,7 +12,7 @@ export function Button(props: any) {
   return (
     <button
       {...otherProps}
-      class={`inline-flex justify-center rounded-md border border-transparent px-4 py-2 text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
+      class={`inline-flex justify-center items-center rounded-md border border-transparent px-4 py-2 text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
         classProp?.class ?? ""
       }`}
       classList={{

@@ -50,8 +50,13 @@ export function UploadDialog() {
 
   return (
     <>
-      <Button ref={dialogRef} {...dialogApi().triggerProps}>
+      <Button
+        class="text-md flex items-center gap-2"
+        ref={dialogRef}
+        {...dialogApi().triggerProps}
+      >
         Upload
+        <div class="material-icons">upload_file</div>
       </Button>
       {dialogApi().isOpen && (
         <Portal>

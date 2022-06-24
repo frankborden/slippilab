@@ -3,10 +3,10 @@ import { OpenMenu } from "~/common/OpenMenu";
 
 export function Landing() {
   return (
-    <div class="h-full w-full p-4">
-      <div class="flex h-full w-full flex-col content-center items-center justify-between">
-        <div class="flex h-full w-full flex-grow content-center items-center justify-center gap-4">
-          <div class="flex h-full w-full items-center">
+    <div class="h-screen p-4">
+      <div class="flex h-full flex-col content-center items-center justify-between">
+        <div class="flex w-full flex-grow content-center items-center justify-center gap-4">
+          <div class="flex w-full items-center">
             <svg class="aspect-square flex-grow" viewBox="0 -3 30 27">
               <path
                 transform="translate(15 20) scale(-.1 .1) translate(-500 -500)"
@@ -47,8 +47,20 @@ export function Landing() {
             </svg>
           </div>
         </div>
-        <div>
+        <div class="flex flex-col items-center gap-2">
           <Links />
+          <div>
+            Slippi Lab uses .slp replay files from
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              class="pl-[0.5ch] underline"
+              href="https://slippi.gg"
+            >
+              Project Slippi
+            </a>
+            , but is not affiliated with the project.
+          </div>
         </div>
       </div>
     </div>
