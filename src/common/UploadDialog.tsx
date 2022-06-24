@@ -1,108 +1,90 @@
-import * as dialog from "@zag-js/dialog";
-import { Portal } from "solid-js/web";
-import { useMachine, useSetup, normalizeProps, PropTypes } from "@zag-js/solid";
-import { createEffect, createMemo, createSignal, on, Show } from "solid-js";
+import { createSignal, Match, Show, Switch } from "solid-js";
 import { Button } from "~/common/Button";
-import { uploadReplay } from "~/supabaseClient";
 import { SpinnerCircle } from "~/common/SpinnerCircle";
 import { selectionStore } from "~/state/selectionStore";
+import {
+  Dialog,
+  DialogClose,
+  DialogContents,
+  DialogTrigger,
+} from "~/common/Dialog";
+import { uploadReplay } from "~/supabaseClient";
 
 export function UploadDialog() {
-  const [dialogState, dialogSend] = useMachine(dialog.machine);
-  const dialogRef = useSetup({ send: dialogSend, id: "uploadDialog" });
-  const dialogApi = createMemo(() =>
-    dialog.connect<PropTypes>(dialogState, dialogSend, normalizeProps)
+  const [state, setState] = createSignal<"not started" | "loading" | "done">(
+    "not started"
   );
-  const isDialogOpen = createMemo(() => dialogApi().isOpen);
-  const isDialogClosed = createMemo(() => !dialogApi().isOpen);
-
-  const [isUploading, setIsUploading] = createSignal(false);
   const [url, setUrl] = createSignal<string | undefined>();
   const [error, setError] = createSignal<string | undefined>();
   const [isUrlCopied, setIsUrlCopied] = createSignal(false);
 
-  createEffect(
-    on(
-      isDialogOpen,
-      async () => {
-        setIsUploading(true);
-        const [file] = selectionStore.selectedFileAndSettings!;
-        const { id, data, error } = await uploadReplay(file);
-        if (data != null) {
-          setUrl(`${window.location.origin}/${id}`);
-        } else {
-          setError("Error uploading file");
-          console.error(error);
-        }
-        setIsUploading(false);
-      },
-      { defer: true }
-    )
-  );
+  async function onUploadClicked() {
+    setState("loading");
+    const [file] = selectionStore.selectedFileAndSettings!;
+    const { id, data, error } = await uploadReplay(file);
+    if (data != null) {
+      setUrl(`${window.location.origin}/${id}`);
+    } else {
+      setError("Error uploading file");
+      console.error(error);
+    }
+    setState("done");
+  }
 
-  createEffect(
-    on(isDialogClosed, () => {
-      setIsUrlCopied(false);
-      setUrl();
-      setError();
-    })
-  );
+  function onOpen() {
+    setState("not started");
+    setIsUrlCopied(false);
+    setUrl();
+    setError();
+  }
 
   return (
-    <>
-      <Button
-        class="text-md flex items-center gap-2"
-        ref={dialogRef}
-        {...dialogApi().triggerProps}
-      >
-        Upload
-        <div class="material-icons">upload_file</div>
-      </Button>
-      {dialogApi().isOpen && (
-        <Portal>
-          <div
-            {...dialogApi().backdropProps}
-            class="absolute top-0 left-0 h-screen w-screen bg-slate-800 opacity-25"
-          />
-          <div
-            {...dialogApi().underlayProps}
-            class="absolute top-0 left-0 flex h-full w-full items-center justify-center"
-          >
-            <div
-              {...dialogApi().contentProps}
-              class="flex flex-col gap-4 rounded border border-slate-700 bg-slate-50 p-4"
-            >
-              <h1 {...dialogApi().titleProps} class="text-lg">
-                Replay Upload
-              </h1>
-              <div {...dialogApi().descriptionProps}>
-                <div class="flex items-center justify-center gap-2">
-                  <Show when={!isUploading()} fallback={<SpinnerCircle />}>
-                    <Show when={url()} fallback={error()}>
-                      <code class="text-sm">{url()}</code>
-                      <Button
-                        class="material-icons cursor-pointer px-1 py-0 text-lg"
-                        onClick={() => {
-                          const link = url();
-                          if (link === undefined) return;
-                          void navigator.clipboard.writeText(link);
-                          setIsUrlCopied(true);
-                        }}
-                      >
-                        content_copy
-                      </Button>
-                      <Show when={isUrlCopied()}>Copied!</Show>
-                    </Show>
-                  </Show>
+    <Dialog>
+      <DialogTrigger onOpen={onOpen}>
+        <Button class="text-md flex items-center gap-2">
+          Upload
+          <div class="material-icons">upload_file</div>
+        </Button>
+      </DialogTrigger>
+      <DialogContents>
+        <h1 class="text-lg">Replay Upload</h1>
+        <div>
+          <div class="w-96 flex items-center justify-center gap-2">
+            <Switch>
+              <Match when={state() === "not started"}>
+                <Button onClick={onUploadClicked}>Upload</Button>
+              </Match>
+              <Match when={state() === "loading"}>
+                <div class="w-10 h-10">
+                  <SpinnerCircle />
                 </div>
-              </div>
-              <div class="flex justify-end">
-                <Button {...dialogApi().closeButtonProps}>Close</Button>
-              </div>
-            </div>
+              </Match>
+              <Match when={state() === "done"}>
+                <Show when={url()} fallback={error()}>
+                  <code class="text-sm">{url()}</code>
+                  <Button
+                    class="material-icons cursor-pointer px-1 py-0 text-lg"
+                    onClick={() => {
+                      const link = url();
+                      if (link === undefined) return;
+                      void navigator.clipboard.writeText(link);
+                      setIsUrlCopied(true);
+                    }}
+                  >
+                    content_copy
+                  </Button>
+                  <Show when={isUrlCopied()}>Copied!</Show>
+                </Show>
+              </Match>
+            </Switch>
           </div>
-        </Portal>
-      )}
-    </>
+        </div>
+        <DialogClose>
+          <div class="flex justify-end">
+            <Button>Close</Button>
+          </div>
+        </DialogClose>
+      </DialogContents>
+    </Dialog>
   );
 }
