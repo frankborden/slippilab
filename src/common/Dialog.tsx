@@ -6,6 +6,7 @@ import {
   createSignal,
   useContext,
 } from "solid-js";
+import { Portal } from "solid-js/web";
 
 const DialogRefContext =
   createContext<
@@ -25,11 +26,16 @@ export function Dialog(props: { onOpen?: () => void; children?: any }) {
   );
 }
 
-export function DialogTrigger(props: { children?: any; onOpen?: () => void }) {
+export function DialogTrigger(props: {
+  children?: any;
+  onOpen?: () => void;
+  class?: string;
+}) {
   const context = useContext(DialogRefContext);
   const dialogRef = createMemo(() => context?.[0]);
   return (
     <div
+      class={props.class ?? ""}
       onClick={() => {
         props.onOpen?.();
         dialogRef?.()?.()?.showModal();
@@ -45,13 +51,17 @@ export function DialogContents(props: { children?: any }) {
   const dialogRef = createMemo(() => context?.[0]);
   const setDialogRef = createMemo(() => context?.[1]);
   return (
-    <dialog
-      ref={setDialogRef()}
-      class="rounded-lg backdrop:bg-gray-500 backdrop:opacity-75 flex flex-col gap-4"
-      onClick={(e) => e.target === dialogRef()?.() && dialogRef()?.()?.close()}
-    >
-      {props.children}
-    </dialog>
+    <Portal>
+      <dialog
+        ref={setDialogRef()}
+        class="rounded-lg backdrop:bg-gray-500 backdrop:opacity-75 flex flex-col gap-4"
+        onClick={(e) =>
+          e.target === dialogRef()?.() && dialogRef()?.()?.close()
+        }
+      >
+        {props.children}
+      </dialog>
+    </Portal>
   );
 }
 

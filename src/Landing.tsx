@@ -3,7 +3,12 @@ import { OpenMenu } from "~/common/OpenMenu";
 
 export function Landing() {
   return (
-    <div class="h-screen p-4">
+    <div
+      class="h-screen p-4 bg-[length:30px_30px]"
+      style={{
+        "background-image": `linear-gradient(lightblue 1px, transparent 1px), linear-gradient(90deg, lightblue 1px, transparent 1px)`,
+      }}
+    >
       <div class="flex h-full flex-col content-center items-center justify-between">
         <div class="flex w-full flex-grow content-center items-center justify-center gap-4">
           <div class="flex w-full items-center">
