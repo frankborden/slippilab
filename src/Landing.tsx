@@ -4,7 +4,7 @@ import { OpenMenu } from "~/common/OpenMenu";
 export function Landing() {
   return (
     <div
-      class="h-screen p-4 bg-[length:30px_30px]"
+      class="h-screen bg-[length:30px_30px] p-4"
       style={{
         "background-image": `linear-gradient(lightblue 1px, transparent 1px), linear-gradient(90deg, lightblue 1px, transparent 1px)`,
       }}

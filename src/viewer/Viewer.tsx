@@ -1,6 +1,5 @@
 import { createMemo, For, Show } from "solid-js";
 import { Camera } from "~/viewer/Camera";
-import { Controls } from "~/viewer/Controls";
 import { Hud } from "~/viewer/Hud";
 import { Players } from "~/viewer/Player";
 import { Stage } from "~/viewer/Stage";
@@ -15,7 +14,7 @@ export function Viewer() {
     <Show when={replayStore.replayData}>
       <svg
         /* up = positive y axis */
-        class="-scale-y-100 bg-slate-50 flex-shrink"
+        class="flex-shrink -scale-y-100 rounded-lg bg-slate-50"
         viewBox="-365 -300 730 600"
       >
         <Camera>
@@ -24,7 +23,6 @@ export function Viewer() {
           <For each={items()}>{(item) => <Item item={item} />}</For>
         </Camera>
         <Hud />
-        <Controls />
       </svg>
     </Show>
   );

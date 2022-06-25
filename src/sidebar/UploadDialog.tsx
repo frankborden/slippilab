@@ -49,13 +49,13 @@ export function UploadDialog() {
       <DialogContents>
         <h1 class="text-lg">Replay Upload</h1>
         <div>
-          <div class="w-96 flex items-center justify-center gap-2">
+          <div class="flex w-96 items-center justify-center gap-2">
             <Switch>
               <Match when={state() === "not started"}>
                 <Button onClick={onUploadClicked}>Upload</Button>
               </Match>
               <Match when={state() === "loading"}>
-                <div class="w-10 h-10">
+                <div class="h-10 w-10">
                   <SpinnerCircle />
                 </div>
               </Match>
@@ -63,7 +63,7 @@ export function UploadDialog() {
                 <Show when={url()} fallback={error()}>
                   <code class="text-sm">{url()}</code>
                   <div
-                    class="material-icons cursor-pointer px-1 py-0 text-lg bg-slate-100 rounded"
+                    class="material-icons cursor-pointer rounded bg-slate-100 px-1 py-0 text-lg"
                     onClick={() => {
                       const link = url();
                       if (link === undefined) return;

@@ -23,8 +23,8 @@ export function Controls() {
     window.addEventListener("keyup", onKeyUp);
   });
   onCleanup(() => {
-    window.addEventListener("keydown", onKeyDown);
-    window.addEventListener("keyup", onKeyUp);
+    window.removeEventListener("keydown", onKeyDown);
+    window.removeEventListener("keyup", onKeyUp);
   });
 
   function onKeyDown({ key }: KeyboardEvent): void {
@@ -109,98 +109,90 @@ export function Controls() {
   let seekbarInput!: HTMLInputElement;
 
   return (
-    <foreignObject
-      transform="scale(1 -1)"
-      x="-50%"
-      y="-50%"
-      width="100%"
-      height="100%"
-    >
-      <div class="flex items-center justify-evenly gap-4 pl-2 pr-4 text-slate-800">
-        <div class="w-[6ch] text-end">
-          {replayStore.isDebug ? replayStore.frame - 123 : replayStore.frame}
+    <div class="flex flex-grow items-center justify-evenly gap-4 pl-2 pr-4 text-slate-800">
+      <div class="w-[6ch] text-end">
+        {replayStore.isDebug ? replayStore.frame - 123 : replayStore.frame}
+      </div>
+      <div class="flex items-center gap-2">
+        <div
+          class="material-icons cursor-pointer text-3xl"
+          onClick={() => adjust(-120)}
+          aria-label="Rewind 2 seconds"
+        >
+          history
         </div>
-        <div class="flex items-center gap-2">
-          <div
-            class="material-icons cursor-pointer text-3xl"
-            onClick={() => adjust(-120)}
-            aria-label="Rewind 2 seconds"
-          >
-            history
-          </div>
-          <div
-            class="material-icons cursor-pointer text-3xl"
-            onClick={() => {
-              pause();
-              adjust(-1);
-            }}
-            aria-label="Rewind 1 frame"
-          >
-            rotate_left
-          </div>
-          <Show
-            when={replayStore.running}
-            fallback={
-              <div
-                class="material-icons cursor-pointer text-4xl"
-                onClick={() => togglePause()}
-                aria-label="Resume playback"
-              >
-                play_arrow
-              </div>
-            }
-          >
+        <div
+          class="material-icons cursor-pointer text-3xl"
+          onClick={() => {
+            pause();
+            adjust(-1);
+          }}
+          aria-label="Rewind 1 frame"
+        >
+          rotate_left
+        </div>
+        <Show
+          when={replayStore.running}
+          fallback={
             <div
               class="material-icons cursor-pointer text-4xl"
               onClick={() => togglePause()}
-              aria-label="pause playback"
+              aria-label="Resume playback"
             >
-              pause
+              play_arrow
             </div>
-          </Show>
+          }
+        >
           <div
-            class="material-icons cursor-pointer text-3xl"
-            onClick={() => {
-              pause();
-              adjust(1);
-            }}
-            aria-label="Skip ahead 1 frame"
+            class="material-icons cursor-pointer text-4xl"
+            onClick={() => togglePause()}
+            aria-label="pause playback"
           >
-            rotate_right
+            pause
           </div>
-          <div
-            class="material-icons cursor-pointer text-3xl"
-            onClick={() => adjust(120)}
-            aria-label="Skip ahead 2 seconds"
-          >
-            update
-          </div>
+        </Show>
+        <div
+          class="material-icons cursor-pointer text-3xl"
+          onClick={() => {
+            pause();
+            adjust(1);
+          }}
+          aria-label="Skip ahead 1 frame"
+        >
+          rotate_right
         </div>
-        <input
-          class="flex-grow accent-green-900"
-          type="range"
-          ref={seekbarInput}
-          value={replayStore.frame}
-          max={replayStore.replayData!.frames.length - 1}
-          onInput={() => jump(Number(seekbarInput.value))}
-        />
-        <div class="flex items-center gap-2">
-          <div
-            class="material-icons cursor-pointer text-4xl"
-            onClick={() => zoomOut()}
-            aria-label="Zoom out"
-          >
-            zoom_out
-          </div>
-          <div
-            class="material-icons cursor-pointer text-4xl"
-            onClick={() => zoomIn()}
-            aria-label="Zoom in"
-          >
-            zoom_in
-          </div>
+        <div
+          class="material-icons cursor-pointer text-3xl"
+          onClick={() => adjust(120)}
+          aria-label="Skip ahead 2 seconds"
+        >
+          update
         </div>
       </div>
-    </foreignObject>
+      <input
+        class="flex-grow accent-blue-400"
+        type="range"
+        ref={seekbarInput}
+        value={replayStore.frame}
+        max={replayStore.replayData!.frames.length - 1}
+        onInput={() => jump(Number(seekbarInput.value))}
+      />
+      <div class="flex items-center gap-2">
+        <div
+          class="material-icons cursor-pointer text-4xl"
+          onClick={() => zoomOut()}
+          aria-label="Zoom out"
+        >
+          zoom_out
+        </div>
+        <div
+          class="material-icons cursor-pointer text-4xl"
+          onClick={() => zoomIn()}
+          aria-label="Zoom in"
+        >
+          zoom_in
+        </div>
+      </div>
+    </div>
   );
 }

@@ -29,7 +29,7 @@ export function App() {
   return (
     <>
       <Show when={fileStore.files.length > 0} fallback={<Landing />}>
-        <div class="h-screen w-screen flex flex-col" ref={dropzoneRef}>
+        <div class="flex h-screen w-screen flex-col" ref={dropzoneRef}>
           <TopBar />
           <MainContent />
         </div>

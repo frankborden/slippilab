@@ -45,7 +45,7 @@ export function ClipsTab() {
           <div {...api().getItemProps({ value: item.title })}>
             <h3>
               <button
-                class="w-full flex justify-between gap-3 border border-slate-400 rounded p-2"
+                class="flex w-full justify-between gap-3 rounded border border-slate-400 p-2"
                 classList={{
                   "text-slate-400":
                     replayStore.highlights[item.title].length === 0,

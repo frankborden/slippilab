@@ -42,10 +42,10 @@ export function Links() {
       <a
         target="_blank"
         rel="noopener noreferrer"
-        class="underline h-6 w-6"
+        class="h-6 w-6 underline"
         href="https://github.com/frankborden/slippilab/issues/new"
       >
-        <div class="material-icons text-3xl leading-6 w-6">report</div>
+        <div class="material-icons w-6 text-3xl leading-6">report</div>
       </a>
     </div>
   );

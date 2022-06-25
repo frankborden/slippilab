@@ -12,7 +12,7 @@ export function Button(
   return (
     <button
       {...otherProps}
-      class={`inline-flex justify-center items-center rounded-md border border-transparent px-4 py-2 text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
+      class={`inline-flex items-center justify-center rounded-md border border-transparent px-4 py-2 text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
         classProp?.class ?? ""
       }`}
       classList={{
