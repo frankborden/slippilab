@@ -23,7 +23,7 @@ export const fileStore = getStore;
 export async function load(files: File[]): Promise<void> {
   const progressToast = createToast({
     title: "Parsing files",
-    duration: Infinity,
+    duration: 999999,
     render: () => (
       <div class="flex items-center gap-3">
         <ProgressCircle
@@ -43,7 +43,10 @@ export async function load(files: File[]): Promise<void> {
     goodFilesAndSettings: Array<[File, GameSettings]>;
     failedFilenames: string[];
     skipCount: number;
-  } = await send(files, () => setStore("parseProgress", inc));
+    } = await send(files, () => {
+      console.log('incrementing');
+      setStore("parseProgress", inc)
+    });
 
   // Save results to the store and show results toasts
   batch(() => {
