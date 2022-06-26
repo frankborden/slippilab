@@ -55,7 +55,7 @@ export interface ReplayStore {
 }
 
 const [getStore, setStore] = createStore<ReplayStore>({
-  highlights: {},
+  highlights: map(() => [], queries),
   frame: 0,
   renderDatas: [],
   animations: Array(4).fill(undefined),
