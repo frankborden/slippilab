@@ -1,17 +1,15 @@
-import { Show } from "solid-js";
 import { Dialog, DialogContents, DialogTrigger } from "~/common/Dialog";
 import { Links } from "~/common/Links";
 import { SettingsTab } from "~/sidebar/SettingsTab";
-import { replayStore } from "~/state/replayStore";
-import { Controls } from "~/viewer/Controls";
+import { Upload } from "~/sidebar/Upload";
 
 export function TopBar() {
   return (
     <div class="flex items-center justify-between gap-20 bg-slate-200 px-5 py-3">
-      <h1 class="text-2xl">Slippi Lab</h1>
-      <Show when={replayStore.replayData}>
-        <Controls />
-      </Show>
+      <div class="flex gap-10">
+        <h1 class="text-4xl">Slippi Lab</h1>
+        <Upload />
+      </div>
       <div class="flex items-center gap-4">
         <Links />
         <Dialog>

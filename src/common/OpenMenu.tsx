@@ -34,7 +34,11 @@ export function OpenMenu(props: { name: string }) {
       <div ref={menuRef}>
         <Button
           {...menuApi().triggerProps}
-          class="text-md flex items-center gap-2"
+          class={`
+          text-md flex items-center gap-2 ${
+            props.name === "Open" ? "bg-transparent hover:bg-slate-300" : ""
+          }
+          `}
         >
           {props.name}
           <div class="material-icons" aria-label="Open File or Folder">

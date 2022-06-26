@@ -10,7 +10,8 @@ import { Picker } from "~/common/Picker";
 import { GameSettings, PlayerSettings } from "~/common/types";
 import { Upload } from "~/sidebar/Upload";
 import { Badge } from "~/common/Badge";
-import { select, selectionStore, setFilters } from "~/state/selectionStore";
+import { nextFile, previousFile, select, selectionStore, setFilters } from "~/state/selectionStore";
+import { Button } from "~/common/Button";
 
 const filterProps = createOptions(
   [
@@ -35,7 +36,7 @@ export function ReplaysTab() {
           onkeyup={(e: Event) => e.stopPropagation()}
         >
           <Select
-            class="w-full rounded border border-blue-600 bg-white"
+            class="w-full rounded border border-slate-600 bg-white"
             placeholder="Filter"
             multiple
             {...filterProps}
@@ -56,7 +57,15 @@ export function ReplaysTab() {
             }
           />
         </div>
-        <Upload />
+        <div class="flex w-full items-center justify-between gap-4">
+          <Button onClick={previousFile}>
+            <div class="material-icons cursor-pointer">arrow_upward</div>
+          </Button>
+          <Button onClick={nextFile}>
+            <div class="material-icons cursor-pointer">arrow_downward</div>
+          </Button>
+        </div>
+        {/* <Upload /> */}
       </div>
     </>
   );

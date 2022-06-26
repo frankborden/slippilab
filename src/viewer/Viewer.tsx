@@ -14,15 +14,17 @@ export function Viewer() {
     <Show when={replayStore.replayData}>
       <svg
         /* up = positive y axis */
-        class="flex-shrink -scale-y-100 rounded-lg bg-slate-50"
+        class="flex-shrink bg-slate-50 rounded-t-lg border"
         viewBox="-365 -300 730 600"
       >
-        <Camera>
-          <Stage />
-          <Players />
-          <For each={items()}>{(item) => <Item item={item} />}</For>
-        </Camera>
-        <Hud />
+        <g class="-scale-y-100">
+          <Camera>
+            <Stage />
+            <Players />
+            <For each={items()}>{(item) => <Item item={item} />}</For>
+          </Camera>
+          <Hud />
+        </g>
       </svg>
     </Show>
   );

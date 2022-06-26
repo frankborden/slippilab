@@ -3,7 +3,7 @@ import { UploadDialog } from "~/sidebar/UploadDialog";
 
 export function Upload() {
   return (
-    <div class="flex w-full items-center justify-between gap-4">
+    <div class="flex items-center gap-4">
       <OpenMenu name={"Open"} />
       <UploadDialog />
     </div>

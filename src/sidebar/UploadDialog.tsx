@@ -41,7 +41,7 @@ export function UploadDialog() {
   return (
     <Dialog>
       <DialogTrigger onOpen={onOpen}>
-        <Button class="text-md flex items-center gap-2">
+        <Button class="text-md flex items-center gap-2 bg-transparent hover:bg-slate-300">
           Upload
           <div class="material-icons">upload_file</div>
         </Button>
@@ -52,7 +52,18 @@ export function UploadDialog() {
           <div class="flex w-96 items-center justify-center gap-2">
             <Switch>
               <Match when={state() === "not started"}>
-                <Button onClick={onUploadClicked}>Upload</Button>
+                <div class="flex flex-col items-center gap-3">
+                  <p class="text-sm">
+                    Upload {selectionStore.selectedFileAndSettings?.[0].name} to
+                    share?
+                  </p>
+                  <Button
+                    onClick={onUploadClicked}
+                    class="bg-slate-300 hover:bg-slate-400 text-slate-800"
+                  >
+                    Upload
+                  </Button>
+                </div>
               </Match>
               <Match when={state() === "loading"}>
                 <div class="h-10 w-10">

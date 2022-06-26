@@ -1,5 +1,4 @@
 import { For, JSX } from "solid-js";
-import { Button } from "~/common/Button";
 
 export function Picker<T>(props: {
   items: T[];
@@ -9,16 +8,22 @@ export function Picker<T>(props: {
 }) {
   return (
     <>
-      <div class="flex flex-col items-center">
+      <div class="flex flex-col items-center border divide-y">
         <For each={props.items}>
           {(item, index) => (
-            <Button
-              class="w-full whitespace-normal border border-solid border-blue-300 py-1"
-              selected={props.selected(item, index())}
+            <div
+              role="button"
+              class="w-full whitespace-normal p-1 hover:bg-slate-100"
+              classList={{
+                "bg-slate-200 hover:bg-slate-300": props.selected(
+                  item,
+                  index()
+                ),
+              }}
               onClick={() => props.onClick(item, index())}
             >
               {props.render(item, index())}
-            </Button>
+            </div>
           )}
         </For>
       </div>

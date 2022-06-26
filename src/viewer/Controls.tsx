@@ -109,20 +109,51 @@ export function Controls() {
   let seekbarInput!: HTMLInputElement;
 
   return (
-    <div class="flex flex-grow items-center justify-evenly gap-4 pl-2 pr-4 text-slate-800">
-      <div class="w-[6ch] text-end">
-        {replayStore.isDebug ? replayStore.frame - 123 : replayStore.frame}
+    <div class="flex flex-grow items-center justify-evenly gap-4 pl-2 pr-4 text-slate-800 border rounded-b-lg border-t-0 shadow-md">
+      <Show
+        when={replayStore.running}
+        fallback={
+          <div
+            class="material-icons cursor-pointer text-5xl"
+            onClick={() => togglePause()}
+            aria-label="Resume playback"
+          >
+            play_arrow
+          </div>
+        }
+      >
+        <div
+          class="material-icons cursor-pointer text-5xl"
+          onClick={() => togglePause()}
+          aria-label="pause playback"
+        >
+          pause
+        </div>
+      </Show>
+      <div class="flex flex-col flex-grow">
+        <label for="seekbar" class="text-sm">
+          {replayStore.isDebug ? replayStore.frame - 123 : replayStore.frame}
+        </label>
+        <input
+          id="seekbar"
+          class="flex-grow accent-slate-400"
+          type="range"
+          ref={seekbarInput}
+          value={replayStore.frame}
+          max={replayStore.replayData!.frames.length - 1}
+          onInput={() => jump(seekbarInput.valueAsNumber)}
+        />
       </div>
       <div class="flex items-center gap-2">
         <div
-          class="material-icons cursor-pointer text-3xl"
+          class="material-icons cursor-pointer text-4xl"
           onClick={() => adjust(-120)}
           aria-label="Rewind 2 seconds"
         >
           history
         </div>
         <div
-          class="material-icons cursor-pointer text-3xl"
+          class="material-icons cursor-pointer text-4xl"
           onClick={() => {
             pause();
             adjust(-1);
@@ -131,28 +162,8 @@ export function Controls() {
         >
           rotate_left
         </div>
-        <Show
-          when={replayStore.running}
-          fallback={
-            <div
-              class="material-icons cursor-pointer text-4xl"
-              onClick={() => togglePause()}
-              aria-label="Resume playback"
-            >
-              play_arrow
-            </div>
-          }
-        >
-          <div
-            class="material-icons cursor-pointer text-4xl"
-            onClick={() => togglePause()}
-            aria-label="pause playback"
-          >
-            pause
-          </div>
-        </Show>
         <div
-          class="material-icons cursor-pointer text-3xl"
+          class="material-icons cursor-pointer text-4xl"
           onClick={() => {
             pause();
             adjust(1);
@@ -162,35 +173,11 @@ export function Controls() {
           rotate_right
         </div>
         <div
-          class="material-icons cursor-pointer text-3xl"
+          class="material-icons cursor-pointer text-4xl"
           onClick={() => adjust(120)}
           aria-label="Skip ahead 2 seconds"
         >
           update
-        </div>
-      </div>
-      <input
-        class="flex-grow accent-blue-400"
-        type="range"
-        ref={seekbarInput}
-        value={replayStore.frame}
-        max={replayStore.replayData!.frames.length - 1}
-        onInput={() => jump(Number(seekbarInput.value))}
-      />
-      <div class="flex items-center gap-2">
-        <div
-          class="material-icons cursor-pointer text-4xl"
-          onClick={() => zoomOut()}
-          aria-label="Zoom out"
-        >
-          zoom_out
-        </div>
-        <div
-          class="material-icons cursor-pointer text-4xl"
-          onClick={() => zoomIn()}
-          aria-label="Zoom in"
-        >
-          zoom_in
         </div>
       </div>
     </div>

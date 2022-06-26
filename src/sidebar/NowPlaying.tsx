@@ -33,12 +33,7 @@ export function NowPlaying() {
         };
   });
   return (
-    <div class="flex w-full items-center justify-between gap-2">
-      <Button onClick={previousFile}>
-        <div class="material-icons cursor-pointer text-4xl">
-          navigate_before
-        </div>
-      </Button>
+    <>
       <div class="flex flex-col items-start">
         <div>{info().name}</div>
         <Show when={info().date}>
@@ -54,9 +49,6 @@ export function NowPlaying() {
           <div class="whitespace-pre-line">{info().players}</div>
         </Show>
       </div>
-      <Button onClick={nextFile}>
-        <div class="material-icons cursor-pointer text-4xl">navigate_next</div>
-      </Button>
-    </div>
+    </>
   );
 }
