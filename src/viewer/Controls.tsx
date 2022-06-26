@@ -109,7 +109,7 @@ export function Controls() {
   let seekbarInput!: HTMLInputElement;
 
   return (
-    <div class="flex flex-grow items-center justify-evenly gap-4 pl-2 pr-4 text-slate-800 border rounded-b-lg border-t-0 shadow-md">
+    <div class="flex flex-grow items-center justify-evenly gap-4 rounded-b-lg border border-t-0 pl-2 pr-4 text-slate-800 shadow-md">
       <Show
         when={replayStore.running}
         fallback={
@@ -130,7 +130,7 @@ export function Controls() {
           pause
         </div>
       </Show>
-      <div class="flex flex-col flex-grow">
+      <div class="flex flex-grow flex-col">
         <label for="seekbar" class="text-sm">
           {replayStore.isDebug ? replayStore.frame - 123 : replayStore.frame}
         </label>

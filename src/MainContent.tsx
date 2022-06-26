@@ -9,7 +9,7 @@ import { Viewer } from "~/viewer/Viewer";
 export function MainContent() {
   return (
     <div class="flex overflow-y-auto">
-      <div class="box-border h-full overflow-y-auto p-5 pr-0 flex flex-col divide-y">
+      <div class="box-border flex h-full flex-col divide-y overflow-y-auto p-5 pr-0">
         <ReplaysTab />
         <NowPlaying />
       </div>

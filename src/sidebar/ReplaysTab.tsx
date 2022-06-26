@@ -8,9 +8,14 @@ import {
 } from "~/common/ids";
 import { Picker } from "~/common/Picker";
 import { GameSettings, PlayerSettings } from "~/common/types";
-import { Upload } from "~/sidebar/Upload";
 import { Badge } from "~/common/Badge";
-import { nextFile, previousFile, select, selectionStore, setFilters } from "~/state/selectionStore";
+import {
+  nextFile,
+  previousFile,
+  select,
+  selectionStore,
+  setFilters,
+} from "~/state/selectionStore";
 import { Button } from "~/common/Button";
 
 const filterProps = createOptions(

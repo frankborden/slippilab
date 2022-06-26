@@ -8,7 +8,7 @@ export function Picker<T>(props: {
 }) {
   return (
     <>
-      <div class="flex flex-col items-center border divide-y">
+      <div class="flex flex-col items-center divide-y border">
         <For each={props.items}>
           {(item, index) => (
             <div

@@ -13,7 +13,7 @@ export function Button(
     <button
       {...otherProps}
       class={`inline-flex items-center justify-center rounded-md border border-transparent px-4 py-2 text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
-        selectedProp.selected 
+        selectedProp.selected
           ? "bg-slate-600 text-slate-100 hover:bg-slate-500"
           : "bg-slate-100 text-slate-600 hover:bg-slate-200"
       } ${classProp?.class ?? ""}`}

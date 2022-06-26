@@ -43,10 +43,10 @@ export async function load(files: File[]): Promise<void> {
     goodFilesAndSettings: Array<[File, GameSettings]>;
     failedFilenames: string[];
     skipCount: number;
-    } = await send(files, () => {
-      console.log('incrementing');
-      setStore("parseProgress", inc)
-    });
+  } = await send(files, () => {
+    console.log("incrementing");
+    setStore("parseProgress", inc);
+  });
 
   // Save results to the store and show results toasts
   batch(() => {

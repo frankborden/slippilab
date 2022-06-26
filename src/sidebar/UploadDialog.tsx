@@ -59,7 +59,7 @@ export function UploadDialog() {
                   </p>
                   <Button
                     onClick={onUploadClicked}
-                    class="bg-slate-300 hover:bg-slate-400 text-slate-800"
+                    class="bg-slate-300 text-slate-800 hover:bg-slate-400"
                   >
                     Upload
                   </Button>
