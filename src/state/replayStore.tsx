@@ -172,7 +172,7 @@ createEffect(() => setStore("running", running()));
 createEffect(async () => {
   const selected = selectionStore.selectedFileAndSettings;
   if (selected === undefined) {
-    setStore({ highlights: {}, frame: 0, renderDatas: [] });
+    setStore({ highlights: map(() => [], queries), frame: 0, renderDatas: [] });
     return;
   }
   const replayData = parseReplay(await selected[0].arrayBuffer());
