@@ -26,6 +26,7 @@ export function ClipsTab() {
             replayStore.selectedHighlight?.[1].playerIndex ===
               highlight.playerIndex
           }
+          estimateSize={() => 32}
         ></Picker>
       ),
     }))

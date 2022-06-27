@@ -49,19 +49,20 @@ export function ReplaysTab() {
             onChange={setFilters}
           />
         </div>
-        <div class="w-full overflow-y-auto">
-          <Picker
-            items={selectionStore.filteredFilesAndSettings}
-            render={([file, gameSettings]) => (
-              <GameInfo gameSettings={gameSettings} />
-            )}
-            onClick={(fileAndSettings) => select(fileAndSettings)}
-            selected={([file, gameSettings]) =>
-              selectionStore.selectedFileAndSettings?.[0] === file &&
-              selectionStore.selectedFileAndSettings?.[1] === gameSettings
-            }
-          />
-        </div>
+        <Picker
+          items={selectionStore.filteredFilesAndSettings}
+          render={([file, gameSettings]) => (
+            <GameInfo gameSettings={gameSettings} />
+          )}
+          onClick={(fileAndSettings) => select(fileAndSettings)}
+          selected={([file, gameSettings]) =>
+            selectionStore.selectedFileAndSettings?.[0] === file &&
+            selectionStore.selectedFileAndSettings?.[1] === gameSettings
+          }
+          estimateSize={([file, gameSettings]) =>
+            gameSettings.isTeams ? 56 : 32
+          }
+        />
         <div class="flex w-full items-center justify-between gap-4">
           <Button onClick={previousFile}>
             <div class="material-icons cursor-pointer">arrow_upward</div>

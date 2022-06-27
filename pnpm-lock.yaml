@@ -5,6 +5,7 @@ specifiers:
   '@solid-primitives/raf': ^2.1.0
   '@solid-primitives/upload': ^0.0.101
   '@supabase/supabase-js': ^1.35.3
+  '@tanstack/virtual-core': 3.0.0-alpha.1
   '@thisbeyond/solid-select': ^0.11.0
   '@zag-js/accordion': ^0.1.8
   '@zag-js/menu': ^0.1.7
@@ -29,6 +30,7 @@ dependencies:
   '@solid-primitives/raf': 2.1.0_solid-js@1.4.4
   '@solid-primitives/upload': 0.0.101_solid-js@1.4.4
   '@supabase/supabase-js': 1.35.3
+  '@tanstack/virtual-core': 3.0.0-alpha.1
   '@thisbeyond/solid-select': 0.11.0_solid-js@1.4.4
   '@zag-js/accordion': 0.1.8_vite@2.9.12
   '@zag-js/menu': 0.1.7_vite@2.9.12
@@ -432,6 +434,10 @@ packages:
       fastq: 1.13.0
     dev: true
 
+  /@reach/observe-rect/1.2.0:
+    resolution: {integrity: sha512-Ba7HmkFgfQxZqqaeIWWkNK0rEhpxVQHIoVyW1YDSkGsGIXzcaW4deC8B0pZrNSSyLTdIk7y+5olKt5+g0GmFIQ==}
+    dev: false
+
   /@shelacek/ubjson/1.1.1:
     resolution: {integrity: sha512-2Vi46ct3IWzh8eAz9IZ0NulIRtJbGgJDppatJvufB0fHwasRSfklBoQrVrCutF24fSuRvTvZVebjtcIHOxvzWw==}
     dev: false
@@ -514,6 +520,13 @@ packages:
     transitivePeerDependencies:
       - encoding
       - supports-color
+    dev: false
+
+  /@tanstack/virtual-core/3.0.0-alpha.1:
+    resolution: {integrity: sha512-Fa82aHSjxMVpqIg+yuxEj+mlSVadOjcqaMeD7uJ39JE8FHpGoO+53kyedIf+ypWD7zYlSWXB4ah/3W9NNHaI6g==}
+    engines: {node: '>=12'}
+    dependencies:
+      '@reach/observe-rect': 1.2.0
     dev: false
 
   /@thisbeyond/solid-select/0.11.0_solid-js@1.4.4:

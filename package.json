@@ -25,6 +25,7 @@
     "@solid-primitives/raf": "^2.1.0",
     "@solid-primitives/upload": "^0.0.101",
     "@supabase/supabase-js": "^1.35.3",
+    "@tanstack/virtual-core": "3.0.0-alpha.1",
     "@thisbeyond/solid-select": "^0.11.0",
     "@zag-js/accordion": "^0.1.8",
     "@zag-js/menu": "^0.1.7",
