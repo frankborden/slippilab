@@ -21,9 +21,9 @@ export function Picker<T>(props: {
 
   return (
     <>
-      <div ref={scrollParentRef} class="overflow-auto w-full">
+      <div ref={scrollParentRef} class="w-full overflow-auto">
         <div
-          class="w-full relative"
+          class="relative w-full"
           style={{ height: `${virtualizer.getTotalSize()}px` }}
         >
           <For each={virtualizer.getVirtualItems()}>
@@ -31,7 +31,7 @@ export function Picker<T>(props: {
               <div
                 role="button"
                 // ref={(el) => onMount(() => item.measureElement(el))}
-                class="absolute top-0 left-0 w-full whitespace-nowrap p-1 hover:bg-slate-100 border overflow-hidden"
+                class="absolute top-0 left-0 w-full overflow-hidden whitespace-nowrap border p-1 hover:bg-slate-100"
                 style={{ transform: `translateY(${item.start}px)` }}
                 classList={{
                   "bg-slate-200 hover:bg-slate-300": props.selected(
