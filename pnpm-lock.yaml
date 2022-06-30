@@ -24,6 +24,7 @@ specifiers:
   vite: ^2.9.12
   vite-plugin-solid: ^2.2.6
   vite-tsconfig-paths: ^3.5.0
+  zoo-ids: ^2.0.7
 
 dependencies:
   '@shelacek/ubjson': 1.1.1
@@ -40,6 +41,7 @@ dependencies:
   rambda: 7.1.4
   solid-js: 1.4.4
   solid-transition-group: 0.0.10_solid-js@1.4.4
+  zoo-ids: 2.0.7
 
 devDependencies:
   autoprefixer: 10.4.7_postcss@8.4.14
@@ -1827,3 +1829,7 @@ packages:
     resolution: {integrity: sha512-r3vXyErRCYJ7wg28yvBY5VSoAF8ZvlcW9/BwUzEtUsjvX/DKs24dIkuwjtuprwJJHsbyUbLApepYTR1BN4uHrg==}
     engines: {node: '>= 6'}
     dev: true
+
+  /zoo-ids/2.0.7:
+    resolution: {integrity: sha512-qSyy++XHw9FYfUQQP8lun2Rzoc+YUDYhjCNNXgtuIdKSlHjGZYl4+c9GM3kmYKr7v+ZebuHKzCeOxnKSg+CSuA==}
+    dev: false

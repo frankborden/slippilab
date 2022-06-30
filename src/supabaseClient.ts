@@ -1,4 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
+// @ts-ignore: zoo-ids doesn't ship it's types apparently
+import { generateId } from "zoo-ids";
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -16,7 +18,8 @@ export async function uploadReplay(file: File): Promise<{
   data: { Key: string } | null;
   error: Error | null;
 }> {
-  const id = crypto.randomUUID();
+  const id = generateId();
+  // TODO: check if a duplicate id has been generated
   const { data, error } = await supabase.storage
     .from("replays")
     .upload(`${id}.slp`, file);

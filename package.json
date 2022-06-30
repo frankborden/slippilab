@@ -34,6 +34,7 @@
     "@zip.js/zip.js": "^2.4.15",
     "rambda": "^7.1.4",
     "solid-js": "^1.4.4",
-    "solid-transition-group": "^0.0.10"
+    "solid-transition-group": "^0.0.10",
+    "zoo-ids": "^2.0.7"
   }
 }

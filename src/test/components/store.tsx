@@ -2,7 +2,15 @@ import { Component } from "solid-js";
 import { createStore } from "solid-js/store";
 import { PlayerBadge, StageBadge } from "~/common/Badge";
 import { PrimaryButton, SecondaryButton, WhiteButton } from "~/common/Button";
+import {
+  Dialog,
+  DialogClose,
+  DialogContents,
+  DialogTrigger,
+} from "~/common/Dialog";
 import { stageNameByExternalId } from "~/common/ids";
+import { ProgressCircle } from "~/common/ProgressCircle";
+import { SpinnerCircle } from "~/common/SpinnerCircle";
 
 export interface Variant {
   name: string;
@@ -19,7 +27,7 @@ export interface Store {
   currentVariant: Variant;
 }
 
-const stories = [
+const stories: Story[] = [
   {
     name: "Button",
     variants: [
@@ -76,6 +84,76 @@ const stories = [
               stageId={stageNameByExternalId.indexOf("Dream Land N64")}
             />
           </div>
+        ),
+      },
+    ],
+  },
+  {
+    name: "Progress Circle",
+    variants: [
+      {
+        name: "All Variants",
+        component: () => (
+          <div class="grid grid-cols-2 w-max gap-2">
+            <div>0%</div>
+            <div class="w-8 h-8">
+              <ProgressCircle percent={0} />
+            </div>
+            <div>30%</div>
+            <div class="w-8 h-8">
+              <ProgressCircle percent={30} />
+            </div>
+            <div>60%</div>
+            <div class="w-8 h-8">
+              <ProgressCircle percent={60} />
+            </div>
+            <div>90%</div>
+            <div class="w-8 h-8">
+              <ProgressCircle percent={90} />
+            </div>
+            <div>100%</div>
+            <div class="w-8 h-8">
+              <ProgressCircle percent={100} />
+            </div>
+          </div>
+        ),
+      },
+    ],
+  },
+  {
+    name: "Spinner",
+    variants: [
+      {
+        name: "Default",
+        component: () => (
+          <div class="w-8 h-8">
+            <SpinnerCircle />{" "}
+          </div>
+        ),
+      },
+    ],
+  },
+  {
+    name: "Dialog",
+    variants: [
+      {
+        name: "Basic Usage",
+        component: () => (
+          <Dialog>
+            <DialogTrigger>
+              <PrimaryButton>Open</PrimaryButton>
+            </DialogTrigger>
+            <DialogContents>
+              <div class="flex flex-col gap-4 w-96 h-96 justify-between">
+                Contents Here
+                <div class="flex justify-end">
+                  <DialogClose>
+                    <PrimaryButton>Close</PrimaryButton>
+                  </DialogClose>
+                </div>
+              </div>
+            </DialogContents>
+          </Dialog>
         ),
       },
     ],
