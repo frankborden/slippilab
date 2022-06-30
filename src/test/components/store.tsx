@@ -9,6 +9,7 @@ import {
   DialogTrigger,
 } from "~/common/Dialog";
 import { stageNameByExternalId } from "~/common/ids";
+import { Picker } from "~/common/Picker";
 import { ProgressCircle } from "~/common/ProgressCircle";
 import { SpinnerCircle } from "~/common/SpinnerCircle";
 
@@ -154,6 +155,28 @@ const stories: Story[] = [
               </div>
             </DialogContents>
           </Dialog>
+        ),
+      },
+    ],
+  },
+  {
+    name: "Picker",
+    variants: [
+      {
+        name: "Basic Usage",
+        component: () => (
+          <Picker
+            items={[1, 2, 3, 4, 5]}
+            render={(n) => (
+              <div>
+                I am item {n}
+                {n === 3 ? " (selected)" : ""}
+              </div>
+            )}
+            onClick={(n) => alert(`item ${n} was clicked`)}
+            selected={(n) => n === 3}
+            estimateSize={() => 34}
+          ></Picker>
         ),
       },
     ],
