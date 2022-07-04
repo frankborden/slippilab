@@ -165,18 +165,20 @@ const stories: Story[] = [
       {
         name: "Basic Usage",
         component: () => (
-          <Picker
-            items={[1, 2, 3, 4, 5]}
-            render={(n) => (
-              <div>
-                I am item {n}
-                {n === 3 ? " (selected)" : ""}
-              </div>
-            )}
-            onClick={(n) => alert(`item ${n} was clicked`)}
-            selected={(n) => n === 3}
-            estimateSize={() => 34}
-          ></Picker>
+          <div class="w-60">
+            <Picker
+              items={[1, 2, 3, 4, 5]}
+              render={(n) => (
+                <div>
+                  I am item {n}
+                  {n === 3 ? " (selected)" : ""}
+                </div>
+              )}
+              onClick={(n) => alert(`item ${n} was clicked`)}
+              selected={(n) => n === 3}
+              estimateSize={() => 34}
+            ></Picker>
+          </div>
         ),
       },
     ],

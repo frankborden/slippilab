@@ -24,7 +24,8 @@ export function getStartOfAction(
     )?.[playerState.isNana ? "nanaState" : "state"];
     if (
       testEarlierState === undefined ||
-      testEarlierState.actionStateId !== earliestStateOfAction.actionStateId
+      testEarlierState.actionStateId !== earliestStateOfAction.actionStateId ||
+      testEarlierState.actionStateFrameCounter > earliestStateOfAction.actionStateFrameCounter
     ) {
       return earliestStateOfAction.frameNumber;
     }
