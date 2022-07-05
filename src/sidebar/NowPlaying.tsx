@@ -1,10 +1,9 @@
 import { groupBy } from "rambda";
 import { createMemo, Show } from "solid-js";
-import { Button } from "~/common/Button";
 import { characterNameByExternalId } from "~/common/ids";
 import { PlayerSettings } from "~/common/types";
 import { replayStore } from "~/state/replayStore";
-import { nextFile, previousFile, selectionStore } from "~/state/selectionStore";
+import { selectionStore } from "~/state/selectionStore";
 
 export function NowPlaying() {
   function player(p: PlayerSettings): string {

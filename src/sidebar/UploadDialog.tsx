@@ -1,5 +1,5 @@
 import { createSignal, Match, Show, Switch } from "solid-js";
-import { Button } from "~/common/Button";
+import { PrimaryButton, SecondaryButton } from "~/common/Button";
 import { SpinnerCircle } from "~/common/SpinnerCircle";
 import { selectionStore } from "~/state/selectionStore";
 import {
@@ -41,10 +41,10 @@ export function UploadDialog() {
   return (
     <Dialog>
       <DialogTrigger onOpen={onOpen}>
-        <Button class="text-md flex items-center gap-2 bg-transparent hover:bg-slate-300">
+        <PrimaryButton class="text-md flex items-center gap-2">
           Upload
           <div class="material-icons">upload_file</div>
-        </Button>
+        </PrimaryButton>
       </DialogTrigger>
       <DialogContents>
         <h1 class="text-lg">Replay Upload</h1>
@@ -57,12 +57,9 @@ export function UploadDialog() {
                     Upload {selectionStore.selectedFileAndSettings?.[0].name} to
                     share?
                   </p>
-                  <Button
-                    onClick={onUploadClicked}
-                    class="bg-slate-300 text-slate-800 hover:bg-slate-400"
-                  >
+                  <PrimaryButton onClick={onUploadClicked}>
                     Upload
-                  </Button>
+                  </PrimaryButton>
                 </div>
               </Match>
               <Match when={state() === "loading"}>
@@ -94,7 +91,7 @@ export function UploadDialog() {
         </div>
         <DialogClose>
           <div class="flex justify-end">
-            <Button>Close</Button>
+            <SecondaryButton>Close</SecondaryButton>
           </div>
         </DialogClose>
       </DialogContents>

@@ -2,7 +2,7 @@ import { PropTypes, useActor, useMachine, useSetup } from "@zag-js/solid";
 import * as toast from "@zag-js/toast";
 import { createMemo, For } from "solid-js";
 import { Portal } from "solid-js/web";
-import { Button } from "~/common/Button";
+import { WhiteButton } from "~/common/Button";
 
 function Toast(props: { actor: any }) {
   const [state, send] = useActor(props.actor);
@@ -18,12 +18,12 @@ function Toast(props: { actor: any }) {
         <div {...api().titleProps}>{api().title}</div>
         {api()?.render()}
       </div>
-      <Button
-        class="material-icons cursor-pointer px-1 py-0 text-lg"
+      <WhiteButton
+        class="material-icons cursor-pointer px-1 py-0"
         onClick={api().dismiss}
       >
         close
-      </Button>
+      </WhiteButton>
     </div>
   );
 }

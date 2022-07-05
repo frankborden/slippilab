@@ -2,7 +2,7 @@ import * as menu from "@zag-js/menu";
 import { normalizeProps, useMachine, useSetup, PropTypes } from "@zag-js/solid";
 import { createMemo } from "solid-js";
 import { loadFromSupabase } from "~/stateUtil";
-import { Button } from "~/common/Button";
+import { PrimaryButton } from "~/common/Button";
 import { filterFiles } from "~/common/util";
 import { load } from "~/state/fileStore";
 
@@ -32,19 +32,15 @@ export function OpenMenu(props: { name: string }) {
   return (
     <>
       <div ref={menuRef}>
-        <Button
+        <PrimaryButton
           {...menuApi().triggerProps}
-          class={`
-          text-md flex items-center gap-2 ${
-            props.name === "Open" ? "bg-transparent hover:bg-slate-300" : ""
-          }
-          `}
+          class="flex items-center gap-2"
         >
           {props.name}
           <div class="material-icons" aria-label="Open File or Folder">
             folder_open
           </div>
-        </Button>
+        </PrimaryButton>
         <div {...menuApi().positionerProps} class="z-10 bg-white opacity-100">
           <ul
             {...menuApi().contentProps}

@@ -16,7 +16,7 @@ import {
   selectionStore,
   setFilters,
 } from "~/state/selectionStore";
-import { Button } from "~/common/Button";
+import { PrimaryButton } from "~/common/Button";
 
 const filterProps = createOptions(
   [
@@ -64,14 +64,13 @@ export function ReplaysTab() {
           }
         />
         <div class="flex w-full items-center justify-between gap-4">
-          <Button onClick={previousFile}>
+          <PrimaryButton onClick={previousFile}>
             <div class="material-icons cursor-pointer">arrow_upward</div>
-          </Button>
-          <Button onClick={nextFile}>
+          </PrimaryButton>
+          <PrimaryButton onClick={nextFile}>
             <div class="material-icons cursor-pointer">arrow_downward</div>
-          </Button>
+          </PrimaryButton>
         </div>
-        {/* <Upload /> */}
       </div>
     </>
   );
