@@ -25,7 +25,8 @@ export function getStartOfAction(
     if (
       testEarlierState === undefined ||
       testEarlierState.actionStateId !== earliestStateOfAction.actionStateId ||
-      testEarlierState.actionStateFrameCounter > earliestStateOfAction.actionStateFrameCounter
+      testEarlierState.actionStateFrameCounter >
+        earliestStateOfAction.actionStateFrameCounter
     ) {
       return earliestStateOfAction.frameNumber;
     }

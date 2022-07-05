@@ -95,25 +95,25 @@ const stories: Story[] = [
       {
         name: "All Variants",
         component: () => (
-          <div class="grid grid-cols-2 w-max gap-2">
+          <div class="grid w-max grid-cols-2 gap-2">
             <div>0%</div>
-            <div class="w-8 h-8">
+            <div class="h-8 w-8">
               <ProgressCircle percent={0} />
             </div>
             <div>30%</div>
-            <div class="w-8 h-8">
+            <div class="h-8 w-8">
               <ProgressCircle percent={30} />
             </div>
             <div>60%</div>
-            <div class="w-8 h-8">
+            <div class="h-8 w-8">
               <ProgressCircle percent={60} />
             </div>
             <div>90%</div>
-            <div class="w-8 h-8">
+            <div class="h-8 w-8">
               <ProgressCircle percent={90} />
             </div>
             <div>100%</div>
-            <div class="w-8 h-8">
+            <div class="h-8 w-8">
               <ProgressCircle percent={100} />
             </div>
           </div>
@@ -127,7 +127,7 @@ const stories: Story[] = [
       {
         name: "Default",
         component: () => (
-          <div class="w-8 h-8">
+          <div class="h-8 w-8">
             <SpinnerCircle />{" "}
           </div>
         ),
@@ -145,7 +145,7 @@ const stories: Story[] = [
               <PrimaryButton>Open</PrimaryButton>
             </DialogTrigger>
             <DialogContents>
-              <div class="flex flex-col gap-4 w-96 h-96 justify-between">
+              <div class="flex h-96 w-96 flex-col justify-between gap-4">
                 Contents Here
                 <div class="flex justify-end">
                   <DialogClose>
