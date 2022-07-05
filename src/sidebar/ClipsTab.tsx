@@ -1,5 +1,5 @@
 import { createMemo, createUniqueId, For, Show } from "solid-js";
-import { Badge } from "~/common/Badge";
+import { PlayerBadge } from "~/common/Badge";
 import { Picker } from "~/common/Picker";
 import { Highlight } from "~/search/search";
 import { replayStore, selectHighlight } from "~/state/replayStore";
@@ -77,17 +77,11 @@ export function ClipsTab() {
 }
 
 function ClipRow(props: [string, Highlight]) {
-  const portColor = [
-    "bg-red-600 text-red-50",
-    "bg-blue-600 text-blue-50",
-    "bg-yellow-600 text-yellow-50",
-    "bg-green-700 text-green-50",
-  ][props[1].playerIndex];
   return (
     <>
       <div class="flex w-full items-center">
         <div class="flex items-center gap-1">
-          <Badge class={portColor}>{`P${props[1].playerIndex + 1}`}</Badge>
+          <PlayerBadge port={props[1].playerIndex + 1} />
         </div>
         <div class="flex flex-grow items-center justify-center">
           {`${props[1].startFrame}-${props[1].endFrame}`}

@@ -1,14 +1,10 @@
 import { createOptions, Select } from "@thisbeyond/solid-select";
 import { groupBy } from "rambda";
 import { For } from "solid-js";
-import {
-  characterNameByExternalId,
-  ExternalStageName,
-  stageNameByExternalId,
-} from "~/common/ids";
+import { characterNameByExternalId, stageNameByExternalId } from "~/common/ids";
 import { Picker } from "~/common/Picker";
 import { GameSettings, PlayerSettings } from "~/common/types";
-import { Badge } from "~/common/Badge";
+import { StageBadge } from "~/common/Badge";
 import {
   nextFile,
   previousFile,
@@ -88,7 +84,7 @@ function GameInfo(props: { gameSettings: GameSettings }) {
   return (
     <>
       <div class="flex w-full items-center">
-        <StageBadge stage={stageNameByExternalId[props.gameSettings.stageId]} />
+        <StageBadge stageId={props.gameSettings.stageId} />
         <div class="flex flex-grow flex-col items-center">
           {props.gameSettings.isTeams ? (
             <For
@@ -110,29 +106,5 @@ function GameInfo(props: { gameSettings: GameSettings }) {
         </div>
       </div>
     </>
-  );
-}
-
-function StageBadge(props: { stage: ExternalStageName }) {
-  const abbreviations: Partial<{ [key in ExternalStageName]: string }> = {
-    "Final Destination": "FD",
-    "Pokémon Stadium": "PS",
-    Battlefield: "BF",
-    "Fountain of Dreams": "FoD",
-    "Yoshi's Story": "YS",
-    "Dream Land N64": "DL",
-  };
-  const colors: Partial<{ [key in ExternalStageName]: string }> = {
-    "Final Destination": "bg-fuchsia-600 text-fuchsia-100",
-    "Pokémon Stadium": "bg-blue-700 text-blue-100",
-    Battlefield: "bg-slate-600 text-slate-100",
-    "Fountain of Dreams": "bg-purple-700 text-purple-100",
-    "Yoshi's Story": "bg-green-700 text-green-100",
-    "Dream Land N64": "bg-orange-600 text-orange-100",
-  };
-  return (
-    <Badge class={colors[props.stage] ?? "bg-white text-black"}>
-      {abbreviations[props.stage] ?? "??"}
-    </Badge>
   );
 }
