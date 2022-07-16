@@ -1,5 +1,3 @@
-import { BlobReader, TextWriter, ZipReader } from "@zip.js/zip.js";
-
 export type AnimationFrames = string[];
 export interface CharacterAnimations {
   [animationName: string]: AnimationFrames;
@@ -51,6 +49,7 @@ const characterZipUrlByExternalId = [
 ];
 
 async function load(url: string): Promise<CharacterAnimations> {
+  const { ZipReader, TextWriter, BlobReader } = await import("@zip.js/zip.js");
   const animations: CharacterAnimations = {};
   const response = await fetch(url);
   const animationsZip = await response.blob();
