@@ -1,7 +1,8 @@
-import { createMemo } from "solid-js";
-import { replayStore } from "~/state/replayStore";
+import { createMemo, useContext } from "solid-js";
+import { ReplayStoreContext } from "~/state/replayStore";
 
 export function Timer() {
+  const [replayState] = useContext(ReplayStoreContext);
   const meleeHundredths = [
     "00",
     "02",
@@ -66,8 +67,8 @@ export function Timer() {
   ];
   const time = createMemo(() => {
     const frames =
-      replayStore.replayData!.settings.timerStart * 60 -
-      replayStore.frame +
+      replayState.replayData!.settings.timerStart * 60 -
+      replayState.frame +
       123;
     const minutes = Math.floor(frames / (60 * 60))
       .toString()

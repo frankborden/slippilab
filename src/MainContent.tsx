@@ -1,12 +1,13 @@
-import { Show } from "solid-js";
+import { Show, useContext } from "solid-js";
 import { ClipsTab } from "~/sidebar/ClipsTab";
 import { NowPlaying } from "~/sidebar/NowPlaying";
 import { ReplaysTab } from "~/sidebar/ReplaysTab";
-import { replayStore } from "~/state/replayStore";
+import { ReplayStoreContext } from "~/state/replayStore";
 import { Controls } from "~/viewer/Controls";
 import { Viewer } from "~/viewer/Viewer";
 
 export function MainContent() {
+  const [replayState] = useContext(ReplayStoreContext);
   return (
     <div class="flex overflow-y-auto">
       <div class="box-border flex h-full flex-col divide-y overflow-y-auto p-5 pr-0">
@@ -15,7 +16,7 @@ export function MainContent() {
       </div>
       <div class="flex h-full flex-grow flex-col p-5">
         <Viewer />
-        <Show when={replayStore.replayData}>
+        <Show when={replayState.replayData}>
           <Controls />
         </Show>
       </div>

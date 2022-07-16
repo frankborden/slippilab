@@ -1,12 +1,13 @@
 import * as menu from "@zag-js/menu";
 import { normalizeProps, useMachine, useSetup, PropTypes } from "@zag-js/solid";
-import { createMemo } from "solid-js";
+import { createMemo, useContext } from "solid-js";
 import { loadFromSupabase } from "~/stateUtil";
 import { PrimaryButton } from "~/common/Button";
 import { filterFiles } from "~/common/util";
-import { load } from "~/state/fileStore";
+import { FileStoreContext } from "~/state/fileStore";
 
 export function OpenMenu(props: { name: string }) {
+  const [_, { load }] = useContext(FileStoreContext);
   const [menuState, menuSend] = useMachine(
     menu.machine({ "aria-label": "Open Replays" })
   );
@@ -54,7 +55,7 @@ export function OpenMenu(props: { name: string }) {
                   folderInput.click();
                   break;
                 case "demo":
-                  loadFromSupabase("sample");
+                  loadFromSupabase("sample", load);
                   break;
               }
             }}

@@ -1,7 +1,6 @@
-import { createSignal, Match, Show, Switch } from "solid-js";
+import { createSignal, Match, Show, Switch, useContext } from "solid-js";
 import { PrimaryButton, SecondaryButton } from "~/common/Button";
 import { SpinnerCircle } from "~/common/SpinnerCircle";
-import { selectionStore } from "~/state/selectionStore";
 import {
   Dialog,
   DialogClose,
@@ -9,8 +8,10 @@ import {
   DialogTrigger,
 } from "~/common/Dialog";
 import { uploadReplay } from "~/supabaseClient";
+import { SelectionStoreContext } from "~/state/selectionStore";
 
 export function UploadDialog() {
+  const [selectionState] = useContext(SelectionStoreContext);
   const [state, setState] = createSignal<"not started" | "loading" | "done">(
     "not started"
   );
@@ -20,7 +21,7 @@ export function UploadDialog() {
 
   async function onUploadClicked() {
     setState("loading");
-    const [file] = selectionStore.selectedFileAndSettings!;
+    const [file] = selectionState.selectedFileAndSettings!;
     const { id, data, error } = await uploadReplay(file);
     if (data != null) {
       setUrl(`${window.location.origin}/${id}`);
@@ -54,7 +55,7 @@ export function UploadDialog() {
               <Match when={state() === "not started"}>
                 <div class="flex flex-col items-center gap-3">
                   <p class="text-sm">
-                    Upload {selectionStore.selectedFileAndSettings?.[0].name} to
+                    Upload {selectionState.selectedFileAndSettings?.[0].name} to
                     share?
                   </p>
                   <PrimaryButton onClick={onUploadClicked}>

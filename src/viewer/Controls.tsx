@@ -1,23 +1,27 @@
-import { onCleanup, onMount, Show } from "solid-js";
-import {
-  adjust,
-  jump,
-  jumpPercent,
-  nextHighlight,
-  pause,
-  previousHighlight,
-  replayStore,
-  speedFast,
-  speedNormal,
-  speedSlow,
-  toggleDebug,
-  togglePause,
-  zoomIn,
-  zoomOut,
-} from "~/state/replayStore";
-import { nextFile, previousFile } from "~/state/selectionStore";
+import { onCleanup, onMount, Show, useContext } from "solid-js";
+import { ReplayStoreContext } from "~/state/replayStore";
+import { SelectionStoreContext } from "~/state/selectionStore";
 
 export function Controls() {
+  const [_, { nextFile, previousFile }] = useContext(SelectionStoreContext);
+  const [
+    replayState,
+    {
+      adjust,
+      jump,
+      jumpPercent,
+      nextHighlight,
+      pause,
+      previousHighlight,
+      speedFast,
+      speedNormal,
+      speedSlow,
+      toggleDebug,
+      togglePause,
+      zoomIn,
+      zoomOut,
+    },
+  ] = useContext(ReplayStoreContext);
   onMount(() => {
     window.addEventListener("keydown", onKeyDown);
     window.addEventListener("keyup", onKeyUp);
@@ -111,7 +115,7 @@ export function Controls() {
   return (
     <div class="flex flex-grow items-center justify-evenly gap-4 rounded-b-lg border border-t-0 pl-2 pr-4 text-slate-800 shadow-md">
       <Show
-        when={replayStore.running}
+        when={replayState.running}
         fallback={
           <div
             class="material-icons cursor-pointer text-5xl"
@@ -132,15 +136,15 @@ export function Controls() {
       </Show>
       <div class="flex flex-grow flex-col">
         <label for="seekbar" class="text-sm">
-          {replayStore.isDebug ? replayStore.frame - 123 : replayStore.frame}
+          {replayState.isDebug ? replayState.frame - 123 : replayState.frame}
         </label>
         <input
           id="seekbar"
           class="flex-grow accent-slate-400"
           type="range"
           ref={seekbarInput}
-          value={replayStore.frame}
-          max={replayStore.replayData!.frames.length - 1}
+          value={replayState.frame}
+          max={replayState.replayData!.frames.length - 1}
           onInput={() => jump(seekbarInput.valueAsNumber)}
         />
       </div>

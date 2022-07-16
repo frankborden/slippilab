@@ -1,17 +1,18 @@
-import { createMemo, For, Show } from "solid-js";
+import { createMemo, For, Show, useContext } from "solid-js";
 import { Camera } from "~/viewer/Camera";
-import { Hud } from "~/viewer/Hud";
+import { HUD } from "~/viewer/HUD";
 import { Players } from "~/viewer/Player";
 import { Stage } from "~/viewer/Stage";
 import { Item } from "~/viewer/Item";
-import { replayStore } from "~/state/replayStore";
+import { ReplayStoreContext } from "~/state/replayStore";
 
 export function Viewer() {
+  const [replayState] = useContext(ReplayStoreContext);
   const items = createMemo(
-    () => replayStore.replayData?.frames[replayStore.frame].items ?? []
+    () => replayState.replayData?.frames[replayState.frame].items ?? []
   );
   return (
-    <Show when={replayStore.replayData}>
+    <Show when={replayState.replayData}>
       <svg
         /* up = positive y axis */
         class="flex-shrink rounded-t-lg border bg-slate-50"
@@ -23,7 +24,7 @@ export function Viewer() {
             <Players />
             <For each={items()}>{(item) => <Item item={item} />}</For>
           </Camera>
-          <Hud />
+          <HUD />
         </g>
       </svg>
     </Show>

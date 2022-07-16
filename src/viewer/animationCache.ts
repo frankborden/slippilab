@@ -60,7 +60,7 @@ async function load(url: string): Promise<CharacterAnimations> {
     files.map(async (file) => {
       const animationName = file.filename.replace(".json", "");
       const contents = await file.getData?.(new TextWriter());
-      const animationData = JSON.parse(contents);
+      const animationData = JSON.parse(contents!);
       animations[animationName] = animationData;
     })
   );

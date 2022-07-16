@@ -1,18 +1,12 @@
 import { createOptions, Select } from "@thisbeyond/solid-select";
 import { groupBy } from "rambda";
-import { For } from "solid-js";
+import { For, useContext } from "solid-js";
 import { characterNameByExternalId, stageNameByExternalId } from "~/common/ids";
 import { Picker } from "~/common/Picker";
 import { GameSettings, PlayerSettings } from "~/common/types";
 import { StageBadge } from "~/common/Badge";
-import {
-  nextFile,
-  previousFile,
-  select,
-  selectionStore,
-  setFilters,
-} from "~/state/selectionStore";
 import { PrimaryButton } from "~/common/Button";
+import { SelectionStoreContext } from "~/state/selectionStore";
 
 const filterProps = createOptions(
   [
@@ -28,6 +22,8 @@ const filterProps = createOptions(
   }
 );
 export function ReplaysTab() {
+  const [selectionState, { setFilters, select, nextFile, previousFile }] =
+    useContext(SelectionStoreContext);
   return (
     <>
       <div class="flex h-full flex-col items-center gap-2 overflow-y-auto">
@@ -41,19 +37,19 @@ export function ReplaysTab() {
             placeholder="Filter"
             multiple
             {...filterProps}
-            initialValue={selectionStore.filters}
+            initialValue={selectionState.filters}
             onChange={setFilters}
           />
         </div>
         <Picker
-          items={selectionStore.filteredFilesAndSettings}
+          items={selectionState.filteredFilesAndSettings}
           render={([file, gameSettings]) => (
             <GameInfo gameSettings={gameSettings} />
           )}
           onClick={(fileAndSettings) => select(fileAndSettings)}
           selected={([file, gameSettings]) =>
-            selectionStore.selectedFileAndSettings?.[0] === file &&
-            selectionStore.selectedFileAndSettings?.[1] === gameSettings
+            selectionState.selectedFileAndSettings?.[0] === file &&
+            selectionState.selectedFileAndSettings?.[1] === gameSettings
           }
           estimateSize={([file, gameSettings]) =>
             gameSettings.isTeams ? 56 : 32
