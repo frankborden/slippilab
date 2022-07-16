@@ -1,5 +1,5 @@
 import { Dynamic } from "solid-js/web";
-import { store } from "~/test/components/store";
+import { store } from "~/test/components/stories";
 
 export function Component() {
   return (

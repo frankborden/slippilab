@@ -1,5 +1,5 @@
 import { For } from "solid-js";
-import { setStory, setVariant, store } from "~/test/components/store";
+import { setStory, setVariant, store } from "~/test/components/stories";
 
 export function Sidebar() {
   return (
