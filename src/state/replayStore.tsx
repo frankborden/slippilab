@@ -59,6 +59,17 @@ export interface ReplayStoreState {
   zoom: number;
   isDebug: boolean;
 }
+export const defaultReplayStoreState: ReplayStoreState = {
+  highlights: {},
+  frame: 0,
+  renderDatas: [],
+  animations: Array(4).fill(undefined),
+  fps: 60,
+  framesPerTick: 1,
+  running: false,
+  zoom: 1,
+  isDebug: false,
+};
 
 export type ReplayStore = ReturnType<typeof createReplayStore>;
 export const ReplayStoreContext =
@@ -66,15 +77,8 @@ export const ReplayStoreContext =
 
 export function createReplayStore(selectionState: SelectionStoreState) {
   const [replayState, setReplayState] = createStore<ReplayStoreState>({
+    ...defaultReplayStoreState,
     highlights: map(() => [], queries),
-    frame: 0,
-    renderDatas: [],
-    animations: Array(4).fill(undefined),
-    fps: 60,
-    framesPerTick: 1,
-    running: false,
-    zoom: 1,
-    isDebug: false,
   });
 
   function selectHighlight(nameAndHighlight: [string, Highlight]) {

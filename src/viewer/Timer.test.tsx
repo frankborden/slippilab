@@ -1,23 +1,32 @@
-import { afterEach, beforeEach, describe, expect, test } from "vitest";
+import {
+  afterEach,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  test,
+} from "vitest";
 import { render } from "solid-testing-library";
 import { Result } from "solid-testing-library/dist/types";
 import { Timer } from "~/viewer/Timer";
-import { ReplayStoreContext, ReplayStoreState } from "~/state/replayStore";
-import { SetStoreFunction } from "solid-js/store";
-import { createFakeReplayStore } from "~/state/replayStore.fake";
+import { ReplayStoreContext } from "~/state/replayStore";
+import { createFakeReplayStore, sampleReplay } from "~/state/replayStore.fake";
 
 describe("<Timer />", () => {
   let component: Result;
-  let setState: SetStoreFunction<ReplayStoreState>;
+  const [store, setState] = createFakeReplayStore();
+
+  beforeAll(() => {
+    setState("replayData", sampleReplay);
+    expect(sampleReplay.settings.timerStart).toBe(
+      8 * 60 /* 8 minutes in seconds */
+    );
+  });
 
   beforeEach(() => {
-    const storeAndSetState = createFakeReplayStore();
-    setState = storeAndSetState[1];
     setState("frame", 0);
-    // @ts-ignore: missing other replay data
-    setState("replayData", { settings: { timerStart: 8 * 60 /* seconds */ } });
     component = render(() => (
-      <ReplayStoreContext.Provider value={storeAndSetState[0]}>
+      <ReplayStoreContext.Provider value={store}>
         <Timer />
       </ReplayStoreContext.Provider>
     ));
