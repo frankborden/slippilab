@@ -42,6 +42,7 @@ export function StageBadge(props: { stageId: number }) {
         "bg-orange-100 text-orange-800":
           props.stageId === stageNameByExternalId.indexOf("Dream Land N64"),
       }}
+      title={stageNameByExternalId[props.stageId]}
     >
       {abbreviation()}
     </span>

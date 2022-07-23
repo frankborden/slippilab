@@ -113,7 +113,7 @@ export function Controls() {
   let seekbarInput!: HTMLInputElement;
 
   return (
-    <div class="flex flex-grow items-center justify-evenly gap-4 rounded-b-lg border border-t-0 pl-2 pr-4 text-slate-800 shadow-md">
+    <div class="flex items-center justify-evenly gap-4 rounded-lg border pl-2 pr-4 text-slate-800">
       <Show
         when={replayState.running}
         fallback={

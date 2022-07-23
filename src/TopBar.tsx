@@ -1,6 +1,7 @@
 import { Dialog, DialogContents, DialogTrigger } from "~/common/Dialog";
 import { Links } from "~/common/Links";
-import { SettingsTab } from "~/sidebar/SettingsTab";
+import { NowPlaying } from "~/sidebar/NowPlaying";
+import { Settings } from "~/sidebar/Settings";
 import { Upload } from "~/sidebar/Upload";
 
 export function TopBar() {
@@ -10,6 +11,9 @@ export function TopBar() {
         <h1 class="text-4xl">Slippi Lab</h1>
         <Upload />
       </div>
+      <div>
+        <NowPlaying />
+      </div>
       <div class="flex items-center gap-4">
         <Links />
         <Dialog>
@@ -17,7 +21,7 @@ export function TopBar() {
             <div class="material-icons w-6 text-3xl leading-6">settings</div>
           </DialogTrigger>
           <DialogContents>
-            <SettingsTab />
+            <Settings />
           </DialogContents>
         </Dialog>
       </div>

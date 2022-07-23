@@ -21,14 +21,15 @@ const filterProps = createOptions(
     createable: (code) => ({ type: "codeOrName", label: code }),
   }
 );
-export function ReplaysTab() {
+export function Replays() {
   const [selectionState, { setFilters, select, nextFile, previousFile }] =
     useContext(SelectionStoreContext);
   return (
     <>
-      <div class="flex h-full flex-col items-center gap-2 overflow-y-auto">
+      <div class="flex h-full w-96 flex-col items-center gap-2 overflow-y-auto">
         <div
           class="w-full"
+          // don't trigger global shortcuts when typing in the filter box
           onkeydown={(e: Event) => e.stopPropagation()}
           onkeyup={(e: Event) => e.stopPropagation()}
         >

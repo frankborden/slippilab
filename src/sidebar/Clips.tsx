@@ -6,7 +6,7 @@ import { ReplayStoreContext } from "~/state/replayStore";
 import * as accordion from "@zag-js/accordion";
 import { normalizeProps, useMachine, useSetup, PropTypes } from "@zag-js/solid";
 
-export function ClipsTab() {
+export function Clips() {
   const [replayState, { selectHighlight }] = useContext(ReplayStoreContext);
   const data = createMemo(() =>
     Object.keys(replayState.highlights).map((name) => ({

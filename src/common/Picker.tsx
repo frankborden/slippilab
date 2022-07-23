@@ -1,4 +1,4 @@
-import { For, JSX, onMount } from "solid-js";
+import { For, JSX } from "solid-js";
 import { createVirtualizer } from "~/common/virtual";
 
 export function Picker<T>(props: {

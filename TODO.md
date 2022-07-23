@@ -74,3 +74,4 @@
 # slippilab
 
 - Tests
+- Filter by file name
