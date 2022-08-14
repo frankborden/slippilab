@@ -6,9 +6,14 @@ import { Upload } from "~/sidebar/Upload";
 
 export function TopBar() {
   return (
-    <div class="flex items-center justify-between gap-20 bg-slate-200 px-5 py-3">
+    <div class="flex items-center justify-between gap-20 bg-slate-100 px-5 py-2 shadow">
       <div class="flex gap-10">
-        <h1 class="text-4xl">Slippi Lab</h1>
+        <div class="flex items-baseline gap-2">
+          <img class="h-10" src="logo.png" />
+          <div class="font-['Comfortaa-Bold'] text-3xl tracking-tighter">
+            Slippi Lab
+          </div>
+        </div>
         <Upload />
       </div>
       <div>
