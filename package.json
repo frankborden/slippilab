@@ -4,6 +4,7 @@
   "author": "Frank Borden",
   "license": "MIT",
   "scripts": {
+    "dev": "vite",
     "start": "vite",
     "build": "vite build",
     "check": "tsc --noEmit",
