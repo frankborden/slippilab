@@ -128,7 +128,7 @@ const stories: Story[] = [
         name: "Default",
         component: () => (
           <div class="h-8 w-8">
-            <SpinnerCircle />{" "}
+            <SpinnerCircle />
           </div>
         ),
       },
