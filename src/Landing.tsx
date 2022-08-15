@@ -8,13 +8,17 @@ export function Landing() {
       class="box-border grid h-screen bg-[length:30px_30px] p-4"
       style={{
         "grid-template-areas": `
-        ".      .      ."
-        "falco  logo   fox"
-        ".      start  ."
-        "footer footer footer"`,
+          ".      .      ."
+          "falco  logo   fox"
+          ".      start  ."
+          "footer footer footer"
+        `,
         "grid-template-rows": "1fr auto 1fr max-content",
         "grid-template-columns": "1fr max-content 1fr",
-        "background-image": `linear-gradient(lightblue 1px, transparent 1px), linear-gradient(90deg, lightblue 1px, transparent 1px)`,
+        "background-image": `
+          linear-gradient(lightblue 1px, transparent 1px),
+          linear-gradient(90deg, lightblue 1px, transparent 1px)
+        `,
       }}
     >
       <div style={{ "grid-area": "falco" }}>
