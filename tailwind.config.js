@@ -18,11 +18,11 @@ module.exports = {
         },
       },
       animation: {
-        draw: "draw 6s ease-in-out forwards",
+        draw: "draw 2s ease-in-out forwards",
       },
       keyframes: {
         draw: {
-          to: { "stroke-dashoffset": 50 },
+          to: { "stroke-dashoffset": 0 },
         },
       },
     },
