@@ -472,9 +472,9 @@ function getPlayerColor(
     const settings =
       replayState.replayData!.settings.playerSettings[playerIndex];
     return [
-      [colors.red["800"], colors.red["600"]], 
-      [colors.green["800"],colors.green["600"]],
-      [colors.blue["800"], colors.blue["600"]], 
+      [colors.red["800"], colors.red["600"]],
+      [colors.green["800"], colors.green["600"]],
+      [colors.blue["800"], colors.blue["600"]],
     ][settings.teamId][settings.teamShade];
   }
   return [
