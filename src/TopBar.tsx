@@ -10,7 +10,7 @@ export function TopBar() {
       <div class="flex gap-10">
         <div class="flex items-baseline gap-2">
           <img class="h-10" src="logo.png" />
-          <div class="font-['Comfortaa-Bold'] text-3xl tracking-tighter">
+          <div class="whitespace-nowrap font-['Comfortaa-Bold'] text-3xl tracking-tighter">
             Slippi Lab
           </div>
         </div>
