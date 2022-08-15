@@ -13,7 +13,7 @@ export function Landing() {
       <div class="flex h-full flex-col content-center items-center justify-between">
         <div class="flex w-full flex-grow content-center items-center justify-center gap-4">
           <div class="flex w-full items-center">
-            <svg viewBox="0 -3 30 27">
+            <svg viewBox="0 -3 30 27" class="flex-grow">
               <radialGradient id="fill-red" r="1">
                 <stop stop-color={colors.red["700"]}>
                   <animate
@@ -38,7 +38,7 @@ export function Landing() {
               </radialGradient>
               <path
                 transform="translate(15 20) scale(-.1 .1) translate(-500 -500)"
-                class="animate-draw stroke-red-800 stroke-[3]"
+                class="flex-grow animate-draw stroke-red-800 stroke-[3]"
                 stroke-dasharray="1000"
                 stroke-dashoffset="1000"
                 fill="url(#fill-red)"
@@ -56,7 +56,7 @@ export function Landing() {
               </div>
               <OpenMenu name={"Start"} />
             </div>
-            <svg viewBox="0 -3 30 27">
+            <svg viewBox="0 -3 30 27" class="flex-grow">
               <radialGradient id="fill-blue" r="1">
                 <stop stop-color={colors.blue["700"]}>
                   <animate
