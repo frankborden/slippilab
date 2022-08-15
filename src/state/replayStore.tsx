@@ -29,6 +29,7 @@ import { CharacterAnimations, fetchAnimations } from "~/viewer/animationCache";
 import { actionMapByInternalId } from "~/viewer/characters";
 import { Character } from "~/viewer/characters/character";
 import { getPlayerOnFrame, getStartOfAction } from "~/viewer/viewerUtil";
+import colors from "tailwindcss/colors";
 
 export interface RenderData {
   playerState: PlayerState;
@@ -467,18 +468,21 @@ function getPlayerColor(
   replayState: ReplayStoreState,
   playerIndex: number
 ): string {
-  // https://www.radix-ui.com/docs/colors/palette-composition/the-scales
   if (replayState.replayData!.settings.isTeams) {
     const settings =
       replayState.replayData!.settings.playerSettings[playerIndex];
     return [
-      ["#aa2429", "#e5484d"], // redDark8, redDark9
-      ["#0954a5", "#0091ff"], // blueDark8, blueDark9
-      ["#236e4a", "#46a758"], // greenDark8, greenDark9
+      [colors.red["800"], colors.red["600"]], 
+      [colors.green["800"],colors.green["600"]],
+      [colors.blue["800"], colors.blue["600"]], 
     ][settings.teamId][settings.teamShade];
   }
-  // redDark8, blueDark8, yellowDark11, greenDark8
-  return ["#aa2429", "#0954a5", "#f0c000", "#236e4a"][playerIndex];
+  return [
+    colors.red["700"],
+    colors.blue["700"],
+    colors.yellow["500"],
+    colors.green["700"],
+  ][playerIndex];
 }
 
 function wrapFrame(replayState: ReplayStoreState, frame: number): number {
