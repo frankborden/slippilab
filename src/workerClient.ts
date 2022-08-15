@@ -1,8 +1,7 @@
 import { GameSettings } from "~/common/types";
+import MyWorker from './worker?worker';
 
-const worker = new Worker(new URL("./worker.ts", import.meta.url), {
-  type: "module",
-});
+const worker = new MyWorker();
 const callbacks = new Map<number, () => void>();
 const resolvers = new Map<number, (data: any) => void>();
 let nextId = 0;
