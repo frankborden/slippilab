@@ -25,6 +25,7 @@ export function createFileStore() {
   });
 
   async function load(files: File[]): Promise<void> {
+    setState("parseProgress", 0);
     const progressToast = createToast({
       title: "Parsing files",
       duration: 999999,

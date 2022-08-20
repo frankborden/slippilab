@@ -14,10 +14,11 @@ export function NowPlaying() {
   //     : `P${p.port}(${characterNameByExternalId[p.externalCharacterId]})`;
   // }
   const info = createMemo(() => {
-    return replayState.replayData === undefined
+    return replayState.replayData === undefined ||
+      selectionState.selectedFileAndSettings === undefined
       ? {}
       : {
-          name: selectionState.selectedFileAndSettings![0].name,
+          name: selectionState.selectedFileAndSettings[0].name,
           date: new Date(
             replayState.replayData.settings.startTimestamp
           ).toLocaleString(),

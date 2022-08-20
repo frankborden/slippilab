@@ -61,7 +61,7 @@ export interface ReplayStoreState {
   isDebug: boolean;
 }
 export const defaultReplayStoreState: ReplayStoreState = {
-  highlights: {},
+  highlights: map(() => [], queries),
   frame: 0,
   renderDatas: [],
   animations: Array(4).fill(undefined),
@@ -77,10 +77,9 @@ export const ReplayStoreContext =
   createContext<ReplayStore>() as Context<ReplayStore>;
 
 export function createReplayStore(selectionState: SelectionStoreState) {
-  const [replayState, setReplayState] = createStore<ReplayStoreState>({
-    ...defaultReplayStoreState,
-    highlights: map(() => [], queries),
-  });
+  const [replayState, setReplayState] = createStore<ReplayStoreState>(
+    defaultReplayStoreState
+  );
 
   function selectHighlight(nameAndHighlight: [string, Highlight]) {
     batch(() => {
@@ -196,11 +195,7 @@ export function createReplayStore(selectionState: SelectionStoreState) {
   createEffect(async () => {
     const selected = selectionState.selectedFileAndSettings;
     if (selected === undefined) {
-      setReplayState({
-        highlights: map(() => [], queries),
-        frame: 0,
-        renderDatas: [],
-      });
+      setReplayState(defaultReplayStoreState);
       return;
     }
     const replayData = parseReplay(await selected[0].arrayBuffer());

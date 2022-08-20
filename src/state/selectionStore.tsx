@@ -6,7 +6,7 @@ import {
   ExternalStageName,
   stageNameByExternalId,
 } from "~/common/ids";
-import { Context, createContext, createEffect } from "solid-js";
+import { Context, createContext, createEffect, on } from "solid-js";
 import { groupBy, map, zip } from "rambda";
 import { FileStoreState } from "~/state/fileStore";
 
@@ -86,6 +86,10 @@ export function createSelectionStore(fileStoreState: FileStoreState) {
       );
     }
   }
+
+  createEffect(on(() => fileStoreState.files, () => {
+    setSelectionState({ selectedFileAndSettings: undefined});
+  }));
 
   // Update filter results if files, gameSettings, or filters change
   createEffect(() => {
