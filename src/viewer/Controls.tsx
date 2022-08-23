@@ -134,13 +134,13 @@ export function Controls() {
           pause
         </div>
       </Show>
+      <label for="seekbar" class="text-sm">
+        {replayState.isDebug ? replayState.frame - 123 : replayState.frame}
+      </label>
       <div class="flex flex-grow flex-col">
-        <label for="seekbar" class="text-sm">
-          {replayState.isDebug ? replayState.frame - 123 : replayState.frame}
-        </label>
         <input
           id="seekbar"
-          class="flex-grow accent-slate-400"
+          class="flex-grow accent-slippi-500"
           type="range"
           ref={seekbarInput}
           value={replayState.frame}

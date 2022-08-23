@@ -1,3 +1,4 @@
+import { range } from "rambda";
 import { createMemo, For, Match, Switch, useContext } from "solid-js";
 import { stageNameByExternalId } from "~/common/ids";
 import { ReplayStoreContext } from "~/state/replayStore";
@@ -64,6 +65,7 @@ function Battlefield() {
   ];
   return (
     <>
+      <Grid blastzones={blastzones} />
       <polyline points={mainStage.join(" ")} class="fill-slate-800" />
       <For each={platforms}>
         {(points) => (
@@ -146,6 +148,7 @@ function FinalDestination() {
   ];
   return (
     <>
+      <Grid blastzones={blastzones} />
       <polyline points={mainStage.join(" ")} class="fill-slate-800" />
       <rect
         x={blastzones[0][0]}
@@ -284,6 +287,7 @@ function YoshisStory() {
   ];
   return (
     <>
+      <Grid blastzones={blastzones} />
       <polyline
         points={mainStage.join(" ")}
         class="fill-slate-800 stroke-slate-800"
@@ -354,6 +358,7 @@ function FountainOfDreams() {
   ];
   return (
     <>
+      <Grid blastzones={blastzones} />
       <polyline points={mainStage.join(" ")} class="fill-slate-800" />
       <For each={platforms.slice(0, 2)}>
         {(points) => (
@@ -410,6 +415,7 @@ function PokemonStadium() {
   ];
   return (
     <>
+      <Grid blastzones={blastzones} />
       <polyline points={mainStage.join(" ")} class="fill-slate-800" />
       <For each={platforms}>
         {(points) => (
@@ -425,5 +431,34 @@ function PokemonStadium() {
         class="stroke-slate-800"
       />
     </>
+  );
+}
+function Grid(props: { blastzones: number[][] }) {
+  const lines = createMemo(() => {
+    const left = props.blastzones[0][0];
+    const bottom = props.blastzones[0][1];
+    const right = props.blastzones[1][0];
+    const top = props.blastzones[1][1];
+    const result = [];
+    for (let x = props.blastzones[0][0]; x < props.blastzones[1][0]; x += 5) {
+      result.push([x, x, bottom, top]);
+    }
+    for (let y = props.blastzones[0][0]; y < props.blastzones[1][0]; y += 5) {
+      result.push([left, right, y, y]);
+    }
+    return result;
+  });
+  return (
+    <For each={lines()}>
+      {([x1, x2, y1, y2]) => (
+        <line
+          class="stroke-slippi-50 stroke-[0.1]"
+          x1={x1}
+          x2={x2}
+          y1={y1}
+          y2={y2}
+        />
+      )}
+    </For>
   );
 }
