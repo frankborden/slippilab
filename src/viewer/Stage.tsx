@@ -1,4 +1,3 @@
-import { range } from "rambda";
 import { createMemo, For, Match, Switch, useContext } from "solid-js";
 import { stageNameByExternalId } from "~/common/ids";
 import { ReplayStoreContext } from "~/state/replayStore";
