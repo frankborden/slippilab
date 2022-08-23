@@ -105,6 +105,7 @@ function Dreamland() {
   ];
   return (
     <>
+      <Grid blastzones={blastzones} />
       <polyline points={mainStage.join(" ")} class="fill-slate-800" />
       <For each={platforms}>
         {(points) => (
