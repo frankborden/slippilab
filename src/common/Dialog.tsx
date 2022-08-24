@@ -55,9 +55,17 @@ export function DialogContents(props: { children?: any }) {
       <dialog
         ref={setDialogRef()}
         class="flex flex-col gap-4 rounded-lg backdrop:bg-gray-500 backdrop:opacity-75"
-        onClick={(e) =>
-          e.target === dialogRef()?.() && dialogRef()?.()?.close()
-        }
+        onClick={(e) => {
+          const rect = e.target.getBoundingClientRect();
+          const clickedInDialog =
+            rect.top <= e.clientY &&
+            e.clientY <= rect.top + rect.height &&
+            rect.left <= e.clientX &&
+            e.clientX <= rect.left + rect.width;
+          if (clickedInDialog === false) {
+            e.target === dialogRef()?.() && dialogRef()?.()?.close();
+          }
+        }}
       >
         {props.children}
       </dialog>
