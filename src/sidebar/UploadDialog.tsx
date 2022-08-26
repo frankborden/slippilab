@@ -90,11 +90,11 @@ export function UploadDialog() {
             <div class="text-center">Copied!</div>
           </Show>
         </div>
-        <DialogClose>
-          <div class="flex justify-end">
+        <div class="flex justify-end">
+          <DialogClose>
             <SecondaryButton>Close</SecondaryButton>
-          </div>
-        </DialogClose>
+          </DialogClose>
+        </div>
       </DialogContents>
     </Dialog>
   );
