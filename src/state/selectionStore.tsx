@@ -87,9 +87,14 @@ export function createSelectionStore(fileStoreState: FileStoreState) {
     }
   }
 
-  createEffect(on(() => fileStoreState.files, () => {
-    setSelectionState({ selectedFileAndSettings: undefined});
-  }));
+  createEffect(
+    on(
+      () => fileStoreState.files,
+      () => {
+        setSelectionState({ selectedFileAndSettings: undefined });
+      }
+    )
+  );
 
   // Update filter results if files, gameSettings, or filters change
   createEffect(() => {

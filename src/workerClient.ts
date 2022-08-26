@@ -1,5 +1,5 @@
 import { GameSettings } from "~/common/types";
-import MyWorker from './worker?worker';
+import MyWorker from "./worker?worker";
 
 const worker = new MyWorker();
 const callbacks = new Map<number, () => void>();
