@@ -362,7 +362,11 @@ function computeRenderData(
     playerInputs,
     playerSettings,
     path,
-    innerColor: getPlayerColor(replayState, playerUpdate.playerIndex),
+    innerColor: getPlayerColor(
+      replayState,
+      playerUpdate.playerIndex,
+      playerState.isNana
+    ),
     outerColor:
       startOfActionPlayerState.lCancelStatus === "missed"
         ? "red"
@@ -461,7 +465,8 @@ function isSpacieUpB(playerState: PlayerState): boolean {
 
 function getPlayerColor(
   replayState: ReplayStoreState,
-  playerIndex: number
+  playerIndex: number,
+  isNana: boolean
 ): string {
   if (replayState.replayData!.settings.isTeams) {
     const settings =
@@ -470,14 +475,14 @@ function getPlayerColor(
       [colors.red["800"], colors.red["600"]],
       [colors.green["800"], colors.green["600"]],
       [colors.blue["800"], colors.blue["600"]],
-    ][settings.teamId][settings.teamShade];
+    ][settings.teamId][isNana ? 1 : settings.teamShade];
   }
   return [
-    colors.red["700"],
-    colors.blue["700"],
-    colors.yellow["500"],
-    colors.green["700"],
-  ][playerIndex];
+    [colors.red["700"], colors.red["600"]],
+    [colors.blue["700"], colors.blue["600"]],
+    [colors.yellow["500"], colors.yellow["400"]],
+    [colors.green["700"], colors.green["600"]],
+  ][playerIndex][isNana ? 1 : 0];
 }
 
 function wrapFrame(replayState: ReplayStoreState, frame: number): number {
