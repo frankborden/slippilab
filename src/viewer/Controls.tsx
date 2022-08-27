@@ -113,12 +113,12 @@ export function Controls() {
   let seekbarInput!: HTMLInputElement;
 
   return (
-    <div class="flex items-center justify-evenly gap-4 rounded-lg border pl-2 pr-4 text-slate-800">
+    <div class="flex flex-wrap items-center justify-evenly gap-4 rounded-lg border pl-2 pr-4 text-slate-800">
       <Show
         when={replayState.running}
         fallback={
           <div
-            class="material-icons cursor-pointer text-5xl"
+            class="material-icons cursor-pointer text-7xl lg:text-5xl"
             onClick={() => togglePause()}
             aria-label="Resume playback"
           >
@@ -127,7 +127,7 @@ export function Controls() {
         }
       >
         <div
-          class="material-icons cursor-pointer text-5xl"
+          class="material-icons cursor-pointer text-7xl lg:text-5xl"
           onClick={() => togglePause()}
           aria-label="pause playback"
         >
@@ -137,27 +137,25 @@ export function Controls() {
       <label for="seekbar" class="text-sm">
         {replayState.isDebug ? replayState.frame - 123 : replayState.frame}
       </label>
-      <div class="flex flex-grow flex-col">
-        <input
-          id="seekbar"
-          class="flex-grow accent-slippi-500"
-          type="range"
-          ref={seekbarInput}
-          value={replayState.frame}
-          max={replayState.replayData!.frames.length - 1}
-          onInput={() => jump(seekbarInput.valueAsNumber)}
-        />
-      </div>
+      <input
+        id="seekbar"
+        class="flex-grow accent-slippi-500"
+        type="range"
+        ref={seekbarInput}
+        value={replayState.frame}
+        max={replayState.replayData!.frames.length - 1}
+        onInput={() => jump(seekbarInput.valueAsNumber)}
+      />
       <div class="flex items-center gap-2">
         <div
-          class="material-icons cursor-pointer text-4xl"
+          class="material-icons cursor-pointer text-7xl lg:text-4xl"
           onClick={() => adjust(-120)}
           aria-label="Rewind 2 seconds"
         >
           history
         </div>
         <div
-          class="material-icons cursor-pointer text-4xl"
+          class="material-icons cursor-pointer text-7xl lg:text-4xl"
           onClick={() => {
             pause();
             adjust(-1);
@@ -167,7 +165,7 @@ export function Controls() {
           rotate_left
         </div>
         <div
-          class="material-icons cursor-pointer text-4xl"
+          class="material-icons cursor-pointer text-7xl lg:text-4xl"
           onClick={() => {
             pause();
             adjust(1);
@@ -177,7 +175,7 @@ export function Controls() {
           rotate_right
         </div>
         <div
-          class="material-icons cursor-pointer text-4xl"
+          class="material-icons cursor-pointer text-7xl lg:text-4xl"
           onClick={() => adjust(120)}
           aria-label="Skip ahead 2 seconds"
         >
