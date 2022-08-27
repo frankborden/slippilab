@@ -67,7 +67,10 @@ export function App() {
       <SelectionStoreContext.Provider value={selectionStore}>
         <ReplayStoreContext.Provider value={replayStore}>
           <Show when={fileStore[0].files.length > 0} fallback={<Landing />}>
-            <div class="flex h-screen w-screen flex-col" ref={dropzoneRef}>
+            <div
+              class="flex flex-col md:h-screen md:w-screen"
+              ref={dropzoneRef}
+            >
               <TopBar />
               <MainContent />
             </div>
