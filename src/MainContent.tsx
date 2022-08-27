@@ -8,14 +8,14 @@ import { Viewer } from "~/viewer/Viewer";
 export function MainContent() {
   const [replayState] = useContext(ReplayStoreContext);
   return (
-    <div class="box-border flex w-full flex-col-reverse gap-5 p-5 lg:h-full lg:flex-row lg:overflow-y-auto">
-      <div class="w-full lg:h-full lg:w-auto lg:overflow-y-auto">
+    <div class="box-border flex w-full flex-col-reverse gap-5 p-5 md:h-full md:flex-row md:overflow-y-auto">
+      <div class="w-full md:h-full md:w-auto md:overflow-y-auto">
         <Replays />
       </div>
-      <div class="w-full lg:h-full lg:w-auto lg:overflow-y-auto">
+      <div class="w-full md:h-full md:w-auto md:overflow-y-auto">
         <Clips />
       </div>
-      <div class="flex w-full flex-grow flex-col justify-between overflow-y-auto lg:h-full lg:w-auto">
+      <div class="flex w-full flex-grow flex-col justify-between overflow-y-auto md:h-full md:w-auto">
         <Viewer />
         <Show when={replayState.replayData}>
           <Controls />

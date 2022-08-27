@@ -37,7 +37,7 @@ export function OpenMenu(props: { name: string }) {
           {...menuApi().triggerProps}
           class="flex items-center gap-2"
         >
-          <div class="hidden lg:block">{props.name}</div>
+          <div class="hidden md:block">{props.name}</div>
           <div class="material-icons" aria-label="Open File or Folder">
             folder_open
           </div>

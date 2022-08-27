@@ -118,7 +118,7 @@ export function Controls() {
         when={replayState.running}
         fallback={
           <div
-            class="material-icons cursor-pointer text-7xl lg:text-5xl"
+            class="material-icons cursor-pointer text-7xl md:text-5xl"
             onClick={() => togglePause()}
             aria-label="Resume playback"
           >
@@ -127,7 +127,7 @@ export function Controls() {
         }
       >
         <div
-          class="material-icons cursor-pointer text-7xl lg:text-5xl"
+          class="material-icons cursor-pointer text-7xl md:text-5xl"
           onClick={() => togglePause()}
           aria-label="pause playback"
         >
@@ -148,14 +148,14 @@ export function Controls() {
       />
       <div class="flex items-center gap-2">
         <div
-          class="material-icons cursor-pointer text-7xl lg:text-4xl"
+          class="material-icons cursor-pointer text-7xl md:text-4xl"
           onClick={() => adjust(-120)}
           aria-label="Rewind 2 seconds"
         >
           history
         </div>
         <div
-          class="material-icons cursor-pointer text-7xl lg:text-4xl"
+          class="material-icons cursor-pointer text-7xl md:text-4xl"
           onClick={() => {
             pause();
             adjust(-1);
@@ -165,7 +165,7 @@ export function Controls() {
           rotate_left
         </div>
         <div
-          class="material-icons cursor-pointer text-7xl lg:text-4xl"
+          class="material-icons cursor-pointer text-7xl md:text-4xl"
           onClick={() => {
             pause();
             adjust(1);
@@ -175,7 +175,7 @@ export function Controls() {
           rotate_right
         </div>
         <div
-          class="material-icons cursor-pointer text-7xl lg:text-4xl"
+          class="material-icons cursor-pointer text-7xl md:text-4xl"
           onClick={() => adjust(120)}
           aria-label="Skip ahead 2 seconds"
         >

@@ -18,7 +18,7 @@ export function TopBar() {
         </div>
         <Upload />
       </div>
-      <div class="hidden lg:block">
+      <div class="hidden md:block">
         <NowPlaying />
       </div>
       <div class="flex items-center gap-4">
