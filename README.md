@@ -1,41 +1,65 @@
-# SlippiLab
+<p align="center">
+  <a href="https://slippilab.com" target="_blank" rel="noopener noreferrer">
+    <img src="public/logo-square.png" width="25%"/>
+  </a>
+</p>
 
-Replay your .slp files in the browser. SlippiLab is still in development.
-[slippilab.com](https://www.slippilab.com)
+# Slippi Lab
 
-See a [Demo](https://www.slippilab.com/sample)
-![Example](screenshot.png)
-
-Background: https://github.com/project-slippi/project-slippi
+Slippi replays in the browser. This is the code base for [slippilab.com](https://www.slippilab.com).
 
 ## Features
 
-SlippiLab does not re-simulate your match, it reads position and animation data
-directly from the .slp file. The main advantage of this is that playback is
-instantaneous from any given starting point whereas Dolphin needs to play
-through the entire match from the beginning in order to re-compute the game
-state at the given starting point. This enables a lot of convenience features
-(rewind, frame advance forwards and backwards) as well as analysis features that
-require a lot of jumping around (ex: search for a given situation across
-replays).
+### Smooth instant playback
 
-Sharing a file will generate a link for the given replay.
+Replay files contain rich data about every frame: positions, action states, inputs, and more. This lets us start playing from anywhere without resimulation or heasitation. Combined with some replay-focused controls like frame-by-frame, slowmo/fastforward, and short jumps (2s instead of 5s or 10s), we can offer an unmatched viewing experience.
+
+### Filters
+
+Find replays within a folder quickly using a specific combination of characters, stage, Slippi connect code, Slippi display name, or in-game nametag.
+
+### Insights
+
+Important moments in the selected replay are automatically detected and listed, so less time is needed to find specific situations when browsing.
+
+### Sharing
+
+Upload your replay and grab a quick link to share a match with anyone.
+
+## Limitations
+
+### No realistic rendering
+
+Without resimulating and/or using 3d models from the game, a lot of detailed effects and realism are not possible:
+
+- dynamic clothing effects like dresses, capes, and hair
+- footsnap and other dynamic deviations from .slp positions like throws ("attach thrower bone X to throwee bone Y")
+- 3d camera (we use orthographic rather than perspective)
+
+### Ultra large datasets
+
+TODO: write this.
 
 ## Development
 
+The site is a Vite app primarily using SolidJS and Tailwind.
+
 Local development:
 
-> pnpm start
+> `npm run dev`
 
 Build site:
 
-> pnpm build
+> `npm run build`
 
 ## Thanks
 
-The following projects and people are not associated with this project in any
-way, but served as references or key dependencies and are greatly appreciated.
+The following projects and people are not associated with this project in any way, but served as references or key dependencies and are greatly appreciated.
 
-- [project-slippi](https://github.com/project-slippi)
-- [schmooblidon/slippi-visualiser](https://github.com/schmooblidon/slippi-visualiser)
-- [vinceau/react-slp-viewer](https://github.com/vinceau/react-slp-viewer)
+[Project Slippi](https://github.com/project-slippi) by [Fizzi](https://twitter.com/Fizzi36) and the entire Project Slippi team.
+
+[slippi-visualiser](https://github.com/schmooblidon/slippi-visualiser) by [schmooblidon](https://twitter.com/schmooDev)
+
+[react-slp-viewer](https://github.com/vinceau/react-slp-viewer) by [vinceau](https://twitter.com/_vinceau)
+
+[HSDraw](https://github.com/Ploaj/HSDlib) by [Ploaj](https://github.com/Ploaj)
