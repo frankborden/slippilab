@@ -54,7 +54,7 @@ export function DialogContents(props: { children?: any }) {
     <Portal>
       <dialog
         ref={setDialogRef()}
-        class="flex flex-col gap-4 rounded-lg backdrop:bg-gray-500 backdrop:opacity-75"
+        class="flex flex-col gap-4 rounded-lg backdrop:bg-gray-500 backdrop:opacity-75 [&:not([open])>*]:hidden"
         onClick={(e) => {
           const rect = e.target.getBoundingClientRect();
           const clickedInDialog =
