@@ -24,7 +24,7 @@ export function Links() {
         target="_blank"
         rel="noopener noreferrer"
         class="underline"
-        href="https://twitter.com/frankborden_"
+        href="https://twitter.com/SlippiLab"
       >
         <svg
           width="24px"
