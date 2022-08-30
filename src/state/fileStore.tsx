@@ -4,13 +4,13 @@ import { createStore } from "solid-js/store";
 import { ProgressCircle } from "~/common/ProgressCircle";
 import { createToast, dismissToast } from "~/common/toaster";
 import { GameSettings } from "~/common/types";
-import { downloadReplay } from "~/supabaseClient";
 import { send } from "~/workerClient";
 
 export interface FileStoreState {
   files: File[];
   gameSettings: GameSettings[];
   parseProgress: number;
+  urlStartFrame?: number;
 }
 
 export type FileStore = ReturnType<typeof createFileStore>;
@@ -24,8 +24,9 @@ export function createFileStore() {
     parseProgress: 0,
   });
 
-  async function load(files: File[]): Promise<void> {
+  async function load(files: File[], startFrame?: number): Promise<void> {
     setState("parseProgress", 0);
+    setState("urlStartFrame", startFrame);
     const progressToast = createToast({
       title: "Parsing files",
       duration: 999999,

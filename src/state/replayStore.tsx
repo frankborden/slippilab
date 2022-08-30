@@ -30,6 +30,7 @@ import { actionMapByInternalId } from "~/viewer/characters";
 import { Character } from "~/viewer/characters/character";
 import { getPlayerOnFrame, getStartOfAction } from "~/viewer/viewerUtil";
 import colors from "tailwindcss/colors";
+import { FileStoreState } from "~/state/fileStore";
 
 export interface RenderData {
   playerState: PlayerState;
@@ -76,7 +77,10 @@ export type ReplayStore = ReturnType<typeof createReplayStore>;
 export const ReplayStoreContext =
   createContext<ReplayStore>() as Context<ReplayStore>;
 
-export function createReplayStore(selectionState: SelectionStoreState) {
+export function createReplayStore(
+  selectionState: SelectionStoreState,
+  fileStoreState: FileStoreState
+) {
   const [replayState, setReplayState] = createStore<ReplayStoreState>(
     defaultReplayStoreState
   );
@@ -200,8 +204,18 @@ export function createReplayStore(selectionState: SelectionStoreState) {
     }
     const replayData = parseReplay(await selected[0].arrayBuffer());
     const highlights = map((query) => search(replayData, ...query), queries);
-    setReplayState({ replayData, highlights, frame: 0, renderDatas: [] });
-    start();
+    setReplayState({
+      replayData,
+      highlights,
+      frame: fileStoreState.urlStartFrame ?? 0,
+      renderDatas: [],
+    });
+    if (
+      fileStoreState.urlStartFrame === undefined ||
+      fileStoreState.urlStartFrame === 0
+    ) {
+      start();
+    }
   });
 
   times(
