@@ -210,7 +210,12 @@ export function createReplayStore(
       frame: fileStoreState.urlStartFrame ?? 0,
       renderDatas: [],
     });
-    start();
+    if (
+      fileStoreState.urlStartFrame === undefined ||
+      fileStoreState.urlStartFrame === 0
+    ) {
+      start();
+    }
   });
 
   times(
