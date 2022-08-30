@@ -24,7 +24,7 @@ export function App() {
 
   const fileStore = createFileStore();
   const selectionStore = createSelectionStore(fileStore[0]);
-  const replayStore = createReplayStore(selectionStore[0]);
+  const replayStore = createReplayStore(selectionStore[0], fileStore[0]);
 
   // Make the whole screen a dropzone
   const { setRef: dropzoneRef } = createDropzone({
@@ -39,14 +39,14 @@ export function App() {
   // match.
   const url = new URLSearchParams(location.search).get("replayUrl");
   const path = location.pathname.slice(1);
-  // const frameParse = Number(location.hash.split("#").at(-1));
-  // const startFrame = Number.isNaN(frameParse) ? 0 : frameParse;
+  const frameParse = Number(location.hash.split("#").at(-1));
+  const startFrame = Number.isNaN(frameParse) ? 0 : frameParse;
   if (url !== null) {
     try {
       void fetch(url)
         .then(async (response) => await response.blob())
         .then((blob) => new File([blob], url.split("/").at(-1) ?? "url.slp"))
-        .then(async (file) => await fileStore[1].load([file]));
+        .then(async (file) => await fileStore[1].load([file], startFrame));
     } catch (e) {
       console.error("Error: could not load replay", url, e);
     }
@@ -54,7 +54,7 @@ export function App() {
     void downloadReplay(path).then(({ data, error }) => {
       if (data != null) {
         const file = new File([data], `${path}.slp`);
-        return fileStore[1].load([file]);
+        return fileStore[1].load([file], startFrame);
       }
       if (error != null) {
         console.error("Error: could not load replay", error);
