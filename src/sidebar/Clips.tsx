@@ -4,7 +4,7 @@ import { Picker } from "~/common/Picker";
 import { Highlight } from "~/search/search";
 import { ReplayStoreContext } from "~/state/replayStore";
 import * as accordion from "@zag-js/accordion";
-import { normalizeProps, useMachine, useSetup, PropTypes } from "@zag-js/solid";
+import { normalizeProps, useMachine } from "@zag-js/solid";
 
 export function Clips() {
   const [replayState, { selectHighlight }] = useContext(ReplayStoreContext);
@@ -33,15 +33,16 @@ export function Clips() {
     }))
   );
   const [state, send] = useMachine(
-    accordion.machine({ multiple: true, collapsible: true })
+    accordion.machine({
+      id: createUniqueId(),
+      multiple: true,
+      collapsible: true,
+    })
   );
-  const ref = useSetup({ send, id: createUniqueId() });
-  const api = createMemo(() =>
-    accordion.connect<PropTypes>(state, send, normalizeProps)
-  );
+  const api = createMemo(() => accordion.connect(state, send, normalizeProps));
 
   return (
-    <div ref={ref} {...api().rootProps}>
+    <div {...api().rootProps}>
       <For each={data()}>
         {(item) => (
           <div {...api().getItemProps({ value: item.title })}>

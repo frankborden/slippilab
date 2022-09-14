@@ -1,5 +1,5 @@
 import { For, JSX } from "solid-js";
-import { createVirtualizer } from "~/common/virtual";
+import { createVirtualizer } from "@tanstack/solid-virtual";
 
 export function Picker<T>(props: {
   items: T[];
@@ -15,8 +15,9 @@ export function Picker<T>(props: {
       return props.items.length;
     },
     getScrollElement: () => scrollParentRef,
-    estimateSize: (i) => props.estimateSize(props.items[i], i),
-    overscan: 5,
+    estimateSize: (index: number) =>
+      props.estimateSize(props.items[index], index),
+    overscan: 25,
   });
 
   return (
@@ -27,10 +28,10 @@ export function Picker<T>(props: {
           style={{ height: `${virtualizer.getTotalSize()}px` }}
         >
           <For each={virtualizer.getVirtualItems()}>
-            {(item) => (
+            {/* item is VirtualItem */}
+            {(item: { start: number; index: number }) => (
               <div
                 role="button"
-                // ref={(el) => onMount(() => item.measureElement(el))}
                 class="absolute top-0 left-0 w-full overflow-hidden whitespace-nowrap border p-1 hover:bg-slate-100"
                 style={{ transform: `translateY(${item.start}px)` }}
                 classList={{
