@@ -19,9 +19,9 @@ export function NowPlaying() {
   return (
     <>
       <div class="flex items-center gap-4">
-        <div class="text-xl">{info().name}</div>
+        <div class="whitespace-nowrap text-xl ">{info().name}</div>
         <Show when={info().date}>
-          <div class="text-xl">{info().date}</div>
+          <div class="whitespace-nowrap text-xl">{info().date}</div>
         </Show>
       </div>
     </>
