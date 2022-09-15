@@ -1,13 +1,12 @@
-import { PropTypes, useActor, useMachine, useSetup } from "@zag-js/solid";
+import { useActor, useMachine, normalizeProps } from "@zag-js/solid";
 import * as toast from "@zag-js/toast";
-import { createMemo, For } from "solid-js";
+import { createMemo, createUniqueId, For } from "solid-js";
 import { Portal } from "solid-js/web";
 import { WhiteButton } from "~/common/Button";
 
-function Toast(props: { actor: any }) {
+function Toast(props: { actor: toast.Service }) {
   const [state, send] = useActor(props.actor);
-  // @ts-ignore
-  const api = createMemo(() => toast.connect<PropTypes>(state, send));
+  const api = createMemo(() => toast.connect(state, send, normalizeProps));
 
   return (
     <div
@@ -28,9 +27,8 @@ function Toast(props: { actor: any }) {
   );
 }
 
-const [state, send] = useMachine(toast.group.machine);
-const ref = useSetup({ send, id: "1" });
-const api = createMemo(() => toast.group.connect(state, send));
+const [state, send] = useMachine(toast.group.machine({ id: createUniqueId() }));
+const api = createMemo(() => toast.group.connect(state, send, normalizeProps));
 
 export function ToastGroup() {
   return (
@@ -38,8 +36,11 @@ export function ToastGroup() {
       <Portal>
         <For each={Object.entries(api().toastsByPlacement)}>
           {([placement, toasts]) => (
-            // @ts-ignore
-            <div {...api().getGroupProps({ placement })}>
+            <div
+              {...api().getGroupProps({
+                placement: placement as toast.Placement,
+              })}
+            >
               <For each={toasts}>{(toast) => <Toast actor={toast} />}</For>
             </div>
           )}

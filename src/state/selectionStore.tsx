@@ -149,7 +149,7 @@ function applyFilters(
       ([character, amountRequired]) =>
         gameSettings.playerSettings.filter(
           (p) => character === characterNameByExternalId[p.externalCharacterId]
-        ).length === amountRequired
+        ).length >= amountRequired
     );
     const stagePass =
       stagesAllowed.length === 0 ||
