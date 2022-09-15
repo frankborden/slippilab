@@ -17,6 +17,7 @@ export function Controls() {
       speedNormal,
       speedSlow,
       toggleDebug,
+      toggleFullscreen,
       togglePause,
       zoomIn,
       zoomOut,
@@ -97,6 +98,9 @@ export function Controls() {
         break;
       case "d":
         toggleDebug();
+        break;
+      case "f":
+        toggleFullscreen();
         break;
     }
   }
@@ -180,6 +184,13 @@ export function Controls() {
           aria-label="Skip ahead 2 seconds"
         >
           update
+        </div>
+        <div
+          class="material-icons cursor-pointer text-7xl md:text-4xl"
+          onClick={() => toggleFullscreen()}
+          aria-label="Toggle fullscreen mode"
+        >
+          {replayState.isFullscreen ? "fullscreen_exit" : "fullscreen"}
         </div>
       </div>
     </div>

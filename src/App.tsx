@@ -1,3 +1,4 @@
+/* @refresh reload */
 import { fetchAnimations } from "~/viewer/animationCache";
 import { createDropzone } from "@solid-primitives/upload";
 import { Show } from "solid-js";
@@ -14,6 +15,7 @@ import {
 } from "~/state/selectionStore";
 import { createReplayStore, ReplayStoreContext } from "~/state/replayStore";
 import { downloadReplay } from "~/supabaseClient";
+import { Viewer } from "~/viewer/Viewer";
 
 export function App() {
   // Get started fetching the most popular characters
@@ -67,13 +69,22 @@ export function App() {
       <SelectionStoreContext.Provider value={selectionStore}>
         <ReplayStoreContext.Provider value={replayStore}>
           <Show when={fileStore[0].files.length > 0} fallback={<Landing />}>
-            <div
-              class="flex flex-col md:h-screen md:w-screen"
-              ref={dropzoneRef}
+            <Show
+              when={!replayStore[0].isFullscreen}
+              fallback={
+                <div class="flex h-screen flex-col justify-between overflow-y-auto">
+                  <Viewer />
+                </div>
+              }
             >
-              <TopBar />
-              <MainContent />
-            </div>
+              <div
+                class="flex flex-col md:h-screen md:w-screen"
+                ref={dropzoneRef}
+              >
+                <TopBar />
+                <MainContent />
+              </div>
+            </Show>
           </Show>
           <ToastGroup />
         </ReplayStoreContext.Provider>
