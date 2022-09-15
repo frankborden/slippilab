@@ -72,7 +72,7 @@ export const defaultReplayStoreState: ReplayStoreState = {
   running: false,
   zoom: 1,
   isDebug: false,
-  isFullscreen: true,
+  isFullscreen: false,
 };
 
 export type ReplayStore = ReturnType<typeof createReplayStore>;
