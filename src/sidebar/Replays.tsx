@@ -1,6 +1,6 @@
 import { createOptions, Select } from "@thisbeyond/solid-select";
 import { groupBy } from "rambda";
-import { For, useContext } from "solid-js";
+import { For, Show, useContext } from "solid-js";
 import { characterNameByExternalId, stageNameByExternalId } from "~/common/ids";
 import { Picker } from "~/common/Picker";
 import { GameSettings, PlayerSettings } from "~/common/types";
@@ -42,20 +42,25 @@ export function Replays() {
             onChange={setFilters}
           />
         </div>
-        <Picker
-          items={selectionState.filteredFilesAndSettings}
-          render={([file, gameSettings]) => (
-            <GameInfo gameSettings={gameSettings} />
-          )}
-          onClick={(fileAndSettings) => select(fileAndSettings)}
-          selected={([file, gameSettings]) =>
-            selectionState.selectedFileAndSettings?.[0] === file &&
-            selectionState.selectedFileAndSettings?.[1] === gameSettings
-          }
-          estimateSize={([file, gameSettings]) =>
-            gameSettings.isTeams ? 56 : 32
-          }
-        />
+        <Show
+          when={selectionState.filteredFilesAndSettings.length > 0}
+          fallback={<div>No matching results</div>}
+        >
+          <Picker
+            items={selectionState.filteredFilesAndSettings}
+            render={([file, gameSettings]) => (
+              <GameInfo gameSettings={gameSettings} />
+            )}
+            onClick={(fileAndSettings) => select(fileAndSettings)}
+            selected={([file, gameSettings]) =>
+              selectionState.selectedFileAndSettings?.[0] === file &&
+              selectionState.selectedFileAndSettings?.[1] === gameSettings
+            }
+            estimateSize={([file, gameSettings]) =>
+              gameSettings.isTeams ? 56 : 32
+            }
+          />
+        </Show>
         <div class="flex w-full items-center justify-between gap-4">
           <PrimaryButton onClick={previousFile}>
             <div class="material-icons cursor-pointer">arrow_upward</div>

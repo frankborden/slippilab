@@ -5,6 +5,7 @@ import { loadFromSupabase } from "~/stateUtil";
 import { PrimaryButton } from "~/common/Button";
 import { filterFiles } from "~/common/util";
 import { FileStoreContext } from "~/state/fileStore";
+import { Portal } from "solid-js/web";
 
 export function OpenMenu(props: { name: string }) {
   const [_, { load }] = useContext(FileStoreContext);
@@ -54,31 +55,30 @@ export function OpenMenu(props: { name: string }) {
             folder_open
           </div>
         </PrimaryButton>
-        <div {...api().positionerProps} class="z-10 bg-white opacity-100">
-          <ul
-            {...api().contentProps}
-            class="flex flex-col border border-slate-300"
-          >
-            <li
-              {...api().getItemProps({ id: "file" })}
-              class="w-full cursor-pointer py-2 px-4 hover:bg-slate-200"
-            >
-              Open File(s)
-            </li>
-            <li
-              {...api().getItemProps({ id: "folder" })}
-              class="w-full cursor-pointer py-2 px-4 hover:bg-slate-200"
-            >
-              Open Folder
-            </li>
-            <li
-              {...api().getItemProps({ id: "demo" })}
-              class="w-full cursor-pointer py-2 px-4 hover:bg-slate-200"
-            >
-              Load Demo
-            </li>
-          </ul>
-        </div>
+        <Portal>
+          <div {...api().positionerProps} class="bg-white opacity-100">
+            <ul {...api().contentProps} class="border border-slate-300">
+              <li
+                {...api().getItemProps({ id: "file" })}
+                class="w-full cursor-pointer py-2 px-4 hover:bg-slate-200"
+              >
+                Open File(s)
+              </li>
+              <li
+                {...api().getItemProps({ id: "folder" })}
+                class="w-full cursor-pointer py-2 px-4 hover:bg-slate-200"
+              >
+                Open Folder
+              </li>
+              <li
+                {...api().getItemProps({ id: "demo" })}
+                class="w-full cursor-pointer py-2 px-4 hover:bg-slate-200"
+              >
+                Load Demo
+              </li>
+            </ul>
+          </div>
+        </Portal>
       </div>
       <input
         class="hidden"
