@@ -5,6 +5,7 @@ import { Players } from "~/viewer/Player";
 import { Stage } from "~/viewer/Stage";
 import { Item } from "~/viewer/Item";
 import { ReplayStoreContext } from "~/state/replayStore";
+import { Controls } from "~/viewer/Controls";
 
 export function Viewer() {
   const [replayState] = useContext(ReplayStoreContext);
@@ -13,11 +14,8 @@ export function Viewer() {
   );
   return (
     <Show when={replayState.replayData}>
-      <svg
-        /* up = positive y axis */
-        class="rounded-lg border bg-slate-50"
-        viewBox="-365 -300 730 600"
-      >
+      <svg class="rounded-lg border bg-slate-50" viewBox="-365 -300 730 600">
+        {/* up = positive y axis */}
         <g class="-scale-y-100">
           <Camera>
             <Stage />
@@ -27,6 +25,7 @@ export function Viewer() {
           <HUD />
         </g>
       </svg>
+      <Controls />
     </Show>
   );
 }
