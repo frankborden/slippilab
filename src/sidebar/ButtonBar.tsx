@@ -1,5 +1,5 @@
 import { useContext } from "solid-js";
-import { IconButton } from "~/common/Button";
+import { PrimaryButton } from "~/common/Button";
 import { OpenMenu } from "~/common/OpenMenu";
 import { UploadDialog } from "~/sidebar/UploadDialog";
 import { SelectionStoreContext } from "~/state/selectionStore";
@@ -10,8 +10,8 @@ export function ButtonBar() {
     <div class="flex items-center gap-4">
       <OpenMenu name="" />
       <UploadDialog />
-      <IconButton
-        class="material-icons text-xl"
+      <PrimaryButton
+        class="text-md"
         onClick={() => {
           if (replayState.selectedFileAndSettings === undefined) {
             return;
@@ -27,8 +27,8 @@ export function ButtonBar() {
           document.body.removeChild(element);
         }}
       >
-        download
-      </IconButton>
+        <div class="material-icons">download</div>
+      </PrimaryButton>
     </div>
   );
 }

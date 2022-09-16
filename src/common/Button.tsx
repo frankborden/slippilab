@@ -15,21 +15,6 @@ export function PrimaryButton(props: JSX.HTMLAttributes<HTMLButtonElement>) {
   );
 }
 
-export function IconButton(props: JSX.HTMLAttributes<HTMLButtonElement>) {
-  const [classProp, otherProps] = splitProps(props, ["class"]);
-  return (
-    <button
-      type="button"
-      {...otherProps}
-      class={`inline-flex w-fit items-center rounded-md border border-transparent bg-slippi-400 px-2 py-1 text-sm font-medium text-white shadow-sm hover:bg-slippi-500 focus:outline-none focus:ring-2 focus:ring-slippi-500 focus:ring-offset-2 ${
-        classProp.class ?? ""
-      }`}
-    >
-      {props.children}
-    </button>
-  );
-}
-
 export function SecondaryButton(props: JSX.HTMLAttributes<HTMLButtonElement>) {
   const [classProp, otherProps] = splitProps(props, ["class"]);
   return (
