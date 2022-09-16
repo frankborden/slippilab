@@ -18,6 +18,7 @@ export function Controls() {
       speedSlow,
       toggleDebug,
       toggleFullscreen,
+      toggleInputDisplay,
       togglePause,
       zoomIn,
       zoomOut,
@@ -35,22 +36,27 @@ export function Controls() {
   function onKeyDown({ key }: KeyboardEvent): void {
     switch (key) {
       case "k":
+      case "K":
       case " ":
         togglePause();
         break;
       case "ArrowRight":
       case "l":
+      case "L":
         adjust(120);
         break;
       case "ArrowLeft":
       case "j":
+      case "J":
         adjust(-120);
         break;
       case ".":
+      case ">":
         pause();
         adjust(1);
         break;
       case ",":
+      case "<":
         pause();
         adjust(-1);
         break;
@@ -97,11 +103,16 @@ export function Controls() {
         previousHighlight();
         break;
       case "d":
+      case "D":
         toggleDebug();
         break;
       case "f":
+      case "F":
         toggleFullscreen();
         break;
+      case "c":
+      case "C":
+        toggleInputDisplay();
     }
   }
 

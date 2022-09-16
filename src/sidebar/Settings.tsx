@@ -26,6 +26,22 @@ export function Settings() {
             <tr>
               <td>
                 <kbd class="rounded border border-slate-400 bg-slate-50 px-1">
+                  F
+                </kbd>
+              </td>
+              <td class="pl-3">Toggle fullscreen</td>
+            </tr>
+            <tr>
+              <td>
+                <kbd class="rounded border border-slate-400 bg-slate-50 px-1">
+                  C
+                </kbd>
+              </td>
+              <td class="pl-3">Toggle input display</td>
+            </tr>
+            <tr>
+              <td>
+                <kbd class="rounded border border-slate-400 bg-slate-50 px-1">
                   LeftArrow
                 </kbd>
                 /
