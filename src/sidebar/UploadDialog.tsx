@@ -43,7 +43,6 @@ export function UploadDialog() {
     <Dialog>
       <DialogTrigger onOpen={onOpen}>
         <PrimaryButton class="text-md flex items-center gap-2">
-          <div class="hidden md:block">Upload</div>
           <div class="material-icons">upload_file</div>
         </PrimaryButton>
       </DialogTrigger>
