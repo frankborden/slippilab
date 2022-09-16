@@ -221,6 +221,17 @@ function Inputs(props: { renderData: RenderData; portX: number }) {
           }
           stroke="black"
         />
+        {/* Z */}
+        <rect
+          x="40%"
+          y="20%"
+          width="10%"
+          height="4%"
+          fill={
+            props.renderData.playerInputs.processed.z ? "purple" : "transparent"
+          }
+          stroke="black"
+        />
         {/* L */}
         <rect
           x="-40%"
