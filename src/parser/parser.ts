@@ -105,12 +105,13 @@ export function parseReplay(fileBuffer: ArrayBuffer): ReplayData {
     offset = offset + commandPayloadSizes[command] + 0x01;
   }
   if (gameEnding === undefined) {
-    throw new Error("Game Ending not found");
+    console.warn("Game end event not found");
+    // throw new Error("Game Ending not found");
   }
   return {
     settings: gameSettings,
     frames: frames,
-    ending: gameEnding,
+    ending: gameEnding as GameEnding,
   };
 }
 
