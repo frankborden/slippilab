@@ -1,29 +1,25 @@
-import { onCleanup, onMount, Show, useContext } from "solid-js";
-import { ReplayStoreContext } from "~/state/replayStore";
-import { SelectionStoreContext } from "~/state/selectionStore";
+import { onCleanup, onMount, Show } from "solid-js";
+import {
+  replayStore,
+  adjust,
+  jump,
+  jumpPercent,
+  nextHighlight,
+  pause,
+  previousHighlight,
+  speedFast,
+  speedNormal,
+  speedSlow,
+  toggleDebug,
+  toggleFullscreen,
+  toggleInputDisplay,
+  togglePause,
+  zoomIn,
+  zoomOut,
+} from "~/state/replayStore";
+import { nextFile, previousFile } from "~/state/selectionStore";
 
 export function Controls() {
-  const [_, { nextFile, previousFile }] = useContext(SelectionStoreContext);
-  const [
-    replayState,
-    {
-      adjust,
-      jump,
-      jumpPercent,
-      nextHighlight,
-      pause,
-      previousHighlight,
-      speedFast,
-      speedNormal,
-      speedSlow,
-      toggleDebug,
-      toggleFullscreen,
-      toggleInputDisplay,
-      togglePause,
-      zoomIn,
-      zoomOut,
-    },
-  ] = useContext(ReplayStoreContext);
   onMount(() => {
     window.addEventListener("keydown", onKeyDown);
     window.addEventListener("keyup", onKeyUp);
@@ -130,7 +126,7 @@ export function Controls() {
   return (
     <div class="flex flex-wrap items-center justify-evenly gap-4 rounded-lg border pl-2 pr-4 text-slate-800">
       <Show
-        when={replayState.running}
+        when={replayStore.running}
         fallback={
           <div
             class="material-icons cursor-pointer text-7xl md:text-5xl"
@@ -150,15 +146,15 @@ export function Controls() {
         </div>
       </Show>
       <label for="seekbar" class="text-sm">
-        {replayState.isDebug ? replayState.frame - 123 : replayState.frame}
+        {replayStore.isDebug ? replayStore.frame - 123 : replayStore.frame}
       </label>
       <input
         id="seekbar"
         class="flex-grow accent-slippi-500"
         type="range"
         ref={seekbarInput}
-        value={replayState.frame}
-        max={replayState.replayData!.frames.length - 1}
+        value={replayStore.frame}
+        max={replayStore.replayData!.frames.length - 1}
         onInput={() => jump(seekbarInput.valueAsNumber)}
       />
       <div class="flex items-center gap-2">
@@ -201,7 +197,7 @@ export function Controls() {
           onClick={() => toggleFullscreen()}
           aria-label="Toggle fullscreen mode"
         >
-          {replayState.isFullscreen ? "fullscreen_exit" : "fullscreen"}
+          {replayStore.isFullscreen ? "fullscreen_exit" : "fullscreen"}
         </div>
       </div>
     </div>

@@ -1,12 +1,6 @@
 import createRAF, { targetFPS } from "@solid-primitives/raf";
 import { add, curry, map, max, modulo, pipe, times, update } from "rambda";
-import {
-  batch,
-  Context,
-  createContext,
-  createEffect,
-  createResource,
-} from "solid-js";
+import { batch, createEffect, createResource } from "solid-js";
 import { createStore } from "solid-js/store";
 import {
   actionNameById,
@@ -24,13 +18,13 @@ import {
 import { parseReplay } from "~/parser/parser";
 import { queries } from "~/search/queries";
 import { Highlight, search } from "~/search/search";
-import { SelectionStoreState } from "~/state/selectionStore";
+import { selectionStore } from "~/state/selectionStore";
 import { CharacterAnimations, fetchAnimations } from "~/viewer/animationCache";
 import { actionMapByInternalId } from "~/viewer/characters";
 import { Character } from "~/viewer/characters/character";
 import { getPlayerOnFrame, getStartOfAction } from "~/viewer/viewerUtil";
 import colors from "tailwindcss/colors";
-import { FileStoreState } from "~/state/fileStore";
+import { fileStore } from "~/state/fileStore";
 
 export interface RenderData {
   playerState: PlayerState;
@@ -48,7 +42,7 @@ export interface RenderData {
   characterData: Character;
 }
 
-export interface ReplayStoreState {
+export interface ReplayStore {
   replayData?: ReplayData;
   highlights: Record<string, Highlight[]>;
   selectedHighlight?: [string, Highlight];
@@ -63,7 +57,7 @@ export interface ReplayStoreState {
   isFullscreen: boolean;
   showInputDisplay: boolean;
 }
-export const defaultReplayStoreState: ReplayStoreState = {
+export const defaultReplayStoreState: ReplayStore = {
   highlights: map(() => [], queries),
   frame: 0,
   renderDatas: [],
@@ -77,254 +71,219 @@ export const defaultReplayStoreState: ReplayStoreState = {
   showInputDisplay: false,
 };
 
-export type ReplayStore = ReturnType<typeof createReplayStore>;
-export const ReplayStoreContext =
-  createContext<ReplayStore>() as Context<ReplayStore>;
+const [replayState, setReplayState] = createStore<ReplayStore>(
+  defaultReplayStoreState
+);
 
-export function createReplayStore(
-  selectionState: SelectionStoreState,
-  fileStoreState: FileStoreState
-) {
-  const [replayState, setReplayState] = createStore<ReplayStoreState>(
-    defaultReplayStoreState
-  );
-
-  function selectHighlight(nameAndHighlight: [string, Highlight]) {
-    batch(() => {
-      setReplayState("selectedHighlight", nameAndHighlight);
-      setReplayState(
-        "frame",
-        wrapFrame(replayState, nameAndHighlight[1].startFrame - 30)
-      );
-    });
-  }
-
-  function nextHighlight() {
-    const highlights = Object.entries(replayState.highlights).flatMap(
-      ([name, highlights]) =>
-        highlights.map((highlight) => [name, highlight] as const)
-    );
-    const currentIndex =
-      replayState.selectedHighlight !== undefined
-        ? highlights.findIndex(
-            ([name, highlight]) =>
-              replayState.selectedHighlight![1] === highlight
-          )
-        : -1;
-    const nextIndex = wrapHighlight(replayState, currentIndex + 1);
-    batch(() => {
-      setReplayState("selectedHighlight", highlights[nextIndex]);
-      setReplayState("frame", highlights[nextIndex][1].startFrame - 30);
-    });
-  }
-
-  function previousHighlight() {
-    const highlights = Object.entries(replayState.highlights).flatMap(
-      ([name, highlights]) =>
-        highlights.map((highlight) => [name, highlight] as const)
-    );
-    const currentIndex =
-      replayState.selectedHighlight !== undefined
-        ? highlights.findIndex(
-            ([name, highlight]) =>
-              replayState.selectedHighlight![1] === highlight
-          )
-        : 1;
-    const previousIndex = wrapHighlight(replayState, currentIndex - 1);
-    batch(() => {
-      setReplayState("selectedHighlight", highlights[previousIndex]);
-      setReplayState("frame", highlights[previousIndex][1].startFrame - 30);
-    });
-  }
-
-  function speedNormal(): void {
-    batch(() => {
-      setReplayState("fps", 60);
-      setReplayState("framesPerTick", 1);
-    });
-  }
-
-  function speedFast(): void {
-    setReplayState("framesPerTick", 2);
-  }
-
-  function speedSlow(): void {
-    setReplayState("fps", 30);
-  }
-
-  function zoomIn(): void {
-    setReplayState("zoom", (z) => z * 1.01);
-  }
-
-  function zoomOut(): void {
-    setReplayState("zoom", (z) => z / 1.01);
-  }
-
-  function toggleDebug(): void {
-    setReplayState("isDebug", (isDebug) => !isDebug);
-  }
-
-  function toggleFullscreen(): void {
-    setReplayState("isFullscreen", (isFullscreen) => !isFullscreen);
-  }
-
-  function toggleInputDisplay(): void {
-    setReplayState("showInputDisplay", (showInputDisplay) => !showInputDisplay);
-  }
-
-  function togglePause(): void {
-    running() ? stop() : start();
-  }
-
-  function pause(): void {
-    stop();
-  }
-
-  function jump(target: number): void {
-    setReplayState("frame", wrapFrame(replayState, target));
-  }
-
-  // percent is [0,1]
-  function jumpPercent(percent: number): void {
+export const replayStore = replayState;
+export function selectHighlight(nameAndHighlight: [string, Highlight]) {
+  batch(() => {
+    setReplayState("selectedHighlight", nameAndHighlight);
     setReplayState(
       "frame",
-      Math.round((replayState.replayData?.frames.length ?? 0) * percent)
-    );
-  }
-
-  function adjust(delta: number): void {
-    setReplayState("frame", pipe(add(delta), curry(wrapFrame)(replayState)));
-  }
-
-  const [running, start, stop] = createRAF(
-    targetFPS(
-      () =>
-        setReplayState(
-          "frame",
-          pipe(add(replayState.framesPerTick), curry(wrapFrame)(replayState))
-        ),
-      () => replayState.fps
-    )
-  );
-  createEffect(() => setReplayState("running", running()));
-
-  createEffect(async () => {
-    const selected = selectionState.selectedFileAndSettings;
-    if (selected === undefined) {
-      setReplayState(defaultReplayStoreState);
-      return;
-    }
-    const replayData = parseReplay(await selected[0].arrayBuffer());
-    const highlights = map((query) => search(replayData, ...query), queries);
-    setReplayState({
-      replayData,
-      highlights,
-      frame: fileStoreState.urlStartFrame ?? 0,
-      renderDatas: [],
-    });
-    if (
-      fileStoreState.urlStartFrame === undefined ||
-      fileStoreState.urlStartFrame === 0
-    ) {
-      start();
-    }
-  });
-
-  times(
-    (playerIndex) =>
-      createResource(
-        () => {
-          const replay = replayState.replayData;
-          if (replay === undefined) {
-            return undefined;
-          }
-          const playerSettings = replay.settings.playerSettings[playerIndex];
-          if (playerSettings === undefined) {
-            return undefined;
-          }
-          const playerUpdate =
-            replay.frames[replayState.frame].players[playerIndex];
-          if (playerUpdate === undefined) {
-            return playerSettings.externalCharacterId;
-          }
-          if (
-            playerUpdate.state.internalCharacterId ===
-            characterNameByInternalId.indexOf("Zelda")
-          ) {
-            return characterNameByExternalId.indexOf("Zelda");
-          }
-          if (
-            playerUpdate.state.internalCharacterId ===
-            characterNameByInternalId.indexOf("Sheik")
-          ) {
-            return characterNameByExternalId.indexOf("Sheik");
-          }
-          return playerSettings.externalCharacterId;
-        },
-        (id) => (id === undefined ? undefined : fetchAnimations(id))
-      ),
-    4
-  ).forEach(([dataSignal], playerIndex) =>
-    createEffect(() =>
-      // I can't use the obvious setReplayState("animations", playerIndex, dataSignal())
-      // because it will merge into the previous animations data object,
-      // essentially overwriting the previous characters animation data forever
-      setReplayState("animations", (animations) =>
-        update(playerIndex, dataSignal(), animations)
-      )
-    )
-  );
-
-  createEffect(() => {
-    if (replayState.replayData === undefined) {
-      return;
-    }
-    setReplayState(
-      "renderDatas",
-      replayState.replayData.frames[replayState.frame].players
-        .filter((playerUpdate) => playerUpdate)
-        .flatMap((playerUpdate) => {
-          const animations = replayState.animations[playerUpdate.playerIndex];
-          if (animations === undefined) return [];
-          const renderDatas = [];
-          renderDatas.push(
-            computeRenderData(replayState, playerUpdate, animations, false)
-          );
-          if (playerUpdate.nanaState != null) {
-            renderDatas.push(
-              computeRenderData(replayState, playerUpdate, animations, true)
-            );
-          }
-          return renderDatas;
-        })
+      wrapFrame(replayState, nameAndHighlight[1].startFrame - 30)
     );
   });
-
-  return [
-    replayState,
-    {
-      selectHighlight,
-      nextHighlight,
-      previousHighlight,
-      speedNormal,
-      speedFast,
-      speedSlow,
-      zoomIn,
-      zoomOut,
-      toggleDebug,
-      toggleFullscreen,
-      toggleInputDisplay,
-      togglePause,
-      pause,
-      jump,
-      jumpPercent,
-      adjust,
-    },
-  ] as const;
 }
 
+export function nextHighlight() {
+  const highlights = Object.entries(replayState.highlights).flatMap(
+    ([name, highlights]) =>
+      highlights.map((highlight) => [name, highlight] as const)
+  );
+  const currentIndex =
+    replayState.selectedHighlight !== undefined
+      ? highlights.findIndex(
+          ([name, highlight]) => replayState.selectedHighlight![1] === highlight
+        )
+      : -1;
+  const nextIndex = wrapHighlight(replayState, currentIndex + 1);
+  batch(() => {
+    setReplayState("selectedHighlight", highlights[nextIndex]);
+    setReplayState("frame", highlights[nextIndex][1].startFrame - 30);
+  });
+}
+
+export function previousHighlight() {
+  const highlights = Object.entries(replayState.highlights).flatMap(
+    ([name, highlights]) =>
+      highlights.map((highlight) => [name, highlight] as const)
+  );
+  const currentIndex =
+    replayState.selectedHighlight !== undefined
+      ? highlights.findIndex(
+          ([name, highlight]) => replayState.selectedHighlight![1] === highlight
+        )
+      : 1;
+  const previousIndex = wrapHighlight(replayState, currentIndex - 1);
+  batch(() => {
+    setReplayState("selectedHighlight", highlights[previousIndex]);
+    setReplayState("frame", highlights[previousIndex][1].startFrame - 30);
+  });
+}
+
+export function speedNormal(): void {
+  batch(() => {
+    setReplayState("fps", 60);
+    setReplayState("framesPerTick", 1);
+  });
+}
+
+export function speedFast(): void {
+  setReplayState("framesPerTick", 2);
+}
+
+export function speedSlow(): void {
+  setReplayState("fps", 30);
+}
+
+export function zoomIn(): void {
+  setReplayState("zoom", (z) => z * 1.01);
+}
+
+export function zoomOut(): void {
+  setReplayState("zoom", (z) => z / 1.01);
+}
+
+export function toggleDebug(): void {
+  setReplayState("isDebug", (isDebug) => !isDebug);
+}
+
+export function toggleFullscreen(): void {
+  setReplayState("isFullscreen", (isFullscreen) => !isFullscreen);
+}
+
+export function toggleInputDisplay(): void {
+  setReplayState("showInputDisplay", (showInputDisplay) => !showInputDisplay);
+}
+
+export function togglePause(): void {
+  running() ? stop() : start();
+}
+
+export function pause(): void {
+  stop();
+}
+
+export function jump(target: number): void {
+  setReplayState("frame", wrapFrame(replayState, target));
+}
+
+// percent is [0,1]
+export function jumpPercent(percent: number): void {
+  setReplayState(
+    "frame",
+    Math.round((replayState.replayData?.frames.length ?? 0) * percent)
+  );
+}
+
+export function adjust(delta: number): void {
+  setReplayState("frame", pipe(add(delta), curry(wrapFrame)(replayState)));
+}
+
+const [running, start, stop] = createRAF(
+  targetFPS(
+    () =>
+      setReplayState(
+        "frame",
+        pipe(add(replayState.framesPerTick), curry(wrapFrame)(replayState))
+      ),
+    () => replayState.fps
+  )
+);
+createEffect(() => setReplayState("running", running()));
+
+createEffect(async () => {
+  const selected = selectionStore.selectedFileAndSettings;
+  if (selected === undefined) {
+    setReplayState(defaultReplayStoreState);
+    return;
+  }
+  const replayData = parseReplay(await selected[0].arrayBuffer());
+  const highlights = map((query) => search(replayData, ...query), queries);
+  setReplayState({
+    replayData,
+    highlights,
+    frame: fileStore.urlStartFrame ?? 0,
+    renderDatas: [],
+  });
+  if (fileStore.urlStartFrame === undefined || fileStore.urlStartFrame === 0) {
+    start();
+  }
+});
+
+times(
+  (playerIndex) =>
+    createResource(
+      () => {
+        const replay = replayState.replayData;
+        if (replay === undefined) {
+          return undefined;
+        }
+        const playerSettings = replay.settings.playerSettings[playerIndex];
+        if (playerSettings === undefined) {
+          return undefined;
+        }
+        const playerUpdate =
+          replay.frames[replayState.frame].players[playerIndex];
+        if (playerUpdate === undefined) {
+          return playerSettings.externalCharacterId;
+        }
+        if (
+          playerUpdate.state.internalCharacterId ===
+          characterNameByInternalId.indexOf("Zelda")
+        ) {
+          return characterNameByExternalId.indexOf("Zelda");
+        }
+        if (
+          playerUpdate.state.internalCharacterId ===
+          characterNameByInternalId.indexOf("Sheik")
+        ) {
+          return characterNameByExternalId.indexOf("Sheik");
+        }
+        return playerSettings.externalCharacterId;
+      },
+      (id) => (id === undefined ? undefined : fetchAnimations(id))
+    ),
+  4
+).forEach(([dataSignal], playerIndex) =>
+  createEffect(() =>
+    // I can't use the obvious setReplayState("animations", playerIndex, dataSignal())
+    // because it will merge into the previous animations data object,
+    // essentially overwriting the previous characters animation data forever
+    setReplayState("animations", (animations) =>
+      update(playerIndex, dataSignal(), animations)
+    )
+  )
+);
+
+createEffect(() => {
+  if (replayState.replayData === undefined) {
+    return;
+  }
+  setReplayState(
+    "renderDatas",
+    replayState.replayData.frames[replayState.frame].players
+      .filter((playerUpdate) => playerUpdate)
+      .flatMap((playerUpdate) => {
+        const animations = replayState.animations[playerUpdate.playerIndex];
+        if (animations === undefined) return [];
+        const renderDatas = [];
+        renderDatas.push(
+          computeRenderData(replayState, playerUpdate, animations, false)
+        );
+        if (playerUpdate.nanaState != null) {
+          renderDatas.push(
+            computeRenderData(replayState, playerUpdate, animations, true)
+          );
+        }
+        return renderDatas;
+      })
+  );
+});
+
 function computeRenderData(
-  replayState: ReplayStoreState,
+  replayState: ReplayStore,
   playerUpdate: PlayerUpdate,
   animations: CharacterAnimations,
   isNana: boolean
@@ -423,7 +382,7 @@ function computeRenderData(
 // opposite direction (that scale happens first) and the flip of (0,1) is still
 // (0, 1)
 function getDamageFlyRollRotation(
-  replayState: ReplayStoreState,
+  replayState: ReplayStore,
   playerState: PlayerState
 ): number {
   const previousState = (
@@ -445,7 +404,7 @@ function getDamageFlyRollRotation(
 // 0 - 0 = 0, so (1,0) is unaltered when facing right
 // 0 - 180 = -180, so (1,0) is flipped when facing left
 function getSpacieUpBRotation(
-  replayState: ReplayStoreState,
+  replayState: ReplayStore,
   playerState: PlayerState
 ): number {
   const startOfActionPlayer = getPlayerOnFrame(
@@ -492,7 +451,7 @@ function isSpacieUpB(playerState: PlayerState): boolean {
 }
 
 function getPlayerColor(
-  replayState: ReplayStoreState,
+  replayState: ReplayStore,
   playerIndex: number,
   isNana: boolean
 ): string {
@@ -513,7 +472,7 @@ function getPlayerColor(
   ][playerIndex][isNana ? 1 : 0];
 }
 
-function wrapFrame(replayState: ReplayStoreState, frame: number): number {
+function wrapFrame(replayState: ReplayStore, frame: number): number {
   if (!replayState.replayData) return frame;
   return (
     (frame + replayState.replayData.frames.length) %
@@ -521,10 +480,7 @@ function wrapFrame(replayState: ReplayStoreState, frame: number): number {
   );
 }
 
-function wrapHighlight(
-  replayState: ReplayStoreState,
-  highlight: number
-): number {
+function wrapHighlight(replayState: ReplayStore, highlight: number): number {
   const length = Object.entries(replayState.highlights).flatMap(
     ([name, highlights]) => highlights
   ).length;
