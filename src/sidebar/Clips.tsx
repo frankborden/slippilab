@@ -1,12 +1,11 @@
-import { createMemo, createUniqueId, For, Show, useContext } from "solid-js";
+import { createMemo, createUniqueId, For, Show } from "solid-js";
 import { PlayerBadge } from "~/common/Badge";
 import { Highlight } from "~/search/search";
-import { ReplayStoreContext } from "~/state/replayStore";
+import { replayStore, selectHighlight } from "~/state/replayStore";
 import * as accordion from "@zag-js/accordion";
 import { normalizeProps, useMachine } from "@zag-js/solid";
 
 export function Clips() {
-  const [replayState] = useContext(ReplayStoreContext);
   const [state, send] = useMachine(
     accordion.machine({
       id: createUniqueId(),
@@ -18,7 +17,7 @@ export function Clips() {
 
   return (
     <div {...api().rootProps}>
-      <For each={Object.entries(replayState.highlights)}>
+      <For each={Object.entries(replayStore.highlights)}>
         {([name, highlights]) => (
           <div {...api().getItemProps({ value: name })}>
             <h3>
@@ -55,19 +54,18 @@ export function Clips() {
 }
 
 function ClipRow(props: { name: string; highlight: Highlight }) {
-  const [replayState, { selectHighlight }] = useContext(ReplayStoreContext);
   return (
     <>
       <div
         class="flex w-full cursor-pointer items-center overflow-hidden whitespace-nowrap border p-1 hover:bg-slate-100"
         classList={{
           "bg-slate-200 hover:bg-slate-300":
-            replayState.selectedHighlight?.[0] === props.name &&
-            replayState.selectedHighlight?.[1].startFrame ===
+            replayStore.selectedHighlight?.[0] === props.name &&
+            replayStore.selectedHighlight?.[1].startFrame ===
               props.highlight.startFrame &&
-            replayState.selectedHighlight?.[1].endFrame ===
+            replayStore.selectedHighlight?.[1].endFrame ===
               props.highlight.endFrame &&
-            replayState.selectedHighlight?.[1].playerIndex ===
+            replayStore.selectedHighlight?.[1].playerIndex ===
               props.highlight.playerIndex,
         }}
         onClick={() => selectHighlight([props.name, props.highlight])}

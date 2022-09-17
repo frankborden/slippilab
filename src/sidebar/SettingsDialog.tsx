@@ -1,9 +1,38 @@
-export function Settings() {
+import { WhiteButton } from "~/common/Button";
+import { Dialog } from "~/common/Dialog";
+
+export function SettingsDialog() {
+  return (
+    <div class="h-6 w-6">
+      <Dialog>
+        <Dialog.Trigger>
+          <button class="material-icons cursor-pointer text-3xl leading-6">
+            settings
+          </button>
+        </Dialog.Trigger>
+        <Dialog.Title>
+          <div class="text-lg">Playback Shortcuts</div>
+        </Dialog.Title>
+        <Dialog.Contents>
+          <div class="my-5">
+            <Settings />
+          </div>
+          <div class="flex w-full justify-end">
+            <Dialog.Close>
+              <WhiteButton>Close</WhiteButton>
+            </Dialog.Close>
+          </div>
+        </Dialog.Contents>
+      </Dialog>
+    </div>
+  );
+}
+
+function Settings() {
   return (
     <>
       <div class="flex flex-col items-center gap-2 overflow-y-auto">
         <table>
-          <caption>Playback Shortcuts</caption>
           <thead>
             <tr>
               <th>Shortcut</th>

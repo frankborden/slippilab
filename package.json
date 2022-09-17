@@ -11,6 +11,7 @@
     "@tanstack/solid-virtual": "^3.0.0-beta.6",
     "@thisbeyond/solid-select": "^0.13.0",
     "@zag-js/accordion": "^0.1.13",
+    "@zag-js/dialog": "^0.1.13",
     "@zag-js/menu": "^0.1.14",
     "@zag-js/solid": "^0.1.15",
     "@zag-js/toast": "^0.1.14",
@@ -33,9 +34,9 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
-    "check": "tsc --noEmit",
+    "types": "tsc --noEmit",
     "format": "prettier -w src/"
   }
 }

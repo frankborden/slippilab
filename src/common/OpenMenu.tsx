@@ -1,14 +1,13 @@
 import * as menu from "@zag-js/menu";
 import { normalizeProps, useMachine } from "@zag-js/solid";
-import { createMemo, createUniqueId, useContext } from "solid-js";
+import { createMemo, createUniqueId, Show } from "solid-js";
 import { loadFromSupabase } from "~/stateUtil";
 import { PrimaryButton } from "~/common/Button";
 import { filterFiles } from "~/common/util";
-import { FileStoreContext } from "~/state/fileStore";
+import { load } from "~/state/fileStore";
 import { Portal } from "solid-js/web";
 
 export function OpenMenu(props: { name: string }) {
-  const [_, { load }] = useContext(FileStoreContext);
   const [menuState, menuSend] = useMachine(
     menu.machine({
       id: createUniqueId(),
@@ -50,7 +49,9 @@ export function OpenMenu(props: { name: string }) {
     <>
       <div>
         <PrimaryButton {...api().triggerProps} class="flex items-center gap-2">
-          <div class="hidden md:block">{props.name}</div>
+          <Show when={props.name !== ""}>
+            <div class="hidden md:block">{props.name}</div>
+          </Show>
           <div class="material-icons" aria-label="Open File or Folder">
             folder_open
           </div>

@@ -1,13 +1,12 @@
-import { createMemo, For, Show, useContext } from "solid-js";
+import { createMemo, For, Show } from "solid-js";
 import { characterNameByExternalId } from "~/common/ids";
-import { RenderData, ReplayStoreContext } from "~/state/replayStore";
+import { RenderData, replayStore } from "~/state/replayStore";
 import { getPlayerOnFrame, getStartOfAction } from "~/viewer/viewerUtil";
 
 export function Players() {
-  const [replayState] = useContext(ReplayStoreContext);
   return (
     <>
-      <For each={replayState.renderDatas}>
+      <For each={replayStore.renderDatas}>
         {(renderData) => (
           <>
             <path
@@ -27,7 +26,6 @@ export function Players() {
 }
 
 function Shield(props: { renderData: RenderData }) {
-  const [replayState] = useContext(ReplayStoreContext);
   // [0,60]
   const shieldHealth = createMemo(
     () => props.renderData.playerState.shieldSize
@@ -44,9 +42,9 @@ function Shield(props: { renderData: RenderData }) {
           props.renderData.playerSettings.playerIndex,
           getStartOfAction(
             props.renderData.playerState,
-            replayState.replayData!
+            replayStore.replayData!
           ),
-          replayState.replayData!
+          replayStore.replayData!
         ).inputs.processed.anyTrigger
       : props.renderData.playerInputs.processed.anyTrigger === 0
       ? 1

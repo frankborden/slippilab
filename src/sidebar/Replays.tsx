@@ -1,12 +1,18 @@
 import { createOptions, Select } from "@thisbeyond/solid-select";
 import { groupBy } from "rambda";
-import { For, Show, useContext } from "solid-js";
+import { For, Show } from "solid-js";
 import { characterNameByExternalId, stageNameByExternalId } from "~/common/ids";
 import { Picker } from "~/common/Picker";
 import { GameSettings, PlayerSettings } from "~/common/types";
 import { StageBadge } from "~/common/Badge";
 import { PrimaryButton } from "~/common/Button";
-import { SelectionStoreContext } from "~/state/selectionStore";
+import {
+  selectionStore,
+  setFilters,
+  select,
+  nextFile,
+  previousFile,
+} from "~/state/selectionStore";
 
 const filterProps = createOptions(
   [
@@ -22,8 +28,6 @@ const filterProps = createOptions(
   }
 );
 export function Replays() {
-  const [selectionState, { setFilters, select, nextFile, previousFile }] =
-    useContext(SelectionStoreContext);
   return (
     <>
       <div class="flex h-full w-96 flex-col items-center gap-2 overflow-y-auto">
@@ -38,23 +42,23 @@ export function Replays() {
             placeholder="Filter"
             multiple
             {...filterProps}
-            initialValue={selectionState.filters}
+            initialValue={selectionStore.filters}
             onChange={setFilters}
           />
         </div>
         <Show
-          when={selectionState.filteredFilesAndSettings.length > 0}
+          when={selectionStore.filteredFilesAndSettings.length > 0}
           fallback={<div>No matching results</div>}
         >
           <Picker
-            items={selectionState.filteredFilesAndSettings}
+            items={selectionStore.filteredFilesAndSettings}
             render={([file, gameSettings]) => (
               <GameInfo gameSettings={gameSettings} />
             )}
             onClick={(fileAndSettings) => select(fileAndSettings)}
             selected={([file, gameSettings]) =>
-              selectionState.selectedFileAndSettings?.[0] === file &&
-              selectionState.selectedFileAndSettings?.[1] === gameSettings
+              selectionStore.selectedFileAndSettings?.[0] === file &&
+              selectionStore.selectedFileAndSettings?.[1] === gameSettings
             }
             estimateSize={([file, gameSettings]) =>
               gameSettings.isTeams ? 56 : 32

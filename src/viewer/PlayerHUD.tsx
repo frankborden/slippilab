@@ -1,11 +1,10 @@
-import { createMemo, useContext, For, Show } from "solid-js";
+import { createMemo, For, Show } from "solid-js";
 import { characterNameByInternalId } from "~/common/ids";
-import { RenderData, ReplayStoreContext } from "~/state/replayStore";
+import { RenderData, replayStore } from "~/state/replayStore";
 
 export function PlayerHUD(props: { player: number }) {
-  const [replayState] = useContext(ReplayStoreContext);
   const renderData = createMemo(() =>
-    replayState.renderDatas.find(
+    replayStore.renderDatas.find(
       (renderData) =>
         renderData.playerSettings.playerIndex === props.player &&
         renderData.playerState.isNana === false
@@ -30,6 +29,7 @@ export function PlayerHUD(props: { player: number }) {
         ].find((n) => n !== undefined && n.length > 0)
       : ""
   );
+
   return (
     <>
       <Show when={renderData()}>
@@ -62,10 +62,10 @@ export function PlayerHUD(props: { player: number }) {
           fill={renderData()!.innerColor}
           stroke="black"
         />
-        <Show when={replayState.isDebug}>
+        <Show when={replayStore.isDebug}>
           <Debug position={position()} renderData={renderData()!} />
         </Show>
-        <Show when={replayState.showInputDisplay}>
+        <Show when={replayStore.showInputDisplay}>
           <Inputs renderData={renderData()!} portX={position().x} />
         </Show>
       </Show>
@@ -183,7 +183,7 @@ function Inputs(props: { renderData: RenderData; portX: number }) {
           cy="0"
           r="8%"
           fill={
-            props.renderData.playerInputs.processed.a ? "green" : "transparent"
+            props.renderData.playerInputs.physical.a ? "green" : "transparent"
           }
           stroke="black"
         />

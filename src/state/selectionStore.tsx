@@ -6,126 +6,117 @@ import {
   ExternalStageName,
   stageNameByExternalId,
 } from "~/common/ids";
-import { Context, createContext, createEffect, on } from "solid-js";
+import { createEffect, on } from "solid-js";
 import { groupBy, map, zip } from "rambda";
-import { FileStoreState } from "~/state/fileStore";
+import { fileStore } from "~/state/fileStore";
 
 export type Filter =
   | { type: "character"; label: ExternalCharacterName }
   | { type: "stage"; label: ExternalStageName }
   | { type: "codeOrName"; label: string };
 
-export interface SelectionStoreState {
+export interface SelectionStore {
   filters: Filter[];
   filteredFilesAndSettings: [File, GameSettings][];
   selectedFileAndSettings?: [File, GameSettings];
 }
 
-export type SelectionStore = ReturnType<typeof createSelectionStore>;
-export const SelectionStoreContext =
-  createContext<SelectionStore>() as Context<SelectionStore>;
+const [selectionState, setSelectionState] = createStore<SelectionStore>({
+  filters: [],
+  filteredFilesAndSettings: [],
+});
 
-export function createSelectionStore(fileStoreState: FileStoreState) {
-  const [selectionState, setSelectionState] = createStore<SelectionStoreState>({
-    filters: [],
-    filteredFilesAndSettings: [],
-  });
+export const selectionStore = selectionState;
 
-  function setFilters(filters: Filter[]) {
-    setSelectionState("filters", filters);
-  }
-
-  function select(fileAndSettings: [File, GameSettings]) {
-    setSelectionState("selectedFileAndSettings", fileAndSettings);
-  }
-
-  function nextFile() {
-    if (selectionState.filteredFilesAndSettings.length === 0) {
-      return;
-    }
-    if (selectionState.selectedFileAndSettings === undefined) {
-      setSelectionState(
-        "selectedFileAndSettings",
-        selectionState.filteredFilesAndSettings[0]
-      );
-    } else {
-      const currentIndex = selectionState.filteredFilesAndSettings.findIndex(
-        ([file]) => file === selectionState.selectedFileAndSettings![0]
-      );
-      const nextIndex = wrap(
-        currentIndex + 1,
-        selectionState.filteredFilesAndSettings.length
-      );
-      setSelectionState(
-        "selectedFileAndSettings",
-        selectionState.filteredFilesAndSettings[nextIndex]
-      );
-    }
-  }
-
-  function previousFile() {
-    if (selectionState.filteredFilesAndSettings.length === 0) {
-      return;
-    }
-    if (selectionState.selectedFileAndSettings === undefined) {
-      setSelectionState(
-        "selectedFileAndSettings",
-        selectionState.filteredFilesAndSettings[0]
-      );
-    } else {
-      const currentIndex = selectionState.filteredFilesAndSettings.findIndex(
-        ([file]) => file === selectionState.selectedFileAndSettings![0]
-      );
-      const nextIndex = wrap(
-        currentIndex - 1,
-        selectionState.filteredFilesAndSettings.length
-      );
-      setSelectionState(
-        "selectedFileAndSettings",
-        selectionState.filteredFilesAndSettings[nextIndex]
-      );
-    }
-  }
-
-  createEffect(
-    on(
-      () => fileStoreState.files,
-      () => {
-        setSelectionState({ selectedFileAndSettings: undefined });
-      }
-    )
-  );
-
-  // Update filter results if files, gameSettings, or filters change
-  createEffect(() => {
-    const filesWithSettings = zip(
-      fileStoreState.files,
-      fileStoreState.gameSettings
-    ) as [File, GameSettings][];
-    setSelectionState(
-      "filteredFilesAndSettings",
-      applyFilters(filesWithSettings, selectionState.filters)
-    );
-  });
-
-  // ???
-  createEffect(() => {
-    if (
-      selectionState.filteredFilesAndSettings.length > 0 &&
-      selectionState.selectedFileAndSettings === undefined
-    ) {
-      setSelectionState(
-        "selectedFileAndSettings",
-        selectionState.filteredFilesAndSettings[0]
-      );
-    }
-  });
-
-  return [
-    selectionState,
-    { setFilters, select, nextFile, previousFile },
-  ] as const;
+export function setFilters(filters: Filter[]) {
+  setSelectionState("filters", filters);
 }
+
+export function select(fileAndSettings: [File, GameSettings]) {
+  setSelectionState("selectedFileAndSettings", fileAndSettings);
+}
+
+export function nextFile() {
+  if (selectionState.filteredFilesAndSettings.length === 0) {
+    return;
+  }
+  if (selectionState.selectedFileAndSettings === undefined) {
+    setSelectionState(
+      "selectedFileAndSettings",
+      selectionState.filteredFilesAndSettings[0]
+    );
+  } else {
+    const currentIndex = selectionState.filteredFilesAndSettings.findIndex(
+      ([file]) => file === selectionState.selectedFileAndSettings![0]
+    );
+    const nextIndex = wrap(
+      currentIndex + 1,
+      selectionState.filteredFilesAndSettings.length
+    );
+    setSelectionState(
+      "selectedFileAndSettings",
+      selectionState.filteredFilesAndSettings[nextIndex]
+    );
+  }
+}
+
+export function previousFile() {
+  if (selectionState.filteredFilesAndSettings.length === 0) {
+    return;
+  }
+  if (selectionState.selectedFileAndSettings === undefined) {
+    setSelectionState(
+      "selectedFileAndSettings",
+      selectionState.filteredFilesAndSettings[0]
+    );
+  } else {
+    const currentIndex = selectionState.filteredFilesAndSettings.findIndex(
+      ([file]) => file === selectionState.selectedFileAndSettings![0]
+    );
+    const nextIndex = wrap(
+      currentIndex - 1,
+      selectionState.filteredFilesAndSettings.length
+    );
+    setSelectionState(
+      "selectedFileAndSettings",
+      selectionState.filteredFilesAndSettings[nextIndex]
+    );
+  }
+}
+
+createEffect(
+  on(
+    () => fileStore.files,
+    () => {
+      setSelectionState({ selectedFileAndSettings: undefined });
+    }
+  )
+);
+
+// Update filter results if files, gameSettings, or filters change
+createEffect(() => {
+  const filesWithSettings = zip(fileStore.files, fileStore.gameSettings) as [
+    File,
+    GameSettings
+  ][];
+  setSelectionState(
+    "filteredFilesAndSettings",
+    applyFilters(filesWithSettings, selectionState.filters)
+  );
+});
+
+// ???
+createEffect(() => {
+  if (
+    selectionState.filteredFilesAndSettings.length > 0 &&
+    selectionState.selectedFileAndSettings === undefined
+  ) {
+    setSelectionState(
+      "selectedFileAndSettings",
+      selectionState.filteredFilesAndSettings[0]
+    );
+  }
+});
 
 function applyFilters(
   filesWithSettings: [File, GameSettings][],

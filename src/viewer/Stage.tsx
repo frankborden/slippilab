@@ -1,11 +1,10 @@
-import { createMemo, For, Match, Switch, useContext } from "solid-js";
+import { createMemo, For, Match, Switch } from "solid-js";
 import { stageNameByExternalId } from "~/common/ids";
-import { ReplayStoreContext } from "~/state/replayStore";
+import { replayStore } from "~/state/replayStore";
 
 export function Stage() {
-  const [replayState] = useContext(ReplayStoreContext);
   const stageName = createMemo(
-    () => stageNameByExternalId[replayState.replayData!.settings.stageId]
+    () => stageNameByExternalId[replayStore.replayData!.settings.stageId]
   );
   return (
     <Switch>
@@ -163,7 +162,6 @@ function FinalDestination() {
 }
 
 function YoshisStory() {
-  const [replayState] = useContext(ReplayStoreContext);
   const mainStage = [
     "-54, -91",
     "-54, -47",
@@ -235,7 +233,7 @@ function YoshisStory() {
       1022: [-14.954894065856934, -103.4649963378906],
     };
     // return frameNumber to -123 based.
-    const frameInLap = (replayState.frame - 123 + 1200) % 1200;
+    const frameInLap = (replayStore.frame - 123 + 1200) % 1200;
     const randallWidth = 11.9;
 
     if (frameInLap > 476 && frameInLap < 1016) {
