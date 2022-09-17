@@ -29,6 +29,7 @@ export function PlayerHUD(props: { player: number }) {
         ].find((n) => n !== undefined && n.length > 0)
       : ""
   );
+
   return (
     <>
       <Show when={renderData()}>
@@ -182,7 +183,7 @@ function Inputs(props: { renderData: RenderData; portX: number }) {
           cy="0"
           r="8%"
           fill={
-            props.renderData.playerInputs.processed.a ? "green" : "transparent"
+            props.renderData.playerInputs.physical.a ? "green" : "transparent"
           }
           stroke="black"
         />
