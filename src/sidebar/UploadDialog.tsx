@@ -1,22 +1,35 @@
-import { createSignal, Match, Show, Switch } from "solid-js";
-import { PrimaryButton, SecondaryButton } from "~/common/Button";
-import { SpinnerCircle } from "~/common/SpinnerCircle";
 import {
-  Dialog,
-  DialogClose,
-  DialogContents,
-  DialogTrigger,
-} from "~/common/Dialog";
+  createSignal,
+  createMemo,
+  createUniqueId,
+  Match,
+  Show,
+  Switch,
+} from "solid-js";
+import { PrimaryButton, WhiteButton } from "~/common/Button";
+import { SpinnerCircle } from "~/common/SpinnerCircle";
 import { uploadReplay } from "~/supabaseClient";
 import { selectionStore } from "~/state/selectionStore";
+import * as dialog from "@zag-js/dialog";
+import { useMachine, normalizeProps } from "@zag-js/solid";
+import { Portal } from "solid-js/web";
 
 export function UploadDialog() {
-  const [state, setState] = createSignal<"not started" | "loading" | "done">(
-    "not started"
+  const [machineState, send] = useMachine(
+    dialog.machine({
+      id: createUniqueId(),
+      onClose: () => setState("not started"),
+    })
   );
-  const [url, setUrl] = createSignal<string | undefined>();
-  const [error, setError] = createSignal<string | undefined>();
-  const [isUrlCopied, setIsUrlCopied] = createSignal(false);
+  const api = createMemo(() =>
+    dialog.connect(machineState, send, normalizeProps)
+  );
+
+  const [state, setState] = createSignal<
+    "not started" | "loading" | "done" | "copied"
+  >("not started");
+  const [url, setUrl] = createSignal("");
+  const [error, setError] = createSignal("");
 
   async function onUploadClicked() {
     setState("loading");
@@ -31,69 +44,85 @@ export function UploadDialog() {
     setState("done");
   }
 
-  function onOpen() {
-    setState("not started");
-    setIsUrlCopied(false);
-    setUrl();
-    setError();
-  }
-
   return (
-    <Dialog>
-      <DialogTrigger onOpen={onOpen}>
-        <PrimaryButton class="text-md">
-          <div class="material-icons">upload_file</div>
-        </PrimaryButton>
-      </DialogTrigger>
-      <DialogContents>
-        <h1 class="text-lg">Replay Upload</h1>
-        <div>
-          <div class="flex w-96 items-center justify-center gap-2">
-            <Switch>
-              <Match when={state() === "not started"}>
-                <div class="flex flex-col items-center gap-3">
-                  <p class="text-sm">
-                    Upload {selectionStore.selectedFileAndSettings?.[0].name} to
-                    share?
-                  </p>
-                  <PrimaryButton onClick={onUploadClicked}>
-                    Upload
-                  </PrimaryButton>
-                </div>
-              </Match>
-              <Match when={state() === "loading"}>
-                <div class="h-10 w-10">
-                  <SpinnerCircle />
-                </div>
-              </Match>
-              <Match when={state() === "done"}>
-                <Show when={url()} fallback={error()}>
-                  <code class="text-sm">{url()}</code>
-                  <div
-                    class="material-icons cursor-pointer rounded bg-slate-100 px-1 py-0 text-lg"
-                    onClick={() => {
-                      const link = url();
-                      if (link === undefined) return;
-                      void navigator.clipboard.writeText(link);
-                      setIsUrlCopied(true);
-                    }}
-                  >
-                    content_copy
-                  </div>
-                </Show>
-              </Match>
-            </Switch>
+    <>
+      <PrimaryButton {...api().triggerProps}>
+        <div class="material-icons text-md">upload_file</div>
+      </PrimaryButton>
+      <Show when={api().isOpen}>
+        <Portal>
+          <div
+            {...api().backdropProps}
+            class="fixed inset-0 backdrop-blur-md backdrop-brightness-90"
+          />
+          <div
+            {...api().underlayProps}
+            class="fixed inset-0 flex h-screen w-screen items-center justify-center"
+          >
+            <div
+              {...api().contentProps}
+              class="w-full max-w-md rounded-md border bg-white p-8"
+              // don't trigger replay shortcuts here.
+              onkeydown={(e: Event) => e.stopPropagation()}
+              onkeyup={(e: Event) => e.stopPropagation()}
+            >
+              <h2 {...api().titleProps} class="text-lg">
+                Replay Upload
+              </h2>
+              <div {...api().descriptionProps} class="my-6 flex flex-col">
+                <Switch>
+                  <Match when={state() === "not started"}>
+                    <p class="text-sm">
+                      Uploading will send the file{" "}
+                      <code>
+                        {selectionStore.selectedFileAndSettings?.[0].name}
+                      </code>{" "}
+                      to Slippi Lab for hosting and you will receive a short
+                      link to share out.
+                    </p>
+                  </Match>
+                  <Match when={state() === "loading"}>
+                    <div class="h-10 w-10 self-center">
+                      <SpinnerCircle />
+                    </div>
+                  </Match>
+                  <Match when={state() === "done" || state() === "copied"}>
+                    <Show when={url()} fallback={error()}>
+                      <div class="flex items-center gap-2">
+                        <code class="text-sm">{url()}</code>
+                        <div
+                          class="material-icons cursor-pointer rounded bg-slate-100 px-1 py-0 text-lg"
+                          onClick={() => {
+                            void navigator.clipboard.writeText(url());
+                            setState("copied");
+                          }}
+                        >
+                          {state() === "done" ? "content_copy" : "check"}
+                        </div>
+                      </div>
+                    </Show>
+                  </Match>
+                </Switch>
+              </div>
+              <div class="flex w-full justify-end gap-2">
+                <Switch>
+                  <Match when={state() === "not started"}>
+                    <WhiteButton {...api().closeButtonProps}>
+                      Cancel
+                    </WhiteButton>
+                    <PrimaryButton onClick={onUploadClicked}>
+                      Upload
+                    </PrimaryButton>
+                  </Match>
+                  <Match when={state() === "done" || state() === "copied"}>
+                    <WhiteButton {...api().closeButtonProps}>Close</WhiteButton>
+                  </Match>
+                </Switch>
+              </div>
+            </div>
           </div>
-          <Show when={isUrlCopied()}>
-            <div class="text-center">Copied!</div>
-          </Show>
-        </div>
-        <div class="flex justify-end">
-          <DialogClose>
-            <SecondaryButton>Close</SecondaryButton>
-          </DialogClose>
-        </div>
-      </DialogContents>
-    </Dialog>
+        </Portal>
+      </Show>
+    </>
   );
 }
