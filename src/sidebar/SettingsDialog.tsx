@@ -1,9 +1,59 @@
-export function Settings() {
+import { createMemo, createUniqueId, Show } from "solid-js";
+import { Portal } from "solid-js/web";
+import { useMachine, normalizeProps } from "@zag-js/solid";
+import * as dialog from "@zag-js/dialog";
+import { WhiteButton } from "~/common/Button";
+
+export function SettingsDialog() {
+  const [state, send] = useMachine(dialog.machine({ id: createUniqueId() }));
+  const api = createMemo(() => dialog.connect(state, send, normalizeProps));
+  return (
+    <>
+      <button
+        {...api().triggerProps}
+        class="material-icons h-6 w-6 cursor-pointer text-3xl leading-6"
+      >
+        settings
+      </button>
+      <Show when={api().isOpen}>
+        <Portal>
+          <div
+            {...api().backdropProps}
+            class="fixed inset-0 backdrop-blur-md backdrop-brightness-90"
+          />
+          <div
+            {...api().underlayProps}
+            class="fixed inset-0 flex h-screen w-screen items-center justify-center"
+          >
+            <div
+              {...api().contentProps}
+              class="w-full max-w-xl rounded-md border bg-white p-8"
+              // don't trigger replay shortcuts here.
+              onkeydown={(e: Event) => e.stopPropagation()}
+              onkeyup={(e: Event) => e.stopPropagation()}
+            >
+              <h2 {...api().titleProps} class="text-lg">
+                Playback Shortcuts
+              </h2>
+              <div {...api().descriptionProps} class="my-5">
+                <Settings />
+              </div>
+              <div class="flex w-full justify-end">
+                <WhiteButton {...api().closeButtonProps}>Close</WhiteButton>
+              </div>
+            </div>
+          </div>
+        </Portal>
+      </Show>
+    </>
+  );
+}
+
+function Settings() {
   return (
     <>
       <div class="flex flex-col items-center gap-2 overflow-y-auto">
         <table>
-          <caption>Playback Shortcuts</caption>
           <thead>
             <tr>
               <th>Shortcut</th>

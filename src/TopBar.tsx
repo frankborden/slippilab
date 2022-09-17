@@ -1,8 +1,7 @@
-import { Dialog, DialogContents, DialogTrigger } from "~/common/Dialog";
 import { Links } from "~/common/Links";
 import { NowPlaying } from "~/sidebar/NowPlaying";
-import { Settings } from "~/sidebar/Settings";
 import { ButtonBar } from "~/sidebar/ButtonBar";
+import { SettingsDialog } from "~/sidebar/SettingsDialog";
 
 export function TopBar() {
   return (
@@ -23,14 +22,7 @@ export function TopBar() {
       </div>
       <div class="flex items-center gap-4">
         <Links />
-        <Dialog>
-          <DialogTrigger class="h-6 w-6 cursor-pointer">
-            <div class="material-icons w-6 text-3xl leading-6">settings</div>
-          </DialogTrigger>
-          <DialogContents>
-            <Settings />
-          </DialogContents>
-        </Dialog>
+        <SettingsDialog />
       </div>
     </div>
   );
