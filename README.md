@@ -18,6 +18,9 @@ Replay files contain rich data about every frame: positions, action states, inpu
 
 Find replays within a folder quickly using a specific combination of characters, stage, Slippi connect code, Slippi display name, or in-game nametag.
 
+File names of filtered games are now printed to the console. Can be used to pick files to add to Project Clippi or use in conjunction with forked version of slp-to-mp4 for simplified batch conversion of matches. See fork for details:
+https://github.com/Gmarcott42/slp-to-mp4
+
 ### Insights
 
 Important moments in the selected replay are automatically detected and listed, so less time is needed to find specific situations when browsing.
