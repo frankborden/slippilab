@@ -144,7 +144,7 @@ function applyFilters(
   const namesNeeded = filters
     .filter((filter) => filter.type === "codeOrName")
     .map((filter) => filter.label);
-  return filesWithSettings.filter(([file, gameSettings]) => {
+  const filtered = filesWithSettings.filter(([file, gameSettings]) => {
     const areCharactersSatisfied = Object.entries(charactersNeeded).every(
       ([character, amountRequired]) =>
         gameSettings.playerSettings.filter(
@@ -165,6 +165,12 @@ function applyFilters(
     );
     return stagePass && areCharactersSatisfied && areNamesSatisfied;
   });
+  let filenames = [''];
+  filtered.forEach((element) => {
+    filenames.push(element[0]['name']);
+  });
+  console.log(filenames);
+  return filtered;
 }
 
 function wrap(index: number, limit: number): number {
