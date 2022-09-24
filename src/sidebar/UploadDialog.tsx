@@ -4,6 +4,7 @@ import { SpinnerCircle } from "~/common/SpinnerCircle";
 import { uploadReplay } from "~/supabaseClient";
 import { selectionStore } from "~/state/selectionStore";
 import { Dialog } from "~/common/Dialog";
+import { ShareIcon } from "~/common/icons";
 
 export function UploadDialog() {
   const [state, setState] = createSignal<
@@ -29,7 +30,7 @@ export function UploadDialog() {
     <div class="h-8">
       <Dialog onClose={() => setState("not started")}>
         <Dialog.Trigger>
-          <div class="material-icons text-[32px]">share</div>
+          <ShareIcon class="h-8 w-8" title="Upload and share replay" />
         </Dialog.Trigger>
         <Dialog.Title>
           <h2 class="text-lg">Replay Upload</h2>

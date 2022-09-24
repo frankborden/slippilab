@@ -1,4 +1,5 @@
 import { onCleanup, onMount, Show } from "solid-js";
+import { MinusIcon, PlusIcon } from "~/common/icons";
 import {
   replayStore,
   adjust,
@@ -124,12 +125,12 @@ export function Controls() {
   let seekbarInput!: HTMLInputElement;
 
   return (
-    <div class="flex flex-wrap items-center justify-evenly gap-4 rounded-b border border-t-0 pl-2 pr-4 text-slate-800">
+    <div class="flex flex-wrap items-center justify-evenly gap-4 rounded-b border border-t-0 py-1 px-2 text-slate-800">
       <Show
         when={replayStore.running}
         fallback={
           <div
-            class="material-icons cursor-pointer text-7xl md:text-5xl"
+            class="material-icons cursor-pointer text-[32px] leading-none"
             onClick={() => togglePause()}
             aria-label="Resume playback"
           >
@@ -138,16 +139,40 @@ export function Controls() {
         }
       >
         <div
-          class="material-icons cursor-pointer text-7xl md:text-5xl"
+          class="material-icons cursor-pointer text-[32px]"
           onClick={() => togglePause()}
           aria-label="pause playback"
         >
           pause
         </div>
       </Show>
-      <label for="seekbar" class="text-sm">
-        {replayStore.isDebug ? replayStore.frame - 123 : replayStore.frame}
-      </label>
+      <div class="flex items-center gap-1">
+        <MinusIcon
+          class="h-6 w-6"
+          role="button"
+          title="previous frame"
+          onClick={() => {
+            pause();
+            adjust(-1);
+          }}
+        >
+          -
+        </MinusIcon>
+        <label for="seekbar" class="text-sm">
+          {replayStore.isDebug ? replayStore.frame - 123 : replayStore.frame}
+        </label>
+        <PlusIcon
+          class="h-6 w-6"
+          role="button"
+          title="next frame"
+          onClick={() => {
+            pause();
+            adjust(1);
+          }}
+        >
+          +
+        </PlusIcon>
+      </div>
       <input
         id="seekbar"
         class="flex-grow accent-slippi-500"
@@ -159,41 +184,21 @@ export function Controls() {
       />
       <div class="flex items-center gap-2">
         <div
-          class="material-icons cursor-pointer text-7xl md:text-4xl"
+          class="material-icons cursor-pointer text-[32px]"
           onClick={() => adjust(-120)}
           aria-label="Rewind 2 seconds"
         >
           history
         </div>
         <div
-          class="material-icons cursor-pointer text-7xl md:text-4xl"
-          onClick={() => {
-            pause();
-            adjust(-1);
-          }}
-          aria-label="Rewind 1 frame"
-        >
-          rotate_left
-        </div>
-        <div
-          class="material-icons cursor-pointer text-7xl md:text-4xl"
-          onClick={() => {
-            pause();
-            adjust(1);
-          }}
-          aria-label="Skip ahead 1 frame"
-        >
-          rotate_right
-        </div>
-        <div
-          class="material-icons cursor-pointer text-7xl md:text-4xl"
+          class="material-icons cursor-pointer text-[32px]"
           onClick={() => adjust(120)}
           aria-label="Skip ahead 2 seconds"
         >
           update
         </div>
         <div
-          class="material-icons cursor-pointer text-7xl md:text-4xl"
+          class="material-icons cursor-pointer text-[32px]"
           onClick={() => toggleFullscreen()}
           aria-label="Toggle fullscreen mode"
         >

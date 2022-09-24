@@ -1,6 +1,5 @@
 import {
   ControllerIcon,
-  FilmIcon,
   FilmSlateIcon,
   GitHubIcon,
   TwitterIcon,
@@ -18,24 +17,24 @@ export function Navigation() {
             <VideoLibraryIcon
               title="Replays"
               classList={{
-                "py-4 cursor-pointer": true,
-                "-mx-7 bg-slippi-50 px-7": currentSidebar() === "replays",
+                "py-4 cursor-pointer -mx-7 px-7": true,
+                "bg-slippi-50": currentSidebar() === "replays",
               }}
               onClick={() => setSidebar("replays")}
             />
             <FilmSlateIcon
               title="Clips"
               classList={{
-                "py-4 cursor-pointer": true,
-                "-mx-7 bg-slippi-50 px-7": currentSidebar() === "clips",
+                "py-4 cursor-pointer -mx-7 px-7": true,
+                "bg-slippi-50": currentSidebar() === "clips",
               }}
               onClick={() => setSidebar("clips")}
             />
             <ControllerIcon
               title="Inputs"
               classList={{
-                "py-4 cursor-pointer": true,
-                "-mx-7 bg-slippi-50 px-7": currentSidebar() === "inputs",
+                "py-4 cursor-pointer -mx-7 px-7": true,
+                "bg-slippi-50": currentSidebar() === "inputs",
               }}
               onClick={() => setSidebar("inputs")}
             />

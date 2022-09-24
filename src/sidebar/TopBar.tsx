@@ -1,5 +1,5 @@
 import { Show } from "solid-js";
-import { ArrowLeft, ArrowRight } from "~/common/icons";
+import { ArrowLeft, ArrowRight, DownloadIcon } from "~/common/icons";
 import { OpenMenu } from "~/common/OpenMenu";
 import { UploadDialog } from "~/sidebar/UploadDialog";
 import { nextFile, previousFile, selectionStore } from "~/state/selectionStore";
@@ -30,8 +30,9 @@ export function TopBar() {
           />
         </div>
         <div class="flex h-8 gap-4 justify-self-end">
-          <button
-            class="material-icons text-[32px] leading-none"
+          <DownloadIcon
+            class="h-8 w-8"
+            role="button"
             onClick={() => {
               if (selectionStore.selectedFileAndSettings === undefined) {
                 return;
@@ -46,9 +47,8 @@ export function TopBar() {
               element.click();
               document.body.removeChild(element);
             }}
-          >
-            download
-          </button>
+            title="download .slp"
+          />
           <UploadDialog />
         </div>
       </Show>
