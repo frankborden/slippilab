@@ -64,8 +64,14 @@ export function App() {
   }
 
   return (
-    <>
-      <Show when={fileStore.files.length > 0} fallback={<Landing />}>
+    <div class="flex h-screen gap-4" ref={dropzoneRef}>
+      <Navigation />
+      <Sidebar />
+      <div class="flex flex-grow flex-col gap-2 pt-2">
+        <TopBar />
+        <Viewer />
+      </div>
+      {/* <Show when={fileStore.files.length > 0} fallback={<Landing />}>
         <Show
           when={!replayStore.isFullscreen}
           fallback={
@@ -86,8 +92,8 @@ export function App() {
             </div>
           </div>
         </Show>
-      </Show>
+      </Show> */}
       <ToastGroup />
-    </>
+    </div>
   );
 }
