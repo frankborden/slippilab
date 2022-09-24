@@ -4,6 +4,7 @@
   "author": "Frank Borden",
   "license": "MIT",
   "dependencies": {
+    "@motionone/solid": "^10.14.2",
     "@shelacek/ubjson": "^1.1.1",
     "@solid-primitives/raf": "^2.1.2",
     "@solid-primitives/upload": "^0.0.103",

@@ -164,6 +164,7 @@ export interface PlayerState {
   readonly lastHitBy: number;
   readonly stocksRemaining: number;
   readonly actionStateFrameCounter: number;
+  readonly hitstunRemaining: number;
   readonly isGrounded: boolean;
   readonly lastGroundId: number;
   readonly jumpsRemaining: number;

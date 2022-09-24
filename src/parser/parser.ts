@@ -757,6 +757,13 @@ function parsePostFrameUpdateEvent(
       "0.2.0.0",
       offset + 0x22
     ),
+    hitstunRemaining: readFloat(
+      rawData,
+      32,
+      replayVersion,
+      "2.0.0.0",
+      offset + 0x2b
+    ),
     isGrounded:
       readUint(rawData, 8, replayVersion, "2.0.0.0", offset + 0x2f) !== 0,
     lastGroundId: readUint(rawData, 8, replayVersion, "2.0.0.0", offset + 0x30),

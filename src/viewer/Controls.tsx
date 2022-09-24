@@ -124,7 +124,7 @@ export function Controls() {
   let seekbarInput!: HTMLInputElement;
 
   return (
-    <div class="flex flex-wrap items-center justify-evenly gap-4 rounded-lg border pl-2 pr-4 text-slate-800">
+    <div class="flex flex-wrap items-center justify-evenly gap-4 rounded-b border border-t-0 pl-2 pr-4 text-slate-800">
       <Show
         when={replayStore.running}
         fallback={

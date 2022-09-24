@@ -26,12 +26,10 @@ export function UploadDialog() {
   }
 
   return (
-    <div>
+    <div class="h-8">
       <Dialog onClose={() => setState("not started")}>
         <Dialog.Trigger>
-          <PrimaryButton>
-            <div class="material-icons text-md">upload_file</div>
-          </PrimaryButton>
+          <div class="material-icons text-[32px]">share</div>
         </Dialog.Trigger>
         <Dialog.Title>
           <h2 class="text-lg">Replay Upload</h2>

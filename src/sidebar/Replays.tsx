@@ -30,7 +30,7 @@ const filterProps = createOptions(
 export function Replays() {
   return (
     <>
-      <div class="flex h-full w-96 flex-col items-center gap-2 overflow-y-auto">
+      <div class="flex h-full w-full flex-col items-center gap-2 overflow-y-auto">
         <div
           class="w-full"
           // don't trigger global shortcuts when typing in the filter box
@@ -65,14 +65,6 @@ export function Replays() {
             }
           />
         </Show>
-        <div class="flex w-full items-center justify-between gap-4">
-          <PrimaryButton onClick={previousFile}>
-            <div class="material-icons cursor-pointer">arrow_upward</div>
-          </PrimaryButton>
-          <PrimaryButton onClick={nextFile}>
-            <div class="material-icons cursor-pointer">arrow_downward</div>
-          </PrimaryButton>
-        </div>
       </div>
     </>
   );

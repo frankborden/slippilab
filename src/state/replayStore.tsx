@@ -450,7 +450,7 @@ function isSpacieUpB(playerState: PlayerState): boolean {
   );
 }
 
-function getPlayerColor(
+export function getPlayerColor(
   replayState: ReplayStore,
   playerIndex: number,
   isNana: boolean
