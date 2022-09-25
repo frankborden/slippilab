@@ -15,7 +15,7 @@
     "@zag-js/menu": "^0.1.14",
     "@zag-js/solid": "^0.1.15",
     "@zag-js/toast": "^0.1.14",
-    "@zip.js/zip.js": "^2.6.26",
+    "@zip.js/zip.js": "^2.6.32",
     "rambda": "^7.2.1",
     "solid-js": "^1.5.4",
     "zoo-ids": "^2.0.7"
