@@ -21,11 +21,9 @@ export function PlayerHUD(props: { player: number }) {
           renderData()!.playerSettings.connectCode,
           renderData()!.playerSettings.nametag,
           renderData()!.playerSettings.displayName,
-          renderData()!.playerSettings.playerType === 1
-            ? "CPU"
-            : characterNameByInternalId[
-                renderData()!.playerState.internalCharacterId
-              ],
+          characterNameByInternalId[
+            renderData()!.playerState.internalCharacterId
+          ],
         ].find((n) => n !== undefined && n.length > 0)
       : ""
   );
@@ -64,9 +62,6 @@ export function PlayerHUD(props: { player: number }) {
         />
         <Show when={replayStore.isDebug}>
           <Debug position={position()} renderData={renderData()!} />
-        </Show>
-        <Show when={replayStore.showInputDisplay}>
-          <Inputs renderData={renderData()!} portX={position().x} />
         </Show>
       </Show>
     </>
@@ -131,134 +126,5 @@ function Debug(props: {
         stroke="black"
       />
     </>
-  );
-}
-
-function Inputs(props: { renderData: RenderData; portX: number }) {
-  return (
-    <svg
-      x={`${props.portX - 10}%`}
-      y="30%"
-      width="20%"
-      height="20%"
-      viewBox="0 0 100 100"
-    >
-      <g transform="translate(50, 50) scale(1, 1)">
-        {/* joystick */}
-        <circle
-          cx={`${-30 + 5 * props.renderData.playerInputs.processed.joystickX}%`}
-          cy={`${5 * props.renderData.playerInputs.processed.joystickY}%`}
-          r="10%"
-          fill="lightgray"
-          stroke="black"
-        />
-        <circle
-          cx={`${-30 + 5 * props.renderData.playerInputs.processed.joystickX}%`}
-          cy={`${5 * props.renderData.playerInputs.processed.joystickY}%`}
-          r={"7%"}
-          fill="lightgray"
-          stroke="black"
-        />
-        <circle cx={`${-30}%`} cy={0} r="1.5%" fill="black" />
-        {/* cstick */}
-        <circle
-          cx={`${20 + 5 * props.renderData.playerInputs.processed.cStickX}%`}
-          cy={`${-30 + 5 * props.renderData.playerInputs.processed.cStickY}%`}
-          r="10%"
-          fill="yellow"
-          stroke="black"
-        />
-        <circle
-          cx={`${20 + 5 * props.renderData.playerInputs.processed.cStickX}%`}
-          cy={`${-30 + 5 * props.renderData.playerInputs.processed.cStickY}%`}
-          r="7%"
-          fill="yellow"
-          stroke="black"
-        />
-        <circle cx={`${20}%`} cy={-30} r="1.5%" fill="black" />
-        {/* buttons */}
-        {/* A */}
-        <circle
-          cx="30%"
-          cy="0"
-          r="8%"
-          fill={
-            props.renderData.playerInputs.physical.a ? "green" : "transparent"
-          }
-          stroke="black"
-        />
-        {/* B */}
-        <circle
-          cx="17%"
-          cy="-10%"
-          r="5%"
-          fill={
-            props.renderData.playerInputs.processed.b ? "red" : "transparent"
-          }
-          stroke="black"
-        />
-        {/* X */}
-        <circle
-          cx="45%"
-          cy="0"
-          r="5%"
-          fill={
-            props.renderData.playerInputs.processed.x
-              ? "lightgray"
-              : "transparent"
-          }
-          stroke="black"
-        />
-        {/* Y */}
-        <circle
-          cx="29%"
-          cy="15%"
-          r="5%"
-          fill={
-            props.renderData.playerInputs.processed.y
-              ? "lightgray"
-              : "transparent"
-          }
-          stroke="black"
-        />
-        {/* Z */}
-        <rect
-          x="40%"
-          y="20%"
-          width="10%"
-          height="4%"
-          fill={
-            props.renderData.playerInputs.processed.z ? "purple" : "transparent"
-          }
-          stroke="black"
-        />
-        {/* L */}
-        <rect
-          x="-40%"
-          y="30%"
-          width="20%"
-          height="4%"
-          fill={
-            props.renderData.playerInputs.processed.lTriggerDigial
-              ? "lightgray"
-              : "transparent"
-          }
-          stroke="black"
-        />
-        {/* R */}
-        <rect
-          x="40%"
-          y="30%"
-          width="20%"
-          height="4%"
-          fill={
-            props.renderData.playerInputs.processed.rTriggerDigial
-              ? "lightgray"
-              : "transparent"
-          }
-          stroke="black"
-        />
-      </g>
-    </svg>
   );
 }

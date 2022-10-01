@@ -6,6 +6,7 @@ import { PrimaryButton } from "~/common/Button";
 import { filterFiles } from "~/common/util";
 import { load } from "~/state/fileStore";
 import { Portal } from "solid-js/web";
+import { FolderIcon } from "~/common/icons";
 
 export function OpenMenu(props: { name: string }) {
   const [menuState, menuSend] = useMachine(
@@ -56,12 +57,15 @@ export function OpenMenu(props: { name: string }) {
             folder_open
           </div>
         </PrimaryButton> */}
-        <button
+        {/* <button
           class="material-icons justify-self-start text-[32px] leading-none"
           aria-label="Open File or Folder"
           {...api().triggerProps}
         >
           folder_open
+        </button> */}
+        <button class="h-8 w-8 cursor-pointer" {...api().triggerProps}>
+          <FolderIcon title="Open File or Folder" />
         </button>
         <Portal>
           <div {...api().positionerProps} class="bg-white opacity-100">

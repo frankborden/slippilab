@@ -55,7 +55,6 @@ export interface ReplayStore {
   zoom: number;
   isDebug: boolean;
   isFullscreen: boolean;
-  showInputDisplay: boolean;
 }
 export const defaultReplayStoreState: ReplayStore = {
   highlights: map(() => [], queries),
@@ -68,7 +67,6 @@ export const defaultReplayStoreState: ReplayStore = {
   zoom: 1,
   isDebug: false,
   isFullscreen: false,
-  showInputDisplay: false,
 };
 
 const [replayState, setReplayState] = createStore<ReplayStore>(
@@ -151,10 +149,6 @@ export function toggleDebug(): void {
 
 export function toggleFullscreen(): void {
   setReplayState("isFullscreen", (isFullscreen) => !isFullscreen);
-}
-
-export function toggleInputDisplay(): void {
-  setReplayState("showInputDisplay", (showInputDisplay) => !showInputDisplay);
 }
 
 export function togglePause(): void {

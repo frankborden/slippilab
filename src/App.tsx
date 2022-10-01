@@ -10,11 +10,7 @@ import "~/state/fileStore";
 import "~/state/selectionStore";
 import "~/state/replayStore";
 import { load } from "~/state/fileStore";
-import {
-  replayStore,
-  toggleDebug,
-  toggleInputDisplay,
-} from "~/state/replayStore";
+import { replayStore, toggleDebug } from "~/state/replayStore";
 import { downloadReplay } from "~/supabaseClient";
 import { Viewer } from "~/viewer/Viewer";
 import { Sidebar } from "~/sidebar/Sidebar";

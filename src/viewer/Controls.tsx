@@ -13,7 +13,6 @@ import {
   speedSlow,
   toggleDebug,
   toggleFullscreen,
-  toggleInputDisplay,
   togglePause,
   zoomIn,
   zoomOut,
@@ -107,9 +106,6 @@ export function Controls() {
       case "F":
         toggleFullscreen();
         break;
-      case "c":
-      case "C":
-        toggleInputDisplay();
     }
   }
 
