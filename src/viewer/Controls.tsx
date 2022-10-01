@@ -158,7 +158,7 @@ export function Controls() {
         >
           -
         </MinusIcon>
-        <label for="seekbar" class="text-sm">
+        <label for="seekbar" class="font-mono text-sm">
           {replayStore.isDebug ? replayStore.frame - 123 : replayStore.frame}
         </label>
         <PlusIcon
