@@ -5,6 +5,7 @@ import {
   TwitterIcon,
   VideoLibraryIcon,
 } from "~/common/icons";
+import { SettingsDialog } from "~/sidebar/SettingsDialog";
 import { currentSidebar, setSidebar } from "~/state/navigationStore";
 
 export function Navigation() {
@@ -41,6 +42,7 @@ export function Navigation() {
           </div>
         </div>
         <div class="flex flex-col items-center gap-2">
+          <SettingsDialog />
           <a
             href="https://www.github.com/frankborden/slippilab"
             target="_blank"

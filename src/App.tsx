@@ -9,7 +9,7 @@ import "@thisbeyond/solid-select/style.css";
 import "~/state/fileStore";
 import "~/state/selectionStore";
 import "~/state/replayStore";
-import { load } from "~/state/fileStore";
+import { fileStore, load } from "~/state/fileStore";
 import { replayStore, toggleDebug } from "~/state/replayStore";
 import { downloadReplay } from "~/supabaseClient";
 import { Viewer } from "~/viewer/Viewer";
@@ -64,29 +64,25 @@ export function App() {
   }
 
   return (
-    <div class="flex h-screen gap-4" ref={dropzoneRef}>
-      <Navigation />
-      <Sidebar />
-      <div class="flex flex-grow flex-col gap-2 pt-2">
-        <TopBar />
-        <Viewer />
-      </div>
-      {/* <Show when={fileStore.files.length > 0} fallback={<Landing />}>
-        <Show
-          when={!replayStore.isFullscreen}
-          fallback={
-            <div class="flex h-screen flex-col justify-between overflow-y-auto">
-              <Viewer />
-            </div>
-          }
-        >
-          <div class="flex flex-col md:h-screen md:w-screen" ref={dropzoneRef}>
-            <TopBar />
-            <MainContent />
+    <Show when={fileStore.files.length > 0} fallback={<Landing />}>
+      <Show
+        when={!replayStore.isFullscreen}
+        fallback={
+          <div class="flex h-screen flex-col justify-between overflow-y-auto">
+            <Viewer />
           </div>
-        </Show>
-      </Show> */}
-      <ToastGroup />
-    </div>
+        }
+      >
+        <div class="flex h-screen gap-4" ref={dropzoneRef}>
+          <Navigation />
+          <Sidebar />
+          <div class="flex flex-grow flex-col gap-2 pt-2">
+            <TopBar />
+            <Viewer />
+          </div>
+          <ToastGroup />
+        </div>
+      </Show>
+    </Show>
   );
 }

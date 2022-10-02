@@ -1,13 +1,14 @@
 import { WhiteButton } from "~/common/Button";
 import { Dialog } from "~/common/Dialog";
+import { KeyboardIcon } from "~/common/icons";
 
 export function SettingsDialog() {
   return (
-    <div class="h-6 w-6">
+    <div class="h-8 w-8">
       <Dialog>
         <Dialog.Trigger>
-          <button class="material-icons cursor-pointer text-3xl leading-6">
-            settings
+          <button class="h-8 w-8">
+            <KeyboardIcon title="Keybindings" />
           </button>
         </Dialog.Trigger>
         <Dialog.Title>
@@ -213,7 +214,7 @@ function Settings() {
                   d
                 </kbd>
               </td>
-              <td class="pl-3">Toggle debug output</td>
+              <td class="pl-3">Toggle debug output (un-normalizes frame#)</td>
             </tr>
           </tbody>
         </table>
