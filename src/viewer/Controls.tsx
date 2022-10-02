@@ -143,6 +143,13 @@ export function Controls() {
         </div>
       </Show>
       <div class="flex items-center gap-1">
+        <div
+          class="material-icons cursor-pointer text-[32px]"
+          onClick={() => adjust(-120)}
+          aria-label="Rewind 2 seconds"
+        >
+          history
+        </div>
         <MinusIcon
           class="h-6 w-6"
           role="button"
@@ -168,6 +175,13 @@ export function Controls() {
         >
           +
         </PlusIcon>
+        <div
+          class="material-icons cursor-pointer text-[32px]"
+          onClick={() => adjust(120)}
+          aria-label="Skip ahead 2 seconds"
+        >
+          update
+        </div>
       </div>
       <input
         id="seekbar"
@@ -178,28 +192,12 @@ export function Controls() {
         max={replayStore.replayData!.frames.length - 1}
         onInput={() => jump(seekbarInput.valueAsNumber)}
       />
-      <div class="flex items-center gap-2">
-        <div
-          class="material-icons cursor-pointer text-[32px]"
-          onClick={() => adjust(-120)}
-          aria-label="Rewind 2 seconds"
-        >
-          history
-        </div>
-        <div
-          class="material-icons cursor-pointer text-[32px]"
-          onClick={() => adjust(120)}
-          aria-label="Skip ahead 2 seconds"
-        >
-          update
-        </div>
-        <div
-          class="material-icons cursor-pointer text-[32px]"
-          onClick={() => toggleFullscreen()}
-          aria-label="Toggle fullscreen mode"
-        >
-          {replayStore.isFullscreen ? "fullscreen_exit" : "fullscreen"}
-        </div>
+      <div
+        class="material-icons cursor-pointer text-[32px]"
+        onClick={() => toggleFullscreen()}
+        aria-label="Toggle fullscreen mode"
+      >
+        {replayStore.isFullscreen ? "fullscreen_exit" : "fullscreen"}
       </div>
     </div>
   );
