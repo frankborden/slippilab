@@ -6,9 +6,9 @@ import { PrimaryButton } from "~/common/Button";
 import { filterFiles } from "~/common/util";
 import { load } from "~/state/fileStore";
 import { Portal } from "solid-js/web";
-import { FolderIcon } from "~/common/icons";
+import { AddFolderIcon } from "~/common/icons";
 
-export function OpenMenu(props: { name: string }) {
+export function OpenMenu(props: { name?: string }) {
   const [menuState, menuSend] = useMachine(
     menu.machine({
       id: createUniqueId(),
@@ -49,24 +49,26 @@ export function OpenMenu(props: { name: string }) {
   return (
     <>
       <div class="h-8 w-fit">
-        {/* <PrimaryButton {...api().triggerProps} class="flex items-center gap-2">
-          <Show when={props.name !== ""}>
-            <div class="hidden md:block">{props.name}</div>
-          </Show>
-          <div class="material-icons" aria-label="Open File or Folder">
-            folder_open
-          </div>
-        </PrimaryButton> */}
-        {/* <button
-          class="material-icons justify-self-start text-[32px] leading-none"
-          aria-label="Open File or Folder"
-          {...api().triggerProps}
+        <Show
+          when={props.name}
+          fallback={
+            <button class="h-8 w-8 cursor-pointer" {...api().triggerProps}>
+              <AddFolderIcon title="Open File or Folder" />
+            </button>
+          }
         >
-          folder_open
-        </button> */}
-        <button class="h-8 w-8 cursor-pointer" {...api().triggerProps}>
-          <FolderIcon title="Open File or Folder" />
-        </button>
+          <PrimaryButton
+            {...api().triggerProps}
+            class="flex items-center gap-2"
+          >
+            <Show when={props.name !== ""}>
+              <div class="hidden md:block">{props.name}</div>
+            </Show>
+            <div class="material-icons" aria-label="Open File or Folder">
+              folder_open
+            </div>
+          </PrimaryButton>
+        </Show>
         <Portal>
           <div {...api().positionerProps} class="bg-white opacity-100">
             <ul {...api().contentProps} class="border border-slate-300">

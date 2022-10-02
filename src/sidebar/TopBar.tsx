@@ -7,7 +7,7 @@ import { nextFile, previousFile, selectionStore } from "~/state/selectionStore";
 export function TopBar() {
   return (
     <div class="grid grid-cols-5 items-center pr-4">
-      <OpenMenu name="Open" />
+      <OpenMenu />
       <Show when={selectionStore.selectedFileAndSettings}>
         <div class="text col-span-3 flex items-center gap-4 justify-self-center">
           <ArrowLeft
