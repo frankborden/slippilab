@@ -1,6 +1,7 @@
 import { Links } from "~/common/Links";
 import { OpenMenu } from "~/common/OpenMenu";
 import colors from "tailwindcss/colors";
+import { SlippiLab } from "~/common/icons";
 
 export function Landing() {
   return (
@@ -58,11 +59,9 @@ export function Landing() {
         class="flex flex-col items-center justify-center gap-20"
         style={{ "grid-area": "logo" }}
       >
-        <div class="flex flex-col items-center">
+        <div class="flex flex-col items-center gap-2">
           <img class="w-64" src="logo.png" />
-          <div class="w-max font-['Comfortaa-Bold'] text-6xl tracking-tighter">
-            Slippi Lab
-          </div>
+          <SlippiLab title="logo" />
         </div>
         <OpenMenu name="Start" />
       </div>

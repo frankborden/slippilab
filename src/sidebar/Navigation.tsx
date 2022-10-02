@@ -13,7 +13,7 @@ export function Navigation() {
     <div class="border-r p-4">
       <div class="flex h-full flex-col items-center justify-between">
         <div class="flex flex-col items-center gap-8">
-          <img class="w-16" title="logo" src="logo-square.png" />
+          <img class="w-16" title="logo" src="logo.png" />
           <div class="flex w-10 flex-col">
             <VideoLibraryIcon
               title="Replays"

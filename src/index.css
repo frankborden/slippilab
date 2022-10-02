@@ -1,8 +1,3 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@font-face {
-  font-family: "Comfortaa-Bold";
-  src: local("Comfortaa-Bold"), url(/Comfortaa-Bold.ttf) format("truetype");
-}
