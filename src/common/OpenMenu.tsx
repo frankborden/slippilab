@@ -61,12 +61,7 @@ export function OpenMenu(props: { name?: string }) {
             {...api().triggerProps}
             class="flex items-center gap-2"
           >
-            <Show when={props.name !== ""}>
-              <div class="hidden md:block">{props.name}</div>
-            </Show>
-            <div class="material-icons" aria-label="Open File or Folder">
-              folder_open
-            </div>
+            <div class="hidden md:block">{props.name}</div>
           </PrimaryButton>
         </Show>
         <Portal>

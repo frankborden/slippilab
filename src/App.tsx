@@ -64,25 +64,27 @@ export function App() {
   }
 
   return (
-    <Show when={fileStore.files.length > 0} fallback={<Landing />}>
-      <Show
-        when={!replayStore.isFullscreen}
-        fallback={
-          <div class="flex h-screen flex-col justify-between overflow-y-auto">
-            <Viewer />
+    <>
+      <Show when={fileStore.files.length > 0} fallback={<Landing />}>
+        <Show
+          when={!replayStore.isFullscreen}
+          fallback={
+            <div class="flex h-screen flex-col justify-between overflow-y-auto">
+              <Viewer />
+            </div>
+          }
+        >
+          <div class="flex h-screen gap-4" ref={dropzoneRef}>
+            <Navigation />
+            <Sidebar />
+            <div class="flex flex-grow flex-col gap-2 pt-2">
+              <TopBar />
+              <Viewer />
+            </div>
           </div>
-        }
-      >
-        <div class="flex h-screen gap-4" ref={dropzoneRef}>
-          <Navigation />
-          <Sidebar />
-          <div class="flex flex-grow flex-col gap-2 pt-2">
-            <TopBar />
-            <Viewer />
-          </div>
-          <ToastGroup />
-        </div>
+        </Show>
       </Show>
-    </Show>
+      <ToastGroup />
+    </>
   );
 }

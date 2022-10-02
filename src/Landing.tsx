@@ -1,7 +1,6 @@
-import { Links } from "~/common/Links";
 import { OpenMenu } from "~/common/OpenMenu";
 import colors from "tailwindcss/colors";
-import { SlippiLab } from "~/common/icons";
+import { GitHubIcon, SlippiLab, TwitterIcon } from "~/common/icons";
 
 export function Landing() {
   return (
@@ -103,7 +102,17 @@ export function Landing() {
         class="flex flex-col items-center justify-end"
         style={{ "grid-area": "footer" }}
       >
-        <Links />
+        <div class="flex items-center justify-center gap-4">
+          <a
+            href="https://www.github.com/frankborden/slippilab"
+            target="_blank"
+          >
+            <GitHubIcon class="h-8 w-8" title="GitHub" />
+          </a>
+          <a href="https://www.twitter.com/slippilab" target="_blank">
+            <TwitterIcon class="h-8 w-8" title="Twitter" />
+          </a>
+        </div>
         <div>
           Slippi Lab uses .slp replay files from
           <a
