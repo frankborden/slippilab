@@ -30,7 +30,7 @@ const filterProps = createOptions(
 export function Replays() {
   return (
     <>
-      <div class="flex h-full w-full flex-col items-center gap-2 overflow-y-auto">
+      <div class="flex max-h-96 w-full flex-col items-center gap-2 overflow-y-auto sm:h-full md:max-h-screen">
         <div
           class="w-full"
           // don't trigger global shortcuts when typing in the filter box

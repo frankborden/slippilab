@@ -15,10 +15,13 @@ export function TopBar() {
             title="Previous Replay"
             onClick={() => previousFile()}
           />
-          <div class="truncate whitespace-nowrap">
+          <div
+            class="max-w-[150px] truncate whitespace-nowrap sm:max-w-xs"
+            title={selectionStore.selectedFileAndSettings![0].name}
+          >
             {selectionStore.selectedFileAndSettings![0].name}
           </div>
-          <div class="hidden whitespace-nowrap sm:block">
+          <div class="hidden whitespace-nowrap xl:block">
             {new Date(
               selectionStore.selectedFileAndSettings![1].startTimestamp
             ).toLocaleString()}
