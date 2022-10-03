@@ -211,7 +211,7 @@ function Settings() {
             <tr>
               <td>
                 <kbd class="rounded border border-slate-400 bg-slate-50 px-1">
-                  d
+                  D
                 </kbd>
               </td>
               <td class="pl-3">Toggle debug output (un-normalizes frame#)</td>
