@@ -6,7 +6,7 @@ import { nextFile, previousFile, selectionStore } from "~/state/selectionStore";
 
 export function TopBar() {
   return (
-    <div class="grid grid-cols-5 items-center pr-4">
+    <div class="grid grid-cols-5 items-center">
       <OpenMenu />
       <Show when={selectionStore.selectedFileAndSettings}>
         <div class="text col-span-3 flex items-center gap-4 justify-self-center">
@@ -18,7 +18,7 @@ export function TopBar() {
           <div class="truncate whitespace-nowrap">
             {selectionStore.selectedFileAndSettings![0].name}
           </div>
-          <div class="whitespace-nowrap">
+          <div class="hidden whitespace-nowrap sm:block">
             {new Date(
               selectionStore.selectedFileAndSettings![1].startTimestamp
             ).toLocaleString()}

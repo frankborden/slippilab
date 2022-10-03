@@ -12,7 +12,7 @@ export function Viewer() {
     () => replayStore.replayData?.frames[replayStore.frame].items ?? []
   );
   return (
-    <div class="flex flex-col overflow-y-auto pb-4 pr-4">
+    <div class="flex flex-col overflow-y-auto pb-4">
       <Show when={replayStore.replayData}>
         <svg class="rounded-t border bg-slate-50" viewBox="-365 -300 730 600">
           {/* up = positive y axis */}

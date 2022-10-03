@@ -10,7 +10,7 @@ import { currentSidebar, setSidebar } from "~/state/navigationStore";
 
 export function Navigation() {
   return (
-    <div class="border-r p-4">
+    <div class="hidden border-r p-4 lg:block">
       <div class="flex h-full flex-col items-center justify-between">
         <div class="flex flex-col items-center gap-8">
           <img class="w-16" title="logo" src="logo.png" />

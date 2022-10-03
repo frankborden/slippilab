@@ -74,10 +74,13 @@ export function App() {
             </div>
           }
         >
-          <div class="flex h-screen gap-4" ref={dropzoneRef}>
+          <div
+            class="flex h-full flex-col-reverse gap-4 lg:h-screen lg:flex-row"
+            ref={dropzoneRef}
+          >
             <Navigation />
             <Sidebar />
-            <div class="flex flex-grow flex-col gap-2 pt-2">
+            <div class="flex max-h-screen flex-grow flex-col gap-2 pt-2 pr-4 pl-4 lg:pl-0">
               <TopBar />
               <Viewer />
             </div>
