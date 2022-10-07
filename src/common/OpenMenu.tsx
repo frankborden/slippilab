@@ -61,7 +61,7 @@ export function OpenMenu(props: { name?: string }) {
             {...api().triggerProps}
             class="flex items-center gap-2"
           >
-            <div class="hidden md:block">{props.name}</div>
+            {props.name}
           </PrimaryButton>
         </Show>
         <Portal>

@@ -5,22 +5,20 @@ import { GitHubIcon, SlippiLab, TwitterIcon } from "~/common/icons";
 export function Landing() {
   return (
     <div
-      class="box-border grid h-screen bg-[length:30px_30px] p-4"
+      class="box-border grid h-screen grid-cols-[0_auto_0] grid-rows-[0_auto_min-content] bg-[length:30px_30px] p-4 md:grid-cols-3 md:grid-rows-[1fr_auto_1fr]"
       style={{
         "grid-template-areas": `
           ".      .      ."
           "falco  logo   fox"
           "footer footer footer"
         `,
-        "grid-template-rows": "1fr auto 1fr max-content",
-        "grid-template-columns": "1fr max-content 1fr",
         "background-image": `
           linear-gradient(lightblue 1px, transparent 1px),
           linear-gradient(90deg, lightblue 1px, transparent 1px)
         `,
       }}
     >
-      <div style={{ "grid-area": "falco" }}>
+      <div class="hidden md:block" style={{ "grid-area": "falco" }}>
         <svg class="aspect-square" viewBox="-14 -20 30 19">
           <radialGradient id="fill-red" r="1">
             <stop stop-color={colors.red["700"]}>
@@ -60,11 +58,11 @@ export function Landing() {
       >
         <div class="flex flex-col items-center gap-2">
           <img class="w-64" src="logo.png" />
-          <SlippiLab title="logo" />
+          <SlippiLab class="max-w-[75vw]" title="logo" />
         </div>
         <OpenMenu name="Start" />
       </div>
-      <div style={{ "grid-area": "fox" }}>
+      <div class="hidden md:block" style={{ "grid-area": "fox" }}>
         <svg class="aspect-square" viewBox="-16 -24 30 29">
           <radialGradient id="fill-blue" r="1">
             <stop stop-color={colors.blue["700"]}>
@@ -113,7 +111,7 @@ export function Landing() {
             <TwitterIcon class="h-8 w-8" title="Twitter" />
           </a>
         </div>
-        <div>
+        <div class="text-center">
           Slippi Lab uses .slp replay files from
           <a
             target="_blank"
