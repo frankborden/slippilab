@@ -16,6 +16,18 @@ export function UploadDialog() {
   async function onUploadClicked() {
     setState("loading");
     const [file] = selectionStore.selectedFileAndSettings!;
+
+    // Don't bother re-uploading the sample file.
+    if (
+      file.lastModified === 1665325157744 &&
+      file.name === "sample.slp" &&
+      file.size === 2123266
+    ) {
+      setUrl(`${window.location.origin}/sample`);
+      setState("done");
+      return;
+    }
+
     const { id, data, error } = await uploadReplay(file);
     if (data != null) {
       setUrl(`${window.location.origin}/${id}`);

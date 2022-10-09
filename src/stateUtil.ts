@@ -6,7 +6,7 @@ export async function loadFromSupabase(
 ): Promise<void> {
   const { data, error } = await downloadReplay(id);
   if (data != null) {
-    const file = new File([data], "download.slp");
+    const file = new File([data], `${id}.slp`);
     return await load([file]);
   }
   if (error != null) {
