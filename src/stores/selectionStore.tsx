@@ -7,7 +7,7 @@ import {
   stageNameByExternalId,
 } from "~/common/ids";
 import { createEffect, on } from "solid-js";
-import { fileStore } from "~/state/fileStore";
+import { fileStore } from "~/stores/fileStore";
 
 export type Filter =
   | { type: "character"; label: ExternalCharacterName }

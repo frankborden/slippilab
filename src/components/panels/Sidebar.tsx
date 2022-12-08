@@ -1,8 +1,8 @@
-import { currentSidebar } from "~/state/navigationStore";
+import { currentSidebar } from "~/stores/navigationStore";
 import { Switch, Match } from "solid-js";
-import { Replays } from "~/sidebar/Replays";
-import { Clips } from "~/sidebar/Clips";
-import { Inputs } from "~/sidebar/Inputs";
+import { Replays } from "~/components/panels/Replays";
+import { Clips } from "~/components/panels/Clips";
+import { Inputs } from "~/components/panels/Inputs";
 
 export function Sidebar() {
   return (

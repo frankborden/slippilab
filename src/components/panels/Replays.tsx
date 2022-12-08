@@ -1,10 +1,10 @@
 import { createOptions, Select } from "@thisbeyond/solid-select";
 import { createMemo, For, Show } from "solid-js";
 import { characterNameByExternalId, stageNameByExternalId } from "~/common/ids";
-import { Picker } from "~/common/Picker";
+import { Picker } from "~/components/common/Picker";
 import { GameSettings, PlayerSettings } from "~/common/types";
-import { StageBadge } from "~/common/Badge";
-import { selectionStore, setFilters, select } from "~/state/selectionStore";
+import { StageBadge } from "~/components/common/Badge";
+import { selectionStore, setFilters, select } from "~/stores/selectionStore";
 
 const filterProps = createOptions(
   [

@@ -1,7 +1,7 @@
 import { batch, For } from "solid-js";
 import { createStore } from "solid-js/store";
-import { ProgressCircle } from "~/common/ProgressCircle";
-import { createToast, dismissToast } from "~/common/toaster";
+import { ProgressCircle } from "~/components/common/ProgressCircle";
+import { createToast, dismissToast } from "~/components/common/toaster";
 import { GameSettings } from "~/common/types";
 import { send } from "~/workerClient";
 

@@ -1,5 +1,5 @@
 import { onCleanup, onMount, Show } from "solid-js";
-import { MinusIcon, PlusIcon } from "~/common/icons";
+import { MinusIcon, PlusIcon } from "~/components/common/icons";
 import {
   replayStore,
   adjust,
@@ -16,8 +16,8 @@ import {
   togglePause,
   zoomIn,
   zoomOut,
-} from "~/state/replayStore";
-import { nextFile, previousFile } from "~/state/selectionStore";
+} from "~/stores/replayStore";
+import { nextFile, previousFile } from "~/stores/selectionStore";
 
 export function Controls() {
   onMount(() => {

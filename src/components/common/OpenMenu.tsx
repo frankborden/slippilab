@@ -2,11 +2,11 @@ import * as menu from "@zag-js/menu";
 import { normalizeProps, useMachine } from "@zag-js/solid";
 import { createMemo, createUniqueId, Show } from "solid-js";
 import { loadFromSupabase } from "~/stateUtil";
-import { PrimaryButton } from "~/common/Button";
+import { PrimaryButton } from "~/components/common/Button";
 import { filterFiles } from "~/common/util";
-import { load } from "~/state/fileStore";
+import { load } from "~/stores/fileStore";
 import { Portal } from "solid-js/web";
-import { AddFolderIcon } from "~/common/icons";
+import { AddFolderIcon } from "~/components/common/icons";
 
 export function OpenMenu(props: { name?: string }) {
   const [menuState, menuSend] = useMachine(

@@ -1,8 +1,12 @@
 import { Show } from "solid-js";
-import { ArrowLeft, ArrowRight, DownloadIcon } from "~/common/icons";
-import { OpenMenu } from "~/common/OpenMenu";
-import { UploadDialog } from "~/sidebar/UploadDialog";
-import { nextFile, previousFile, selectionStore } from "~/state/selectionStore";
+import { ArrowLeft, ArrowRight, DownloadIcon } from "~/components/common/icons";
+import { OpenMenu } from "~/components/common/OpenMenu";
+import { UploadDialog } from "~/components/panels/UploadDialog";
+import {
+  nextFile,
+  previousFile,
+  selectionStore,
+} from "~/stores/selectionStore";
 
 export function TopBar() {
   return (

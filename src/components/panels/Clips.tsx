@@ -1,7 +1,7 @@
 import { createMemo, createUniqueId, For, Show } from "solid-js";
-import { PlayerBadge } from "~/common/Badge";
+import { PlayerBadge } from "~/components/common/Badge";
 import { Highlight } from "~/search/search";
-import { replayStore, selectHighlight } from "~/state/replayStore";
+import { replayStore, selectHighlight } from "~/stores/replayStore";
 import * as accordion from "@zag-js/accordion";
 import { normalizeProps, useMachine } from "@zag-js/solid";
 

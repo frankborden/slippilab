@@ -17,13 +17,13 @@ import {
 import { parseReplay } from "~/parser/parser";
 import { queries } from "~/search/queries";
 import { Highlight, search } from "~/search/search";
-import { selectionStore } from "~/state/selectionStore";
+import { selectionStore } from "~/stores/selectionStore";
 import { CharacterAnimations, fetchAnimations } from "~/viewer/animationCache";
 import { actionMapByInternalId } from "~/viewer/characters";
 import { Character } from "~/viewer/characters/character";
 import { getPlayerOnFrame, getStartOfAction } from "~/viewer/viewerUtil";
 import colors from "tailwindcss/colors";
-import { fileStore } from "~/state/fileStore";
+import { fileStore } from "~/stores/fileStore";
 
 export interface RenderData {
   playerState: PlayerState;

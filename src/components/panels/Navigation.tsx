@@ -4,9 +4,9 @@ import {
   GitHubIcon,
   TwitterIcon,
   VideoLibraryIcon,
-} from "~/common/icons";
-import { SettingsDialog } from "~/sidebar/SettingsDialog";
-import { currentSidebar, setSidebar } from "~/state/navigationStore";
+} from "~/components/common/icons";
+import { SettingsDialog } from "~/components/panels/SettingsDialog";
+import { currentSidebar, setSidebar } from "~/stores/navigationStore";
 
 export function Navigation() {
   return (

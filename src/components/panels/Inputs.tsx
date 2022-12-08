@@ -1,8 +1,8 @@
 import { For, JSX, Show } from "solid-js";
-import { PlayerBadge } from "~/common/Badge";
+import { PlayerBadge } from "~/components/common/Badge";
 import { characterNameByInternalId } from "~/common/ids";
 import { PlayerInputs } from "~/common/types";
-import { getPlayerColor, replayStore } from "~/state/replayStore";
+import { getPlayerColor, replayStore } from "~/stores/replayStore";
 
 export function Inputs() {
   return (

@@ -1,21 +1,21 @@
 /* @refresh reload */
-import { fetchAnimations } from "~/viewer/animationCache";
 import { createDropzone } from "@solid-primitives/upload";
-import { Show } from "solid-js";
-import { Landing } from "~/Landing";
-import { filterFiles } from "~/common/util";
-import { ToastGroup } from "~/common/toaster";
 import "@thisbeyond/solid-select/style.css";
-import "~/state/fileStore";
-import "~/state/selectionStore";
-import "~/state/replayStore";
-import { fileStore, load } from "~/state/fileStore";
-import { replayStore } from "~/state/replayStore";
+import { Show } from "solid-js";
+import { filterFiles } from "~/common/util";
+import { ToastGroup } from "~/components/common/toaster";
+import { Landing } from "~/components/Landing";
+import { Navigation } from "~/components/panels/Navigation";
+import { Sidebar } from "~/components/panels/Sidebar";
+import { TopBar } from "~/components/panels/TopBar";
+import { Viewer } from "~/components/viewer/Viewer";
+import { fileStore, load } from "~/stores/fileStore";
+import { replayStore } from "~/stores/replayStore";
 import { downloadReplay } from "~/supabaseClient";
-import { Viewer } from "~/viewer/Viewer";
-import { Sidebar } from "~/sidebar/Sidebar";
-import { Navigation } from "~/sidebar/Navigation";
-import { TopBar } from "~/sidebar/TopBar";
+import { fetchAnimations } from "~/viewer/animationCache";
+import "~/stores/fileStore";
+import "~/stores/replayStore";
+import "~/stores/selectionStore";
 
 export function App() {
   // Get started fetching the most popular characters

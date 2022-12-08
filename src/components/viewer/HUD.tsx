@@ -1,8 +1,8 @@
 import { createMemo } from "solid-js";
 import { For } from "solid-js/web";
-import { replayStore } from "~/state/replayStore";
-import { PlayerHUD } from "~/viewer/PlayerHUD";
-import { Timer } from "~/viewer/Timer";
+import { replayStore } from "~/stores/replayStore";
+import { PlayerHUD } from "~/components/viewer/PlayerHUD";
+import { Timer } from "~/components/viewer/Timer";
 
 export function HUD() {
   const playerIndexes = createMemo(() =>
