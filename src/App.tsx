@@ -10,14 +10,11 @@ import "~/state/fileStore";
 import "~/state/selectionStore";
 import "~/state/replayStore";
 import { fileStore, load } from "~/state/fileStore";
-import { replayStore, toggleDebug } from "~/state/replayStore";
+import { replayStore } from "~/state/replayStore";
 import { downloadReplay } from "~/supabaseClient";
 import { Viewer } from "~/viewer/Viewer";
 import { Sidebar } from "~/sidebar/Sidebar";
 import { Navigation } from "~/sidebar/Navigation";
-import { selectionStore } from "~/state/selectionStore";
-import { UploadDialog } from "~/sidebar/UploadDialog";
-import { ControllerIcon, ListUlIcon } from "~/common/icons";
 import { TopBar } from "~/sidebar/TopBar";
 
 export function App() {

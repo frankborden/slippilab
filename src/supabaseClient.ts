@@ -15,7 +15,7 @@ export async function downloadReplay(
 
 export async function uploadReplay(file: File): Promise<{
   id: string;
-  data: { Key: string } | null;
+  data: { path: string } | null;
   error: Error | null;
 }> {
   const id = generateId();

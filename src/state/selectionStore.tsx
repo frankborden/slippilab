@@ -7,7 +7,6 @@ import {
   stageNameByExternalId,
 } from "~/common/ids";
 import { createEffect, on } from "solid-js";
-import { groupBy, map, zip } from "rambda";
 import { fileStore } from "~/state/fileStore";
 
 export type Filter =
@@ -95,10 +94,9 @@ createEffect(
 
 // Update filter results if files, gameSettings, or filters change
 createEffect(() => {
-  const filesWithSettings = zip(fileStore.files, fileStore.gameSettings) as [
-    File,
-    GameSettings
-  ][];
+  const filesWithSettings = fileStore.files.map(
+    (file, i): [File, GameSettings] => [file, fileStore.gameSettings[i]]
+  );
   setSelectionState(
     "filteredFilesAndSettings",
     applyFilters(filesWithSettings, selectionState.filters)
@@ -122,13 +120,17 @@ function applyFilters(
   filesWithSettings: [File, GameSettings][],
   filters: Filter[]
 ): [File, GameSettings][] {
-  const charactersNeeded = map(
-    (filters: Filter[]) => filters.length,
-    groupBy(
-      (filter) => filter.label,
-      filters.filter((filter) => filter.type === "character")
+  const charactersNeeded: Record<string, number> = {};
+  filters
+    .filter(
+      (filter): filter is Filter & { type: "character" } =>
+        filter.type === "character"
     )
-  );
+    .forEach(
+      (filter) =>
+        (charactersNeeded[filter.label] =
+          (charactersNeeded[filter.label] ?? 0) + 1)
+    );
   const stagesAllowed = filters
     .filter((filter) => filter.type === "stage")
     .map((filter) => filter.label);

@@ -1,4 +1,3 @@
-import { splitEvery } from "rambda";
 import { stageNameByExternalId } from "./common/ids";
 import { GameSettings } from "./common/types";
 import { parseGameSettings } from "./parser/parser";
@@ -6,7 +5,10 @@ import { parseGameSettings } from "./parser/parser";
 onmessage = async (event) => {
   // Parse in groups of 500 replays at a time to prevent memory issues.
   const parsedSettings: Array<[File, GameSettings | "skipped" | "failed"]> = [];
-  const fileGroups = splitEvery<File>(500, event.data.payload);
+  const fileGroups = [];
+  for (let i = 0; i < event.data.payload.length; i += 500) {
+    fileGroups.push(event.data.payload.slice(i, i + 500));
+  }
   for (const fileGroup of fileGroups) {
     parsedSettings.push(
       ...(await Promise.all(

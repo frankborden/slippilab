@@ -1,18 +1,10 @@
 import { createOptions, Select } from "@thisbeyond/solid-select";
-import { groupBy } from "rambda";
-import { For, Show } from "solid-js";
+import { createMemo, For, Show } from "solid-js";
 import { characterNameByExternalId, stageNameByExternalId } from "~/common/ids";
 import { Picker } from "~/common/Picker";
 import { GameSettings, PlayerSettings } from "~/common/types";
 import { StageBadge } from "~/common/Badge";
-import { PrimaryButton } from "~/common/Button";
-import {
-  selectionStore,
-  setFilters,
-  select,
-  nextFile,
-  previousFile,
-} from "~/state/selectionStore";
+import { selectionStore, setFilters, select } from "~/state/selectionStore";
 
 const filterProps = createOptions(
   [
@@ -79,20 +71,21 @@ function GameInfo(props: { gameSettings: GameSettings }) {
     return name !== undefined ? `${name}(${character})` : character;
   }
 
+  const teams = createMemo(() => {
+    const teams: PlayerSettings[][] = [[], [], []];
+    props.gameSettings.playerSettings
+      .filter(Boolean)
+      .forEach((player) => teams[player.teamId].push(player));
+    return teams.filter((team) => team.length > 0);
+  });
+
   return (
     <>
       <div class="flex w-full items-center">
         <StageBadge stageId={props.gameSettings.stageId} />
         <div class="flex flex-grow flex-col items-center">
           {props.gameSettings.isTeams ? (
-            <For
-              each={Object.values(
-                groupBy(
-                  (p) => String(p.teamId),
-                  props.gameSettings.playerSettings.filter((s) => s)
-                )
-              )}
-            >
+            <For each={teams()}>
               {(team) => <div>{team.map(playerString).join(" + ")}</div>}
             </For>
           ) : (

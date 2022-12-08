@@ -1,4 +1,3 @@
-import { inc } from "rambda";
 import { batch, For } from "solid-js";
 import { createStore } from "solid-js/store";
 import { ProgressCircle } from "~/common/ProgressCircle";
@@ -43,7 +42,7 @@ export async function load(files: File[], startFrame?: number): Promise<void> {
     goodFilesAndSettings: Array<[File, GameSettings]>;
     failedFilenames: string[];
     skipCount: number;
-  } = await send(files, () => setState("parseProgress", inc));
+  } = await send(files, () => setState("parseProgress", (p) => p + 1));
 
   // Save results to the store and show results toasts
   batch(() => {

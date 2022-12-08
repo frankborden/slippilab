@@ -1,4 +1,3 @@
-import { findLastIndex } from "rambda";
 import type { ReplayData } from "~/common/types";
 import { Predicate } from "~/search/framePredicates";
 
@@ -86,10 +85,11 @@ export function search(
         .filter(
           (highlight, index, highlights) =>
             index ===
-            findLastIndex(
-              (h) => h.startFrame === highlight.startFrame,
-              highlights
-            )
+            highlights.length -
+              1 -
+              [...highlights]
+                .reverse()
+                .findIndex((h) => h.startFrame === highlight.startFrame)
         )
     );
   });

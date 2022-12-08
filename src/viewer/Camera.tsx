@@ -1,6 +1,4 @@
-import { filter, map, pipe, prop } from "rambda";
 import { createEffect, createMemo, createSignal, ParentProps } from "solid-js";
-import { PlayerUpdate } from "~/common/types";
 import { replayStore } from "~/state/replayStore";
 
 export function Camera(props: ParentProps) {
@@ -13,15 +11,12 @@ export function Camera(props: ParentProps) {
     const minimums = [100, 100];
 
     const currentFrame = replayStore.replayData!.frames[replayStore.frame];
-    const focuses = pipe(
-      filter((player: PlayerUpdate) => Boolean(player)),
-      map((player: PlayerUpdate) => ({
-        x: player.state.xPosition,
-        y: player.state.yPosition,
-      }))
-    )(currentFrame.players);
-    const xs = map(prop("x"), focuses);
-    const ys = map(prop("y"), focuses);
+    const focuses = currentFrame.players.filter(Boolean).map((player) => ({
+      x: player.state.xPosition,
+      y: player.state.yPosition,
+    }));
+    const xs = focuses.map(({ x }) => x);
+    const ys = focuses.map(({ y }) => y);
     const xMin = Math.min(...xs) - padding[0];
     const xMax = Math.max(...xs) + padding[0];
     const yMin = Math.min(...ys) - padding[1];
