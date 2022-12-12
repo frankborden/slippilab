@@ -1,6 +1,6 @@
 import { createMemo, For, Show } from "solid-js";
 import { characterNameByExternalId } from "~/common/ids";
-import { RenderData, replayStore } from "~/stores/replayStore";
+import { RenderData, replayStore } from "~/state/replayStore";
 import { getPlayerOnFrame, getStartOfAction } from "~/viewer/viewerUtil";
 
 export function Players() {

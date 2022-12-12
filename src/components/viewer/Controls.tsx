@@ -16,8 +16,8 @@ import {
   togglePause,
   zoomIn,
   zoomOut,
-} from "~/stores/replayStore";
-import { nextFile, previousFile } from "~/stores/selectionStore";
+} from "~/state/replayStore";
+import { nextFile, previousFile } from "~/state/selectionStore";
 
 export function Controls() {
   onMount(() => {

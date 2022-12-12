@@ -1,12 +1,14 @@
 import * as menu from "@zag-js/menu";
 import { normalizeProps, useMachine } from "@zag-js/solid";
 import { createMemo, createUniqueId, Show } from "solid-js";
-import { loadFromSupabase } from "~/stateUtil";
+import { loadFromSupabase } from "~/supabaseClient";
 import { PrimaryButton } from "~/components/common/Button";
 import { filterFiles } from "~/common/util";
-import { load } from "~/stores/fileStore";
+import { load } from "~/state/fileStore";
 import { Portal } from "solid-js/web";
 import { AddFolderIcon } from "~/components/common/icons";
+import { parseGameSettings } from "~/parser/parser";
+import { localLibrary } from "~/state/sources";
 
 export function OpenMenu(props: { name?: string }) {
   const [menuState, menuSend] = useMachine(
@@ -43,7 +45,14 @@ export function OpenMenu(props: { name?: string }) {
     }
     const files = Array.from(input.files);
     const filteredFiles = await filterFiles(files);
-    return await load(filteredFiles);
+    // return await load(filteredFiles);
+    const gameSettings = await Promise.all(
+      filteredFiles.map(async (file) =>
+        parseGameSettings(await file.arrayBuffer())
+      )
+    );
+    console.log(gameSettings);
+    localLibrary.setItems(gameSettings);
   }
 
   return (

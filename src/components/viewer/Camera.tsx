@@ -1,5 +1,5 @@
 import { createEffect, createMemo, createSignal, ParentProps } from "solid-js";
-import { replayStore } from "~/stores/replayStore";
+import { replayStore } from "~/state/replayStore";
 
 export function Camera(props: ParentProps) {
   const [center, setCenter] = createSignal<[number, number] | undefined>();

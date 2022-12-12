@@ -4,7 +4,7 @@ import { HUD } from "~/components/viewer/HUD";
 import { Players } from "~/components/viewer/Player";
 import { Stage } from "~/components/viewer/Stage";
 import { Item } from "~/components/viewer/Item";
-import { replayStore } from "~/stores/replayStore";
+import { replayStore } from "~/state/replayStore";
 import { Controls } from "~/components/viewer/Controls";
 
 export function Viewer() {

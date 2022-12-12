@@ -2,9 +2,11 @@ import { createOptions, Select } from "@thisbeyond/solid-select";
 import { createMemo, For, Show } from "solid-js";
 import { characterNameByExternalId, stageNameByExternalId } from "~/common/ids";
 import { Picker } from "~/components/common/Picker";
-import { GameSettings, PlayerSettings } from "~/common/types";
+import { PlayerSettings } from "~/common/types";
 import { StageBadge } from "~/components/common/Badge";
-import { selectionStore, setFilters, select } from "~/stores/selectionStore";
+// import { selectionStore, setFilters, select } from "~/state/selectionStore";
+import { Library } from "~/state/library";
+import { ReplayStub } from "~/state/sources";
 
 const filterProps = createOptions(
   [
@@ -19,7 +21,7 @@ const filterProps = createOptions(
     createable: (code) => ({ type: "codeOrName", label: code }),
   }
 );
-export function Replays() {
+export function Replays(props: { library: Library<ReplayStub> }) {
   return (
     <>
       <div class="flex max-h-96 w-full flex-col items-center gap-2 overflow-y-auto sm:h-full md:max-h-screen">
@@ -45,7 +47,7 @@ export function Replays() {
           <Picker
             items={selectionStore.filteredFilesAndSettings}
             render={([file, gameSettings]) => (
-              <GameInfo gameSettings={gameSettings} />
+              <GameInfo replayStub={gameSettings} />
             )}
             onClick={(fileAndSettings) => select(fileAndSettings)}
             selected={([file, gameSettings]) =>
@@ -62,7 +64,7 @@ export function Replays() {
   );
 }
 
-function GameInfo(props: { gameSettings: GameSettings }) {
+function GameInfo(props: { replayStub: ReplayStub }) {
   function playerString(player: PlayerSettings): string {
     const name = [player.displayName, player.connectCode, player.nametag].find(
       (s) => s?.length > 0
@@ -73,7 +75,7 @@ function GameInfo(props: { gameSettings: GameSettings }) {
 
   const teams = createMemo(() => {
     const teams: PlayerSettings[][] = [[], [], []];
-    props.gameSettings.playerSettings
+    props.replayStub.playerSettings
       .filter(Boolean)
       .forEach((player) => teams[player.teamId].push(player));
     return teams.filter((team) => team.length > 0);
@@ -82,14 +84,14 @@ function GameInfo(props: { gameSettings: GameSettings }) {
   return (
     <>
       <div class="flex w-full items-center">
-        <StageBadge stageId={props.gameSettings.stageId} />
+        <StageBadge stageId={props.replayStub.stageId} />
         <div class="flex flex-grow flex-col items-center">
-          {props.gameSettings.isTeams ? (
+          {props.replayStub.isTeams ? (
             <For each={teams()}>
               {(team) => <div>{team.map(playerString).join(" + ")}</div>}
             </For>
           ) : (
-            props.gameSettings.playerSettings
+            props.replayStub.playerSettings
               .filter((s) => s)
               .map(playerString)
               .join(" vs ")

@@ -1,6 +1,6 @@
 import { createMemo, For, Match, Switch } from "solid-js";
 import { stageNameByExternalId } from "~/common/ids";
-import { replayStore } from "~/stores/replayStore";
+import { replayStore } from "~/state/replayStore";
 
 export function Stage() {
   const stageName = createMemo(

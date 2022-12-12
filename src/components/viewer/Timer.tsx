@@ -1,5 +1,5 @@
 import { createMemo } from "solid-js";
-import { replayStore } from "~/stores/replayStore";
+import { replayStore } from "~/state/replayStore";
 
 export function Timer() {
   const meleeHundredths = [
