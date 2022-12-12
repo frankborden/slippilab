@@ -2,7 +2,7 @@ import { createSignal, Match, Show, Switch } from "solid-js";
 import { PrimaryButton, WhiteButton } from "~/components/common/Button";
 import { SpinnerCircle } from "~/components/common/SpinnerCircle";
 import { uploadReplay } from "~/supabaseClient";
-import { selectionStore } from "~/state/selectionStore";
+import { localLibrary } from "~/state/selectionStore";
 import { Dialog } from "~/components/common/Dialog";
 import { ShareIcon } from "~/components/common/icons";
 
@@ -15,7 +15,7 @@ export function UploadDialog() {
 
   async function onUploadClicked() {
     setState("loading");
-    const [file] = selectionStore.selectedFileAndSettings!;
+    const [file] = localLibrary.data.selectedFileAndSettings!;
 
     // Don't bother re-uploading the sample file.
     if (
@@ -59,7 +59,7 @@ export function UploadDialog() {
                   <p class="text-sm">
                     Uploading will send the file{" "}
                     <code class="underline">
-                      {selectionStore.selectedFileAndSettings?.[0].name}
+                      {localLibrary.data.selectedFileAndSettings?.[0].name}
                     </code>{" "}
                     to Slippi Lab for hosting and you will receive a short link
                     to share out.

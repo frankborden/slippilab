@@ -2,11 +2,9 @@ import { createOptions, Select } from "@thisbeyond/solid-select";
 import { createMemo, For, Show } from "solid-js";
 import { characterNameByExternalId, stageNameByExternalId } from "~/common/ids";
 import { Picker } from "~/components/common/Picker";
-import { PlayerSettings } from "~/common/types";
+import { GameSettings, PlayerSettings } from "~/common/types";
 import { StageBadge } from "~/components/common/Badge";
-// import { selectionStore, setFilters, select } from "~/state/selectionStore";
-import { Library } from "~/state/library";
-import { ReplayStub } from "~/state/sources";
+import { localLibrary } from "~/state/selectionStore";
 
 const filterProps = createOptions(
   [
@@ -21,7 +19,7 @@ const filterProps = createOptions(
     createable: (code) => ({ type: "codeOrName", label: code }),
   }
 );
-export function Replays(props: { library: Library<ReplayStub> }) {
+export function Replays() {
   return (
     <>
       <div class="flex max-h-96 w-full flex-col items-center gap-2 overflow-y-auto sm:h-full md:max-h-screen">
@@ -36,23 +34,23 @@ export function Replays(props: { library: Library<ReplayStub> }) {
             placeholder="Filter"
             multiple
             {...filterProps}
-            initialValue={selectionStore.filters}
-            onChange={setFilters}
+            initialValue={localLibrary.data.filters}
+            onChange={localLibrary.setFilters}
           />
         </div>
         <Show
-          when={selectionStore.filteredFilesAndSettings.length > 0}
+          when={localLibrary.data.filteredFilesAndSettings.length > 0}
           fallback={<div>No matching results</div>}
         >
           <Picker
-            items={selectionStore.filteredFilesAndSettings}
+            items={localLibrary.data.filteredFilesAndSettings}
             render={([file, gameSettings]) => (
               <GameInfo replayStub={gameSettings} />
             )}
-            onClick={(fileAndSettings) => select(fileAndSettings)}
+            onClick={(fileAndSettings) => localLibrary.select(fileAndSettings)}
             selected={([file, gameSettings]) =>
-              selectionStore.selectedFileAndSettings?.[0] === file &&
-              selectionStore.selectedFileAndSettings?.[1] === gameSettings
+              localLibrary.data.selectedFileAndSettings?.[0] === file &&
+              localLibrary.data.selectedFileAndSettings?.[1] === gameSettings
             }
             estimateSize={([file, gameSettings]) =>
               gameSettings.isTeams ? 56 : 32
@@ -64,7 +62,7 @@ export function Replays(props: { library: Library<ReplayStub> }) {
   );
 }
 
-function GameInfo(props: { replayStub: ReplayStub }) {
+function GameInfo(props: { replayStub: GameSettings }) {
   function playerString(player: PlayerSettings): string {
     const name = [player.displayName, player.connectCode, player.nametag].find(
       (s) => s?.length > 0

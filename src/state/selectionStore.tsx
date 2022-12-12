@@ -7,26 +7,24 @@ import {
   stageNameByExternalId,
 } from "~/common/ids";
 import { createEffect, on } from "solid-js";
-import { fileStore } from "~/state/fileStore";
+import { FileStore, fileStore } from "~/state/fileStore";
 
 export type Filter =
   | { type: "character"; label: ExternalCharacterName }
   | { type: "stage"; label: ExternalStageName }
   | { type: "codeOrName"; label: string };
 
-export interface SelectionStore {
+export interface SelectionState {
   filters: Filter[];
   filteredFilesAndSettings: [File, GameSettings][];
   selectedFileAndSettings?: [File, GameSettings];
 }
 
-function createSelectionStore() {
-  const [selectionState, setSelectionState] = createStore<SelectionStore>({
+function createSelectionStore(stubStore: FileStore) {
+  const [selectionState, setSelectionState] = createStore<SelectionState>({
     filters: [],
     filteredFilesAndSettings: [],
   });
-
-  const selectionStore = selectionState;
 
   function setFilters(filters: Filter[]) {
     setSelectionState("filters", filters);
@@ -86,7 +84,7 @@ function createSelectionStore() {
 
   createEffect(
     on(
-      () => fileStore.files,
+      () => stubStore.files,
       () => {
         setSelectionState({ selectedFileAndSettings: undefined });
       }
@@ -95,8 +93,8 @@ function createSelectionStore() {
 
   // Update filter results if files, gameSettings, or filters change
   createEffect(() => {
-    const filesWithSettings = fileStore.files.map(
-      (file, i): [File, GameSettings] => [file, fileStore.gameSettings[i]]
+    const filesWithSettings = stubStore.files.map(
+      (file, i): [File, GameSettings] => [file, stubStore.gameSettings[i]]
     );
     setSelectionState(
       "filteredFilesAndSettings",
@@ -117,7 +115,7 @@ function createSelectionStore() {
     }
   });
 
-  return { selectionStore, previousFile, setFilters, select, nextFile };
+  return { data: selectionState, previousFile, setFilters, select, nextFile };
 }
 
 function applyFilters(
@@ -170,3 +168,5 @@ function wrap(index: number, limit: number): number {
   }
   return (index + limit) % limit;
 }
+
+export const localLibrary = createSelectionStore(fileStore);

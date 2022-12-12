@@ -8,7 +8,6 @@ import { load } from "~/state/fileStore";
 import { Portal } from "solid-js/web";
 import { AddFolderIcon } from "~/components/common/icons";
 import { parseGameSettings } from "~/parser/parser";
-import { localLibrary } from "~/state/sources";
 
 export function OpenMenu(props: { name?: string }) {
   const [menuState, menuSend] = useMachine(
@@ -45,14 +44,7 @@ export function OpenMenu(props: { name?: string }) {
     }
     const files = Array.from(input.files);
     const filteredFiles = await filterFiles(files);
-    // return await load(filteredFiles);
-    const gameSettings = await Promise.all(
-      filteredFiles.map(async (file) =>
-        parseGameSettings(await file.arrayBuffer())
-      )
-    );
-    console.log(gameSettings);
-    localLibrary.setItems(gameSettings);
+    return await load(filteredFiles);
   }
 
   return (

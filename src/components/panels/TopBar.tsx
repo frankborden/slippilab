@@ -2,34 +2,34 @@ import { Show } from "solid-js";
 import { ArrowLeft, ArrowRight, DownloadIcon } from "~/components/common/icons";
 import { OpenMenu } from "~/components/common/OpenMenu";
 import { UploadDialog } from "~/components/panels/UploadDialog";
-import { nextFile, previousFile, selectionStore } from "~/state/selectionStore";
+import { localLibrary } from "~/state/selectionStore";
 
 export function TopBar() {
   return (
     <div class="grid grid-cols-5 items-center">
       <OpenMenu />
-      <Show when={selectionStore.selectedFileAndSettings}>
+      <Show when={localLibrary.data.selectedFileAndSettings}>
         <div class="text col-span-3 flex items-center gap-4 justify-self-center">
           <ArrowLeft
             class="w-6 cursor-pointer"
             title="Previous Replay"
-            onClick={() => previousFile()}
+            onClick={() => localLibrary.previousFile()}
           />
           <div
             class="max-w-[150px] truncate whitespace-nowrap sm:max-w-xs"
-            title={selectionStore.selectedFileAndSettings![0].name}
+            title={localLibrary.data.selectedFileAndSettings![0].name}
           >
-            {selectionStore.selectedFileAndSettings![0].name}
+            {localLibrary.data.selectedFileAndSettings![0].name}
           </div>
           <div class="hidden whitespace-nowrap xl:block">
             {new Date(
-              selectionStore.selectedFileAndSettings![1].startTimestamp
+              localLibrary.data.selectedFileAndSettings![1].startTimestamp
             ).toLocaleString()}
           </div>
           <ArrowRight
             class="w-6 cursor-pointer"
             title="Next Replay"
-            onClick={() => nextFile()}
+            onClick={() => localLibrary.nextFile()}
           />
         </div>
         <div class="flex h-8 gap-4 justify-self-end">
@@ -37,10 +37,10 @@ export function TopBar() {
             class="h-8 w-8"
             role="button"
             onClick={() => {
-              if (selectionStore.selectedFileAndSettings === undefined) {
+              if (localLibrary.data.selectedFileAndSettings === undefined) {
                 return;
               }
-              const file = selectionStore.selectedFileAndSettings[0];
+              const file = localLibrary.data.selectedFileAndSettings[0];
               const element = document.createElement("a");
               const url = URL.createObjectURL(file);
               element.href = url;
