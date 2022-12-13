@@ -5,6 +5,7 @@ import { uploadReplay } from "~/supabaseClient";
 import { currentSelectionStore } from "~/state/selectionStore";
 import { Dialog } from "~/components/common/Dialog";
 import { ShareIcon } from "~/components/common/icons";
+import { replayStore } from "~/state/replayStore";
 
 export function UploadDialog() {
   const [state, setState] = createSignal<
@@ -28,7 +29,10 @@ export function UploadDialog() {
       return;
     }
 
-    const { id, data, error } = await uploadReplay(file);
+    const { id, data, error } = await uploadReplay(
+      file,
+      replayStore.replayData!
+    );
     if (data != null) {
       setUrl(`${window.location.origin}/${id}`);
     } else {

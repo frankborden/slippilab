@@ -90,9 +90,7 @@ function isLegalGameWithoutCPUs(gameSettings: GameSettings): boolean {
 function settingsToStub(file: File, settings: GameSettings): ReplayStub {
   return {
     // fake stuff
-    id: 0,
     numFrames: 99999,
-    createdAt: "",
     // real stuff
     isTeams: settings.isTeams,
     fileName: file.name,

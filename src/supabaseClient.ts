@@ -1,6 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 // @ts-ignore: zoo-ids doesn't ship it's types apparently
 import { generateId } from "zoo-ids";
+import { ReplayData } from "~/common/types";
 import { ReplayStub } from "~/state/selectionStore";
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
@@ -9,8 +10,8 @@ const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 interface ReplayRow {
-  id: number;
-  created_at: string;
+  id?: number;
+  created_at?: string;
   file_name: string;
   played_on: string;
   num_frames: number;
@@ -32,7 +33,10 @@ export async function downloadReplay(
   return await supabase.storage.from("replays").download(name);
 }
 
-export async function uploadReplay(file: File): Promise<{
+export async function uploadReplay(
+  file: File,
+  replay: ReplayData
+): Promise<{
   id: string;
   data: { path: string } | null;
   error: Error | null;
@@ -42,11 +46,37 @@ export async function uploadReplay(file: File): Promise<{
   const { data, error } = await supabase.storage
     .from("replays")
     .upload(`${id}.slp`, file);
-  return {
-    id,
-    data,
-    error,
-  };
+  if (data) {
+    const row: ReplayRow = {
+      file_name: `${id}.slp`,
+      played_on: replay.settings.startTimestamp,
+      num_frames: replay.frames.length,
+      external_stage_id: replay.settings.stageId,
+      is_teams: replay.settings.isTeams,
+      players: replay.settings.playerSettings.filter(Boolean).map((p) => ({
+        player_index: p.playerIndex,
+        connect_code: p.connectCode ?? "",
+        display_name: p.displayName ?? "",
+        nametag: p.nametag ?? "",
+        external_character_id: p.externalCharacterId,
+        team_id: p.teamId,
+      })),
+    };
+    const insertResponse = await supabase.from("replays").insert(row);
+    return {
+      id,
+      data,
+      error: insertResponse.error
+        ? new Error(insertResponse.error.message)
+        : null,
+    };
+  } else {
+    return {
+      id,
+      data,
+      error: error,
+    };
+  }
 }
 
 export async function loadFromSupabase(

@@ -21,8 +21,6 @@ export interface SelectionState {
 }
 
 export interface ReplayStub {
-  id: number;
-  createdAt: string;
   fileName: string;
   playedOn: string;
   numFrames: number;
