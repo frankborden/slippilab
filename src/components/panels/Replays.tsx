@@ -2,9 +2,8 @@ import { createOptions, Select } from "@thisbeyond/solid-select";
 import { createMemo, For, Show } from "solid-js";
 import { characterNameByExternalId, stageNameByExternalId } from "~/common/ids";
 import { Picker } from "~/components/common/Picker";
-import { GameSettings, PlayerSettings } from "~/common/types";
 import { StageBadge } from "~/components/common/Badge";
-import { localLibrary } from "~/state/selectionStore";
+import { ReplayStub, SelectionStore } from "~/state/selectionStore";
 
 const filterProps = createOptions(
   [
@@ -19,7 +18,7 @@ const filterProps = createOptions(
     createable: (code) => ({ type: "codeOrName", label: code }),
   }
 );
-export function Replays() {
+export function Replays(props: { selectionStore: SelectionStore }) {
   return (
     <>
       <div class="flex max-h-96 w-full flex-col items-center gap-2 overflow-y-auto sm:h-full md:max-h-screen">
@@ -34,26 +33,25 @@ export function Replays() {
             placeholder="Filter"
             multiple
             {...filterProps}
-            initialValue={localLibrary.data.filters}
-            onChange={localLibrary.setFilters}
+            initialValue={props.selectionStore.data.filters}
+            onChange={props.selectionStore.setFilters}
           />
         </div>
         <Show
-          when={localLibrary.data.filteredFilesAndSettings.length > 0}
+          when={props.selectionStore.data.filteredFilesAndSettings.length > 0}
           fallback={<div>No matching results</div>}
         >
           <Picker
-            items={localLibrary.data.filteredFilesAndSettings}
-            render={([file, gameSettings]) => (
-              <GameInfo replayStub={gameSettings} />
-            )}
-            onClick={(fileAndSettings) => localLibrary.select(fileAndSettings)}
-            selected={([file, gameSettings]) =>
-              localLibrary.data.selectedFileAndSettings?.[0] === file &&
-              localLibrary.data.selectedFileAndSettings?.[1] === gameSettings
+            items={props.selectionStore.data.filteredFilesAndSettings}
+            render={(stub) => <GameInfo replayStub={stub} />}
+            onClick={(fileAndSettings) =>
+              props.selectionStore.select(fileAndSettings)
             }
-            estimateSize={([file, gameSettings]) =>
-              gameSettings.isTeams ? 56 : 32
+            selected={(stub) =>
+              props.selectionStore.data.selectedFileAndSettings?.[1] === stub
+            }
+            estimateSize={(stub) =>
+              stub.playerSettings.filter(Boolean).length === 4 ? 56 : 32
             }
           />
         </Show>
@@ -62,8 +60,8 @@ export function Replays() {
   );
 }
 
-function GameInfo(props: { replayStub: GameSettings }) {
-  function playerString(player: PlayerSettings): string {
+function GameInfo(props: { replayStub: ReplayStub }) {
+  function playerString(player: ReplayStub["playerSettings"][0]): string {
     const name = [player.displayName, player.connectCode, player.nametag].find(
       (s) => s?.length > 0
     );
@@ -72,10 +70,10 @@ function GameInfo(props: { replayStub: GameSettings }) {
   }
 
   const teams = createMemo(() => {
-    const teams: PlayerSettings[][] = [[], [], []];
+    const teams: ReplayStub["playerSettings"][0][][] = [[], [], []];
     props.replayStub.playerSettings
       .filter(Boolean)
-      .forEach((player) => teams[player.teamId].push(player));
+      .forEach((player) => teams[player.teamId ?? 0].push(player));
     return teams.filter((team) => team.length > 0);
   });
 
@@ -84,7 +82,7 @@ function GameInfo(props: { replayStub: GameSettings }) {
       <div class="flex w-full items-center">
         <StageBadge stageId={props.replayStub.stageId} />
         <div class="flex flex-grow flex-col items-center">
-          {props.replayStub.isTeams ? (
+          {props.replayStub.playerSettings.filter(Boolean).length === 4 ? (
             <For each={teams()}>
               {(team) => <div>{team.map(playerString).join(" + ")}</div>}
             </For>

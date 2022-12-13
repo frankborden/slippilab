@@ -17,7 +17,7 @@ import {
   zoomIn,
   zoomOut,
 } from "~/state/replayStore";
-import { localLibrary } from "~/state/selectionStore";
+import { currentSelectionStore } from "~/state/selectionStore";
 
 export function Controls() {
   onMount(() => {
@@ -84,11 +84,11 @@ export function Controls() {
         break;
       case "]":
       case "}":
-        void localLibrary.nextFile();
+        void currentSelectionStore().nextFile();
         break;
       case "[":
       case "{":
-        void localLibrary.previousFile();
+        void currentSelectionStore().previousFile();
         break;
       case "'":
       case '"':

@@ -1,13 +1,13 @@
 import { createStore } from "solid-js/store";
-import { GameSettings } from "~/common/types";
 import {
   characterNameByExternalId,
   ExternalCharacterName,
   ExternalStageName,
   stageNameByExternalId,
 } from "~/common/ids";
-import { createEffect, on } from "solid-js";
-import { FileStore, fileStore } from "~/state/fileStore";
+import { createComputed, createEffect, createSignal, on } from "solid-js";
+import { fileStore } from "~/state/fileStore";
+import { listCloudReplays, loadFromSupabase } from "~/supabaseClient";
 
 export type Filter =
   | { type: "character"; label: ExternalCharacterName }
@@ -16,11 +16,36 @@ export type Filter =
 
 export interface SelectionState {
   filters: Filter[];
-  filteredFilesAndSettings: [File, GameSettings][];
-  selectedFileAndSettings?: [File, GameSettings];
+  filteredFilesAndSettings: ReplayStub[];
+  selectedFileAndSettings?: [File, ReplayStub];
 }
 
-function createSelectionStore(stubStore: FileStore) {
+export interface ReplayStub {
+  id: number;
+  createdAt: string;
+  fileName: string;
+  playedOn: string;
+  numFrames: number;
+  stageId: number;
+  isTeams: boolean;
+  playerSettings: {
+    playerIndex: number;
+    connectCode: string;
+    displayName: string;
+    nametag: string;
+    externalCharacterId: number;
+    teamId: number;
+  }[];
+}
+
+export interface StubStore {
+  stubs: () => ReplayStub[];
+  getFile: (stub: ReplayStub) => Promise<File>;
+}
+
+export type SelectionStore = ReturnType<typeof createSelectionStore>;
+
+function createSelectionStore(stubStore: StubStore) {
   const [selectionState, setSelectionState] = createStore<SelectionState>({
     filters: [],
     filteredFilesAndSettings: [],
@@ -30,61 +55,74 @@ function createSelectionStore(stubStore: FileStore) {
     setSelectionState("filters", filters);
   }
 
-  function select(fileAndSettings: [File, GameSettings]) {
-    setSelectionState("selectedFileAndSettings", fileAndSettings);
+  async function select(stub: ReplayStub) {
+    const file = await stubStore.getFile(stub);
+    setSelectionState("selectedFileAndSettings", [file, stub]);
   }
 
-  function nextFile() {
+  async function nextFile() {
     if (selectionState.filteredFilesAndSettings.length === 0) {
       return;
     }
     if (selectionState.selectedFileAndSettings === undefined) {
-      setSelectionState(
-        "selectedFileAndSettings",
+      const file = await stubStore.getFile(
         selectionState.filteredFilesAndSettings[0]
       );
+      setSelectionState("selectedFileAndSettings", [
+        file,
+        selectionState.filteredFilesAndSettings[0],
+      ]);
     } else {
       const currentIndex = selectionState.filteredFilesAndSettings.findIndex(
-        ([file]) => file === selectionState.selectedFileAndSettings![0]
+        (stub) => stub === selectionState.selectedFileAndSettings![1]
       );
       const nextIndex = wrap(
         currentIndex + 1,
         selectionState.filteredFilesAndSettings.length
       );
-      setSelectionState(
-        "selectedFileAndSettings",
+      const file = await stubStore.getFile(
         selectionState.filteredFilesAndSettings[nextIndex]
       );
+      setSelectionState("selectedFileAndSettings", [
+        file,
+        selectionState.filteredFilesAndSettings[nextIndex],
+      ]);
     }
   }
 
-  function previousFile() {
+  async function previousFile() {
     if (selectionState.filteredFilesAndSettings.length === 0) {
       return;
     }
     if (selectionState.selectedFileAndSettings === undefined) {
-      setSelectionState(
-        "selectedFileAndSettings",
+      const file = await stubStore.getFile(
         selectionState.filteredFilesAndSettings[0]
       );
+      setSelectionState("selectedFileAndSettings", [
+        file,
+        selectionState.filteredFilesAndSettings[0],
+      ]);
     } else {
       const currentIndex = selectionState.filteredFilesAndSettings.findIndex(
-        ([file]) => file === selectionState.selectedFileAndSettings![0]
+        (stub) => stub === selectionState.selectedFileAndSettings![1]
       );
       const nextIndex = wrap(
         currentIndex - 1,
         selectionState.filteredFilesAndSettings.length
       );
-      setSelectionState(
-        "selectedFileAndSettings",
+      const file = await stubStore.getFile(
         selectionState.filteredFilesAndSettings[nextIndex]
       );
+      setSelectionState("selectedFileAndSettings", [
+        file,
+        selectionState.filteredFilesAndSettings[nextIndex],
+      ]);
     }
   }
 
   createEffect(
     on(
-      () => stubStore.files,
+      () => stubStore.stubs(),
       () => {
         setSelectionState({ selectedFileAndSettings: undefined });
       }
@@ -93,25 +131,32 @@ function createSelectionStore(stubStore: FileStore) {
 
   // Update filter results if files, gameSettings, or filters change
   createEffect(() => {
-    const filesWithSettings = stubStore.files.map(
-      (file, i): [File, GameSettings] => [file, stubStore.gameSettings[i]]
-    );
+    // const filesWithSettings = stubStore
+    //   .stubs()
+    //   .map((file, i): [File, GameSettings] => [
+    //     file,
+    //     stubStore.gameSettings[i],
+    //   ]);
     setSelectionState(
       "filteredFilesAndSettings",
-      applyFilters(filesWithSettings, selectionState.filters)
+      applyFilters(stubStore.stubs(), selectionState.filters)
+      // applyFilters(filesWithSettings, selectionState.filters)
     );
   });
 
   // ???
-  createEffect(() => {
+  createEffect(async () => {
     if (
       selectionState.filteredFilesAndSettings.length > 0 &&
       selectionState.selectedFileAndSettings === undefined
     ) {
-      setSelectionState(
-        "selectedFileAndSettings",
+      const file = await stubStore.getFile(
         selectionState.filteredFilesAndSettings[0]
       );
+      setSelectionState("selectedFileAndSettings", [
+        file,
+        selectionState.filteredFilesAndSettings[0],
+      ]);
     }
   });
 
@@ -119,9 +164,9 @@ function createSelectionStore(stubStore: FileStore) {
 }
 
 function applyFilters(
-  filesWithSettings: [File, GameSettings][],
+  filesWithSettings: ReplayStub[],
   filters: Filter[]
-): [File, GameSettings][] {
+): ReplayStub[] {
   const charactersNeeded: Record<string, number> = {};
   filters
     .filter(
@@ -139,18 +184,18 @@ function applyFilters(
   const namesNeeded = filters
     .filter((filter) => filter.type === "codeOrName")
     .map((filter) => filter.label);
-  return filesWithSettings.filter(([file, gameSettings]) => {
+  return filesWithSettings.filter((stub) => {
     const areCharactersSatisfied = Object.entries(charactersNeeded).every(
       ([character, amountRequired]) =>
-        gameSettings.playerSettings.filter(
+        stub.playerSettings.filter(
           (p) => character === characterNameByExternalId[p.externalCharacterId]
         ).length >= amountRequired
     );
     const stagePass =
       stagesAllowed.length === 0 ||
-      stagesAllowed.includes(stageNameByExternalId[gameSettings.stageId]);
+      stagesAllowed.includes(stageNameByExternalId[stub.stageId]);
     const areNamesSatisfied = namesNeeded.every((name) =>
-      gameSettings.playerSettings.some((p) =>
+      stub.playerSettings.some((p) =>
         [
           p.connectCode?.toLowerCase(),
           p.displayName?.toLowerCase(),
@@ -169,4 +214,33 @@ function wrap(index: number, limit: number): number {
   return (index + limit) % limit;
 }
 
-export const localLibrary = createSelectionStore(fileStore);
+const [cloudStubs, setCloudStubs] = createSignal<ReplayStub[]>([]);
+export const cloudLibrary = createSelectionStore({
+  stubs: cloudStubs,
+  getFile(stub) {
+    return loadFromSupabase(stub.fileName.toString());
+  },
+});
+listCloudReplays().then((rows) => setCloudStubs(rows));
+
+export const localLibrary = createSelectionStore({
+  stubs: () => fileStore.stubs,
+  async getFile(stub) {
+    return fileStore.files[fileStore.stubs.indexOf(stub)];
+  },
+});
+
+export const [currentSelectionStore, setCurrentSelectionStore] =
+  createSignal<SelectionStore>(cloudLibrary);
+createComputed(
+  on(
+    () => cloudLibrary.data.selectedFileAndSettings,
+    () => setCurrentSelectionStore(cloudLibrary)
+  )
+);
+createComputed(
+  on(
+    () => localLibrary.data.selectedFileAndSettings,
+    () => setCurrentSelectionStore(localLibrary)
+  )
+);

@@ -17,7 +17,7 @@ import {
 import { parseReplay } from "~/parser/parser";
 import { queries } from "~/search/queries";
 import { Highlight, search } from "~/search/search";
-import { localLibrary } from "~/state/selectionStore";
+import { currentSelectionStore } from "~/state/selectionStore";
 import { CharacterAnimations, fetchAnimations } from "~/viewer/animationCache";
 import { actionMapByInternalId } from "~/viewer/characters";
 import { Character } from "~/viewer/characters/character";
@@ -188,7 +188,7 @@ const [running, start, stop] = createRAF(
 createEffect(() => setReplayState("running", running()));
 
 createEffect(async () => {
-  const selected = localLibrary.data.selectedFileAndSettings;
+  const selected = currentSelectionStore().data.selectedFileAndSettings;
   if (selected === undefined) {
     setReplayState(defaultReplayStoreState);
     return;

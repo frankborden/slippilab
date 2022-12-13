@@ -1,10 +1,11 @@
 import { stageNameByExternalId } from "./common/ids";
-import { GameSettings } from "./common/types";
+import { ReplayStub } from "./state/selectionStore";
 import { parseGameSettings } from "./parser/parser";
+import { GameSettings } from "~/common/types";
 
 onmessage = async (event) => {
   // Parse in groups of 500 replays at a time to prevent memory issues.
-  const parsedSettings: Array<[File, GameSettings | "skipped" | "failed"]> = [];
+  const parsedSettings: Array<[File, ReplayStub | "skipped" | "failed"]> = [];
   const fileGroups = [];
   for (let i = 0; i < event.data.payload.length; i += 500) {
     fileGroups.push(event.data.payload.slice(i, i + 500));
@@ -15,11 +16,12 @@ onmessage = async (event) => {
         fileGroup.map(
           async (
             file: File
-          ): Promise<[File, GameSettings | "skipped" | "failed"]> => {
+          ): Promise<[File, ReplayStub | "skipped" | "failed"]> => {
             try {
               const settings = parseGameSettings(await file.arrayBuffer());
               if (isLegalGameWithoutCPUs(settings)) {
-                return [file, settings];
+                const stub = settingsToStub(file, settings);
+                return [file, stub];
               } else {
                 return [file, "skipped"];
               }
@@ -39,15 +41,11 @@ onmessage = async (event) => {
   }
   const goodFilesAndSettings = parsedSettings
     .filter(
-      (fileAndSettings): fileAndSettings is [File, GameSettings] =>
+      (fileAndSettings): fileAndSettings is [File, ReplayStub] =>
         fileAndSettings[1] !== "failed" && fileAndSettings[1] !== "skipped"
     )
     .sort(([, a], [, b]) =>
-      a.startTimestamp > b.startTimestamp
-        ? 1
-        : a.startTimestamp === b.startTimestamp
-        ? 0
-        : -1
+      a.playedOn > b.playedOn ? 1 : a.playedOn === b.playedOn ? 0 : -1
     );
   const failedFilenames = parsedSettings
     .filter(([, settings]) => settings === "failed")
@@ -87,4 +85,26 @@ function isLegalGameWithoutCPUs(gameSettings: GameSettings): boolean {
     return false;
   }
   return true;
+}
+
+function settingsToStub(file: File, settings: GameSettings): ReplayStub {
+  return {
+    // fake stuff
+    id: 0,
+    numFrames: 99999,
+    createdAt: "",
+    // real stuff
+    isTeams: settings.isTeams,
+    fileName: file.name,
+    stageId: settings.stageId,
+    playedOn: settings.startTimestamp,
+    playerSettings: settings.playerSettings.map((p) => ({
+      playerIndex: p.playerIndex,
+      connectCode: p.connectCode,
+      displayName: p.displayName,
+      nametag: p.nametag,
+      externalCharacterId: p.externalCharacterId,
+      teamId: p.teamId,
+    })),
+  };
 }

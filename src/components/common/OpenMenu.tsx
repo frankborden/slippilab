@@ -7,7 +7,7 @@ import { filterFiles } from "~/common/util";
 import { load } from "~/state/fileStore";
 import { Portal } from "solid-js/web";
 import { AddFolderIcon } from "~/components/common/icons";
-import { parseGameSettings } from "~/parser/parser";
+import { setSidebar } from "~/state/navigationStore";
 
 export function OpenMenu(props: { name?: string }) {
   const [menuState, menuSend] = useMachine(
@@ -44,7 +44,8 @@ export function OpenMenu(props: { name?: string }) {
     }
     const files = Array.from(input.files);
     const filteredFiles = await filterFiles(files);
-    return await load(filteredFiles);
+    await load(filteredFiles);
+    setSidebar("local replays");
   }
 
   return (
