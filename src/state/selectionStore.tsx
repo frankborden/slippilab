@@ -1,152 +1,186 @@
 import { createStore } from "solid-js/store";
-import { GameSettings } from "~/common/types";
 import {
   characterNameByExternalId,
   ExternalCharacterName,
   ExternalStageName,
   stageNameByExternalId,
 } from "~/common/ids";
-import { createEffect, on } from "solid-js";
-import { groupBy, map, zip } from "rambda";
+import { createComputed, createEffect, createSignal, on } from "solid-js";
 import { fileStore } from "~/state/fileStore";
+import { listCloudReplays, loadFromSupabase } from "~/supabaseClient";
 
 export type Filter =
   | { type: "character"; label: ExternalCharacterName }
   | { type: "stage"; label: ExternalStageName }
   | { type: "codeOrName"; label: string };
 
-export interface SelectionStore {
+export interface SelectionState {
   filters: Filter[];
-  filteredFilesAndSettings: [File, GameSettings][];
-  selectedFileAndSettings?: [File, GameSettings];
+  filteredStubs: ReplayStub[];
+  selectedFileAndStub?: [File, ReplayStub];
 }
 
-const [selectionState, setSelectionState] = createStore<SelectionStore>({
-  filters: [],
-  filteredFilesAndSettings: [],
-});
-
-export const selectionStore = selectionState;
-
-export function setFilters(filters: Filter[]) {
-  setSelectionState("filters", filters);
+export interface ReplayStub {
+  fileName: string;
+  playedOn: string;
+  numFrames: number;
+  stageId: number;
+  isTeams: boolean;
+  playerSettings: {
+    playerIndex: number;
+    connectCode: string;
+    displayName: string;
+    nametag: string;
+    externalCharacterId: number;
+    teamId: number;
+  }[];
 }
 
-export function select(fileAndSettings: [File, GameSettings]) {
-  setSelectionState("selectedFileAndSettings", fileAndSettings);
+export interface StubStore {
+  stubs: () => ReplayStub[];
+  getFile: (stub: ReplayStub) => Promise<File>;
 }
 
-export function nextFile() {
-  if (selectionState.filteredFilesAndSettings.length === 0) {
-    return;
+export type SelectionStore = ReturnType<typeof createSelectionStore>;
+
+function createSelectionStore(stubStore: StubStore) {
+  const [selectionState, setSelectionState] = createStore<SelectionState>({
+    filters: [],
+    filteredStubs: [],
+  });
+
+  function setFilters(filters: Filter[]) {
+    setSelectionState("filters", filters);
   }
-  if (selectionState.selectedFileAndSettings === undefined) {
-    setSelectionState(
-      "selectedFileAndSettings",
-      selectionState.filteredFilesAndSettings[0]
-    );
-  } else {
-    const currentIndex = selectionState.filteredFilesAndSettings.findIndex(
-      ([file]) => file === selectionState.selectedFileAndSettings![0]
-    );
-    const nextIndex = wrap(
-      currentIndex + 1,
-      selectionState.filteredFilesAndSettings.length
-    );
-    setSelectionState(
-      "selectedFileAndSettings",
-      selectionState.filteredFilesAndSettings[nextIndex]
-    );
-  }
-}
 
-export function previousFile() {
-  if (selectionState.filteredFilesAndSettings.length === 0) {
-    return;
+  async function select(stub: ReplayStub) {
+    const file = await stubStore.getFile(stub);
+    setSelectionState("selectedFileAndStub", [file, stub]);
   }
-  if (selectionState.selectedFileAndSettings === undefined) {
-    setSelectionState(
-      "selectedFileAndSettings",
-      selectionState.filteredFilesAndSettings[0]
-    );
-  } else {
-    const currentIndex = selectionState.filteredFilesAndSettings.findIndex(
-      ([file]) => file === selectionState.selectedFileAndSettings![0]
-    );
-    const nextIndex = wrap(
-      currentIndex - 1,
-      selectionState.filteredFilesAndSettings.length
-    );
-    setSelectionState(
-      "selectedFileAndSettings",
-      selectionState.filteredFilesAndSettings[nextIndex]
-    );
-  }
-}
 
-createEffect(
-  on(
-    () => fileStore.files,
-    () => {
-      setSelectionState({ selectedFileAndSettings: undefined });
+  async function nextFile() {
+    if (selectionState.filteredStubs.length === 0) {
+      return;
     }
-  )
-);
-
-// Update filter results if files, gameSettings, or filters change
-createEffect(() => {
-  const filesWithSettings = zip(fileStore.files, fileStore.gameSettings) as [
-    File,
-    GameSettings
-  ][];
-  setSelectionState(
-    "filteredFilesAndSettings",
-    applyFilters(filesWithSettings, selectionState.filters)
-  );
-});
-
-// ???
-createEffect(() => {
-  if (
-    selectionState.filteredFilesAndSettings.length > 0 &&
-    selectionState.selectedFileAndSettings === undefined
-  ) {
-    setSelectionState(
-      "selectedFileAndSettings",
-      selectionState.filteredFilesAndSettings[0]
-    );
+    if (selectionState.selectedFileAndStub === undefined) {
+      const file = await stubStore.getFile(selectionState.filteredStubs[0]);
+      setSelectionState("selectedFileAndStub", [
+        file,
+        selectionState.filteredStubs[0],
+      ]);
+    } else {
+      const currentIndex = selectionState.filteredStubs.findIndex(
+        (stub) => stub === selectionState.selectedFileAndStub![1]
+      );
+      const nextIndex = wrap(
+        currentIndex + 1,
+        selectionState.filteredStubs.length
+      );
+      const file = await stubStore.getFile(
+        selectionState.filteredStubs[nextIndex]
+      );
+      setSelectionState("selectedFileAndStub", [
+        file,
+        selectionState.filteredStubs[nextIndex],
+      ]);
+    }
   }
-});
 
-function applyFilters(
-  filesWithSettings: [File, GameSettings][],
-  filters: Filter[]
-): [File, GameSettings][] {
-  const charactersNeeded = map(
-    (filters: Filter[]) => filters.length,
-    groupBy(
-      (filter) => filter.label,
-      filters.filter((filter) => filter.type === "character")
+  async function previousFile() {
+    if (selectionState.filteredStubs.length === 0) {
+      return;
+    }
+    if (selectionState.selectedFileAndStub === undefined) {
+      const file = await stubStore.getFile(selectionState.filteredStubs[0]);
+      setSelectionState("selectedFileAndStub", [
+        file,
+        selectionState.filteredStubs[0],
+      ]);
+    } else {
+      const currentIndex = selectionState.filteredStubs.findIndex(
+        (stub) => stub === selectionState.selectedFileAndStub![1]
+      );
+      const nextIndex = wrap(
+        currentIndex - 1,
+        selectionState.filteredStubs.length
+      );
+      const file = await stubStore.getFile(
+        selectionState.filteredStubs[nextIndex]
+      );
+      setSelectionState("selectedFileAndStub", [
+        file,
+        selectionState.filteredStubs[nextIndex],
+      ]);
+    }
+  }
+
+  createEffect(
+    on(
+      () => stubStore.stubs(),
+      () => {
+        setSelectionState({ selectedFileAndStub: undefined });
+      }
     )
   );
+
+  // Update filter results if stubs or filters change
+  createEffect(() => {
+    setSelectionState(
+      "filteredStubs",
+      applyFilters(stubStore.stubs(), selectionState.filters)
+    );
+  });
+
+  // ???
+  createEffect(async () => {
+    if (
+      selectionState.filteredStubs.length > 0 &&
+      selectionState.selectedFileAndStub === undefined
+    ) {
+      const file = await stubStore.getFile(selectionState.filteredStubs[0]);
+      setSelectionState("selectedFileAndStub", [
+        file,
+        selectionState.filteredStubs[0],
+      ]);
+    }
+  });
+
+  return { data: selectionState, previousFile, setFilters, select, nextFile };
+}
+
+function applyFilters(
+  filesWithSettings: ReplayStub[],
+  filters: Filter[]
+): ReplayStub[] {
+  const charactersNeeded: Record<string, number> = {};
+  filters
+    .filter(
+      (filter): filter is Filter & { type: "character" } =>
+        filter.type === "character"
+    )
+    .forEach(
+      (filter) =>
+        (charactersNeeded[filter.label] =
+          (charactersNeeded[filter.label] ?? 0) + 1)
+    );
   const stagesAllowed = filters
     .filter((filter) => filter.type === "stage")
     .map((filter) => filter.label);
   const namesNeeded = filters
     .filter((filter) => filter.type === "codeOrName")
     .map((filter) => filter.label);
-  return filesWithSettings.filter(([file, gameSettings]) => {
+  return filesWithSettings.filter((stub) => {
     const areCharactersSatisfied = Object.entries(charactersNeeded).every(
       ([character, amountRequired]) =>
-        gameSettings.playerSettings.filter(
+        stub.playerSettings.filter(
           (p) => character === characterNameByExternalId[p.externalCharacterId]
         ).length >= amountRequired
     );
     const stagePass =
       stagesAllowed.length === 0 ||
-      stagesAllowed.includes(stageNameByExternalId[gameSettings.stageId]);
+      stagesAllowed.includes(stageNameByExternalId[stub.stageId]);
     const areNamesSatisfied = namesNeeded.every((name) =>
-      gameSettings.playerSettings.some((p) =>
+      stub.playerSettings.some((p) =>
         [
           p.connectCode?.toLowerCase(),
           p.displayName?.toLowerCase(),
@@ -164,3 +198,44 @@ function wrap(index: number, limit: number): number {
   }
   return (index + limit) % limit;
 }
+
+const [cloudStubs, setCloudStubs] = createSignal<ReplayStub[]>([]);
+export const cloudLibrary = createSelectionStore({
+  stubs: cloudStubs,
+  getFile(stub) {
+    return loadFromSupabase(stub.fileName.toString());
+  },
+});
+
+listCloudReplays().then((rows) => {
+  setCloudStubs(rows);
+  const path = location.pathname.slice(1);
+  if (path !== "") {
+    const stub = cloudStubs().find((s) => s.fileName === `${path}.slp`);
+    if (stub !== undefined) {
+      cloudLibrary.select(stub);
+    }
+  }
+});
+
+export const localLibrary = createSelectionStore({
+  stubs: () => fileStore.stubs,
+  async getFile(stub) {
+    return fileStore.files[fileStore.stubs.indexOf(stub)];
+  },
+});
+
+export const [currentSelectionStore, setCurrentSelectionStore] =
+  createSignal<SelectionStore>(cloudLibrary);
+createComputed(
+  on(
+    () => cloudLibrary.data.selectedFileAndStub,
+    () => setCurrentSelectionStore(cloudLibrary)
+  )
+);
+createComputed(
+  on(
+    () => localLibrary.data.selectedFileAndStub,
+    () => setCurrentSelectionStore(localLibrary)
+  )
+);

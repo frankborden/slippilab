@@ -1,5 +1,4 @@
 import createRAF, { targetFPS } from "@solid-primitives/raf";
-import { add, curry, map, max, modulo, pipe, times, update } from "rambda";
 import { batch, createEffect, createResource } from "solid-js";
 import { createStore } from "solid-js/store";
 import {
@@ -18,7 +17,7 @@ import {
 import { parseReplay } from "~/parser/parser";
 import { queries } from "~/search/queries";
 import { Highlight, search } from "~/search/search";
-import { selectionStore } from "~/state/selectionStore";
+import { currentSelectionStore } from "~/state/selectionStore";
 import { CharacterAnimations, fetchAnimations } from "~/viewer/animationCache";
 import { actionMapByInternalId } from "~/viewer/characters";
 import { Character } from "~/viewer/characters/character";
@@ -57,7 +56,9 @@ export interface ReplayStore {
   isFullscreen: boolean;
 }
 export const defaultReplayStoreState: ReplayStore = {
-  highlights: map(() => [], queries),
+  highlights: Object.fromEntries(
+    Object.entries(queries).map(([name]) => [name, []])
+  ),
   frame: 0,
   renderDatas: [],
   animations: Array(4).fill(undefined),
@@ -172,15 +173,14 @@ export function jumpPercent(percent: number): void {
 }
 
 export function adjust(delta: number): void {
-  setReplayState("frame", pipe(add(delta), curry(wrapFrame)(replayState)));
+  setReplayState("frame", (f) => wrapFrame(replayState, f + delta));
 }
 
 const [running, start, stop] = createRAF(
   targetFPS(
     () =>
-      setReplayState(
-        "frame",
-        pipe(add(replayState.framesPerTick), curry(wrapFrame)(replayState))
+      setReplayState("frame", (f) =>
+        wrapFrame(replayState, f + replayState.framesPerTick)
       ),
     () => replayState.fps
   )
@@ -188,13 +188,18 @@ const [running, start, stop] = createRAF(
 createEffect(() => setReplayState("running", running()));
 
 createEffect(async () => {
-  const selected = selectionStore.selectedFileAndSettings;
+  const selected = currentSelectionStore().data.selectedFileAndStub;
   if (selected === undefined) {
     setReplayState(defaultReplayStoreState);
     return;
   }
   const replayData = parseReplay(await selected[0].arrayBuffer());
-  const highlights = map((query) => search(replayData, ...query), queries);
+  const highlights = Object.fromEntries(
+    Object.entries(queries).map(([name, query]) => [
+      name,
+      search(replayData, ...query),
+    ])
+  );
   setReplayState({
     replayData,
     highlights,
@@ -206,8 +211,9 @@ createEffect(async () => {
   }
 });
 
-times(
-  (playerIndex) =>
+const animationResources = [];
+for (let playerIndex = 0; playerIndex < 4; playerIndex++) {
+  animationResources.push(
     createResource(
       () => {
         const replay = replayState.replayData;
@@ -238,16 +244,20 @@ times(
         return playerSettings.externalCharacterId;
       },
       (id) => (id === undefined ? undefined : fetchAnimations(id))
-    ),
-  4
-).forEach(([dataSignal], playerIndex) =>
-  createEffect(() =>
-    // I can't use the obvious setReplayState("animations", playerIndex, dataSignal())
-    // because it will merge into the previous animations data object,
-    // essentially overwriting the previous characters animation data forever
-    setReplayState("animations", (animations) =>
-      update(playerIndex, dataSignal(), animations)
     )
+  );
+}
+animationResources.forEach(([dataSignal], playerIndex) =>
+  createEffect(() =>
+    // I can't use the obvious setReplayState("animations", playerIndex,
+    // dataSignal()) because it will merge into the previous animations data
+    // object, essentially overwriting the previous characters animation data
+    // forever
+    setReplayState("animations", (animations) => {
+      const newAnimations = [...animations];
+      newAnimations[playerIndex] = dataSignal();
+      return newAnimations;
+    })
   )
 );
 
@@ -309,10 +319,9 @@ function computeRenderData(
   // TODO: validate L cancels, other fractional frames, and one-indexed
   // animations. I am currently just flooring. Converts - 1 to 0 and loops for
   // Entry, Guard, etc.
-  const frameIndex = modulo(
-    Math.floor(max(0, playerState.actionStateFrameCounter)),
-    animationFrames?.length ?? 1
-  );
+  const frameIndex =
+    Math.floor(Math.max(0, playerState.actionStateFrameCounter)) %
+    (animationFrames?.length ?? 1);
   // To save animation file size, duplicate frames just reference earlier
   // matching frames such as "frame20".
   const animationPathOrFrameReference = animationFrames?.[frameIndex];

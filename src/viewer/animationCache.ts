@@ -1,3 +1,5 @@
+import { unzipSync, strFromU8 } from "fflate";
+
 export type AnimationFrames = string[];
 export interface CharacterAnimations {
   [animationName: string]: AnimationFrames;
@@ -49,19 +51,15 @@ const characterZipUrlByExternalId = [
 ];
 
 async function load(url: string): Promise<CharacterAnimations> {
-  const { ZipReader, TextWriter, BlobReader } = await import("@zip.js/zip.js");
-  const animations: CharacterAnimations = {};
   const response = await fetch(url);
   const animationsZip = await response.blob();
-  const reader = new ZipReader(new BlobReader(animationsZip));
-  const files = await reader.getEntries();
-  await Promise.all(
-    files.map(async (file) => {
-      const animationName = file.filename.replace(".json", "");
-      const contents = await file.getData?.(new TextWriter());
-      const animationData = JSON.parse(contents!);
-      animations[animationName] = animationData;
-    })
+  const fileBuffers = unzipSync(
+    new Uint8Array(await animationsZip.arrayBuffer())
   );
-  return animations;
+  return Object.fromEntries(
+    Object.entries(fileBuffers).map(([name, buffer]) => [
+      name.replace(".json", ""),
+      JSON.parse(strFromU8(buffer)),
+    ])
+  );
 }

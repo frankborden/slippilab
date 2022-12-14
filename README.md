@@ -17,7 +17,7 @@ Slippi replays in the browser. This is the code base for
 
 Replay files contain rich data about every frame: positions, action states,
 inputs, and more. This lets us start playing from anywhere without resimulation
-or heasitation. Combined with some replay-focused controls like frame-by-frame,
+or hesitation. Combined with some replay-focused controls like frame-by-frame,
 slowmo/fastforward, and short jumps (2s instead of 5s or 10s), we can offer an
 unmatched viewing experience.
 

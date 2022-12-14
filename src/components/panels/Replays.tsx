@@ -1,18 +1,9 @@
 import { createOptions, Select } from "@thisbeyond/solid-select";
-import { groupBy } from "rambda";
-import { For, Show } from "solid-js";
+import { createMemo, For, Show } from "solid-js";
 import { characterNameByExternalId, stageNameByExternalId } from "~/common/ids";
-import { Picker } from "~/common/Picker";
-import { GameSettings, PlayerSettings } from "~/common/types";
-import { StageBadge } from "~/common/Badge";
-import { PrimaryButton } from "~/common/Button";
-import {
-  selectionStore,
-  setFilters,
-  select,
-  nextFile,
-  previousFile,
-} from "~/state/selectionStore";
+import { Picker } from "~/components/common/Picker";
+import { StageBadge } from "~/components/common/Badge";
+import { ReplayStub, SelectionStore } from "~/state/selectionStore";
 
 const filterProps = createOptions(
   [
@@ -27,7 +18,7 @@ const filterProps = createOptions(
     createable: (code) => ({ type: "codeOrName", label: code }),
   }
 );
-export function Replays() {
+export function Replays(props: { selectionStore: SelectionStore }) {
   return (
     <>
       <div class="flex max-h-96 w-full flex-col items-center gap-2 overflow-y-auto sm:h-full md:max-h-screen">
@@ -42,26 +33,25 @@ export function Replays() {
             placeholder="Filter"
             multiple
             {...filterProps}
-            initialValue={selectionStore.filters}
-            onChange={setFilters}
+            initialValue={props.selectionStore.data.filters}
+            onChange={props.selectionStore.setFilters}
           />
         </div>
         <Show
-          when={selectionStore.filteredFilesAndSettings.length > 0}
+          when={props.selectionStore.data.filteredStubs.length > 0}
           fallback={<div>No matching results</div>}
         >
           <Picker
-            items={selectionStore.filteredFilesAndSettings}
-            render={([file, gameSettings]) => (
-              <GameInfo gameSettings={gameSettings} />
-            )}
-            onClick={(fileAndSettings) => select(fileAndSettings)}
-            selected={([file, gameSettings]) =>
-              selectionStore.selectedFileAndSettings?.[0] === file &&
-              selectionStore.selectedFileAndSettings?.[1] === gameSettings
+            items={props.selectionStore.data.filteredStubs}
+            render={(stub) => <GameInfo replayStub={stub} />}
+            onClick={(fileAndSettings) =>
+              props.selectionStore.select(fileAndSettings)
             }
-            estimateSize={([file, gameSettings]) =>
-              gameSettings.isTeams ? 56 : 32
+            selected={(stub) =>
+              props.selectionStore.data.selectedFileAndStub?.[1] === stub
+            }
+            estimateSize={(stub) =>
+              stub.playerSettings.filter(Boolean).length === 4 ? 56 : 32
             }
           />
         </Show>
@@ -70,8 +60,8 @@ export function Replays() {
   );
 }
 
-function GameInfo(props: { gameSettings: GameSettings }) {
-  function playerString(player: PlayerSettings): string {
+function GameInfo(props: { replayStub: ReplayStub }) {
+  function playerString(player: ReplayStub["playerSettings"][0]): string {
     const name = [player.displayName, player.connectCode, player.nametag].find(
       (s) => s?.length > 0
     );
@@ -79,24 +69,25 @@ function GameInfo(props: { gameSettings: GameSettings }) {
     return name !== undefined ? `${name}(${character})` : character;
   }
 
+  const teams = createMemo(() => {
+    const teams: ReplayStub["playerSettings"][0][][] = [[], [], []];
+    props.replayStub.playerSettings
+      .filter(Boolean)
+      .forEach((player) => teams[player.teamId ?? 0].push(player));
+    return teams.filter((team) => team.length > 0);
+  });
+
   return (
     <>
       <div class="flex w-full items-center">
-        <StageBadge stageId={props.gameSettings.stageId} />
+        <StageBadge stageId={props.replayStub.stageId} />
         <div class="flex flex-grow flex-col items-center">
-          {props.gameSettings.isTeams ? (
-            <For
-              each={Object.values(
-                groupBy(
-                  (p) => String(p.teamId),
-                  props.gameSettings.playerSettings.filter((s) => s)
-                )
-              )}
-            >
+          {props.replayStub.playerSettings.filter(Boolean).length === 4 ? (
+            <For each={teams()}>
               {(team) => <div>{team.map(playerString).join(" + ")}</div>}
             </For>
           ) : (
-            props.gameSettings.playerSettings
+            props.replayStub.playerSettings
               .filter((s) => s)
               .map(playerString)
               .join(" vs ")

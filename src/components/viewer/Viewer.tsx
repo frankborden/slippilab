@@ -1,11 +1,11 @@
 import { createMemo, For, Show } from "solid-js";
-import { Camera } from "~/viewer/Camera";
-import { HUD } from "~/viewer/HUD";
-import { Players } from "~/viewer/Player";
-import { Stage } from "~/viewer/Stage";
-import { Item } from "~/viewer/Item";
+import { Camera } from "~/components/viewer/Camera";
+import { HUD } from "~/components/viewer/HUD";
+import { Players } from "~/components/viewer/Player";
+import { Stage } from "~/components/viewer/Stage";
+import { Item } from "~/components/viewer/Item";
 import { replayStore } from "~/state/replayStore";
-import { Controls } from "~/viewer/Controls";
+import { Controls } from "~/components/viewer/Controls";
 
 export function Viewer() {
   const items = createMemo(

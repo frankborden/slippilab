@@ -1,6 +1,6 @@
-import { OpenMenu } from "~/common/OpenMenu";
+import { OpenMenu } from "~/components/common/OpenMenu";
 import colors from "tailwindcss/colors";
-import { GitHubIcon, SlippiLab, TwitterIcon } from "~/common/icons";
+import { GitHubIcon, SlippiLab, TwitterIcon } from "~/components/common/icons";
 
 export function Landing() {
   return (

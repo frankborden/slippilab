@@ -1,5 +1,5 @@
 import { onCleanup, onMount, Show } from "solid-js";
-import { MinusIcon, PlusIcon } from "~/common/icons";
+import { MinusIcon, PlusIcon } from "~/components/common/icons";
 import {
   replayStore,
   adjust,
@@ -17,7 +17,7 @@ import {
   zoomIn,
   zoomOut,
 } from "~/state/replayStore";
-import { nextFile, previousFile } from "~/state/selectionStore";
+import { currentSelectionStore } from "~/state/selectionStore";
 
 export function Controls() {
   onMount(() => {
@@ -84,11 +84,11 @@ export function Controls() {
         break;
       case "]":
       case "}":
-        void nextFile();
+        void currentSelectionStore().nextFile();
         break;
       case "[":
       case "{":
-        void previousFile();
+        void currentSelectionStore().previousFile();
         break;
       case "'":
       case '"':

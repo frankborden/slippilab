@@ -1,6 +1,6 @@
-import { WhiteButton } from "~/common/Button";
-import { Dialog } from "~/common/Dialog";
-import { KeyboardIcon } from "~/common/icons";
+import { WhiteButton } from "~/components/common/Button";
+import { Dialog } from "~/components/common/Dialog";
+import { KeyboardIcon } from "~/components/common/icons";
 
 export function SettingsDialog() {
   return (

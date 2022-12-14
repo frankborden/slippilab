@@ -1,11 +1,12 @@
 import {
+  CloudIcon,
   ControllerIcon,
   FilmSlateIcon,
   GitHubIcon,
   TwitterIcon,
   VideoLibraryIcon,
-} from "~/common/icons";
-import { SettingsDialog } from "~/sidebar/SettingsDialog";
+} from "~/components/common/icons";
+import { SettingsDialog } from "~/components/panels/SettingsDialog";
 import { currentSidebar, setSidebar } from "~/state/navigationStore";
 
 export function Navigation() {
@@ -15,13 +16,21 @@ export function Navigation() {
         <div class="flex flex-col items-center gap-8">
           <img class="w-16" title="logo" src="logo.png" />
           <div class="flex w-10 flex-col">
-            <VideoLibraryIcon
-              title="Replays"
+            <CloudIcon
+              title="Cloud Replays"
               classList={{
                 "py-4 cursor-pointer -mx-7 px-7": true,
-                "bg-slippi-50": currentSidebar() === "replays",
+                "bg-slippi-50": currentSidebar() === "cloud replays",
               }}
-              onClick={() => setSidebar("replays")}
+              onClick={() => setSidebar("cloud replays")}
+            />
+            <VideoLibraryIcon
+              title="Local Replays"
+              classList={{
+                "py-4 cursor-pointer -mx-7 px-7": true,
+                "bg-slippi-50": currentSidebar() === "local replays",
+              }}
+              onClick={() => setSidebar("local replays")}
             />
             <FilmSlateIcon
               title="Clips"

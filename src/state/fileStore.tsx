@@ -1,21 +1,20 @@
-import { inc } from "rambda";
 import { batch, For } from "solid-js";
 import { createStore } from "solid-js/store";
-import { ProgressCircle } from "~/common/ProgressCircle";
-import { createToast, dismissToast } from "~/common/toaster";
-import { GameSettings } from "~/common/types";
+import { ProgressCircle } from "~/components/common/ProgressCircle";
+import { createToast, dismissToast } from "~/components/common/toaster";
 import { send } from "~/workerClient";
+import { ReplayStub } from "~/state/selectionStore";
 
 export interface FileStore {
   files: File[];
-  gameSettings: GameSettings[];
+  stubs: ReplayStub[];
   parseProgress: number;
   urlStartFrame?: number;
 }
 
 const [state, setState] = createStore<FileStore>({
   files: [],
-  gameSettings: [],
+  stubs: [],
   parseProgress: 0,
 });
 
@@ -40,15 +39,15 @@ export async function load(files: File[], startFrame?: number): Promise<void> {
     skipCount,
     failedFilenames,
   }: {
-    goodFilesAndSettings: Array<[File, GameSettings]>;
+    goodFilesAndSettings: Array<[File, ReplayStub]>;
     failedFilenames: string[];
     skipCount: number;
-  } = await send(files, () => setState("parseProgress", inc));
+  } = await send(files, () => setState("parseProgress", (p) => p + 1));
 
   // Save results to the store and show results toasts
   batch(() => {
     setState(
-      "gameSettings",
+      "stubs",
       goodFilesAndSettings.map(([, settings]) => settings)
     );
     setState(
