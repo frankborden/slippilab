@@ -9,13 +9,15 @@ console.log("fetching files");
 const listResponse = await supabase.storage.from("replays").list("", {
   limit: 99999,
 });
-const fileMetas = listResponse.data;
+const fileMetas = [...listResponse.data].sort((a, b) =>
+  a.created_at > b.created_at ? 1 : a.created_at === b.created_at ? 0 : -1
+);
 
 console.log(fileMetas.length, "files found");
 
 for (let i = 0; i < fileMetas.length; i++) {
   const fileMeta = fileMetas[i];
-  console.log(`${i}/${fileMetas.length}`, fileMeta.name);
+  console.log(`${i + 1}/${fileMetas.length}`, fileMeta.name);
   const fileResponse = await supabase.storage
     .from("replays")
     .download(fileMeta.name);

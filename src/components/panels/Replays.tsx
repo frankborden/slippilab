@@ -38,17 +38,17 @@ export function Replays(props: { selectionStore: SelectionStore }) {
           />
         </div>
         <Show
-          when={props.selectionStore.data.filteredFilesAndSettings.length > 0}
+          when={props.selectionStore.data.filteredStubs.length > 0}
           fallback={<div>No matching results</div>}
         >
           <Picker
-            items={props.selectionStore.data.filteredFilesAndSettings}
+            items={props.selectionStore.data.filteredStubs}
             render={(stub) => <GameInfo replayStub={stub} />}
             onClick={(fileAndSettings) =>
               props.selectionStore.select(fileAndSettings)
             }
             selected={(stub) =>
-              props.selectionStore.data.selectedFileAndSettings?.[1] === stub
+              props.selectionStore.data.selectedFileAndStub?.[1] === stub
             }
             estimateSize={(stub) =>
               stub.playerSettings.filter(Boolean).length === 4 ? 56 : 32

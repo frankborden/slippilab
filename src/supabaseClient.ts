@@ -10,8 +10,8 @@ const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 interface ReplayRow {
-  id?: number;
-  created_at?: string;
+  id: number;
+  created_at: string;
   file_name: string;
   played_on: string;
   num_frames: number;
@@ -26,6 +26,8 @@ interface ReplayRow {
     team_id: number;
   }[];
 }
+
+type InsertRow = Omit<ReplayRow, "created_at" | "id">;
 
 export async function downloadReplay(
   name: string
@@ -47,7 +49,7 @@ export async function uploadReplay(
     .from("replays")
     .upload(`${id}.slp`, file);
   if (data) {
-    const row: ReplayRow = {
+    const row: InsertRow = {
       file_name: `${id}.slp`,
       played_on: replay.settings.startTimestamp,
       num_frames: replay.frames.length,
@@ -101,21 +103,25 @@ export async function listCloudReplays(): Promise<ReplayStub[]> {
     console.error(error);
     return [];
   }
-  return (data as ReplayRow[]).map((row) => ({
-    createdAt: row.created_at,
-    fileName: row.file_name,
-    id: row.id,
-    stageId: row.external_stage_id,
-    numFrames: row.num_frames,
-    playedOn: row.played_on,
-    isTeams: row.is_teams,
-    playerSettings: row.players.map((p) => ({
-      playerIndex: p.player_index,
-      connectCode: p.connect_code,
-      displayName: p.display_name,
-      nametag: p.nametag,
-      externalCharacterId: p.external_character_id,
-      teamId: p.team_id,
-    })),
-  }));
+  return (data as ReplayRow[])
+    .sort((a, b) =>
+      a.created_at < b.created_at ? 1 : a.created_at === b.created_at ? 0 : -1
+    )
+    .map((row) => ({
+      createdAt: row.created_at,
+      fileName: row.file_name,
+      id: row.id,
+      stageId: row.external_stage_id,
+      numFrames: row.num_frames,
+      playedOn: row.played_on,
+      isTeams: row.is_teams,
+      playerSettings: row.players.map((p) => ({
+        playerIndex: p.player_index,
+        connectCode: p.connect_code,
+        displayName: p.display_name,
+        nametag: p.nametag,
+        externalCharacterId: p.external_character_id,
+        teamId: p.team_id,
+      })),
+    }));
 }

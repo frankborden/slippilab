@@ -4,14 +4,12 @@ import "@thisbeyond/solid-select/style.css";
 import { Show } from "solid-js";
 import { filterFiles } from "~/common/util";
 import { ToastGroup } from "~/components/common/toaster";
-import { Landing } from "~/components/Landing";
 import { Navigation } from "~/components/panels/Navigation";
 import { Sidebar } from "~/components/panels/Sidebar";
 import { TopBar } from "~/components/panels/TopBar";
 import { Viewer } from "~/components/viewer/Viewer";
-import { fileStore, load } from "~/state/fileStore";
+import { load } from "~/state/fileStore";
 import { replayStore } from "~/state/replayStore";
-import { downloadReplay } from "~/supabaseClient";
 import { fetchAnimations } from "~/viewer/animationCache";
 import "~/state/fileStore";
 import "~/state/replayStore";
@@ -33,10 +31,8 @@ export function App() {
     },
   });
 
-  // load a file from query params if provided. Otherwise start playing the
-  // sample match.
+  // Broken: load a file from query params if provided.
   const url = new URLSearchParams(location.search).get("replayUrl");
-  const path = location.pathname.slice(1);
   const frameParse = Number(location.hash.split("#").at(-1));
   const startFrame = Number.isNaN(frameParse) ? 0 : frameParse;
   if (url !== null) {
@@ -48,16 +44,6 @@ export function App() {
     } catch (e) {
       console.error("Error: could not load replay", url, e);
     }
-  } else if (path !== "") {
-    void downloadReplay(path).then(({ data, error }) => {
-      if (data != null) {
-        const file = new File([data], `${path}.slp`);
-        return load([file], startFrame);
-      }
-      if (error != null) {
-        console.error("Error: could not load replay", error);
-      }
-    });
   }
 
   return (

@@ -8,7 +8,7 @@ export function TopBar() {
   return (
     <div class="grid grid-cols-5 items-center">
       <OpenMenu />
-      <Show when={currentSelectionStore().data.selectedFileAndSettings}>
+      <Show when={currentSelectionStore().data.selectedFileAndStub}>
         <div class="text col-span-3 flex items-center gap-4 justify-self-center">
           <ArrowLeft
             class="w-6 cursor-pointer"
@@ -17,15 +17,13 @@ export function TopBar() {
           />
           <div
             class="max-w-[150px] truncate whitespace-nowrap sm:max-w-xs"
-            title={
-              currentSelectionStore().data.selectedFileAndSettings![0].name
-            }
+            title={currentSelectionStore().data.selectedFileAndStub![0].name}
           >
-            {currentSelectionStore().data.selectedFileAndSettings![0].name}
+            {currentSelectionStore().data.selectedFileAndStub![0].name}
           </div>
           <div class="hidden whitespace-nowrap xl:block">
             {new Date(
-              currentSelectionStore().data.selectedFileAndSettings![1].playedOn
+              currentSelectionStore().data.selectedFileAndStub![1].playedOn
             ).toLocaleString()}
           </div>
           <ArrowRight
@@ -40,13 +38,11 @@ export function TopBar() {
             role="button"
             onClick={() => {
               if (
-                currentSelectionStore().data.selectedFileAndSettings ===
-                undefined
+                currentSelectionStore().data.selectedFileAndStub === undefined
               ) {
                 return;
               }
-              const file =
-                currentSelectionStore().data.selectedFileAndSettings![0];
+              const file = currentSelectionStore().data.selectedFileAndStub![0];
               const element = document.createElement("a");
               const url = URL.createObjectURL(file);
               element.href = url;

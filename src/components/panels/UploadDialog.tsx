@@ -2,7 +2,7 @@ import { createSignal, Match, Show, Switch } from "solid-js";
 import { PrimaryButton, WhiteButton } from "~/components/common/Button";
 import { SpinnerCircle } from "~/components/common/SpinnerCircle";
 import { uploadReplay } from "~/supabaseClient";
-import { currentSelectionStore } from "~/state/selectionStore";
+import { cloudLibrary, currentSelectionStore } from "~/state/selectionStore";
 import { Dialog } from "~/components/common/Dialog";
 import { ShareIcon } from "~/components/common/icons";
 import { replayStore } from "~/state/replayStore";
@@ -16,15 +16,16 @@ export function UploadDialog() {
 
   async function onUploadClicked() {
     setState("loading");
-    const [file] = currentSelectionStore().data.selectedFileAndSettings!;
+    const [file] = currentSelectionStore().data.selectedFileAndStub!;
 
-    // Don't bother re-uploading the sample file.
-    if (
-      file.lastModified === 1665325157744 &&
-      file.name === "sample.slp" &&
-      file.size === 2123266
-    ) {
-      setUrl(`${window.location.origin}/sample`);
+    // Don't bother re-uploading cloud files
+    if (currentSelectionStore() === cloudLibrary) {
+      setUrl(
+        `${window.location.origin}/${file.name.substring(
+          0,
+          file.name.length - 4
+        )}`
+      );
       setState("done");
       return;
     }
@@ -64,8 +65,8 @@ export function UploadDialog() {
                     Uploading will send the file{" "}
                     <code class="underline">
                       {
-                        currentSelectionStore().data
-                          .selectedFileAndSettings?.[0].name
+                        currentSelectionStore().data.selectedFileAndStub?.[0]
+                          .name
                       }
                     </code>{" "}
                     to Slippi Lab for hosting and you will receive a short link

@@ -188,7 +188,7 @@ const [running, start, stop] = createRAF(
 createEffect(() => setReplayState("running", running()));
 
 createEffect(async () => {
-  const selected = currentSelectionStore().data.selectedFileAndSettings;
+  const selected = currentSelectionStore().data.selectedFileAndStub;
   if (selected === undefined) {
     setReplayState(defaultReplayStoreState);
     return;

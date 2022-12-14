@@ -16,8 +16,8 @@ export type Filter =
 
 export interface SelectionState {
   filters: Filter[];
-  filteredFilesAndSettings: ReplayStub[];
-  selectedFileAndSettings?: [File, ReplayStub];
+  filteredStubs: ReplayStub[];
+  selectedFileAndStub?: [File, ReplayStub];
 }
 
 export interface ReplayStub {
@@ -46,7 +46,7 @@ export type SelectionStore = ReturnType<typeof createSelectionStore>;
 function createSelectionStore(stubStore: StubStore) {
   const [selectionState, setSelectionState] = createStore<SelectionState>({
     filters: [],
-    filteredFilesAndSettings: [],
+    filteredStubs: [],
   });
 
   function setFilters(filters: Filter[]) {
@@ -55,65 +55,61 @@ function createSelectionStore(stubStore: StubStore) {
 
   async function select(stub: ReplayStub) {
     const file = await stubStore.getFile(stub);
-    setSelectionState("selectedFileAndSettings", [file, stub]);
+    setSelectionState("selectedFileAndStub", [file, stub]);
   }
 
   async function nextFile() {
-    if (selectionState.filteredFilesAndSettings.length === 0) {
+    if (selectionState.filteredStubs.length === 0) {
       return;
     }
-    if (selectionState.selectedFileAndSettings === undefined) {
-      const file = await stubStore.getFile(
-        selectionState.filteredFilesAndSettings[0]
-      );
-      setSelectionState("selectedFileAndSettings", [
+    if (selectionState.selectedFileAndStub === undefined) {
+      const file = await stubStore.getFile(selectionState.filteredStubs[0]);
+      setSelectionState("selectedFileAndStub", [
         file,
-        selectionState.filteredFilesAndSettings[0],
+        selectionState.filteredStubs[0],
       ]);
     } else {
-      const currentIndex = selectionState.filteredFilesAndSettings.findIndex(
-        (stub) => stub === selectionState.selectedFileAndSettings![1]
+      const currentIndex = selectionState.filteredStubs.findIndex(
+        (stub) => stub === selectionState.selectedFileAndStub![1]
       );
       const nextIndex = wrap(
         currentIndex + 1,
-        selectionState.filteredFilesAndSettings.length
+        selectionState.filteredStubs.length
       );
       const file = await stubStore.getFile(
-        selectionState.filteredFilesAndSettings[nextIndex]
+        selectionState.filteredStubs[nextIndex]
       );
-      setSelectionState("selectedFileAndSettings", [
+      setSelectionState("selectedFileAndStub", [
         file,
-        selectionState.filteredFilesAndSettings[nextIndex],
+        selectionState.filteredStubs[nextIndex],
       ]);
     }
   }
 
   async function previousFile() {
-    if (selectionState.filteredFilesAndSettings.length === 0) {
+    if (selectionState.filteredStubs.length === 0) {
       return;
     }
-    if (selectionState.selectedFileAndSettings === undefined) {
-      const file = await stubStore.getFile(
-        selectionState.filteredFilesAndSettings[0]
-      );
-      setSelectionState("selectedFileAndSettings", [
+    if (selectionState.selectedFileAndStub === undefined) {
+      const file = await stubStore.getFile(selectionState.filteredStubs[0]);
+      setSelectionState("selectedFileAndStub", [
         file,
-        selectionState.filteredFilesAndSettings[0],
+        selectionState.filteredStubs[0],
       ]);
     } else {
-      const currentIndex = selectionState.filteredFilesAndSettings.findIndex(
-        (stub) => stub === selectionState.selectedFileAndSettings![1]
+      const currentIndex = selectionState.filteredStubs.findIndex(
+        (stub) => stub === selectionState.selectedFileAndStub![1]
       );
       const nextIndex = wrap(
         currentIndex - 1,
-        selectionState.filteredFilesAndSettings.length
+        selectionState.filteredStubs.length
       );
       const file = await stubStore.getFile(
-        selectionState.filteredFilesAndSettings[nextIndex]
+        selectionState.filteredStubs[nextIndex]
       );
-      setSelectionState("selectedFileAndSettings", [
+      setSelectionState("selectedFileAndStub", [
         file,
-        selectionState.filteredFilesAndSettings[nextIndex],
+        selectionState.filteredStubs[nextIndex],
       ]);
     }
   }
@@ -122,38 +118,29 @@ function createSelectionStore(stubStore: StubStore) {
     on(
       () => stubStore.stubs(),
       () => {
-        setSelectionState({ selectedFileAndSettings: undefined });
+        setSelectionState({ selectedFileAndStub: undefined });
       }
     )
   );
 
-  // Update filter results if files, gameSettings, or filters change
+  // Update filter results if stubs or filters change
   createEffect(() => {
-    // const filesWithSettings = stubStore
-    //   .stubs()
-    //   .map((file, i): [File, GameSettings] => [
-    //     file,
-    //     stubStore.gameSettings[i],
-    //   ]);
     setSelectionState(
-      "filteredFilesAndSettings",
+      "filteredStubs",
       applyFilters(stubStore.stubs(), selectionState.filters)
-      // applyFilters(filesWithSettings, selectionState.filters)
     );
   });
 
   // ???
   createEffect(async () => {
     if (
-      selectionState.filteredFilesAndSettings.length > 0 &&
-      selectionState.selectedFileAndSettings === undefined
+      selectionState.filteredStubs.length > 0 &&
+      selectionState.selectedFileAndStub === undefined
     ) {
-      const file = await stubStore.getFile(
-        selectionState.filteredFilesAndSettings[0]
-      );
-      setSelectionState("selectedFileAndSettings", [
+      const file = await stubStore.getFile(selectionState.filteredStubs[0]);
+      setSelectionState("selectedFileAndStub", [
         file,
-        selectionState.filteredFilesAndSettings[0],
+        selectionState.filteredStubs[0],
       ]);
     }
   });
@@ -219,7 +206,17 @@ export const cloudLibrary = createSelectionStore({
     return loadFromSupabase(stub.fileName.toString());
   },
 });
-listCloudReplays().then((rows) => setCloudStubs(rows));
+
+listCloudReplays().then((rows) => {
+  setCloudStubs(rows);
+  const path = location.pathname.slice(1);
+  if (path !== "") {
+    const stub = cloudStubs().find((s) => s.fileName === `${path}.slp`);
+    if (stub !== undefined) {
+      cloudLibrary.select(stub);
+    }
+  }
+});
 
 export const localLibrary = createSelectionStore({
   stubs: () => fileStore.stubs,
@@ -232,13 +229,13 @@ export const [currentSelectionStore, setCurrentSelectionStore] =
   createSignal<SelectionStore>(cloudLibrary);
 createComputed(
   on(
-    () => cloudLibrary.data.selectedFileAndSettings,
+    () => cloudLibrary.data.selectedFileAndStub,
     () => setCurrentSelectionStore(cloudLibrary)
   )
 );
 createComputed(
   on(
-    () => localLibrary.data.selectedFileAndSettings,
+    () => localLibrary.data.selectedFileAndStub,
     () => setCurrentSelectionStore(localLibrary)
   )
 );
