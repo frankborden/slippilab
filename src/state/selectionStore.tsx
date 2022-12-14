@@ -131,11 +131,12 @@ function createSelectionStore(stubStore: StubStore) {
     );
   });
 
-  // ???
+  // Select first one by default. If url is set that will be handled elsewhere.
   createEffect(async () => {
     if (
       selectionState.filteredStubs.length > 0 &&
-      selectionState.selectedFileAndStub === undefined
+      selectionState.selectedFileAndStub === undefined &&
+      location.pathname.slice(1) === ""
     ) {
       const file = await stubStore.getFile(selectionState.filteredStubs[0]);
       setSelectionState("selectedFileAndStub", [
