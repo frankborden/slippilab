@@ -14,6 +14,7 @@ import { fetchAnimations } from "~/viewer/animationCache";
 import "~/state/fileStore";
 import "~/state/replayStore";
 import "~/state/selectionStore";
+import { setSidebar } from "~/state/navigationStore";
 
 export function App() {
   // Get started fetching the most popular characters
@@ -25,9 +26,10 @@ export function App() {
   // Make the whole screen a dropzone
   const { setRef: dropzoneRef } = createDropzone({
     onDrop: async (uploads) => {
+      setSidebar("local replays");
       const files = uploads.map((upload) => upload.file);
       const filteredFiles = await filterFiles(files);
-      return await load(filteredFiles);
+      await load(filteredFiles);
     },
   });
 
