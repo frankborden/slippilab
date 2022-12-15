@@ -122,6 +122,7 @@ export const doctorMario: Character = {
     ["YoshiEgg", ""],
   ]),
   specialsMap: new Map<number, string>([
+    [341, "Appeal"],
     [343, "SpecialN"],
     [344, "SpecialAirN"],
     [345, "SpecialS"],
