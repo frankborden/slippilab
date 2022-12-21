@@ -587,7 +587,7 @@ function parsePreFrameUpdateEvent(
         "0.1.0.0",
         offset + 0x37
       ),
-      rTriggerDigial: Boolean(physicalButtonsBitfield & 0x0020),
+      rTriggerDigital: Boolean(physicalButtonsBitfield & 0x0020),
       lTriggerAnalog: readFloat(
         rawData,
         32,
@@ -595,7 +595,7 @@ function parsePreFrameUpdateEvent(
         "0.1.0.0",
         offset + 0x33
       ),
-      lTriggerDigial: Boolean(physicalButtonsBitfield & 0x0040),
+      lTriggerDigital: Boolean(physicalButtonsBitfield & 0x0040),
       a: Boolean(physicalButtonsBitfield & 0x0100),
       b: Boolean(physicalButtonsBitfield & 0x0200),
       x: Boolean(physicalButtonsBitfield & 0x0400),
@@ -608,8 +608,8 @@ function parsePreFrameUpdateEvent(
       dPadDown: Boolean(processedButtonsBitfield & 0x0004),
       dPadUp: Boolean(processedButtonsBitfield & 0x0008),
       z: Boolean(processedButtonsBitfield & 0x0010),
-      rTriggerDigial: Boolean(processedButtonsBitfield & 0x0020),
-      lTriggerDigial: Boolean(processedButtonsBitfield & 0x0040),
+      rTriggerDigital: Boolean(processedButtonsBitfield & 0x0020),
+      lTriggerDigital: Boolean(processedButtonsBitfield & 0x0040),
       a: Boolean(processedButtonsBitfield & 0x0100),
       b: Boolean(processedButtonsBitfield & 0x0200),
       x: Boolean(processedButtonsBitfield & 0x0400),

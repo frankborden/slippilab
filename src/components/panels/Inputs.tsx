@@ -187,14 +187,14 @@ function Controller(
       />
       <path
         id="lTrigger"
-        fill={props.inputs.processed.lTriggerDigial ? "white" : "gray"}
+        fill={props.inputs.processed.lTriggerDigital ? "white" : "gray"}
         stroke="black"
         stroke-width={2.5}
         d="m 130,150 l -75,35 l 0,-10 c 0,-55 55,-55 75,-35 l 0,10 z"
       />
       <path
         id="rTrigger"
-        fill={props.inputs.processed.rTriggerDigial ? "white" : "gray"}
+        fill={props.inputs.processed.rTriggerDigital ? "white" : "gray"}
         stroke="black"
         stroke-width={2.5}
         d="m 460,150 l 75,35 l 0,-10 c 0,-55 -55,-55 -75,-35 l 0,10 z"

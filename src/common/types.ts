@@ -117,10 +117,10 @@ export interface PlayerInputs {
     readonly dPadUp: boolean;
     /** range [0, 1] */
     readonly rTriggerAnalog: number;
-    readonly rTriggerDigial: boolean;
+    readonly rTriggerDigital: boolean;
     /** range [0, 1] */
     readonly lTriggerAnalog: number;
-    readonly lTriggerDigial: boolean;
+    readonly lTriggerDigital: boolean;
   };
   readonly processed: {
     readonly a: boolean;
@@ -133,8 +133,8 @@ export interface PlayerInputs {
     readonly dPadRight: boolean;
     readonly dPadDown: boolean;
     readonly dPadUp: boolean;
-    readonly rTriggerDigial: boolean;
-    readonly lTriggerDigial: boolean;
+    readonly rTriggerDigital: boolean;
+    readonly lTriggerDigital: boolean;
     /** range [-1, 1] */
     readonly joystickX: number;
     /** range [-1, 1] */
