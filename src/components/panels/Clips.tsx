@@ -1,9 +1,20 @@
 import { createMemo, createUniqueId, For, Show } from "solid-js";
 import { PlayerBadge } from "~/components/common/Badge";
 import { Highlight } from "~/search/search";
-import { replayStore, selectHighlight } from "~/state/replayStore";
+import {
+  replayStore,
+  selectCustomAction,
+  selectCustomAttack,
+  selectHighlight,
+} from "~/state/replayStore";
 import * as accordion from "@zag-js/accordion";
 import { normalizeProps, useMachine } from "@zag-js/solid";
+import {
+  ActionName,
+  actionNameById,
+  AttackName,
+  attackNamesById,
+} from "~/common/ids";
 
 export function Clips() {
   const [state, send] = useMachine(
@@ -24,14 +35,56 @@ export function Clips() {
               <button
                 class="flex w-full justify-between gap-3 rounded border border-slate-400 p-2"
                 classList={{
-                  "text-slate-400": highlights.length === 0,
+                  "text-slate-400":
+                    highlights.length === 0 &&
+                    name !== "customAction" &&
+                    name !== "customAttack",
                 }}
                 {...api().getTriggerProps({
                   value: name,
-                  disabled: highlights.length === 0,
+                  disabled:
+                    highlights.length === 0 &&
+                    name !== "customAction" &&
+                    name !== "customAttack",
                 })}
               >
-                {name}
+                {name === "customAction" ? (
+                  <>
+                    Action:
+                    <select
+                      class="min-w-0 shrink border"
+                      value={replayStore.customAction}
+                      onChange={(e) =>
+                        selectCustomAction(
+                          (e.target as HTMLSelectElement).value as ActionName
+                        )
+                      }
+                    >
+                      <For each={actionNameById}>
+                        {(action) => <option value={action}>{action}</option>}
+                      </For>
+                    </select>
+                  </>
+                ) : name === "customAttack" ? (
+                  <>
+                    Attack:
+                    <select
+                      class="min-w-0 shrink border"
+                      value={replayStore.customAttack}
+                      onChange={(e) =>
+                        selectCustomAttack(
+                          (e.target as HTMLSelectElement).value as AttackName
+                        )
+                      }
+                    >
+                      <For each={attackNamesById}>
+                        {(attack) => <option value={attack}>{attack}</option>}
+                      </For>
+                    </select>
+                  </>
+                ) : (
+                  name
+                )}
                 <Show when={highlights.length > 0}>
                   <div class="material-icons">
                     {api().getItemState({ value: name }).isOpen

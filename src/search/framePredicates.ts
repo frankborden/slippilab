@@ -140,7 +140,7 @@ export function isInHitstun(
   );
 }
 
-export function isInShieldstun(
+export function isGrounded(
   playerIndex: number,
   frameNumber: number,
   replay: ReplayData
@@ -149,10 +149,10 @@ export function isInShieldstun(
   if (state === undefined) {
     return false;
   }
-  return actionNameById[state.actionStateId] === "GuardSetOff";
+  return state.isGrounded;
 }
 
-export function isCrouching(
+export function isOpponentCloserToCenter(
   playerIndex: number,
   frameNumber: number,
   replay: ReplayData
@@ -161,8 +161,27 @@ export function isCrouching(
   if (state === undefined) {
     return false;
   }
-  const actionStateId = state.actionStateId;
-  return actionStateId === 40;
+  const otherPlayerIndex = replay.frames[frameNumber].players
+    .filter((p) => p)
+    .find((p) => p.playerIndex !== playerIndex)?.playerIndex;
+  if (otherPlayerIndex === undefined) {
+    return false;
+  }
+  const otherPlayerState =
+    replay.frames[frameNumber].players[otherPlayerIndex]?.state;
+  return Math.abs(state.xPosition) - Math.abs(otherPlayerState.xPosition) > 0;
+}
+
+export function isMissedLCancel(
+  playerIndex: number,
+  frameNumber: number,
+  replay: ReplayData
+): boolean {
+  const state = replay.frames[frameNumber].players[playerIndex]?.state;
+  if (state === undefined) {
+    return false;
+  }
+  return state.lCancelStatus === "missed";
 }
 
 export function isDead(
@@ -218,6 +237,17 @@ export function action(actionName: ActionName): Predicate {
       return false;
     }
     return actionNameById[actionStateId] === actionName;
+  };
+}
+
+export function actionStartsWith(actionName: string): Predicate {
+  return (playerIndex: number, frameNumber: number, replay: ReplayData) => {
+    const actionStateId =
+      replay.frames[frameNumber].players[playerIndex]?.state.actionStateId;
+    if (actionStateId === undefined) {
+      return false;
+    }
+    return actionNameById[actionStateId]?.startsWith(actionName);
   };
 }
 

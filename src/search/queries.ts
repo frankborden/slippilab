@@ -2,16 +2,17 @@ import {
   action,
   all,
   either,
-  isCrouching,
   isDead,
   isGrabbed,
   isInGroundedControl,
   isInHitstun,
-  isInShieldstun,
   isOffstage,
   not,
   opponent,
   Predicate,
+  isOpponentCloserToCenter,
+  actionStartsWith,
+  isMissedLCancel,
 } from "~/search/framePredicates";
 import { Query } from "~/search/search";
 
@@ -42,20 +43,39 @@ const edgeguardQuery: [Query, Predicate?] = [
   not(opponent(isInGroundedControl)),
 ];
 const crouchCancelQuery: [Query, Predicate?] = [
-  [{ predicate: isCrouching }, { predicate: isInHitstun }],
+  [{ predicate: action("SquatWait") }, { predicate: isInHitstun }],
 ];
-const shieldGrabQuery: [Query, Predicate?] = [
+const shieldOptionQuery: [Query, Predicate?] = [
+  [{ predicate: action("GuardSetOff") }],
+  either(
+    actionStartsWith("Guard"),
+    actionStartsWith("Jump"),
+    actionStartsWith("Fall")
+  ),
+];
+const ledgeOptionQuery: [Query, Predicate?] = [
   [
-    { predicate: isInShieldstun },
-    { predicate: action("Catch"), delayed: true },
+    {
+      predicate: all(
+        action("CliffWait"),
+        isOpponentCloserToCenter,
+        not(opponent(isOffstage))
+      ),
+    },
+    { predicate: not(action("CliffWait")), minimumLength: 60 },
   ],
-  either(action("Guard"), action("Catch"), action("GuardSetOff")),
+];
+
+const missedLCancelQuery: [Query, Predicate?] = [
+  [{ predicate: isMissedLCancel }],
 ];
 
 export const queries: Record<string, [Query, Predicate?]> = {
   "Kill Combos": killComboQuery,
-  "Grab Punishes": grabPunishQuery,
-  "Edgeguard Attempts": edgeguardQuery,
+  Grabs: grabPunishQuery,
+  Edgeguards: edgeguardQuery,
   "Crouch Cancels": crouchCancelQuery,
-  "Shield Grab Attempts": shieldGrabQuery,
+  "Missed L-Cancels": missedLCancelQuery,
+  "Shield Options": shieldOptionQuery,
+  "Ledge Options": ledgeOptionQuery,
 };

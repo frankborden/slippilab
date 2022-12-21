@@ -2,7 +2,9 @@ import createRAF, { targetFPS } from "@solid-primitives/raf";
 import { batch, createEffect, createResource } from "solid-js";
 import { createStore } from "solid-js/store";
 import {
+  ActionName,
   actionNameById,
+  AttackName,
   characterNameByExternalId,
   characterNameByInternalId,
 } from "~/common/ids";
@@ -24,6 +26,7 @@ import { Character } from "~/viewer/characters/character";
 import { getPlayerOnFrame, getStartOfAction } from "~/viewer/viewerUtil";
 import colors from "tailwindcss/colors";
 import { fileStore } from "~/state/fileStore";
+import { action, landsAttack } from "~/search/framePredicates";
 
 export interface RenderData {
   playerState: PlayerState;
@@ -54,6 +57,8 @@ export interface ReplayStore {
   zoom: number;
   isDebug: boolean;
   isFullscreen: boolean;
+  customAction: ActionName;
+  customAttack: AttackName;
 }
 export const defaultReplayStoreState: ReplayStore = {
   highlights: Object.fromEntries(
@@ -68,6 +73,8 @@ export const defaultReplayStoreState: ReplayStore = {
   zoom: 1,
   isDebug: false,
   isFullscreen: false,
+  customAction: "Passive",
+  customAttack: "Up Tilt",
 };
 
 const [replayState, setReplayState] = createStore<ReplayStore>(
@@ -75,6 +82,31 @@ const [replayState, setReplayState] = createStore<ReplayStore>(
 );
 
 export const replayStore = replayState;
+
+export function selectCustomAttack(attackName: AttackName) {
+  setReplayState("customAttack", attackName);
+  if (replayState.replayData) {
+    setReplayState("highlights", (highlights) => ({
+      ...highlights,
+      customAttack: search(replayState.replayData!, [
+        { predicate: landsAttack(replayState.customAttack) },
+      ]),
+    }));
+  }
+}
+
+export function selectCustomAction(actionName: ActionName) {
+  setReplayState("customAction", actionName);
+  if (replayState.replayData) {
+    setReplayState("highlights", (highlights) => ({
+      ...highlights,
+      customAction: search(replayState.replayData!, [
+        { predicate: action(replayState.customAction) },
+      ]),
+    }));
+  }
+}
+
 export function selectHighlight(nameAndHighlight: [string, Highlight]) {
   batch(() => {
     setReplayState("selectedHighlight", nameAndHighlight);
@@ -200,6 +232,12 @@ createEffect(async () => {
       search(replayData, ...query),
     ])
   );
+  highlights.customAction = search(replayData, [
+    { predicate: action(replayState.customAction) },
+  ]);
+  highlights.customAttack = search(replayData, [
+    { predicate: landsAttack(replayState.customAttack) },
+  ]);
   setReplayState({
     replayData,
     highlights,
