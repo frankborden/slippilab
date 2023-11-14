@@ -1,17 +1,34 @@
-import { unzipSync } from "fflate";
+import { ReplayStub } from "~/common/model/types";
 
-export async function filterFiles(files: File[]): Promise<File[]> {
-  const slpFiles = files.filter((file) => file.name.endsWith(".slp"));
-  const zipFiles = files.filter((file) => file.name.endsWith(".zip"));
-  const blobsFromZips = (await Promise.all(zipFiles.map(unzip)))
-    .flat()
-    .filter((file) => file.name.endsWith(".slp"));
-  return [...slpFiles, ...blobsFromZips];
+export function stageUrl(stageId: number) {
+  return `/stages/${stageId}.png`;
 }
 
-export async function unzip(zipFile: File): Promise<File[]> {
-  const fileBuffers = unzipSync(new Uint8Array(await zipFile.arrayBuffer()));
-  return Object.entries(fileBuffers).map(
-    ([name, buffer]) => new File([buffer], name)
-  );
+export function characterUrl({
+  externalCharacterId,
+  costumeIndex,
+}: {
+  externalCharacterId: number;
+  costumeIndex?: number;
+}) {
+  return `/stockicons/${externalCharacterId}/${costumeIndex ?? 0}.png`;
+}
+
+export function rankUrl(rank: string) {
+  return `/ranks/${rank.replace(" ", "_")}.svg`;
+}
+
+export function replayTypeIcon(type: ReplayStub["type"]): string {
+  switch (type) {
+    case "offline":
+      return "i-tabler-home";
+    case "old online":
+      return "i-tabler-world";
+    case "unranked":
+      return "i-tabler-building-broadcast-tower";
+    case "direct":
+      return "i-tabler-route rotate-90";
+    case "ranked":
+      return "i-tabler-crown";
+  }
 }

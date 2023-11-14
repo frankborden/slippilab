@@ -1,40 +1,59 @@
 {
-  "name": "slippilab",
+  "name": "template",
+  "private": true,
   "version": "0.0.0",
-  "author": "Frank Borden",
-  "license": "MIT",
+  "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview",
-    "types": "tsc",
-    "format": "prettier -w src/"
+    "dev": "pnpm run /^dev:.*/",
+    "dev:client": "vite --config vite.config.client.ts",
+    "dev:server": "vite --config vite.config.server.ts",
+    "build": "tsc && pnpm run --sequential /^build:.*/ && mv dist/index.js dist/_worker.js",
+    "build:client": "vite build --config vite.config.client.ts",
+    "build:server": "vite build --config vite.config.server.ts",
+    "format": "prettier -w ."
   },
   "dependencies": {
-    "@shelacek/ubjson": "^1.1.1",
-    "@solid-primitives/raf": "^2.1.4",
-    "@solid-primitives/upload": "^0.0.105",
-    "@supabase/supabase-js": "^2.1.2",
-    "@tanstack/solid-virtual": "^3.0.0-beta.6",
-    "@thisbeyond/solid-select": "^0.13.0",
-    "@zag-js/accordion": "^0.2.3",
-    "@zag-js/dialog": "^0.2.3",
-    "@zag-js/menu": "^0.3.0",
-    "@zag-js/solid": "^0.2.2",
-    "@zag-js/toast": "^0.2.4",
-    "fflate": "^0.7.4",
-    "solid-js": "^1.6.3",
-    "zoo-ids": "^2.0.7"
+    "@fontsource-variable/inter": "^5.0.15",
+    "@kobalte/core": "^0.11.2",
+    "@solidjs/router": "^0.9.1",
+    "@tanstack/solid-query": "^5.8.3",
+    "chart.js": "^4.4.0",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.0.0",
+    "drizzle-orm": "^0.29.0",
+    "hono": "^3.10.0",
+    "solid-js": "^1.8.5",
+    "tailwind-merge": "^2.0.0"
   },
   "devDependencies": {
-    "autoprefixer": "^10.4.13",
-    "postcss": "^8.4.19",
-    "prettier": "^2.8.1",
-    "prettier-plugin-tailwindcss": "^0.2.0",
-    "tailwindcss": "^3.2.4",
-    "typescript": "^4.9.3",
-    "vite": "^3.2.5",
-    "vite-plugin-solid": "^2.4.0",
-    "vite-tsconfig-paths": "^4.0.1"
+    "@cloudflare/workers-types": "^4.20231025.0",
+    "@egoist/tailwindcss-icons": "^1.4.0",
+    "@hono/vite-cloudflare-pages": "^0.1.0",
+    "@hono/vite-dev-server": "^0.1.0",
+    "@iconify/json": "^2.2.142",
+    "@trivago/prettier-plugin-sort-imports": "^4.3.0",
+    "autoprefixer": "^10.4.16",
+    "drizzle-kit": "^0.20.2",
+    "prettier": "^3.1.0",
+    "prettier-plugin-tailwindcss": "^0.5.7",
+    "tailwindcss": "^3.3.5",
+    "tailwindcss-animate": "^1.0.7",
+    "typescript": "^5.2.2",
+    "vite": "^4.5.0",
+    "vite-plugin-solid": "^2.7.2",
+    "vite-tsconfig-paths": "^4.2.1",
+    "wrangler": "^3.15.0"
+  },
+  "prettier": {
+    "plugins": [
+      "prettier-plugin-tailwindcss",
+      "@trivago/prettier-plugin-sort-imports"
+    ],
+    "importOrder": [
+      "^~/(.*)$",
+      "^[./]"
+    ],
+    "importOrderSeparation": true,
+    "importOrderSortSpecifiers": true
   }
 }

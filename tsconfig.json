@@ -1,18 +1,24 @@
 {
-  "exclude": ["old/**"],
   "compilerOptions": {
-    "allowSyntheticDefaultImports": true,
-    "baseUrl": "./",
-    "esModuleInterop": true,
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "jsx": "preserve",
     "jsxImportSource": "solid-js",
-    "module": "esnext",
-    "moduleResolution": "node",
-    "paths": { "~/*": ["./src/*"] },
-    "strict": true,
-    "skipLibCheck": true,
-    "target": "esnext",
-    "types": ["vite/client"],
-    "noEmit": true
-  }
+    "baseUrl": ".",
+    "paths": {
+      "~/*": ["src/*"]
+    }
+  },
+  "include": ["src"],
+  "references": [
+    {
+      "path": "./tsconfig.node.json"
+    }
+  ]
 }
