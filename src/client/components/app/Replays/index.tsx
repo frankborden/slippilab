@@ -9,8 +9,8 @@ import {
   filterStages,
 } from "~/client/components/app/Replays/filters/Stage";
 import { Button } from "~/client/components/ui/button";
-import { stageUrl } from "~/client/components/utils";
 import type { ReplayStub } from "~/common/model/types";
+import { stageUrl } from "~/common/util";
 
 export function Replays(props: {
   replays: ReplayStub[];

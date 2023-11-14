@@ -1,6 +1,6 @@
-import { type Session } from "~/common/model/types";
+import { type ReplayStub } from "~/common/model/types";
 
-export const replayTypeIcons: Record<Session["type"], string> = {
+export const replayTypeIcons: Record<ReplayStub["type"], string> = {
   offline: "i-tabler-home",
   "old online": "i-tabler-world",
   unranked: "i-tabler-building-broadcast-tower",

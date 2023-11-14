@@ -1,5 +1,5 @@
 import { decode } from "@shelacek/ubjson";
-import { navigate } from "astro:transitions/client";
+import { useNavigate } from "@solidjs/router";
 import { Show, createEffect, createResource } from "solid-js";
 
 import { Viewer } from "~/client/components/app/Viewer";
@@ -8,6 +8,7 @@ import { selected } from "~/client/state/personal";
 import { parseReplay } from "~/common/parser";
 
 export function LocalViewer() {
+  const navigate = useNavigate();
   const [replay] = createResource(
     () => selected(),
     async ([, file]) => {

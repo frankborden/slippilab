@@ -15,12 +15,16 @@
   "dependencies": {
     "@fontsource-variable/inter": "^5.0.15",
     "@kobalte/core": "^0.11.2",
+    "@shelacek/ubjson": "^1.1.1",
+    "@solid-primitives/keyboard": "^1.2.5",
+    "@solid-primitives/raf": "^2.1.13",
     "@solidjs/router": "^0.9.1",
     "@tanstack/solid-query": "^5.8.3",
     "chart.js": "^4.4.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "drizzle-orm": "^0.29.0",
+    "fflate": "^0.8.1",
     "hono": "^3.10.0",
     "solid-js": "^1.8.5",
     "tailwind-merge": "^2.0.0"

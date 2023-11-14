@@ -12,9 +12,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "~/client/components/ui/dialog";
-import { cn, stageUrl } from "~/client/components/utils";
+import { cn } from "~/client/components/utils";
 import { stages } from "~/common/model/names";
 import type { ReplayStub } from "~/common/model/types";
+import { stageUrl } from "~/common/util";
 
 export function filterStages(replay: ReplayStub, stageIds: number[]) {
   return stageIds.length === 0 || stageIds.includes(replay.stageId);

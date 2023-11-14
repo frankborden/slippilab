@@ -1,5 +1,5 @@
 import { As } from "@kobalte/core";
-import { navigate } from "astro:transitions/client";
+import { useNavigate } from "@solidjs/router";
 
 import { Replays } from "~/client/components/app/Replays";
 import { Button } from "~/client/components/ui/button";
@@ -12,6 +12,7 @@ import {
 import { addFiles, setSelected, stubs } from "~/client/state/personal";
 
 export function LocalReplays() {
+  const navigate = useNavigate();
   return (
     <Replays
       replays={stubs().map(([replay]) => replay)}

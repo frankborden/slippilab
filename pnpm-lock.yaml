@@ -11,6 +11,15 @@ dependencies:
   '@kobalte/core':
     specifier: ^0.11.2
     version: 0.11.2(solid-js@1.8.5)
+  '@shelacek/ubjson':
+    specifier: ^1.1.1
+    version: 1.1.1
+  '@solid-primitives/keyboard':
+    specifier: ^1.2.5
+    version: 1.2.5(solid-js@1.8.5)
+  '@solid-primitives/raf':
+    specifier: ^2.1.13
+    version: 2.1.13(solid-js@1.8.5)
   '@solidjs/router':
     specifier: ^0.9.1
     version: 0.9.1(solid-js@1.8.5)
@@ -29,6 +38,9 @@ dependencies:
   drizzle-orm:
     specifier: ^0.29.0
     version: 0.29.0(@cloudflare/workers-types@4.20231025.0)
+  fflate:
+    specifier: ^0.8.1
+    version: 0.8.1
   hono:
     specifier: ^3.10.0
     version: 3.10.0
@@ -1189,11 +1201,26 @@ packages:
       fastq: 1.15.0
     dev: true
 
+  /@shelacek/ubjson@1.1.1:
+    resolution: {integrity: sha512-2Vi46ct3IWzh8eAz9IZ0NulIRtJbGgJDppatJvufB0fHwasRSfklBoQrVrCutF24fSuRvTvZVebjtcIHOxvzWw==}
+    dev: false
+
   /@solid-primitives/event-listener@2.3.0(solid-js@1.8.5):
     resolution: {integrity: sha512-0DS7DQZvCExWSpurVZC9/wjI8RmkhuOtWOy6Pp1Woq9ElMT9/bfjNpkwXsOwisLpcTqh9eUs17kp7jtpWcC20w==}
     peerDependencies:
       solid-js: ^1.6.12
     dependencies:
+      '@solid-primitives/utils': 6.2.1(solid-js@1.8.5)
+      solid-js: 1.8.5
+    dev: false
+
+  /@solid-primitives/keyboard@1.2.5(solid-js@1.8.5):
+    resolution: {integrity: sha512-1axfWM1T4ASzZp4D91vLtxARevlBuOQ6yFHr1/IkuM/7OhMLo/BrO2CcDu3vSwCPVOSiZ2P875bTiqVWQV6e5g==}
+    peerDependencies:
+      solid-js: ^1.6.12
+    dependencies:
+      '@solid-primitives/event-listener': 2.3.0(solid-js@1.8.5)
+      '@solid-primitives/rootless': 1.4.2(solid-js@1.8.5)
       '@solid-primitives/utils': 6.2.1(solid-js@1.8.5)
       solid-js: 1.8.5
     dev: false
@@ -1229,6 +1256,15 @@ packages:
 
   /@solid-primitives/props@3.1.8(solid-js@1.8.5):
     resolution: {integrity: sha512-38ERNFhl87emUDPRlYvCmlbvEcK2mOJB38SU22YS2QXFDK7TQf/7P46XZacs7oODc/fckhfZTitht71FMEDe2g==}
+    peerDependencies:
+      solid-js: ^1.6.12
+    dependencies:
+      '@solid-primitives/utils': 6.2.1(solid-js@1.8.5)
+      solid-js: 1.8.5
+    dev: false
+
+  /@solid-primitives/raf@2.1.13(solid-js@1.8.5):
+    resolution: {integrity: sha512-BEDmFTiA80UHaZFdVcb2w4kFQioh3D/5KR6yAAVBiCMCb/XCI0ChDr9F8MX45BKZYFThwxLKTyjAjBkFMk2trg==}
     peerDependencies:
       solid-js: ^1.6.12
     dependencies:
@@ -1935,6 +1971,10 @@ packages:
     dependencies:
       reusify: 1.0.4
     dev: true
+
+  /fflate@0.8.1:
+    resolution: {integrity: sha512-/exOvEuc+/iaUm105QIiOt4LpBdMTWsXxqR0HDF35vx3fmaKzw7354gTilCh5rkzEt8WYyG//ku3h3nRmd7CHQ==}
+    dev: false
 
   /fill-range@7.0.1:
     resolution: {integrity: sha512-qOo9F+dMUmC2Lcb4BbVvnKJxTPjCm+RRpe4gDuGrzkL7mEVl/djYSu2OdQ2Pa302N4oqkSg9ir6jaLWJ2USVpQ==}
