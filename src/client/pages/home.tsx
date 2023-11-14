@@ -1,8 +1,8 @@
 import { useRouteData } from "@solidjs/router";
 
-import Data from "~/client/pages/index.data";
+import Data from "~/client/pages/home.data";
 
-export default function Index() {
+export default function Home() {
   const query = useRouteData<typeof Data>();
   return (
     <div class="flex justify-center items-center">

@@ -10,7 +10,4 @@ export default defineConfig({
       "/api": "http://localhost:5174",
     },
   },
-  build: {
-    target: "es2022",
-  },
 });

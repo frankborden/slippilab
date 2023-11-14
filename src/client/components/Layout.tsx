@@ -1,7 +1,7 @@
-import { NavLink } from "@solidjs/router";
+import { NavLink, Outlet } from "@solidjs/router";
 import { ParentProps } from "solid-js";
 
-export default function Layout(props: ParentProps) {
+export default function Layout() {
   return (
     <div>
       <div class="border-b">
@@ -47,7 +47,9 @@ export default function Layout(props: ParentProps) {
           </div>
         </nav>
       </div>
-      <main class="mt-8 container">{props.children}</main>
+      <main class="mt-8 container">
+        <Outlet />
+      </main>
     </div>
   );
 }
