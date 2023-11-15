@@ -6,51 +6,44 @@ import { ReplayTypeColumn } from "~/client/components/app/Replays/columns/Replay
 import {
   CharacterChip,
   CharacterSelect,
-  filterCharacters,
 } from "~/client/components/app/Replays/filters/Character";
 import {
   ConnectCodeChip,
   ConnectCodeSelect,
-  filterConnectCodes,
 } from "~/client/components/app/Replays/filters/ConnectCode";
 import {
   ReplayTypeChip,
   ReplayTypeSelect,
-  filterReplayTypes,
 } from "~/client/components/app/Replays/filters/ReplayType";
 import {
   StageChip,
   StageSelect,
-  filterStages,
 } from "~/client/components/app/Replays/filters/Stage";
 import { Button } from "~/client/components/ui/button";
+import { cn } from "~/client/components/utils";
 import type { ReplayStub, ReplayType } from "~/common/model/types";
 import { stageUrl } from "~/common/util";
+
+export interface Filters {
+  replayTypes: ReplayType[];
+  stageIds: number[];
+  characterIds: number[];
+  connectCodes: string[];
+}
 
 export function Replays(props: {
   replays: ReplayStub[];
   connectCodes: string[];
+  filters: Filters;
+  onFiltersChanged: (filters: Filters) => void;
+  pageIndex: number;
+  pageTotalCount: number;
+  onPageChange: (pageIndex: number) => void;
   onSelect: (replay: ReplayStub) => void;
   children?: JSXElement;
 }) {
-  const [filters, setFilters] = createSignal({
-    replayTypes: [] as ReplayType[],
-    stageIds: [] as number[],
-    characterIds: [] as number[],
-    connectCodes: [] as string[],
-  });
-  const filteredReplays = createMemo(() =>
-    props.replays.filter((replay) => {
-      return (
-        filterReplayTypes(replay, filters().replayTypes) &&
-        filterStages(replay, filters().stageIds) &&
-        filterCharacters(replay, filters().characterIds) &&
-        filterConnectCodes(replay, filters().connectCodes)
-      );
-    }),
-  );
   const maxPlayers = createMemo(() =>
-    Math.max(2, ...filteredReplays().map((r) => r.players.length)),
+    Math.max(2, ...props.replays.map((r) => r.players.length)),
   );
 
   return (
@@ -60,37 +53,41 @@ export function Replays(props: {
     >
       <div class="col-span-full -mx-4 flex flex-wrap items-center gap-4">
         <ReplayTypeSelect
-          current={filters().replayTypes}
-          onChange={(replayTypes) => setFilters({ ...filters(), replayTypes })}
+          current={props.filters.replayTypes}
+          onChange={(replayTypes) =>
+            props.onFiltersChanged({ ...props.filters, replayTypes })
+          }
         />
         <StageSelect
-          current={filters().stageIds}
-          onChange={(stageIds) => setFilters({ ...filters(), stageIds })}
+          current={props.filters.stageIds}
+          onChange={(stageIds) =>
+            props.onFiltersChanged({ ...props.filters, stageIds })
+          }
         />
         <CharacterSelect
-          current={filters().characterIds}
+          current={props.filters.characterIds}
           onChange={(characterIds) =>
-            setFilters({ ...filters(), characterIds })
+            props.onFiltersChanged({ ...props.filters, characterIds })
           }
         />
         <ConnectCodeSelect
           allConnectCodes={props.connectCodes}
-          current={filters().connectCodes}
+          current={props.filters.connectCodes}
           onChange={(connectCodes) =>
-            setFilters({ ...filters(), connectCodes })
+            props.onFiltersChanged({ ...props.filters, connectCodes })
           }
         />
       </div>
-      <Show when={Object.values(filters()).flat().length > 0}>
+      <Show when={Object.values(props.filters).flat().length > 0}>
         <div class="col-span-full flex flex-wrap items-center gap-4">
-          <For each={filters().replayTypes}>
+          <For each={props.filters.replayTypes}>
             {(replayType) => (
               <ReplayTypeChip
                 replayType={replayType}
                 onRemove={() =>
-                  setFilters({
-                    ...filters(),
-                    replayTypes: filters().replayTypes.filter(
+                  props.onFiltersChanged({
+                    ...props.filters,
+                    replayTypes: props.filters.replayTypes.filter(
                       (s) => s !== replayType,
                     ),
                   })
@@ -98,27 +95,29 @@ export function Replays(props: {
               />
             )}
           </For>
-          <For each={filters().stageIds}>
+          <For each={props.filters.stageIds}>
             {(stageId) => (
               <StageChip
                 stageId={stageId}
                 onRemove={() =>
-                  setFilters({
-                    ...filters(),
-                    stageIds: filters().stageIds.filter((s) => s !== stageId),
+                  props.onFiltersChanged({
+                    ...props.filters,
+                    stageIds: props.filters.stageIds.filter(
+                      (s) => s !== stageId,
+                    ),
                   })
                 }
               />
             )}
           </For>
-          <For each={filters().characterIds}>
+          <For each={props.filters.characterIds}>
             {(characterId) => (
               <CharacterChip
                 characterId={characterId}
                 onRemove={() =>
-                  setFilters({
-                    ...filters(),
-                    characterIds: filters().characterIds.filter(
+                  props.onFiltersChanged({
+                    ...props.filters,
+                    characterIds: props.filters.characterIds.filter(
                       (s) => s !== characterId,
                     ),
                   })
@@ -126,14 +125,14 @@ export function Replays(props: {
               />
             )}
           </For>
-          <For each={filters().connectCodes}>
+          <For each={props.filters.connectCodes}>
             {(connectCode) => (
               <ConnectCodeChip
                 connectCode={connectCode}
                 onRemove={() =>
-                  setFilters({
-                    ...filters(),
-                    connectCodes: filters().connectCodes.filter(
+                  props.onFiltersChanged({
+                    ...props.filters,
+                    connectCodes: props.filters.connectCodes.filter(
                       (s) => s !== connectCode,
                     ),
                   })
@@ -153,13 +152,13 @@ export function Replays(props: {
         {maxPlayers() > 3 && <div>Player 4</div>}
       </div>
       <Show
-        when={filteredReplays().length > 0}
+        when={props.replays.length > 0}
         fallback={
           <div class="col-span-full mx-auto mt-8">{props.children}</div>
         }
       >
         <div class="col-span-full grid grid-cols-[subgrid]">
-          <For each={filteredReplays()}>
+          <For each={props.replays}>
             {(replay) => (
               <Button
                 variant="ghost"
@@ -180,6 +179,42 @@ export function Replays(props: {
               </Button>
             )}
           </For>
+        </div>
+        <div class="col-span-full flex items-center justify-end">
+          <div class="col-span-full flex items-center justify-between gap-8">
+            <div class="text-sm">
+              Page {props.pageIndex + 1} of {props.pageTotalCount}
+            </div>
+            <div
+              class={cn(
+                "flex items-center gap-1",
+                "[&>button]:text-2xl",
+                "[&>button:disabled]:text-zinc-300",
+                "dark:[&>button:disabled]:text-zinc-600",
+              )}
+            >
+              <button
+                class={cn("i-tabler-chevron-left-pipe")}
+                disabled={props.pageIndex === 0}
+                onClick={() => props.onPageChange(0)}
+              ></button>
+              <button
+                class={cn("i-tabler-chevron-left")}
+                disabled={props.pageIndex === 0}
+                onClick={() => props.onPageChange(props.pageIndex - 1)}
+              ></button>
+              <button
+                class={cn("i-tabler-chevron-right")}
+                disabled={props.pageIndex === props.pageTotalCount - 1}
+                onClick={() => props.onPageChange(props.pageIndex + 1)}
+              ></button>
+              <button
+                class={cn("i-tabler-chevron-right-pipe")}
+                disabled={props.pageIndex === props.pageTotalCount - 1}
+                onClick={() => props.onPageChange(props.pageTotalCount - 1)}
+              ></button>
+            </div>
+          </div>
         </div>
       </Show>
     </div>

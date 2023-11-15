@@ -16,10 +16,22 @@ export function createRankQuery(code: Accessor<string>) {
   }));
 }
 
-export function createReplaysQuery() {
+export function createReplaysQuery(query: Accessor<URLSearchParams>) {
   return createQuery(() => ({
-    queryKey: ["replays"],
-    queryFn: () => client.api.replays.$get().then((res) => res.json()),
+    queryKey: ["replays", query().toString()],
+    queryFn: () =>
+      client.api.replays
+        .$get({
+          query: Object.fromEntries(query().entries()),
+        })
+        .then((res) => res.json()),
+  }));
+}
+
+export function createConnectCodesQuery() {
+  return createQuery(() => ({
+    queryKey: ["connectCodes"],
+    queryFn: () => client.api.connectCodes.$get().then((res) => res.json()),
   }));
 }
 

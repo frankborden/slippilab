@@ -1,7 +1,12 @@
 import { As } from "@kobalte/core";
 import { useNavigate } from "@solidjs/router";
+import { createMemo, createSignal } from "solid-js";
 
-import { Replays } from "~/client/components/app/Replays";
+import { Filters, Replays } from "~/client/components/app/Replays";
+import { filterCharacters } from "~/client/components/app/Replays/filters/Character";
+import { filterConnectCodes } from "~/client/components/app/Replays/filters/ConnectCode";
+import { filterReplayTypes } from "~/client/components/app/Replays/filters/ReplayType";
+import { filterStages } from "~/client/components/app/Replays/filters/Stage";
 import { Button } from "~/client/components/ui/button";
 import {
   DropdownMenu,
@@ -13,9 +18,37 @@ import { addFiles, setSelected, stubs } from "~/client/state/personal";
 
 export function LocalReplays() {
   const navigate = useNavigate();
+
+  const [filters, setFilters] = createSignal<Filters>({
+    replayTypes: [],
+    stageIds: [],
+    characterIds: [],
+    connectCodes: [],
+  });
+
+  const filteredReplays = createMemo(() =>
+    stubs()
+      .map(([replay]) => replay)
+      .filter((replay) => {
+        return (
+          filterReplayTypes(replay, filters().replayTypes) &&
+          filterStages(replay, filters().stageIds) &&
+          filterCharacters(replay, filters().characterIds) &&
+          filterConnectCodes(replay, filters().connectCodes)
+        );
+      }),
+  );
+  const [pageIndex, setPageIndex] = createSignal(0);
+  const totalPages = createMemo(() => Math.ceil(filteredReplays().length / 10));
+
+  const pageReplays = createMemo(() => {
+    const start = pageIndex() * 10;
+    return filteredReplays().slice(start, start + 10);
+  });
+
   return (
     <Replays
-      replays={stubs().map(([replay]) => replay)}
+      replays={pageReplays()}
       connectCodes={[
         ...new Set(
           stubs()
@@ -23,6 +56,11 @@ export function LocalReplays() {
             .filter((c): c is string => !!c),
         ),
       ].toSorted()}
+      filters={filters()}
+      onFiltersChanged={setFilters}
+      pageIndex={pageIndex()}
+      pageTotalCount={totalPages()}
+      onPageChange={(pageIndex) => setPageIndex(pageIndex)}
       onSelect={(replay) => {
         setSelected(stubs().find(([r]) => r === replay)!);
         navigate("/watch/local");

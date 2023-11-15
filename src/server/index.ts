@@ -1,5 +1,16 @@
 import type { D1Database, R2Bucket } from "@cloudflare/workers-types";
-import { type InferInsertModel, eq, isNotNull } from "drizzle-orm";
+import {
+  type InferInsertModel,
+  SQL,
+  and,
+  eq,
+  inArray,
+  isNotNull,
+  isNull,
+  like,
+  or,
+  sql,
+} from "drizzle-orm";
 import { drizzle } from "drizzle-orm/d1";
 import { Hono } from "hono";
 import { UbjsonDecoder } from "json-joy/esm/json-pack/ubjson/UbjsonDecoder";
@@ -56,36 +67,119 @@ const app = new Hono<Env>()
   .get("/replays", async (c) => {
     const { DB } = c.env;
     const db = drizzle(DB, { schema });
-    const replays = await db.query.replays.findMany({
-      limit: 10,
-      with: {
-        replayPlayers: true,
-      },
-    });
-    return c.jsonT(
-      replays.map((replay): [string, ReplayStub] => [
-        replay.slug,
-        {
-          type: replay.type as ReplayType,
-          stageId: replay.stageId,
-          startTimestamp: replay.startTimestamp,
-          matchId: replay.matchId ?? undefined,
-          gameNumber: replay.gameNumber ?? undefined,
-          tiebreakerNumber: replay.tiebreakerNumber ?? undefined,
-          players: replay.replayPlayers.map(
-            (player): PlayerStub => ({
-              playerIndex: player.playerIndex,
-              connectCode: player.connectCode ?? undefined,
-              displayName: player.displayName ?? undefined,
-              nametag: player.nametag ?? undefined,
-              teamId: player.teamId ?? undefined,
-              externalCharacterId: player.externalCharacterId,
-              costumeIndex: player.costumeIndex,
+
+    const limit = Number(c.req.query("limit") ?? 10);
+    const page = Number(c.req.query("page") ?? 0);
+    const types = c.req.query("types")?.split(",") ?? [];
+    const stages = c.req.query("stages")?.split(",").map(Number) ?? [];
+    const characters = c.req.query("characters")?.split(",").map(Number) ?? [];
+    const connectCodes = c.req.query("connectCodes")?.split(",") ?? [];
+
+    const filters: SQL[] = [];
+    if (types.length > 0) {
+      filters.push(
+        or(
+          ...types
+            .filter((t): t is ReplayType =>
+              (
+                [
+                  "direct",
+                  "offline",
+                  "old online",
+                  "ranked",
+                  "unranked",
+                ] satisfies ReplayType[]
+              ).includes(t as ReplayType),
+            )
+            .map((t) => {
+              switch (t) {
+                case "direct":
+                  return like(schema.replays.matchId, "mode.direct%");
+                case "ranked":
+                  return like(schema.replays.matchId, "mode.ranked%");
+                case "unranked":
+                  return like(schema.replays.matchId, "mode.unranked%");
+                case "offline":
+                case "old online":
+                  return isNull(schema.replays.matchId);
+              }
             }),
-          ),
-        },
-      ]),
-    );
+        ) as SQL,
+      );
+    }
+    if (stages.length > 0) {
+      filters.push(inArray(schema.replays.stageId, stages));
+    }
+    if (characters.length > 0) {
+      filters.push(
+        ...characters.map(
+          (character) =>
+            // https://github.com/drizzle-team/drizzle-orm/issues/1235
+            sql`exists ${db
+              .select({ exists: sql<number>`1` })
+              .from(schema.replayPlayers)
+              .where(
+                and(
+                  eq(schema.replayPlayers.replayId, schema.replays.id),
+                  eq(schema.replayPlayers.externalCharacterId, character),
+                ),
+              )}`,
+        ),
+      );
+    }
+    if (connectCodes.length > 0) {
+      filters.push(
+        ...connectCodes.map(
+          (connectCode) =>
+            // https://github.com/drizzle-team/drizzle-orm/issues/1235
+            sql`exists ${db
+              .select({ exists: sql<number>`1` })
+              .from(schema.replayPlayers)
+              .where(
+                and(
+                  eq(schema.replayPlayers.replayId, schema.replays.id),
+                  eq(schema.replayPlayers.connectCode, connectCode),
+                ),
+              )}`,
+        ),
+      );
+    }
+
+    const replayCountResults = db
+      .select({ count: sql<number>`count(*)` })
+      .from(schema.replays)
+      .where(and(...filters));
+    const results = await db.query.replays.findMany({
+      with: { replayPlayers: true },
+      where: and(...filters),
+      limit: limit,
+      offset: limit * page,
+    });
+    const stubs: (ReplayStub & { slug: string })[] = results.map((replay) => ({
+      type: replay.type as ReplayType,
+      slug: replay.slug,
+      stageId: replay.stageId,
+      startTimestamp: replay.startTimestamp,
+      matchId: replay.matchId ?? undefined,
+      gameNumber: replay.gameNumber ?? undefined,
+      tiebreakerNumber: replay.tiebreakerNumber ?? undefined,
+      players: replay.replayPlayers.map((player) => ({
+        replayId: replay.id,
+        playerIndex: player.playerIndex,
+        connectCode: player.connectCode ?? undefined,
+        displayName: player.displayName ?? undefined,
+        nametag: player.nametag ?? undefined,
+        teamId: player.teamId ?? undefined,
+        externalCharacterId: player.externalCharacterId,
+        costumeIndex: player.costumeIndex,
+      })),
+    }));
+
+    return c.jsonT({
+      pageIndex: page,
+      pageTotalCount: Math.ceil((await replayCountResults)[0].count / limit),
+      stubs,
+    });
   })
   .get("/replay/:slug", async (c) => {
     const { DB, BUCKET } = c.env;
