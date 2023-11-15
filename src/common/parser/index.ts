@@ -132,13 +132,17 @@ export function parseReplay(metadata: any, raw: Uint8Array): ReplayData {
     switch (gameSettings.matchId.match(/mode\.([^-]+)/)![1]) {
       case "unranked":
         type = "unranked";
+        break;
       case "direct":
         type = "direct";
+        break;
       case "ranked":
         type = "ranked";
+        break;
       default:
         // impossible
         type = "old online";
+        break;
     }
   }
   return {
