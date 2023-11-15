@@ -8,6 +8,9 @@ export function ServerReplays(props: { replays: [string, ReplayStub][] }) {
   return (
     <Replays
       replays={props.replays.map(([, replay]) => replay)}
+      connectCodes={props.replays
+        .flatMap(([, replay]) => replay.players.map((p) => p.connectCode))
+        .filter((c): c is string => !!c)}
       onSelect={(replay) =>
         navigate(`/watch/${props.replays.find(([, r]) => r === replay)![0]}`)
       }

@@ -16,6 +16,13 @@ export function LocalReplays() {
   return (
     <Replays
       replays={stubs().map(([replay]) => replay)}
+      connectCodes={[
+        ...new Set(
+          stubs()
+            .flatMap(([replay]) => replay.players.map((p) => p.connectCode))
+            .filter((c): c is string => !!c),
+        ),
+      ].toSorted()}
       onSelect={(replay) => {
         setSelected(stubs().find(([r]) => r === replay)!);
         navigate("/watch/local");

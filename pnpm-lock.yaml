@@ -56,6 +56,9 @@ dependencies:
   tailwind-merge:
     specifier: ^2.0.0
     version: 2.0.0
+  valibot:
+    specifier: ^0.20.1
+    version: 0.20.1
 
 devDependencies:
   '@cloudflare/workers-types':
@@ -3052,6 +3055,10 @@ packages:
   /util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
     dev: true
+
+  /valibot@0.20.1:
+    resolution: {integrity: sha512-7lToTLG5wtK76u32gq8dUK0bAw7bknTGbeNSKRJunAC2soGVnNrKngg+38Jjt6FOwH+MshUONHoFz+LgmjeYKQ==}
+    dev: false
 
   /validate-html-nesting@1.2.2:
     resolution: {integrity: sha512-hGdgQozCsQJMyfK5urgFcWEqsSSrK63Awe0t/IMR0bZ0QMtnuaiHzThW81guu3qx9abLi99NEuiaN6P9gVYsNg==}

@@ -4,6 +4,16 @@ import { DateColumn } from "~/client/components/app/Replays/columns/DateColumn";
 import { PlayerColumn } from "~/client/components/app/Replays/columns/PlayerColumn";
 import { ReplayTypeColumn } from "~/client/components/app/Replays/columns/ReplayTypeColumn";
 import {
+  CharacterChip,
+  CharacterSelect,
+  filterCharacters,
+} from "~/client/components/app/Replays/filters/Character";
+import {
+  ConnectCodeChip,
+  ConnectCodeSelect,
+  filterConnectCodes,
+} from "~/client/components/app/Replays/filters/ConnectCode";
+import {
   StageChip,
   StageSelect,
   filterStages,
@@ -14,15 +24,22 @@ import { stageUrl } from "~/common/util";
 
 export function Replays(props: {
   replays: ReplayStub[];
+  connectCodes: string[];
   onSelect: (replay: ReplayStub) => void;
   children?: JSXElement;
 }) {
   const [filters, setFilters] = createSignal({
     stageIds: [] as number[],
+    characterIds: [] as number[],
+    connectCodes: [] as string[],
   });
   const filteredReplays = createMemo(() =>
     props.replays.filter((replay) => {
-      return filterStages(replay, filters().stageIds);
+      return (
+        filterStages(replay, filters().stageIds) &&
+        filterCharacters(replay, filters().characterIds) &&
+        filterConnectCodes(replay, filters().connectCodes)
+      );
     }),
   );
   const maxPlayers = createMemo(() =>
@@ -39,6 +56,19 @@ export function Replays(props: {
           current={filters().stageIds}
           onChange={(stageIds) => setFilters({ ...filters(), stageIds })}
         />
+        <CharacterSelect
+          current={filters().characterIds}
+          onChange={(characterIds) =>
+            setFilters({ ...filters(), characterIds })
+          }
+        />
+        <ConnectCodeSelect
+          allConnectCodes={props.connectCodes}
+          current={filters().connectCodes}
+          onChange={(connectCodes) =>
+            setFilters({ ...filters(), connectCodes })
+          }
+        />
       </div>
       <Show when={Object.values(filters()).flat().length > 0}>
         <div class="col-span-full flex flex-wrap items-center gap-4">
@@ -48,8 +78,38 @@ export function Replays(props: {
                 stageId={stageId}
                 onRemove={() =>
                   setFilters({
-                    ...filters,
+                    ...filters(),
                     stageIds: filters().stageIds.filter((s) => s !== stageId),
+                  })
+                }
+              />
+            )}
+          </For>
+          <For each={filters().characterIds}>
+            {(characterId) => (
+              <CharacterChip
+                characterId={characterId}
+                onRemove={() =>
+                  setFilters({
+                    ...filters(),
+                    characterIds: filters().characterIds.filter(
+                      (s) => s !== characterId,
+                    ),
+                  })
+                }
+              />
+            )}
+          </For>
+          <For each={filters().connectCodes}>
+            {(connectCode) => (
+              <ConnectCodeChip
+                connectCode={connectCode}
+                onRemove={() =>
+                  setFilters({
+                    ...filters(),
+                    connectCodes: filters().connectCodes.filter(
+                      (s) => s !== connectCode,
+                    ),
                   })
                 }
               />

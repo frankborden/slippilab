@@ -1,11 +1,20 @@
 import type { D1Database, R2Bucket } from "@cloudflare/workers-types";
-import { InferInsertModel, eq } from "drizzle-orm";
+import { type InferInsertModel, eq, isNotNull } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/d1";
 import { Hono } from "hono";
 import { UbjsonDecoder } from "json-joy/esm/json-pack/ubjson/UbjsonDecoder";
 import { generateSlug } from "random-word-slugs";
+import {
+  type Output,
+  array,
+  number,
+  object,
+  optional,
+  parse,
+  string,
+} from "valibot";
 
-import { PlayerStub, ReplayStub, ReplayType } from "~/common/model/types";
+import type { PlayerStub, ReplayStub, ReplayType } from "~/common/model/types";
 import { parseReplay } from "~/common/parser";
 import * as schema from "~/server/schema";
 
@@ -18,6 +27,32 @@ export type Env = {
 
 const app = new Hono<Env>()
   .basePath("/api")
+  .get("/rank/:code", async (c) => {
+    const code = c.req.param().code;
+    let raw: Output<typeof RankSchema>;
+    raw = await fetch(`http://slprank.com/rank/${code.replace("#", "-")}?raw`)
+      .then((res) => res.json())
+      .then((res) => parse(RankSchema, res));
+    const result = {
+      ...raw,
+      characters: raw.characters
+        .map((character) => ({
+          ...character,
+          id: slpRankNamesById.indexOf(character.characterName),
+        }))
+        .sort((a, b) => b.gameCount - a.gameCount),
+    };
+    return c.jsonT({ data: result });
+  })
+  .get("/connectCodes", async (c) => {
+    const { DB } = c.env;
+    const db = drizzle(DB, { schema });
+    const results = await db
+      .selectDistinct({ code: schema.replayPlayers.connectCode })
+      .from(schema.replayPlayers)
+      .where(isNotNull(schema.replayPlayers.connectCode));
+    return c.jsonT({ connectCodes: results.map((result) => result.code!) });
+  })
   .get("/replays", async (c) => {
     const { DB } = c.env;
     const db = drizzle(DB, { schema });
@@ -110,6 +145,54 @@ const app = new Hono<Env>()
 
     return c.jsonT({ slug });
   });
+
+const RankSchema = object({
+  displayName: string(),
+  continent: optional(string()),
+  rank: string(),
+  rating: number(),
+  leaderboardPlacement: optional(number()),
+  leaderboardRegion: optional(string()),
+  wins: number(),
+  losses: number(),
+  characters: array(
+    object({
+      characterName: string(),
+      gameCount: number(),
+    }),
+  ),
+  dailyGlobalPlacement: optional(number()),
+  dailyRegionalPlacement: optional(number()),
+});
+
+export const slpRankNamesById = [
+  "Captain Falcon",
+  "Donkey Kong",
+  "Fox",
+  "Game And Watch",
+  "Kirby",
+  "Bowser",
+  "Link",
+  "Luigi",
+  "Mario",
+  "Marth",
+  "Mewtwo",
+  "Ness",
+  "Peach",
+  "Pikachu",
+  "Ice Climbers",
+  "Jigglypuff",
+  "Samus",
+  "Yoshi",
+  "Zelda",
+  "Sheik",
+  "Falco",
+  "Young Link",
+  "Dr Mario",
+  "Roy",
+  "Pichu",
+  "Ganondorf",
+];
 
 export type Server = typeof app;
 export default app;

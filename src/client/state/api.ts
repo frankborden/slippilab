@@ -6,6 +6,16 @@ import { type Server } from "~/server";
 
 const client = hc<Server>("");
 
+export function createRankQuery(code: Accessor<string>) {
+  return createQuery(() => ({
+    queryKey: ["rank", code()],
+    queryFn: () =>
+      client.api.rank[":code"]
+        .$get({ param: { code: encodeURIComponent(code()) } })
+        .then((res) => res.json()),
+  }));
+}
+
 export function createReplaysQuery() {
   return createQuery(() => ({
     queryKey: ["replays"],

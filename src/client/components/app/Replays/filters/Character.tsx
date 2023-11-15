@@ -13,17 +13,22 @@ import {
   DialogTrigger,
 } from "~/client/components/ui/dialog";
 import { cn } from "~/client/components/utils";
-import { stages } from "~/common/model/names";
+import { charactersExt } from "~/common/model/names";
 import type { ReplayStub } from "~/common/model/types";
-import { stageUrl } from "~/common/util";
+import { characterUrl } from "~/common/util";
 
-export function filterStages(replay: ReplayStub, stageIds: number[]) {
-  return stageIds.length === 0 || stageIds.includes(replay.stageId);
+export function filterCharacters(replay: ReplayStub, characterIds: number[]) {
+  return (
+    characterIds.length === 0 ||
+    characterIds.every((id) =>
+      replay.players.some((p) => p.externalCharacterId === id),
+    )
+  );
 }
 
-export function StageSelect(props: {
+export function CharacterSelect(props: {
   current: number[];
-  onChange: (stageIds: number[]) => void;
+  onChange: (characterIds: number[]) => void;
 }) {
   const [open, setOpen] = createSignal(false);
   const [selected, setSelected] = createSignal<number[]>(props.current);
@@ -35,32 +40,42 @@ export function StageSelect(props: {
       <DialogTrigger asChild>
         <As component={Button} variant="ghost" size="sm">
           <div class="i-tabler-plus" />
-          <div>Stage</div>
+          <div>Character</div>
         </As>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Stage Select</DialogTitle>
+          <DialogTitle>Character Select</DialogTitle>
           <DialogDescription>
-            Filter results for replays matching any of the selected stages.
+            Filter results for replays matching all of the selected characters.
           </DialogDescription>
         </DialogHeader>
-        <div class="mx-auto grid grid-cols-3 gap-8">
-          {[8, 2, 3, 31, 32, 28].map((stageId) => (
+        <div class="mx-auto grid grid-cols-9 gap-1">
+          {[
+            22, 8, 7, 5, 12, 17, 1, 0, 25, 20, 2, 11, 14, 4, 16, 19, 6, 21, 24,
+            13, 15, 10, 9, 3, 23, 18,
+          ].map((characterId) => (
             <button
               class={cn(
-                "rounded-sm border-4",
-                selected().includes(Number(stageId)) && "border-primary",
+                "rounded-sm border-4 p-1",
+                selected().includes(Number(characterId)) && "border-primary",
+                characterId === 24 && "col-start-2",
               )}
               onClick={() =>
                 setSelected(
-                  selected().includes(Number(stageId))
-                    ? selected().filter((s) => s !== Number(stageId))
-                    : [...selected(), Number(stageId)],
+                  selected().includes(Number(characterId))
+                    ? selected().filter((s) => s !== Number(characterId))
+                    : [...selected(), Number(characterId)],
                 )
               }
             >
-              <img src={stageUrl(Number(stageId))} />
+              <img
+                src={characterUrl({
+                  externalCharacterId: Number(characterId),
+                  costumeIndex: 0,
+                })}
+                class="h-8"
+              />
             </button>
           ))}
         </div>
@@ -90,7 +105,10 @@ export function StageSelect(props: {
   );
 }
 
-export function StageChip(props: { stageId: number; onRemove: () => void }) {
+export function CharacterChip(props: {
+  characterId: number;
+  onRemove: () => void;
+}) {
   return (
     <Badge
       variant="secondary"
@@ -98,7 +116,7 @@ export function StageChip(props: { stageId: number; onRemove: () => void }) {
       class="gap-1"
       onClick={() => props.onRemove()}
     >
-      <div>{stages[props.stageId]}</div>
+      <div>{charactersExt[props.characterId]}</div>
       <div class="i-tabler-x -mr-1" />
     </Badge>
   );
