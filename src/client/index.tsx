@@ -8,7 +8,6 @@ import { render } from "solid-js/web";
 import Layout from "~/client/components/Layout";
 import "~/client/index.css";
 import BrowseData from "~/client/pages/browse.data";
-import HomeData from "~/client/pages/home.data";
 import { WatchLocalData } from "~/client/pages/watchLocal.data";
 import { WatchServerData } from "~/client/pages/watchServer.data";
 
@@ -20,7 +19,6 @@ const routes: RouteDefinition[] = [
       {
         path: "/",
         component: lazy(() => import("./pages/home")),
-        data: HomeData,
       },
       {
         path: "/browse",

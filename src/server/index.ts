@@ -18,9 +18,6 @@ export type Env = {
 
 const app = new Hono<Env>()
   .basePath("/api")
-  .get("/", async (c) => {
-    return c.jsonT({ message: "Home!" });
-  })
   .get("/replays", async (c) => {
     const { DB } = c.env;
     const db = drizzle(DB, { schema });

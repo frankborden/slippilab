@@ -16,16 +16,10 @@ export function createReplaysQuery() {
 export function createReplayQuery(slug: Accessor<string>) {
   return createQuery(() => ({
     queryKey: ["replay", slug()],
+    staleTime: Infinity,
     queryFn: () =>
       client.api.replay[":slug"]
         .$get({ param: { slug: slug() } })
         .then((res) => res.json()),
-  }));
-}
-
-export function createHomeQuery() {
-  return createQuery(() => ({
-    queryKey: ["home"],
-    queryFn: () => client.api.$get().then((res) => res.json()),
   }));
 }
