@@ -34,17 +34,18 @@ export function parseStub(raw: ArrayBufferLike): ReplayStub {
     } else {
       type = "old online";
     }
-  }
-  switch (gameSettings.matchId.match(/mode\.([^-]+)/)![1]) {
-    case "unranked":
-      type = "unranked";
-    case "direct":
-      type = "direct";
-    case "ranked":
-      type = "ranked";
-    default:
-      // impossible
-      type = "old online";
+  } else {
+    switch (gameSettings.matchId.match(/mode\.([^-]+)/)![1]) {
+      case "unranked":
+        type = "unranked";
+      case "direct":
+        type = "direct";
+      case "ranked":
+        type = "ranked";
+      default:
+        // impossible
+        type = "old online";
+    }
   }
   return {
     type,

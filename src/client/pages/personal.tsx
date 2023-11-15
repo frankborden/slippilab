@@ -1,3 +1,5 @@
+import { LocalReplays } from "~/client/components/app/LocalReplays";
+
 export default function Personal() {
-  return <div>Personal</div>;
+  return <LocalReplays />;
 }

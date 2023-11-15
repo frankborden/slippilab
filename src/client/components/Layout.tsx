@@ -1,6 +1,8 @@
 import { NavLink, Outlet } from "@solidjs/router";
 import { ParentProps } from "solid-js";
 
+import { LocalProgress } from "~/client/components/app/LocalProgress";
+
 export default function Layout() {
   return (
     <div>
@@ -47,6 +49,7 @@ export default function Layout() {
           </div>
         </nav>
       </div>
+      <LocalProgress />
       <main class="mt-8 container">
         <Outlet />
       </main>

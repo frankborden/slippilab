@@ -8,6 +8,7 @@ import { render } from "solid-js/web";
 import Layout from "~/client/components/Layout";
 import "~/client/index.css";
 import HomeData from "~/client/pages/home.data";
+import { WatchData } from "~/client/pages/watch.data";
 
 const routes: RouteDefinition[] = [
   {
@@ -30,6 +31,7 @@ const routes: RouteDefinition[] = [
       {
         path: "/watch/:id",
         component: lazy(() => import("./pages/watch")),
+        data: WatchData,
       },
     ],
   },
