@@ -1,5 +1,11 @@
+export type ReplayType =
+  | "direct"
+  | "ranked"
+  | "unranked"
+  | "old online"
+  | "offline";
 export interface ReplayStub {
-  type: "direct" | "ranked" | "unranked" | "old online" | "offline";
+  type: ReplayType;
   stageId: number;
   startTimestamp?: string;
   players: PlayerStub[];
@@ -41,6 +47,8 @@ export interface Character {
 
 /** */
 export interface ReplayData {
+  type: ReplayType;
+
   readonly settings: GameSettings;
   /**
    * Player control starts at 84. Timer starts at 123.

@@ -1,4 +1,10 @@
-import type { Frame, GameEnding, ReplayData, ReplayStub } from "../model/types";
+import type {
+  Frame,
+  GameEnding,
+  ReplayData,
+  ReplayStub,
+  ReplayType,
+} from "../model/types";
 import {
   parseEventPayloadsEvent,
   parseFrameStartEvent,
@@ -25,7 +31,7 @@ export function parseStub(raw: ArrayBufferLike): ReplayStub {
     rawData,
     0x01 + commandPayloadSizes[0x35],
   );
-  let type: ReplayStub["type"];
+  let type: ReplayType;
   if (gameSettings.matchId === undefined) {
     if (
       gameSettings.playerSettings.filter(Boolean)[0].connectCode === undefined
@@ -109,7 +115,30 @@ export function parseReplay(metadata: any, raw: Uint8Array): ReplayData {
     console.warn("Game end event not found");
     // throw new Error("Game Ending not found");
   }
+  let type: ReplayType;
+  if (gameSettings.matchId === undefined) {
+    if (
+      gameSettings.playerSettings.filter(Boolean)[0].connectCode === undefined
+    ) {
+      type = "offline";
+    } else {
+      type = "old online";
+    }
+  } else {
+    switch (gameSettings.matchId.match(/mode\.([^-]+)/)![1]) {
+      case "unranked":
+        type = "unranked";
+      case "direct":
+        type = "direct";
+      case "ranked":
+        type = "ranked";
+      default:
+        // impossible
+        type = "old online";
+    }
+  }
   return {
+    type,
     settings: gameSettings,
     frames: frames,
     ending: gameEnding as GameEnding,

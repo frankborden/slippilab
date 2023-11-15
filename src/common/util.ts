@@ -1,4 +1,4 @@
-import { ReplayStub } from "~/common/model/types";
+import { ReplayType } from "~/common/model/types";
 
 export function stageUrl(stageId: number) {
   return `/stages/${stageId}.png`;
@@ -18,7 +18,7 @@ export function rankUrl(rank: string) {
   return `/ranks/${rank.replace(" ", "_")}.svg`;
 }
 
-export function replayTypeIcon(type: ReplayStub["type"]): string {
+export function replayTypeIcon(type: ReplayType): string {
   switch (type) {
     case "offline":
       return "i-tabler-home";
