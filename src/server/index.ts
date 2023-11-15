@@ -5,6 +5,7 @@ import { Hono } from "hono";
 import { UbjsonDecoder } from "json-joy/esm/json-pack/ubjson/UbjsonDecoder";
 import { generateSlug } from "random-word-slugs";
 
+import { PlayerStub, ReplayStub, ReplayType } from "~/common/model/types";
 import { parseReplay } from "~/common/parser";
 import * as schema from "~/server/schema";
 
@@ -19,6 +20,40 @@ const app = new Hono<Env>()
   .basePath("/api")
   .get("/", async (c) => {
     return c.jsonT({ message: "Home!" });
+  })
+  .get("/replays", async (c) => {
+    const { DB } = c.env;
+    const db = drizzle(DB, { schema });
+    const replays = await db.query.replays.findMany({
+      limit: 10,
+      with: {
+        replayPlayers: true,
+      },
+    });
+    return c.jsonT(
+      replays.map((replay): [string, ReplayStub] => [
+        replay.slug,
+        {
+          type: replay.type as ReplayType,
+          stageId: replay.stageId,
+          startTimestamp: replay.startTimestamp,
+          matchId: replay.matchId ?? undefined,
+          gameNumber: replay.gameNumber ?? undefined,
+          tiebreakerNumber: replay.tiebreakerNumber ?? undefined,
+          players: replay.replayPlayers.map(
+            (player): PlayerStub => ({
+              playerIndex: player.playerIndex,
+              connectCode: player.connectCode ?? undefined,
+              displayName: player.displayName ?? undefined,
+              nametag: player.nametag ?? undefined,
+              teamId: player.teamId ?? undefined,
+              externalCharacterId: player.externalCharacterId,
+              costumeIndex: player.costumeIndex,
+            }),
+          ),
+        },
+      ]),
+    );
   })
   .get("/replay/:slug", async (c) => {
     const { DB, BUCKET } = c.env;
