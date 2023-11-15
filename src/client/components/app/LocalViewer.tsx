@@ -10,7 +10,7 @@ export function LocalViewer(props: { replay: ReplayData }) {
         onClick={() => {
           const form = new FormData();
           form.set("file", selected()![1]);
-          fetch("/api/replay", {
+          fetch("/upload", {
             method: "POST",
             body: form,
           });

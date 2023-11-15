@@ -1,8 +1,8 @@
 import type { D1Database, R2Bucket } from "@cloudflare/workers-types";
-import { InferInsertModel } from "drizzle-orm";
+import { InferInsertModel, eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/d1";
 import { Hono } from "hono";
-import { UbjsonDecoder } from "json-joy/es2020/json-pack/ubjson/UbjsonDecoder";
+import { UbjsonDecoder } from "json-joy/esm/json-pack/ubjson/UbjsonDecoder";
 import { generateSlug } from "random-word-slugs";
 
 import { parseReplay } from "~/common/parser";
@@ -19,6 +19,21 @@ const app = new Hono<Env>()
   .basePath("/api")
   .get("/", async (c) => {
     return c.jsonT({ message: "Home!" });
+  })
+  .get("/replay/:slug", async (c) => {
+    const { DB, BUCKET } = c.env;
+    const slug = c.req.param("slug");
+    const db = drizzle(DB, { schema });
+    const serverReplay = await db.query.replays.findFirst({
+      columns: { id: true },
+      where: eq(schema.replays.slug, slug),
+    });
+    const object = await BUCKET.get(serverReplay!.id);
+    const buffer = await object!.arrayBuffer();
+    const { raw, metadata } = new UbjsonDecoder().read(
+      new Uint8Array(buffer),
+    ) as any;
+    return c.jsonT({ replay: parseReplay(metadata, raw) });
   })
   .post("/upload", async (c) => {
     const { DB, BUCKET } = c.env;

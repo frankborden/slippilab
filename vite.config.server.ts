@@ -8,7 +8,7 @@ export default defineConfig({
   server: { port: 5174 },
   plugins: [
     paths(),
-    pages({ emptyOutDir: false, entry }),
+    pages({ emptyOutDir: false, entry, external: ["random-word-slugs"] }),
     devServer({
       entry,
       cf: {
@@ -19,4 +19,5 @@ export default defineConfig({
       },
     }),
   ],
+  cacheDir: ".vite/server",
 });
