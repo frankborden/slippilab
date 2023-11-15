@@ -14,12 +14,17 @@ import {
   filterConnectCodes,
 } from "~/client/components/app/Replays/filters/ConnectCode";
 import {
+  ReplayTypeChip,
+  ReplayTypeSelect,
+  filterReplayTypes,
+} from "~/client/components/app/Replays/filters/ReplayType";
+import {
   StageChip,
   StageSelect,
   filterStages,
 } from "~/client/components/app/Replays/filters/Stage";
 import { Button } from "~/client/components/ui/button";
-import type { ReplayStub } from "~/common/model/types";
+import type { ReplayStub, ReplayType } from "~/common/model/types";
 import { stageUrl } from "~/common/util";
 
 export function Replays(props: {
@@ -29,6 +34,7 @@ export function Replays(props: {
   children?: JSXElement;
 }) {
   const [filters, setFilters] = createSignal({
+    replayTypes: [] as ReplayType[],
     stageIds: [] as number[],
     characterIds: [] as number[],
     connectCodes: [] as string[],
@@ -36,6 +42,7 @@ export function Replays(props: {
   const filteredReplays = createMemo(() =>
     props.replays.filter((replay) => {
       return (
+        filterReplayTypes(replay, filters().replayTypes) &&
         filterStages(replay, filters().stageIds) &&
         filterCharacters(replay, filters().characterIds) &&
         filterConnectCodes(replay, filters().connectCodes)
@@ -52,6 +59,10 @@ export function Replays(props: {
       style={{ "grid-template-columns": `repeat(${3 + maxPlayers()}, auto)` }}
     >
       <div class="col-span-full -mx-4 flex flex-wrap items-center gap-4">
+        <ReplayTypeSelect
+          current={filters().replayTypes}
+          onChange={(replayTypes) => setFilters({ ...filters(), replayTypes })}
+        />
         <StageSelect
           current={filters().stageIds}
           onChange={(stageIds) => setFilters({ ...filters(), stageIds })}
@@ -72,6 +83,21 @@ export function Replays(props: {
       </div>
       <Show when={Object.values(filters()).flat().length > 0}>
         <div class="col-span-full flex flex-wrap items-center gap-4">
+          <For each={filters().replayTypes}>
+            {(replayType) => (
+              <ReplayTypeChip
+                replayType={replayType}
+                onRemove={() =>
+                  setFilters({
+                    ...filters(),
+                    replayTypes: filters().replayTypes.filter(
+                      (s) => s !== replayType,
+                    ),
+                  })
+                }
+              />
+            )}
+          </For>
           <For each={filters().stageIds}>
             {(stageId) => (
               <StageChip
