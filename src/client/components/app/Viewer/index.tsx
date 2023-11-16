@@ -30,8 +30,9 @@ import { search } from "~/common/search/search";
 export { getPlayerColor, fetchAnimations };
 
 const [frame, setFrame] = createSignal(0);
-const [ticksPerSecond, setTicksPerSecond] = createSignal(60);
-const [framesPerTick, setFramesPerTick] = createSignal(1);
+const [speed, setSpeed] = createSignal<"0.5x" | "1x" | "2x">("1x");
+const ticksPerSecond = createMemo(() => (speed() === "0.5x" ? 30 : 60));
+const framesPerTick = createMemo(() => (speed() === "2x" ? 2 : 1));
 const [running, start, stop] = createRAF(
   targetFPS(() => setFrame((f) => f + framesPerTick()), ticksPerSecond),
 );
@@ -224,7 +225,7 @@ function Seekbar(props: { length: number }) {
         </Slider.Thumb>
       </Slider.Track>
       <div class="flex items-center justify-between">
-        <div class="flex items-center gap-[0.5ch]">
+        <div class="flex items-center gap-[0.5ch] text-foreground/80">
           <Slider.Label>Frame</Slider.Label> <Slider.ValueLabel as="span" />
         </div>
         <Controls length={props.length} />
@@ -234,6 +235,10 @@ function Seekbar(props: { length: number }) {
 }
 
 function Controls(props: { length: number }) {
+  const speed = createMemo((): "0.5x" | "1x" | "2x" =>
+    framesPerTick() === 2 ? "2x" : ticksPerSecond() === 30 ? "0.5x" : "1x",
+  );
+
   createShortcut(["k"], () => (running() ? stop() : start()));
   createShortcut([" "], () => (running() ? stop() : start()));
   createShortcut(["j"], () => setFrame((f) => Math.max(f - 120, 0)));
@@ -262,49 +267,61 @@ function Controls(props: { length: number }) {
   createShortcut(["7"], () => setFrame(Math.floor((7 * props.length) / 10)));
   createShortcut(["8"], () => setFrame(Math.floor((8 * props.length) / 10)));
   createShortcut(["9"], () => setFrame(Math.floor((9 * props.length) / 10)));
-
-  const speed = createMemo((): "0.5x" | "1x" | "2x" =>
-    framesPerTick() === 2 ? "2x" : ticksPerSecond() === 30 ? "0.5x" : "1x",
+  createShortcut(["Shift", "<"], () =>
+    setSpeed(speed() === "2x" ? "1x" : "0.5x"),
+  );
+  createShortcut(["Shift", ">"], () =>
+    setSpeed(speed() === "0.5x" ? "1x" : "2x"),
   );
 
   return (
     <div class="flex items-center gap-1">
-      <Switch>
-        <Match when={speed() === "0.5x"}>
-          <button onClick={() => setTicksPerSecond(60)}>0.5x</button>
-        </Match>
-        <Match when={speed() === "1x"}>
-          <button onClick={() => setFramesPerTick(2)}>1x</button>
-        </Match>
-        <Match when={speed() === "2x"}>
-          <button
-            onClick={() => {
-              setFramesPerTick(1);
-              setTicksPerSecond(30);
-            }}
-          >
-            2x
-          </button>
-        </Match>
-      </Switch>
       <button
         class={cn(
-          "text-lg",
-          running() ? "i-tabler-player-pause" : "i-tabler-player-pause-filled",
+          "text-3xl text-foreground/80",
+          speed() === "0.5x"
+            ? "i-tabler-multiplier-0-5x"
+            : speed() === "1x"
+              ? "i-tabler-multiplier-1x"
+              : "i-tabler-multiplier-2x",
         )}
-        onClick={stop}
+        onClick={() =>
+          setSpeed(speed() === "2x" ? "0.5x" : speed() === "1x" ? "2x" : "1x")
+        }
+      />
+      <button
+        class="text-xl i-tabler-rotate-2"
+        onClick={() => setFrame((f) => Math.max(f - 120, 0))}
+      />
+      <button
+        class="text-xl i-tabler-chevron-left"
+        onClick={() => {
+          stop();
+          setFrame((f) => Math.max(0, f - 1));
+        }}
       />
       <button
         class={cn(
           "text-lg",
-          running() ? "i-tabler-player-play-filled" : "i-tabler-player-play",
+          running() ? "i-tabler-player-pause" : "i-tabler-player-play",
         )}
         onClick={() => {
           if (frame() === props.length - 1) {
             setFrame(0);
           }
-          start();
+          running() ? stop() : start();
         }}
+      />
+      <button
+        class="text-xl i-tabler-chevron-right"
+        onClick={() => {
+          stop();
+          setFrame((f) => Math.min(f + 1, props.length - 1));
+        }}
+      />
+      <button
+        class="text-xl i-tabler-rotate-clockwise-2"
+        onClick={() => setFrame((f) => Math.min(f + 120, props.length - 1))}
       />
     </div>
   );
