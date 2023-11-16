@@ -22,7 +22,7 @@ export function DateColumn(props: { replay: ReplayStub }) {
                 year: "numeric",
               })}
             </div>
-            <div class={cn("light:text-zinc-500", "dark:text-zinc-400")}>
+            <div class="text-foreground/60">
               {date().toLocaleTimeString(undefined, {
                 hour: "numeric",
                 hour12: true,

@@ -9,7 +9,7 @@ export default function Home() {
       <div>
         <h1 class="text-4xl font-medium">Explore your Melee games</h1>
         <div class="mt-6 text-foreground/70 max-w-[50ch]">
-          Use slippilab to dive deep into your Slippi replays and share your
+          Use Slippilab to dive deep into your Slippi replays and share your
           favorite moments with the community.
         </div>
         <div class="my-8 ml-2 text-foreground/80 flex flex-col gap-4 text-sm">

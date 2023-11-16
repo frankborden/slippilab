@@ -70,6 +70,7 @@ export function ConnectCodeSelect(props: {
             setSelected(selected);
           }}
           placeholder="Search"
+          placement="bottom"
           itemComponent={(props) => (
             <ComboboxItem item={props.item}>
               <ComboboxItemLabel>{props.item.rawValue}</ComboboxItemLabel>
@@ -99,7 +100,7 @@ export function ConnectCodeSelect(props: {
               </>
             )}
           </ComboboxControl>
-          <ComboboxContent />
+          <ComboboxContent class="max-h-[10rem] overflow-y-auto" />
         </Combobox>
         <DialogFooter>
           <Button

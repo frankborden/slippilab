@@ -189,8 +189,7 @@ export function Replays(props: {
               class={cn(
                 "flex items-center gap-1",
                 "[&>button]:text-2xl",
-                "[&>button:disabled]:text-zinc-300",
-                "dark:[&>button:disabled]:text-zinc-600",
+                "[&>button:disabled]:text-foreground/40",
               )}
             >
               <button

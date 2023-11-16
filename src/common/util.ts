@@ -14,10 +14,6 @@ export function characterUrl({
   return `/stockicons/${externalCharacterId}/${costumeIndex ?? 0}.png`;
 }
 
-export function rankUrl(rank: string) {
-  return `/ranks/${rank.replace(" ", "_")}.svg`;
-}
-
 export function replayTypeIcon(type: ReplayType): string {
   switch (type) {
     case "offline":
