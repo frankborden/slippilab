@@ -235,10 +235,6 @@ function Seekbar(props: { length: number }) {
 }
 
 function Controls(props: { length: number }) {
-  const speed = createMemo((): "0.5x" | "1x" | "2x" =>
-    framesPerTick() === 2 ? "2x" : ticksPerSecond() === 30 ? "0.5x" : "1x",
-  );
-
   createShortcut(["k"], () => (running() ? stop() : start()));
   createShortcut([" "], () => (running() ? stop() : start()));
   createShortcut(["j"], () => setFrame((f) => Math.max(f - 120, 0)));
