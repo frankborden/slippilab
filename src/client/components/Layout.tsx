@@ -1,11 +1,10 @@
 import { NavLink, Outlet } from "@solidjs/router";
-import { ParentProps } from "solid-js";
 
 import { LocalProgress } from "~/client/components/app/LocalProgress";
 
 export default function Layout() {
   return (
-    <div>
+    <>
       <div class="border-b">
         <nav class="container py-2 flex items-center justify-between">
           <div class="flex items-center gap-8">
@@ -53,6 +52,6 @@ export default function Layout() {
       <main class="mt-8 container">
         <Outlet />
       </main>
-    </div>
+    </>
   );
 }
