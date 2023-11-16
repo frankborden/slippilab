@@ -4,6 +4,8 @@ import { createRAF, targetFPS } from "@solid-primitives/raf";
 import {
   type Accessor,
   For,
+  Match,
+  Switch,
   createEffect,
   createMemo,
   createResource,
@@ -28,8 +30,10 @@ import { search } from "~/common/search/search";
 export { getPlayerColor, fetchAnimations };
 
 const [frame, setFrame] = createSignal(0);
+const [ticksPerSecond, setTicksPerSecond] = createSignal(60);
+const [framesPerTick, setFramesPerTick] = createSignal(1);
 const [running, start, stop] = createRAF(
-  targetFPS(() => setFrame((f) => f + 1), 60),
+  targetFPS(() => setFrame((f) => f + framesPerTick()), ticksPerSecond),
 );
 const [resumeAfterDrag, setResumeAfterDrag] = createSignal(false);
 start();
@@ -259,18 +263,42 @@ function Controls(props: { length: number }) {
   createShortcut(["8"], () => setFrame(Math.floor((8 * props.length) / 10)));
   createShortcut(["9"], () => setFrame(Math.floor((9 * props.length) / 10)));
 
+  const speed = createMemo((): "0.5x" | "1x" | "2x" =>
+    framesPerTick() === 2 ? "2x" : ticksPerSecond() === 30 ? "0.5x" : "1x",
+  );
+
   return (
-    <div class="flex items-center gap-1 [&>button]:text-lg">
+    <div class="flex items-center gap-1">
+      <Switch>
+        <Match when={speed() === "0.5x"}>
+          <button onClick={() => setTicksPerSecond(60)}>0.5x</button>
+        </Match>
+        <Match when={speed() === "1x"}>
+          <button onClick={() => setFramesPerTick(2)}>1x</button>
+        </Match>
+        <Match when={speed() === "2x"}>
+          <button
+            onClick={() => {
+              setFramesPerTick(1);
+              setTicksPerSecond(30);
+            }}
+          >
+            2x
+          </button>
+        </Match>
+      </Switch>
       <button
-        class={
-          running() ? "i-tabler-player-pause" : "i-tabler-player-pause-filled"
-        }
+        class={cn(
+          "text-lg",
+          running() ? "i-tabler-player-pause" : "i-tabler-player-pause-filled",
+        )}
         onClick={stop}
       />
       <button
-        class={
-          running() ? "i-tabler-player-play-filled" : "i-tabler-player-play"
-        }
+        class={cn(
+          "text-lg",
+          running() ? "i-tabler-player-play-filled" : "i-tabler-player-play",
+        )}
         onClick={() => {
           if (frame() === props.length - 1) {
             setFrame(0);
