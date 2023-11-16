@@ -12,14 +12,8 @@ const labels: Record<ReplayType, string> = {
 
 export function ReplayTypeColumn(props: { replay: ReplayStub }) {
   return (
-    <div
-      class={cn(
-        "flex flex-col items-center",
-        "light:text-zinc-600",
-        "dark:text-zinc-300",
-      )}
-    >
-      <div class={cn("text-5", replayTypeIcons[props.replay.type])} />
+    <div class={cn("flex flex-col items-center", "text-foreground/80")}>
+      <div class={cn("text-xl", replayTypeIcons[props.replay.type])} />
       <div class="text-xs">{labels[props.replay.type]}</div>
     </div>
   );
