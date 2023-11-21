@@ -1,6 +1,8 @@
 import { NavLink, Outlet } from "@solidjs/router";
+import { Show } from "solid-js";
 
 import { LocalProgress } from "~/client/components/app/LocalProgress";
+import { lastWatched } from "~/client/state/watch";
 
 export default function Layout() {
   return (
@@ -29,6 +31,16 @@ export default function Layout() {
             >
               Personal
             </NavLink>
+            <Show when={lastWatched()}>
+              <NavLink
+                href={`/watch/${lastWatched()}`}
+                class="font-medium"
+                activeClass="text-foreground/90"
+                inactiveClass="text-foreground/60 hover:text-foreground/80"
+              >
+                Watch
+              </NavLink>
+            </Show>
           </div>
           <div class="flex items-center gap-3">
             <a

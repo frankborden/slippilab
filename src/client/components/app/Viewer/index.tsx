@@ -286,7 +286,7 @@ function Controls(props: { length: number }) {
         }
       />
       <button
-        class="text-xl i-tabler-rotate-2"
+        class="text-2xl i-tabler-chevrons-left"
         onClick={() => setFrame((f) => Math.max(f - 120, 0))}
       />
       <button
@@ -298,7 +298,7 @@ function Controls(props: { length: number }) {
       />
       <button
         class={cn(
-          "text-lg",
+          "text-xl",
           running() ? "i-tabler-player-pause" : "i-tabler-player-play",
         )}
         onClick={() => {
@@ -316,7 +316,7 @@ function Controls(props: { length: number }) {
         }}
       />
       <button
-        class="text-xl i-tabler-rotate-clockwise-2"
+        class="text-2xl i-tabler-chevrons-right"
         onClick={() => setFrame((f) => Math.min(f + 120, props.length - 1))}
       />
     </div>
