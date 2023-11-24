@@ -1,0 +1,9 @@
+[[d1_databases]]
+binding = "DB"
+database_name = "<YOUR_D1_NAME_HERE>"
+database_id = "<YOUR_ID_HERE>"
+preview_database_id = "DB"
+
+[[r2_buckets]]
+binding = "BUCKET"
+bucket_name = "<YOUR_R2_NAME_HERE>"
