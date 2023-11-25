@@ -58,6 +58,8 @@ export function CharacterSelect(props: {
             <button
               class={cn(
                 "rounded-sm border-4 p-1",
+                !selected().includes(characterId) &&
+                  "hover:border-foreground/30",
                 selected().includes(Number(characterId)) && "border-primary",
                 characterId === 24 && "col-start-2",
               )}

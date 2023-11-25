@@ -50,6 +50,7 @@ export function StageSelect(props: {
             <button
               class={cn(
                 "rounded-sm border-4",
+                !selected().includes(stageId) && "hover:border-foreground/30",
                 selected().includes(Number(stageId)) && "border-primary",
               )}
               onClick={() =>
