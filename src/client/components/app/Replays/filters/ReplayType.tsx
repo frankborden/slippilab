@@ -44,7 +44,7 @@ export function ReplayTypeSelect(props: {
             Filter results for replays matching any of the selected types.
           </DialogDescription>
         </DialogHeader>
-        <div class="mx-auto grid grid-cols-2 gap-2">
+        <div class="mx-auto grid grid-cols-3 gap-2">
           {(
             [
               "ranked",
@@ -57,6 +57,8 @@ export function ReplayTypeSelect(props: {
             <button
               class={cn(
                 "rounded-sm border-2 p-2",
+                !selected().includes(replayType) &&
+                  "hover:border-foreground/30",
                 selected().includes(replayType) && "border-primary",
               )}
               onClick={() =>
