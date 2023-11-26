@@ -8,7 +8,12 @@ export default defineConfig({
   server: { port: 5174 },
   plugins: [
     paths(),
-    pages({ emptyOutDir: false, entry }),
+    pages({
+      emptyOutDir: false,
+      entry,
+      external:
+        process.env.NODE_ENV === "production" ? [] : ["random-word-slugs"],
+    }),
     devServer({
       entry,
       cf: {

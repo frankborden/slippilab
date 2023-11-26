@@ -2,7 +2,6 @@ import { Select, Slider } from "@kobalte/core";
 import { type ReplayData } from "@slippilab/common";
 import { queries, search } from "@slippilab/search";
 import { createShortcut } from "@solid-primitives/keyboard";
-import { createRAF, targetFPS } from "@solid-primitives/raf";
 import {
   type Accessor,
   For,
@@ -11,6 +10,7 @@ import {
   createResource,
   createSignal,
   on,
+  onCleanup,
 } from "solid-js";
 
 import { Controller } from "~/client/components/app/Controller";
@@ -22,30 +22,26 @@ import { Stage } from "~/client/components/app/Viewer/Stage";
 import { fetchAnimations } from "~/client/components/app/Viewer/animationCache";
 import { bgColor, getPlayerColor } from "~/client/components/app/Viewer/colors";
 import { cn } from "~/client/components/utils";
+import {
+  frame,
+  running,
+  setFrame,
+  setSpeed,
+  speed,
+  start,
+  stop,
+} from "~/client/state/watch";
 import { renderReplay } from "~/common/render";
 
 export { getPlayerColor, fetchAnimations };
 
-const [frame, setFrame] = createSignal(0);
-const [speed, setSpeed] = createSignal<"0.5x" | "1x" | "2x">("1x");
-const ticksPerSecond = createMemo(() => (speed() === "0.5x" ? 30 : 60));
-const framesPerTick = createMemo(() => (speed() === "2x" ? 2 : 1));
-const [running, start, stop] = createRAF(
-  targetFPS(() => setFrame((f) => f + framesPerTick()), ticksPerSecond),
-);
 const [resumeAfterDrag, setResumeAfterDrag] = createSignal(false);
 start();
 
 export function Viewer(props: { replay: ReplayData; file?: File }) {
-  createEffect(
-    on(
-      () => props.replay,
-      () => {
-        setFrame(0);
-        start();
-      },
-    ),
-  );
+  onCleanup(() => {
+    stop();
+  });
   createEffect(() => {
     if (frame() === props.replay.frames.length - 1) {
       stop();
