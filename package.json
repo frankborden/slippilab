@@ -4,8 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "local": "pnpm run --filter server db:local --file migrations/0000_unknown_grim_reaper.sql --persist-to .wrangler/state",
     "build": "pnpm run -r build && cp apps/server/dist/index.js apps/web/dist/_worker.js",
-    "dev": "pnpm run -r --parallel dev"
+    "dev": "pnpm run -r --parallel dev",
+    "format": "pnpm run -r format",
+    "local": "pnpm run --filter server db:local --file migrations/0000_unknown_grim_reaper.sql --persist-to .wrangler/state"
   }
 }

@@ -8,7 +8,7 @@ export default defineConfig({
   server: { port: 5174 },
   plugins: [
     paths(),
-    pages({ emptyOutDir: false, entry, external: ["random-word-slugs"] }),
+    pages({ emptyOutDir: false, entry }),
     devServer({
       entry,
       cf: {

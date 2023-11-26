@@ -9,12 +9,12 @@
   "scripts": {
     "build": "pnpm run /^build:/",
     "build:types": "tsc",
-    "build:vite": "vite build --config vite.config.ts",
+    "build:vite": "vite build",
     "db:generate": "drizzle-kit generate:sqlite",
     "db:local": "wrangler d1 execute --local slippilab",
     "db:prod": "wrangler d1 execute slippilab",
     "dev": "pnpm run /^dev:/",
-    "dev:vite": "vite --config vite.config.ts",
+    "dev:vite": "vite",
     "dev:types": "tsc -w",
     "format": "prettier -w ."
   },
