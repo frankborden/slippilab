@@ -9,7 +9,6 @@ import {
   createMemo,
   createResource,
   createSignal,
-  on,
   onCleanup,
 } from "solid-js";
 

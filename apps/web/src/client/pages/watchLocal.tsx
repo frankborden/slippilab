@@ -1,4 +1,4 @@
-import { useRouteData } from "@solidjs/router";
+import { useNavigate, useRouteData } from "@solidjs/router";
 import { Show, onMount } from "solid-js";
 
 import { Viewer } from "~/client/components/app/Viewer";
@@ -8,8 +8,15 @@ import { selected } from "~/client/state/personal";
 import { setLastWatched } from "~/client/state/watch";
 
 export default function Watch() {
+  const navigate = useNavigate();
   const data = useRouteData<typeof WatchLocalData>();
-  onMount(() => setLastWatched("local"));
+  onMount(() => {
+    if (selected() === undefined) {
+      navigate("/personal");
+    } else {
+      setLastWatched("local");
+    }
+  });
   return (
     <Show when={data()}>
       {(data) => (
