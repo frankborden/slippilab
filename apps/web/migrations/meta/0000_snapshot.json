@@ -70,22 +70,15 @@
           "name": "replay_players_replay_id_replays_id_fk",
           "tableFrom": "replay_players",
           "tableTo": "replays",
-          "columnsFrom": [
-            "replay_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["replay_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {
         "replay_players_replay_id_player_index_pk": {
-          "columns": [
-            "player_index",
-            "replay_id"
-          ],
+          "columns": ["player_index", "replay_id"],
           "name": "replay_players_replay_id_player_index_pk"
         }
       },
@@ -154,9 +147,7 @@
       "indexes": {
         "replays_slug_unique": {
           "name": "replays_slug_unique",
-          "columns": [
-            "slug"
-          ],
+          "columns": ["slug"],
           "isUnique": true
         }
       },

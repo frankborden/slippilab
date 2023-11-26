@@ -160,17 +160,17 @@ export function parseGameStartEvent(
       timerTypeCode === 0
         ? "no timer"
         : timerTypeCode === 2
-        ? "counting down"
-        : "counting up",
+          ? "counting down"
+          : "counting up",
     characterUiPlacesCount: (settingsBitfield1 & 0b11100) >> 2,
     gameType:
       gameModeCode === 0
         ? "time"
         : gameModeCode === 1
-        ? "stock"
-        : gameModeCode === 2
-        ? "coin"
-        : "bonus",
+          ? "stock"
+          : gameModeCode === 2
+            ? "coin"
+            : "bonus",
     friendlyFireOn: Boolean(settingsBitfield2 & 0x01),
     isBreakTheTargetsOrTitleDemo: Boolean(settingsBitfield2 & 0x02),
     isClassicOrAdventureMode: Boolean(settingsBitfield2 & 0x04),
@@ -184,14 +184,14 @@ export function parseGameStartEvent(
       itemSpawnRateCode === -1
         ? "off"
         : itemSpawnRateCode === 0
-        ? "very low"
-        : itemSpawnRateCode === 1
-        ? "low"
-        : itemSpawnRateCode === 2
-        ? "medium"
-        : itemSpawnRateCode === 3
-        ? "high"
-        : "very high",
+          ? "very low"
+          : itemSpawnRateCode === 1
+            ? "low"
+            : itemSpawnRateCode === 2
+              ? "medium"
+              : itemSpawnRateCode === 3
+                ? "high"
+                : "very high",
     selfDestructScoreValue: readInt(
       rawData,
       8,
@@ -338,8 +338,8 @@ export function parseGameStartEvent(
           ? dashbackFix === 1
             ? "UCF"
             : dashbackFix === 2
-            ? "Dween"
-            : "None"
+              ? "Dween"
+              : "None"
           : "Mixed",
       nametag: readShiftJisString(
         rawData,
@@ -616,14 +616,14 @@ export function parsePostFrameUpdateEvent(
       lCancelStatusCode === 1
         ? "successful"
         : lCancelStatusCode === 2
-        ? "missed"
-        : undefined,
+          ? "missed"
+          : undefined,
     hurtboxCollisionState:
       hurtboxCollisionStateCode === 0 || hurtboxCollisionStateCode === undefined
         ? "vulnerable"
         : hurtboxCollisionStateCode === 1
-        ? "invulnerable"
-        : "intangible",
+          ? "invulnerable"
+          : "intangible",
     selfInducedAirXSpeed: readFloat(
       rawData,
       32,
@@ -773,8 +773,8 @@ export function parseGameEndEvent(
         gameEndCode === 1
           ? "TIME!"
           : gameEndCode === 2
-          ? "GAME!"
-          : "No Contest",
+            ? "GAME!"
+            : "No Contest",
       quitInitiator,
     };
   }
