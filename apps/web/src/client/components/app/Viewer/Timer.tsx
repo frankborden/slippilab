@@ -1,8 +1,8 @@
+import { type ReplayData } from "@slippilab/common";
 import cn from "clsx";
 import { createMemo } from "solid-js";
 
 import { timerFillColor } from "~/client/components/app/Viewer/colors";
-import { type ReplayData } from "~/common/model/types";
 
 export function Timer(props: { replay: ReplayData; frame: number }) {
   const meleeHundredths = [

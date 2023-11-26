@@ -1,3 +1,10 @@
+import {
+  type PlayerState,
+  type PlayerUpdateWithNana,
+  type RenderData,
+  type ReplayData,
+} from "@slippilab/common";
+import { charactersExt } from "@slippilab/common";
 import cn from "clsx";
 import { type Resource, Show, createMemo } from "solid-js";
 
@@ -9,13 +16,6 @@ import {
   missedLCancelOutlineStrokeColor,
   shineFillColor,
 } from "~/client/components/app/Viewer/colors";
-import { charactersExt } from "~/common/model/names";
-import {
-  type PlayerState,
-  type PlayerUpdateWithNana,
-  type RenderData,
-  type ReplayData,
-} from "~/common/model/types";
 import {
   getDamageFlyRollRotation,
   getPlayerOnFrame,

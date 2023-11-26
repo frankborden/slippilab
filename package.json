@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "local": "pnpm run --filter web db:local --file migrations/0000_unknown_grim_reaper.sql --persist-to .wrangler/state",
-    "build": "pnpm run --filter web build",
-    "dev": "pnpm run --filter web dev"
+    "build": "pnpm run -r build",
+    "dev": "pnpm run -r --parallel dev"
   }
 }

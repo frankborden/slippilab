@@ -1,11 +1,12 @@
-import { actions, charactersInt } from "~/common/model/names";
 import type {
   PlayerState,
   PlayerUpdate,
   PlayerUpdateWithNana,
   RenderData,
   ReplayData,
-} from "~/common/model/types";
+} from "@slippilab/common";
+import { actions, charactersInt } from "@slippilab/common";
+
 import { actionMapByInternalId } from "~/common/render/characters";
 
 export function renderReplay(replay: ReplayData): RenderData[][] {

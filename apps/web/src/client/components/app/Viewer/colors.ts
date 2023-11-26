@@ -1,4 +1,4 @@
-import { type ReplayData } from "~/common/model/types";
+import { type ReplayData } from "@slippilab/common";
 
 export const bgColor = "bg-zinc-50";
 export const gridStrokeColor = "stroke-indigo-500";

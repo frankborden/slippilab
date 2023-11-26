@@ -1,5 +1,5 @@
-import { stages } from "../../common/model/names";
-import { type ReplayStub } from "../../common/model/types";
+import { type ReplayStub, stages } from "@slippilab/common";
+
 import { parseStub } from "../../common/parser";
 
 // Accepts an array of File objects. Emits progress events followed by an event

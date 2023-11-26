@@ -1,11 +1,10 @@
+import { type ReplayData } from "@slippilab/common";
 import {
   type ParentProps,
   createEffect,
   createMemo,
   createSignal,
 } from "solid-js";
-
-import { type ReplayData } from "~/common/model/types";
 
 export function Camera(
   props: ParentProps<{ replay: ReplayData; frame: number }>,

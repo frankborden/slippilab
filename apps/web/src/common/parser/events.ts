@@ -4,7 +4,8 @@ import type {
   ItemUpdate,
   PlayerInputs,
   PlayerState,
-} from "../model/types";
+} from "@slippilab/common";
+
 import {
   firstVersion,
   readFloat,

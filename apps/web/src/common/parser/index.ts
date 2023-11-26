@@ -4,7 +4,8 @@ import type {
   ReplayData,
   ReplayStub,
   ReplayType,
-} from "../model/types";
+} from "@slippilab/common";
+
 import {
   parseEventPayloadsEvent,
   parseFrameStartEvent,

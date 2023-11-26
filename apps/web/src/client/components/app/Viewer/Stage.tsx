@@ -1,3 +1,5 @@
+import { type ReplayData } from "@slippilab/common";
+import { stages } from "@slippilab/common";
 import cn from "clsx";
 import { For, Match, Switch, createMemo } from "solid-js";
 
@@ -7,8 +9,6 @@ import {
   stageFillColor,
   stageStrokeColor,
 } from "~/client/components/app/Viewer/colors";
-import { stages } from "~/common/model/names";
-import { type ReplayData } from "~/common/model/types";
 
 export function Stage(props: { replay: ReplayData; frame: number }) {
   const stageName = createMemo(() => stages[props.replay.settings.stageId]);

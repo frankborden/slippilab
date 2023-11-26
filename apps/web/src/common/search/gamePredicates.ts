@@ -1,5 +1,5 @@
-import { charactersExt, stages } from "~/common/model/names";
-import type { ReplayData } from "~/common/model/types";
+import type { ReplayData } from "@slippilab/common";
+import { charactersExt, stages } from "@slippilab/common";
 
 export type GamePredicate = (game: ReplayData, playerIndex: number) => boolean;
 type ExternalCharacterName = (typeof charactersExt)[number];

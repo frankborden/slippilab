@@ -1,4 +1,4 @@
-import { type Character } from "~/common/model/types";
+import { type Character } from "@slippilab/common";
 
 export const samus: Character = {
   scale: 0.88,

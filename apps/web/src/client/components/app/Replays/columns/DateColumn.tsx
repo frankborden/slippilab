@@ -1,7 +1,7 @@
+import type { ReplayStub } from "@slippilab/common";
 import { Show, createMemo } from "solid-js";
 
 import { cn } from "~/client/components/utils";
-import type { ReplayStub } from "~/common/model/types";
 
 export function DateColumn(props: { replay: ReplayStub }) {
   const date = createMemo(() =>

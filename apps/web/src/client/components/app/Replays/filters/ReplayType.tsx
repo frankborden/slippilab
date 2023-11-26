@@ -1,4 +1,5 @@
 import { As } from "@kobalte/core";
+import type { ReplayStub, ReplayType } from "@slippilab/common";
 import { createEffect, createSignal } from "solid-js";
 
 import { Badge } from "~/client/components/ui/badge";
@@ -13,7 +14,6 @@ import {
   DialogTrigger,
 } from "~/client/components/ui/dialog";
 import { cn } from "~/client/components/utils";
-import type { ReplayStub, ReplayType } from "~/common/model/types";
 import { replayTypeIcon } from "~/common/util";
 
 export function filterReplayTypes(replay: ReplayStub, types: ReplayType[]) {

@@ -1,7 +1,6 @@
+import type { PlayerStub } from "@slippilab/common";
 import cn from "clsx";
 import { ComponentProps, Show, splitProps } from "solid-js";
-
-import type { PlayerStub } from "~/common/model/types";
 
 export function PlayerColumn(props: { player?: PlayerStub }) {
   return (

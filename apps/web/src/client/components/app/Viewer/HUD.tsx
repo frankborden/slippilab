@@ -1,9 +1,9 @@
+import { type RenderData, type ReplayData } from "@slippilab/common";
 import { createMemo } from "solid-js";
 import { For } from "solid-js/web";
 
 import { PlayerHUD } from "~/client/components/app/Viewer/PlayerHUD";
 import { Timer } from "~/client/components/app/Viewer/Timer";
-import { type RenderData, type ReplayData } from "~/common/model/types";
 
 export function HUD(props: {
   replay: ReplayData;

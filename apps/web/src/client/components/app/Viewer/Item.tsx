@@ -1,3 +1,9 @@
+import {
+  type ItemUpdate,
+  type PlayerUpdate,
+  type ReplayData,
+} from "@slippilab/common";
+import { items } from "@slippilab/common";
 import cn from "clsx";
 import { For, Match, Switch, createMemo } from "solid-js";
 
@@ -7,12 +13,6 @@ import {
   laserHitboxFillColor,
   laserStrokeColor,
 } from "~/client/components/app/Viewer/colors";
-import { items } from "~/common/model/names";
-import {
-  type ItemUpdate,
-  type PlayerUpdate,
-  type ReplayData,
-} from "~/common/model/types";
 
 // TODO: characters projectiles
 

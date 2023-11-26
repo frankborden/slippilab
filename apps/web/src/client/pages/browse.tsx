@@ -1,3 +1,4 @@
+import { ReplayType } from "@slippilab/common";
 import {
   type Params,
   useNavigate,
@@ -8,7 +9,6 @@ import { Show } from "solid-js";
 
 import { Filters, Replays } from "~/client/components/app/Replays";
 import BrowseData from "~/client/pages/browse.data";
-import { ReplayType } from "~/common/model/types";
 
 export default function Browse() {
   const query = useRouteData<typeof BrowseData>();

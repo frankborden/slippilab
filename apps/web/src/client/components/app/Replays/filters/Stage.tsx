@@ -1,4 +1,6 @@
 import { As } from "@kobalte/core";
+import type { ReplayStub } from "@slippilab/common";
+import { stages } from "@slippilab/common";
 import { createEffect, createSignal } from "solid-js";
 
 import { Badge } from "~/client/components/ui/badge";
@@ -13,8 +15,6 @@ import {
   DialogTrigger,
 } from "~/client/components/ui/dialog";
 import { cn } from "~/client/components/utils";
-import { stages } from "~/common/model/names";
-import type { ReplayStub } from "~/common/model/types";
 import { stageUrl } from "~/common/util";
 
 export function filterStages(replay: ReplayStub, stageIds: number[]) {

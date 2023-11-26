@@ -1,3 +1,5 @@
+import { type RenderData, type ReplayData } from "@slippilab/common";
+import { charactersInt } from "@slippilab/common";
 import cn from "clsx";
 import { For, Show, createMemo } from "solid-js";
 
@@ -5,8 +7,6 @@ import {
   getPlayerColor,
   playerHUDStrokeColor,
 } from "~/client/components/app/Viewer/colors";
-import { charactersInt } from "~/common/model/names";
-import { type RenderData, type ReplayData } from "~/common/model/types";
 
 export function PlayerHUD(props: {
   replay: ReplayData;

@@ -1,4 +1,5 @@
 import { As } from "@kobalte/core";
+import { type ReplayStub, charactersExt } from "@slippilab/common";
 import { createEffect, createSignal } from "solid-js";
 
 import { Badge } from "~/client/components/ui/badge";
@@ -13,8 +14,6 @@ import {
   DialogTrigger,
 } from "~/client/components/ui/dialog";
 import { cn } from "~/client/components/utils";
-import { charactersExt } from "~/common/model/names";
-import type { ReplayStub } from "~/common/model/types";
 import { characterUrl } from "~/common/util";
 
 export function filterCharacters(replay: ReplayStub, characterIds: number[]) {

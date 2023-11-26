@@ -1,3 +1,4 @@
+import type { ReplayStub, ReplayType } from "@slippilab/common";
 import { For, type JSXElement, Show, createMemo, createSignal } from "solid-js";
 
 import { DateColumn } from "~/client/components/app/Replays/columns/DateColumn";
@@ -21,7 +22,6 @@ import {
 } from "~/client/components/app/Replays/filters/Stage";
 import { Button } from "~/client/components/ui/button";
 import { cn } from "~/client/components/utils";
-import type { ReplayStub, ReplayType } from "~/common/model/types";
 import { stageUrl } from "~/common/util";
 
 export interface Filters {

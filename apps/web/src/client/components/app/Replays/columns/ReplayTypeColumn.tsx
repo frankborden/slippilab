@@ -1,6 +1,7 @@
+import type { ReplayStub, ReplayType } from "@slippilab/common";
+
 import { replayTypeIcons } from "~/client/components/app/icons";
 import { cn } from "~/client/components/utils";
-import type { ReplayStub, ReplayType } from "~/common/model/types";
 
 const labels: Record<ReplayType, string> = {
   offline: "Offline",

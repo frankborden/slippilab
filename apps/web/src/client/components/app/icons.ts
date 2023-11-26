@@ -1,4 +1,4 @@
-import { ReplayType } from "~/common/model/types";
+import { ReplayType } from "@slippilab/common";
 
 export const replayTypeIcons: Record<ReplayType, string> = {
   offline: "i-tabler-home",

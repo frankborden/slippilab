@@ -1,4 +1,5 @@
-import type { ReplayData } from "~/common/model/types";
+import type { ReplayData } from "@slippilab/common";
+
 import { type Predicate } from "~/common/search/framePredicates";
 
 export interface Highlight {

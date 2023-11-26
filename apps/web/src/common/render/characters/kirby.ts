@@ -1,4 +1,4 @@
-import { type Character } from "~/common/model/types";
+import { type Character } from "@slippilab/common";
 
 export const kirby: Character = {
   scale: 0.92,

@@ -1,7 +1,7 @@
+import { type RenderData, type ReplayData } from "@slippilab/common";
 import { type JSX, Show, createMemo } from "solid-js";
 
 import { getPlayerColor } from "~/client/components/app/Viewer";
-import { type RenderData, type ReplayData } from "~/common/model/types";
 
 export function Controller(props: {
   replay: ReplayData;

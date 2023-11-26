@@ -1,4 +1,4 @@
-import { ReplayType } from "~/common/model/types";
+import { ReplayType } from "@slippilab/common";
 
 export function stageUrl(stageId: number) {
   return `/stages/${stageId}.png`;

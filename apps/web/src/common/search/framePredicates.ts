@@ -1,5 +1,5 @@
-import { actions, attacks } from "~/common/model/names";
-import type { ReplayData } from "~/common/model/types";
+import type { ReplayData } from "@slippilab/common";
+import { actions, attacks } from "@slippilab/common";
 
 export type Predicate = (
   playerIndex: number,

@@ -1,7 +1,7 @@
+import { type ReplayStub } from "@slippilab/common";
 import { createSignal } from "solid-js";
 
 import ParserWorker from "~/client/state/worker?worker";
-import { type ReplayStub } from "~/common/model/types";
 
 export const [stubs, setStubs] = createSignal<[ReplayStub, File][]>([]);
 export const [progress, setProgress] = createSignal(0);
