@@ -18,7 +18,7 @@ import { Hono } from "hono";
 import { UbjsonDecoder } from "json-joy/esm/json-pack/ubjson/UbjsonDecoder";
 import { generateSlug } from "random-word-slugs";
 
-import * as schema from "~/server/schema";
+import * as schema from "~/schema";
 
 export type Env = {
   Bindings: {

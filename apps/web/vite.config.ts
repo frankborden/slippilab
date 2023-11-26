@@ -10,5 +10,4 @@ export default defineConfig({
       "/api": "http://localhost:5174",
     },
   },
-  cacheDir: ".vite/client",
 });

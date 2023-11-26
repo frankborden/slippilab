@@ -8,6 +8,58 @@ importers:
 
   .: {}
 
+  apps/server:
+    dependencies:
+      '@slippilab/common':
+        specifier: workspace:*
+        version: link:../../packages/common
+      '@slippilab/parser':
+        specifier: workspace:*
+        version: link:../../packages/parser
+      drizzle-orm:
+        specifier: ^0.29.0
+        version: 0.29.0(@cloudflare/workers-types@4.20231121.0)
+      hono:
+        specifier: ^3.10.2
+        version: 3.10.2
+      json-joy:
+        specifier: ^11.3.0
+        version: 11.5.0(quill-delta@5.1.0)(rxjs@7.8.1)(tslib@2.6.2)
+      random-word-slugs:
+        specifier: ^0.1.7
+        version: 0.1.7
+    devDependencies:
+      '@cloudflare/workers-types':
+        specifier: ^4.20231025.0
+        version: 4.20231121.0
+      '@hono/vite-cloudflare-pages':
+        specifier: ^0.1.1
+        version: 0.1.1(hono@3.10.2)
+      '@hono/vite-dev-server':
+        specifier: ^0.1.0
+        version: 0.1.0
+      '@trivago/prettier-plugin-sort-imports':
+        specifier: ^4.3.0
+        version: 4.3.0(prettier@3.1.0)
+      drizzle-kit:
+        specifier: ^0.20.4
+        version: 0.20.4
+      prettier:
+        specifier: ^3.1.0
+        version: 3.1.0
+      typescript:
+        specifier: ^5.3.2
+        version: 5.3.2
+      vite:
+        specifier: ^4.5.0
+        version: 4.5.0
+      vite-tsconfig-paths:
+        specifier: ^4.2.1
+        version: 4.2.1(typescript@5.3.2)(vite@4.5.0)
+      wrangler:
+        specifier: ^3.17.0
+        version: 3.17.1
+
   apps/web:
     dependencies:
       '@fontsource-variable/inter':
@@ -28,6 +80,9 @@ importers:
       '@slippilab/search':
         specifier: workspace:*
         version: link:../../packages/search
+      '@slippilab/server':
+        specifier: workspace:*
+        version: link:../server
       '@solid-primitives/keyboard':
         specifier: ^1.2.5
         version: 1.2.5(solid-js@1.8.6)
@@ -49,30 +104,18 @@ importers:
       clsx:
         specifier: ^2.0.0
         version: 2.0.0
-      drizzle-orm:
-        specifier: ^0.29.0
-        version: 0.29.0(@cloudflare/workers-types@4.20231121.0)
       fflate:
         specifier: ^0.8.1
         version: 0.8.1
       hono:
         specifier: ^3.10.2
         version: 3.10.2
-      json-joy:
-        specifier: ^11.3.0
-        version: 11.5.0(quill-delta@5.1.0)(rxjs@7.8.1)(tslib@2.6.2)
-      random-word-slugs:
-        specifier: ^0.1.7
-        version: 0.1.7
       solid-js:
         specifier: ^1.8.5
         version: 1.8.6
       tailwind-merge:
         specifier: ^2.0.0
         version: 2.0.0
-      valibot:
-        specifier: ^0.20.1
-        version: 0.20.1
     devDependencies:
       '@cloudflare/workers-types':
         specifier: ^4.20231025.0
@@ -80,12 +123,6 @@ importers:
       '@egoist/tailwindcss-icons':
         specifier: ^1.4.0
         version: 1.4.0(tailwindcss@3.3.5)
-      '@hono/vite-cloudflare-pages':
-        specifier: ^0.1.1
-        version: 0.1.1(hono@3.10.2)
-      '@hono/vite-dev-server':
-        specifier: ^0.1.0
-        version: 0.1.0
       '@iconify/json':
         specifier: ^2.2.144
         version: 2.2.146
@@ -95,9 +132,6 @@ importers:
       autoprefixer:
         specifier: ^10.4.16
         version: 10.4.16(postcss@8.4.31)
-      drizzle-kit:
-        specifier: ^0.20.4
-        version: 0.20.4
       prettier:
         specifier: ^3.1.0
         version: 3.1.0
@@ -227,7 +261,7 @@ packages:
     resolution: {integrity: sha512-oLcVCTeIFadUoArDTwpluncplrYBmTCCZZgXCbgNGvOBBiSDDK3eWO4b/+eOTli5tKv1lg+a5/NAXg+nTcei1w==}
     engines: {node: '>=6.9.0'}
     dependencies:
-      '@babel/types': 7.17.0
+      '@babel/types': 7.23.4
       jsesc: 2.5.2
       source-map: 0.5.7
     dev: true
@@ -3097,10 +3131,6 @@ packages:
   /util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
     dev: true
-
-  /valibot@0.20.1:
-    resolution: {integrity: sha512-7lToTLG5wtK76u32gq8dUK0bAw7bknTGbeNSKRJunAC2soGVnNrKngg+38Jjt6FOwH+MshUONHoFz+LgmjeYKQ==}
-    dev: false
 
   /validate-html-nesting@1.2.2:
     resolution: {integrity: sha512-hGdgQozCsQJMyfK5urgFcWEqsSSrK63Awe0t/IMR0bZ0QMtnuaiHzThW81guu3qx9abLi99NEuiaN6P9gVYsNg==}

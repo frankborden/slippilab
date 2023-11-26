@@ -1,8 +1,7 @@
+import { type Server } from "@slippilab/server";
 import { createQuery } from "@tanstack/solid-query";
 import { hc } from "hono/client";
 import { Accessor } from "solid-js";
-
-import { type Server } from "~/server";
 
 const client = hc<Server>("");
 

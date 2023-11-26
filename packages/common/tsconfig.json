@@ -6,7 +6,10 @@
     "outDir": "dist",
     "target": "ESNext",
     "module": "ESNext",
-    "moduleResolution": "bundler"
+    "moduleResolution": "bundler",
+    "preserveWatchOutput": true
   },
-  "include": ["src"]
+  "include": [
+    "src"
+  ]
 }

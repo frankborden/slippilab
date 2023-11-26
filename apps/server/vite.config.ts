@@ -3,7 +3,7 @@ import devServer from "@hono/vite-dev-server";
 import { defineConfig } from "vite";
 import paths from "vite-tsconfig-paths";
 
-const entry = "src/server/index.ts";
+const entry = "src/index.ts";
 export default defineConfig({
   server: { port: 5174 },
   plugins: [
@@ -19,5 +19,4 @@ export default defineConfig({
       },
     }),
   ],
-  cacheDir: ".vite/server",
 });

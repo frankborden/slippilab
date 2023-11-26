@@ -1,0 +1,52 @@
+{
+  "name": "@slippilab/server",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "exports": {
+    "types": "./.types/index.d.ts"
+  },
+  "scripts": {
+    "build": "pnpm run /^build:/",
+    "build:types": "tsc",
+    "build:vite": "vite build --config vite.config.ts",
+    "db:generate": "drizzle-kit generate:sqlite",
+    "db:local": "wrangler d1 execute --local slippilab",
+    "db:prod": "wrangler d1 execute slippilab",
+    "dev": "pnpm run /^dev:/",
+    "dev:vite": "vite --config vite.config.ts",
+    "dev:types": "tsc -w",
+    "format": "prettier -w ."
+  },
+  "dependencies": {
+    "@slippilab/common": "workspace:*",
+    "@slippilab/parser": "workspace:*",
+    "drizzle-orm": "^0.29.0",
+    "hono": "^3.10.2",
+    "json-joy": "^11.3.0",
+    "random-word-slugs": "^0.1.7"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20231025.0",
+    "@hono/vite-cloudflare-pages": "^0.1.1",
+    "@hono/vite-dev-server": "^0.1.0",
+    "@trivago/prettier-plugin-sort-imports": "^4.3.0",
+    "drizzle-kit": "^0.20.4",
+    "prettier": "^3.1.0",
+    "typescript": "^5.3.2",
+    "vite": "^4.5.0",
+    "vite-tsconfig-paths": "^4.2.1",
+    "wrangler": "^3.17.0"
+  },
+  "prettier": {
+    "plugins": [
+      "@trivago/prettier-plugin-sort-imports"
+    ],
+    "importOrder": [
+      "^~/(.*)$",
+      "^[./]"
+    ],
+    "importOrderSeparation": true,
+    "importOrderSortSpecifiers": true
+  }
+}

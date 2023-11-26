@@ -1,7 +1,10 @@
 {
   "compilerOptions": {
     "strict": true,
-    "noEmit": true,
+    "outDir": ".types",
+    "declaration": true,
+    "declarationMap": true,
+    "emitDeclarationOnly": true,
     "skipLibCheck": true,
     "isolatedModules": true,
     "target": "ESNext",
@@ -12,8 +15,6 @@
       "DOM",
       "DOM.Iterable"
     ],
-    "jsx": "preserve",
-    "jsxImportSource": "solid-js",
     "baseUrl": ".",
     "paths": {
       "~/*": [
