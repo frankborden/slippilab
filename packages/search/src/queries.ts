@@ -13,8 +13,8 @@ import {
   isOpponentCloserToCenter,
   not,
   opponent,
-} from "~/common/search/framePredicates";
-import { type Query } from "~/common/search/search";
+} from "./framePredicates";
+import { type Query } from "./search";
 
 const killComboQuery: [Query, Predicate?] = [
   [

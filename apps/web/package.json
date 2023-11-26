@@ -21,6 +21,7 @@
     "@shelacek/ubjson": "^1.1.1",
     "@slippilab/common": "workspace:*",
     "@slippilab/parser": "workspace:*",
+    "@slippilab/search": "workspace:*",
     "@solid-primitives/keyboard": "^1.2.5",
     "@solid-primitives/raf": "^2.1.13",
     "@solidjs/router": "^0.9.1",

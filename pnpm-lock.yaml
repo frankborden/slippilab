@@ -25,6 +25,9 @@ importers:
       '@slippilab/parser':
         specifier: workspace:*
         version: link:../../packages/parser
+      '@slippilab/search':
+        specifier: workspace:*
+        version: link:../../packages/search
       '@solid-primitives/keyboard':
         specifier: ^1.2.5
         version: 1.2.5(solid-js@1.8.6)
@@ -133,6 +136,19 @@ importers:
         version: 5.3.2
 
   packages/parser:
+    dependencies:
+      '@slippilab/common':
+        specifier: workspace:*
+        version: link:../common
+    devDependencies:
+      prettier:
+        specifier: ^3.1.0
+        version: 3.1.0
+      typescript:
+        specifier: ^5.3.2
+        version: 5.3.2
+
+  packages/search:
     dependencies:
       '@slippilab/common':
         specifier: workspace:*

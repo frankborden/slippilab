@@ -1,12 +1,11 @@
 import { Select, Slider } from "@kobalte/core";
 import { type ReplayData } from "@slippilab/common";
+import { queries, search } from "@slippilab/search";
 import { createShortcut } from "@solid-primitives/keyboard";
 import { createRAF, targetFPS } from "@solid-primitives/raf";
 import {
   type Accessor,
   For,
-  Match,
-  Switch,
   createEffect,
   createMemo,
   createResource,
@@ -24,8 +23,6 @@ import { fetchAnimations } from "~/client/components/app/Viewer/animationCache";
 import { bgColor, getPlayerColor } from "~/client/components/app/Viewer/colors";
 import { cn } from "~/client/components/utils";
 import { renderReplay } from "~/common/render";
-import { queries } from "~/common/search/queries";
-import { search } from "~/common/search/search";
 
 export { getPlayerColor, fetchAnimations };
 

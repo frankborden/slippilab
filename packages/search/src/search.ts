@@ -1,6 +1,6 @@
 import type { ReplayData } from "@slippilab/common";
 
-import { type Predicate } from "~/common/search/framePredicates";
+import { type Predicate } from "./framePredicates";
 
 export interface Highlight {
   playerIndex: number;
