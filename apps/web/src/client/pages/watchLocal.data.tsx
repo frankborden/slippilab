@@ -1,9 +1,9 @@
 import { decode } from "@shelacek/ubjson";
+import { parseReplay } from "@slippilab/parser";
 import { RouteDataFuncArgs } from "@solidjs/router";
 import { createResource } from "solid-js";
 
 import { selected } from "~/client/state/personal";
-import { parseReplay } from "~/common/parser";
 
 export function WatchLocalData({ navigate }: RouteDataFuncArgs) {
   const [data] = createResource(

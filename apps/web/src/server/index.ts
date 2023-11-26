@@ -1,5 +1,6 @@
 import type { D1Database, R2Bucket } from "@cloudflare/workers-types";
 import type { ReplayStub, ReplayType } from "@slippilab/common";
+import { parseReplay } from "@slippilab/parser";
 import {
   type InferInsertModel,
   SQL,
@@ -17,7 +18,6 @@ import { Hono } from "hono";
 import { UbjsonDecoder } from "json-joy/esm/json-pack/ubjson/UbjsonDecoder";
 import { generateSlug } from "random-word-slugs";
 
-import { parseReplay } from "~/common/parser";
 import * as schema from "~/server/schema";
 
 export type Env = {

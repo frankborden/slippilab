@@ -1,6 +1,5 @@
 import { type ReplayStub, stages } from "@slippilab/common";
-
-import { parseStub } from "../../common/parser";
+import { parseStub } from "@slippilab/parser";
 
 // Accepts an array of File objects. Emits progress events followed by an event
 // with the date-sorted stubs,file pairs. Replays with non-tournament stages or

@@ -1,0 +1,22 @@
+{
+  "name": "@slippilab/parser",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "default": "./dist/index.js",
+    "types": "./dist/index.d.ts"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc -w",
+    "format": "prettier -w ."
+  },
+  "dependencies": {
+    "@slippilab/common": "workspace:*"
+  },
+  "devDependencies": {
+    "prettier": "^3.1.0",
+    "typescript": "^5.3.2"
+  }
+}
