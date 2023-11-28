@@ -11,11 +11,12 @@
     "build:types": "tsc",
     "build:vite": "vite build",
     "db:generate": "drizzle-kit generate:sqlite",
-    "db:local": "wrangler d1 execute --local slippilab",
-    "db:prod": "wrangler d1 execute slippilab",
+    "db:local:exec": "wrangler d1 execute --local slippilab",
+    "db:local:setup": "wrangler d1 migrations apply slippilab --local --persist-to .wrangler/state",
+    "db:prod:exec": "wrangler d1 execute slippilab",
     "dev": "pnpm run /^dev:/",
-    "dev:vite": "vite",
     "dev:types": "tsc -w",
+    "dev:vite": "vite",
     "format": "prettier -w ."
   },
   "dependencies": {
