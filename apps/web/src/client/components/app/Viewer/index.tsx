@@ -1,4 +1,3 @@
-import { Select } from "@kobalte/core";
 import { type ReplayData } from "@slippilab/common";
 import { queries, search } from "@slippilab/search";
 import { createShortcut } from "@solid-primitives/keyboard";
@@ -20,6 +19,13 @@ import { Player } from "~/client/components/app/Viewer/Player";
 import { Stage } from "~/client/components/app/Viewer/Stage";
 import { fetchAnimations } from "~/client/components/app/Viewer/animationCache";
 import { bgColor, getPlayerColor } from "~/client/components/app/Viewer/colors";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/client/components/ui/select";
 import {
   Slider,
   SliderFill,
@@ -112,40 +118,23 @@ export function Viewer(props: { replay: ReplayData; file?: File }) {
           <Seekbar length={props.replay.frames.length} />
         </div>
         <div>
-          <Select.Root
+          <Select
             value={highlightName()}
             onChange={setHighlightName}
             options={Object.keys(queries)}
             itemComponent={(props) => (
-              <Select.Item
-                item={props.item}
-                class="col-span-full grid select-none grid-cols-[subgrid] gap-x-1 rounded-sm px-2 py-1.5 transition-colors duration-100 hover:bg-zinc-100 hover:text-black dark:hover:bg-zinc-800 dark:hover:text-white"
-              >
-                <div class="flex w-4 flex-col justify-center">
-                  <Select.ItemIndicator>
-                    <div class="i-tabler-check" />
-                  </Select.ItemIndicator>
-                </div>
-                <Select.ItemLabel>{props.item.rawValue}</Select.ItemLabel>
-              </Select.Item>
+              <SelectItem item={props.item}>{props.item.rawValue}</SelectItem>
             )}
           >
-            <Select.Trigger class="flex w-full items-center justify-between gap-4 rounded-sm py-0.5 pb-1 pl-1 pr-2 hover:bg-zinc-100 hover:text-black dark:hover:bg-zinc-800 dark:hover:text-white">
-              <Select.Value<string>>
+            <SelectTrigger>
+              <SelectValue<string>>
                 {(state) => state.selectedOption()}
-              </Select.Value>
-              <Select.Icon>
-                <div class="i-tabler-chevron-down" />
-              </Select.Icon>
-            </Select.Trigger>
-            <Select.Portal>
-              <Select.Content class="rounded-sm border bg-background p-2">
-                <Select.Listbox class="grid grid-cols-[repeat(2,auto)] gap-1" />
-              </Select.Content>
-            </Select.Portal>
-          </Select.Root>
+              </SelectValue>
+            </SelectTrigger>
+            <SelectContent />
+          </Select>
 
-          <div class="grid max-h-[32rem] grid-cols-[repeat(3,auto)] overflow-y-auto overflow-x-hidden border-y dark:border-zinc-700">
+          <div class="mt-2 grid max-h-[32rem] grid-cols-[repeat(3,auto)] overflow-y-auto overflow-x-hidden border-b">
             <For
               each={highlights()[highlightName()]}
               fallback={<div>None</div>}
