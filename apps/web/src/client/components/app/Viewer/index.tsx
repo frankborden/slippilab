@@ -1,4 +1,4 @@
-import { Select, Slider } from "@kobalte/core";
+import { Select } from "@kobalte/core";
 import { type ReplayData } from "@slippilab/common";
 import { queries, search } from "@slippilab/search";
 import { createShortcut } from "@solid-primitives/keyboard";
@@ -20,6 +20,14 @@ import { Player } from "~/client/components/app/Viewer/Player";
 import { Stage } from "~/client/components/app/Viewer/Stage";
 import { fetchAnimations } from "~/client/components/app/Viewer/animationCache";
 import { bgColor, getPlayerColor } from "~/client/components/app/Viewer/colors";
+import {
+  Slider,
+  SliderFill,
+  SliderLabel,
+  SliderThumb,
+  SliderTrack,
+  SliderValueLabel,
+} from "~/client/components/ui/slider";
 import { cn } from "~/client/components/utils";
 import {
   frame,
@@ -190,8 +198,7 @@ export function Viewer(props: { replay: ReplayData; file?: File }) {
 
 function Seekbar(props: { length: number }) {
   return (
-    <Slider.Root
-      class="flex flex-col gap-1"
+    <Slider
       value={[frame() + 1]}
       onChange={(newValue) => {
         if (running()) {
@@ -209,20 +216,17 @@ function Seekbar(props: { length: number }) {
       minValue={1}
       maxValue={props.length - 1}
     >
-      <Slider.Track class="relative h-4">
-        <div class="absolute top-1.5 h-1 w-full bg-zinc-300 dark:bg-zinc-700" />
-        <Slider.Fill class="absolute top-1.5 h-1 rounded-full bg-indigo-500" />
-        <Slider.Thumb class="absolute h-4 w-4 rounded-full bg-indigo-500">
-          <Slider.Input />
-        </Slider.Thumb>
-      </Slider.Track>
-      <div class="flex items-center justify-between">
+      <SliderTrack>
+        <SliderFill />
+        <SliderThumb />
+      </SliderTrack>
+      <div class="mt-1 flex items-center justify-between w-full">
         <div class="flex items-center gap-[0.5ch] text-foreground/80">
-          <Slider.Label>Frame</Slider.Label> <Slider.ValueLabel as="span" />
+          <SliderLabel>Frame</SliderLabel> <SliderValueLabel />
         </div>
         <Controls length={props.length} />
       </div>
-    </Slider.Root>
+    </Slider>
   );
 }
 
@@ -266,7 +270,7 @@ function Controls(props: { length: number }) {
     <div class="flex items-center gap-1">
       <button
         class={cn(
-          "text-3xl text-foreground/80",
+          "text-3xl",
           speed() === "0.5x"
             ? "i-tabler-multiplier-0-5x"
             : speed() === "1x"
