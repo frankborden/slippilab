@@ -5,6 +5,10 @@ import { Accessor } from "solid-js";
 
 const client = hc<Server>("");
 
+export function fetchSelf() {
+  return client.api.self.$get().then((res) => res.json());
+}
+
 export function createReplaysQuery(query: Accessor<URLSearchParams>) {
   return createQuery(() => ({
     queryKey: ["replays", query().toString()],

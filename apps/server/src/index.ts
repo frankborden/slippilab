@@ -1,4 +1,5 @@
 import type { D1Database, R2Bucket } from "@cloudflare/workers-types";
+import { discord } from "@lucia-auth/oauth/providers";
 import type { ReplayStub, ReplayType } from "@slippilab/common";
 import { parseReplay } from "@slippilab/parser";
 import {
@@ -13,25 +14,84 @@ import {
   or,
   sql,
 } from "drizzle-orm";
-import { drizzle } from "drizzle-orm/d1";
+import { DrizzleD1Database, drizzle } from "drizzle-orm/d1";
 import { Hono } from "hono";
 import { UbjsonDecoder } from "json-joy/esm/json-pack/ubjson/UbjsonDecoder";
 import { generateSlug } from "random-word-slugs";
 
+import { Auth, initializeLucia } from "~/auth";
 import * as schema from "~/schema";
 
 export type Env = {
   Bindings: {
     DB: D1Database;
+    DISCORD_CLIENT_ID: string;
+    DISCORD_CLIENT_SECRET: string;
+    DISCORD_REDIRECT_URI: string;
     BUCKET: R2Bucket;
+  };
+  Variables: {
+    user?: any;
+    auth: Auth;
+    db: DrizzleD1Database<typeof schema>;
   };
 };
 
 const app = new Hono<Env>()
   .basePath("/api")
+  .use("*", async (c, next) => {
+    const auth = initializeLucia(c.env.DB);
+    const authRequest = auth.handleRequest(c);
+    const session = await authRequest.validate();
+    if (session) {
+      c.set("user", session.user);
+    }
+    c.set("auth", auth);
+    c.set("db", drizzle(c.env.DB, { schema }));
+    return next();
+  })
+  .get("login/discord", async (c) => {
+    const provider = discord(c.var.auth, {
+      clientId: c.env.DISCORD_CLIENT_ID,
+      clientSecret: c.env.DISCORD_CLIENT_SECRET,
+      redirectUri: c.env.DISCORD_REDIRECT_URI,
+    });
+    const [url] = await provider.getAuthorizationUrl();
+    return c.redirect(url.toString());
+  })
+  .get("login/discord/callback", async (c) => {
+    const code = c.req.query("code");
+    if (!code) return c.json({ success: false });
+    const provider = discord(c.var.auth, {
+      clientId: c.env.DISCORD_CLIENT_ID,
+      clientSecret: c.env.DISCORD_CLIENT_SECRET,
+      redirectUri: c.env.DISCORD_REDIRECT_URI,
+    });
+    const discordAuth = await provider.validateCallback(code);
+    let user = await discordAuth.getExistingUser();
+    if (!user) {
+      user = await discordAuth.createUser({ attributes: {} });
+    }
+    const session = await c.var.auth.createSession({
+      userId: user.userId,
+      attributes: {},
+    });
+    const authRequest = await c.var.auth.handleRequest(c);
+    authRequest.setSession(session);
+    return c.redirect("/");
+  })
+  .get("logout", async (c) => {
+    const authRequest = c.var.auth.handleRequest(c);
+    authRequest.invalidate();
+    authRequest.setSession(null);
+    return c.redirect("/");
+  })
+  .get("/self", async (c) => {
+    const user = c.var.user;
+    return c.jsonT({ user: user });
+  })
   .get("/connectCodes", async (c) => {
-    const { DB } = c.env;
-    const db = drizzle(DB, { schema });
+    const db = c.var.db;
     const results = await db
       .selectDistinct({ code: schema.replayPlayers.connectCode })
       .from(schema.replayPlayers)
@@ -39,8 +99,7 @@ const app = new Hono<Env>()
     return c.jsonT({ connectCodes: results.map((result) => result.code!) });
   })
   .get("/replays", async (c) => {
-    const { DB } = c.env;
-    const db = drizzle(DB, { schema });
+    const db = c.var.db;
 
     const limit = Number(c.req.query("limit") ?? 10);
     const page = Number(c.req.query("page") ?? 0);
@@ -156,9 +215,9 @@ const app = new Hono<Env>()
     });
   })
   .get("/replay/:slug", async (c) => {
-    const { DB, BUCKET } = c.env;
+    const { BUCKET } = c.env;
     const slug = c.req.param("slug");
-    const db = drizzle(DB, { schema });
+    const db = c.var.db;
     const serverReplay = await db.query.replays.findFirst({
       columns: { id: true },
       where: eq(schema.replays.slug, slug),
@@ -171,8 +230,8 @@ const app = new Hono<Env>()
     return c.jsonT({ replay: parseReplay(metadata, raw) });
   })
   .post("/upload", async (c) => {
-    const { DB, BUCKET } = c.env;
-    const db = drizzle(DB, { schema });
+    const { BUCKET } = c.env;
+    const db = c.var.db;
     const form = await c.req.formData();
     const file = form.get("file") as File;
     const buffer = new Uint8Array(await file.arrayBuffer());
