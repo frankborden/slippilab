@@ -17,7 +17,6 @@ export default function Browse() {
 
   return (
     <div class="w-full">
-      <h1 class="text-lg font-medium text-foreground/80">Public replays</h1>
       <Show when={query.data}>
         {(data) => (
           <Replays
