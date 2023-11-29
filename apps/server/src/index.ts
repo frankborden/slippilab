@@ -188,25 +188,28 @@ const app = new Hono<Env>()
       limit: limit,
       offset: limit * page,
     });
-    const stubs: (ReplayStub & { slug: string })[] = results.map((replay) => ({
-      type: replay.type as ReplayType,
-      slug: replay.slug,
-      stageId: replay.stageId,
-      startTimestamp: replay.startTimestamp,
-      matchId: replay.matchId ?? undefined,
-      gameNumber: replay.gameNumber ?? undefined,
-      tiebreakerNumber: replay.tiebreakerNumber ?? undefined,
-      players: replay.replayPlayers.map((player) => ({
-        replayId: replay.id,
-        playerIndex: player.playerIndex,
-        connectCode: player.connectCode ?? undefined,
-        displayName: player.displayName ?? undefined,
-        nametag: player.nametag ?? undefined,
-        teamId: player.teamId ?? undefined,
-        externalCharacterId: player.externalCharacterId,
-        costumeIndex: player.costumeIndex,
-      })),
-    }));
+    const stubs: (ReplayStub & { slug: string; owner: string })[] = results.map(
+      (replay) => ({
+        type: replay.type as ReplayType,
+        slug: replay.slug,
+        owner: replay.owner,
+        stageId: replay.stageId,
+        startTimestamp: replay.startTimestamp,
+        matchId: replay.matchId ?? undefined,
+        gameNumber: replay.gameNumber ?? undefined,
+        tiebreakerNumber: replay.tiebreakerNumber ?? undefined,
+        players: replay.replayPlayers.map((player) => ({
+          replayId: replay.id,
+          playerIndex: player.playerIndex,
+          connectCode: player.connectCode ?? undefined,
+          displayName: player.displayName ?? undefined,
+          nametag: player.nametag ?? undefined,
+          teamId: player.teamId ?? undefined,
+          externalCharacterId: player.externalCharacterId,
+          costumeIndex: player.costumeIndex,
+        })),
+      }),
+    );
 
     return c.jsonT({
       pageIndex: page,
@@ -242,6 +245,7 @@ const app = new Hono<Env>()
     const slug = generateSlug(3, { format: "camel" });
     const dbReplay: InferInsertModel<typeof schema.replays> = {
       id,
+      owner: c.var.user?.userId ?? "anonymous",
       slug,
       type: replay.type,
       stageId: replay.settings.stageId,

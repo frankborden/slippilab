@@ -31,6 +31,9 @@ export const key = sqliteTable("user_key", {
 
 export const replays = sqliteTable("replays", {
   id: text("id").primaryKey(),
+  owner: text("owner")
+    .notNull()
+    .references(() => user.id),
   type: text("type").notNull(),
   slug: text("slug").notNull().unique(),
   matchId: text("match_id"),
