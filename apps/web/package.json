@@ -5,11 +5,11 @@
   "type": "module",
   "scripts": {
     "build": "tsc && vite build",
-    "dev": "vite",
+    "dev": "vite --open",
     "format": "prettier -w ."
   },
   "dependencies": {
-    "@fontsource-variable/inter": "^5.0.15",
+    "@fontsource-variable/inter": "^5.0.16",
     "@kobalte/core": "^0.11.2",
     "@shelacek/ubjson": "^1.1.1",
     "@slippilab/common": "workspace:*",
@@ -18,31 +18,31 @@
     "@slippilab/server": "workspace:*",
     "@solid-primitives/keyboard": "^1.2.5",
     "@solid-primitives/raf": "^2.1.13",
-    "@solidjs/router": "^0.9.1",
-    "@tanstack/solid-query": "^5.8.4",
-    "chart.js": "^4.4.0",
+    "@solidjs/router": "^0.10.5",
+    "@tanstack/solid-query": "^5.15.5",
+    "chart.js": "^4.4.1",
     "class-variance-authority": "^0.7.0",
-    "clsx": "^2.0.0",
+    "clsx": "^2.1.0",
     "fflate": "^0.8.1",
-    "hono": "^3.10.2",
-    "solid-js": "^1.8.5",
-    "tailwind-merge": "^2.0.0"
+    "hono": "^3.11.11",
+    "solid-js": "^1.8.7",
+    "tailwind-merge": "^2.2.0"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20231025.0",
-    "@egoist/tailwindcss-icons": "^1.4.0",
-    "@iconify/json": "^2.2.144",
+    "@cloudflare/workers-types": "^4.20231218.0",
+    "@egoist/tailwindcss-icons": "^1.7.1",
+    "@iconify/json": "^2.2.163",
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
     "autoprefixer": "^10.4.16",
-    "prettier": "^3.1.0",
-    "prettier-plugin-tailwindcss": "^0.5.7",
-    "tailwindcss": "^3.3.5",
+    "prettier": "^3.1.1",
+    "prettier-plugin-tailwindcss": "^0.5.10",
+    "tailwindcss": "^3.4.0",
     "tailwindcss-animate": "^1.0.7",
-    "typescript": "^5.3.2",
-    "vite": "^4.5.0",
-    "vite-plugin-solid": "^2.7.2",
-    "vite-tsconfig-paths": "^4.2.1",
-    "wrangler": "^3.17.0"
+    "typescript": "^5.3.3",
+    "vite": "^5.0.10",
+    "vite-plugin-solid": "^2.8.0",
+    "vite-tsconfig-paths": "^4.2.3",
+    "wrangler": "^3.22.1"
   },
   "prettier": {
     "plugins": [

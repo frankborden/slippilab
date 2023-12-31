@@ -1,47 +1,47 @@
-import { NavLink, Outlet, useRouteData } from "@solidjs/router";
+import { A, RouteSectionProps, createAsync } from "@solidjs/router";
 import { Match, Show, Switch } from "solid-js";
 
 import { LocalProgress } from "~/client/components/app/LocalProgress";
 import { LayoutData } from "~/client/pages/layout.data";
 import { lastWatched } from "~/client/state/watch";
 
-export default function Layout() {
-  const data = useRouteData<typeof LayoutData>();
+export default function Layout(props: RouteSectionProps) {
+  const data = createAsync(() => LayoutData());
   return (
     <>
       <div class="border-b">
         <nav class="container py-2 flex items-center justify-between">
           <div class="flex items-center gap-8">
-            <NavLink class="flex items-center gap-1 mr-4" href="/">
+            <A class="flex items-center gap-1 mr-4" href="/">
               <div class="i-gg-shape-hexagon text-primary text-3xl" />
               <div class="text-lg text-foreground font-medium">slippilab</div>
               <div class="self-start text-xs text-primary">beta</div>
-            </NavLink>
-            <NavLink
+            </A>
+            <A
               href="/browse"
               class="font-medium"
               activeClass="text-foreground/90"
               inactiveClass="text-foreground/60 hover:text-foreground/80"
             >
               Browse
-            </NavLink>
-            <NavLink
+            </A>
+            <A
               href="/personal"
               class="font-medium"
               activeClass="text-foreground/90"
               inactiveClass="text-foreground/60 hover:text-foreground/80"
             >
               Personal
-            </NavLink>
+            </A>
             <Show when={lastWatched()}>
-              <NavLink
+              <A
                 href={`/watch/${lastWatched()}`}
                 class="font-medium"
                 activeClass="text-foreground/90"
                 inactiveClass="text-foreground/60 hover:text-foreground/80"
               >
                 Watch
-              </NavLink>
+              </A>
             </Show>
           </div>
           <div class="flex justify-between items-center gap-12">
@@ -89,9 +89,7 @@ export default function Layout() {
         </nav>
       </div>
       <LocalProgress />
-      <main class="mt-8 container">
-        <Outlet />
-      </main>
+      <main class="mt-8 container">{props.children}</main>
     </>
   );
 }

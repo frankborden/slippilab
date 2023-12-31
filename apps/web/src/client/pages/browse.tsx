@@ -1,45 +1,50 @@
 import { ReplayType } from "@slippilab/common";
 import {
   type Params,
+  RouteSectionProps,
+  createAsync,
   useNavigate,
-  useRouteData,
   useSearchParams,
 } from "@solidjs/router";
 import { Show } from "solid-js";
 
 import { Filters, Replays } from "~/client/components/app/Replays";
-import BrowseData from "~/client/pages/browse.data";
+import { BrowseData } from "~/client/pages/browse.data";
 
-export default function Browse() {
-  const query = useRouteData<typeof BrowseData>();
+export default function Browse(props: RouteSectionProps) {
+  const replays = createAsync(() =>
+    BrowseData({ ...props, intent: "initial" }),
+  );
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
   return (
     <div class="w-full">
-      <Show when={query.data}>
-        {(data) => (
+      <Show when={replays()}>
+        {(replays) => (
           <Replays
-            replays={data().stubs}
+            replays={replays().stubs}
             filters={queryToFilters(searchParams)}
             onFiltersChanged={(filters) =>
               navigate(`?${filtersToQuery(filters)}`)
             }
-            pageIndex={data().pageIndex}
-            pageTotalCount={data().pageTotalCount}
+            pageIndex={replays().pageIndex}
+            pageTotalCount={replays().pageTotalCount}
             onPageChange={(pageIndex) => {
               const params = new URLSearchParams(window.location.search);
               params.set("page", String(pageIndex + 1));
               navigate(`?${params}`);
             }}
-            connectCodes={data()
+            connectCodes={replays()
               .stubs.flatMap((replay) =>
                 replay.players.map((p) => p.connectCode),
               )
               .filter((c): c is string => !!c)}
             onSelect={(replay) =>
               navigate(
-                `/watch/${data().stubs.find((stub) => stub === replay)!.slug}`,
+                `/watch/${
+                  replays().stubs.find((stub) => stub === replay)!.slug
+                }`,
               )
             }
           />

@@ -1,15 +1,23 @@
-import { useNavigate, useRouteData } from "@solidjs/router";
+import { decode } from "@shelacek/ubjson";
+import { parseReplay } from "@slippilab/parser";
+import { createAsync, useNavigate } from "@solidjs/router";
 import { Show, onMount } from "solid-js";
 
 import { Viewer } from "~/client/components/app/Viewer";
 import { Button } from "~/client/components/ui/button";
-import { WatchLocalData } from "~/client/pages/watchLocal.data";
 import { selected } from "~/client/state/personal";
 import { setLastWatched } from "~/client/state/watch";
 
 export default function Watch() {
   const navigate = useNavigate();
-  const data = useRouteData<typeof WatchLocalData>();
+  const replay = createAsync(async () => {
+    if (!selected()) return;
+    const [, file] = selected()!;
+    const { metadata, raw } = decode(await file.arrayBuffer(), {
+      useTypedArrays: true,
+    });
+    return parseReplay(metadata, raw);
+  });
   onMount(() => {
     if (selected() === undefined) {
       navigate("/personal");
@@ -18,8 +26,8 @@ export default function Watch() {
     }
   });
   return (
-    <Show when={data()}>
-      {(data) => (
+    <Show when={replay()}>
+      {(replay) => (
         <>
           <Button
             onClick={() => {
@@ -33,7 +41,7 @@ export default function Watch() {
           >
             Upload
           </Button>
-          <Viewer replay={data()} />
+          <Viewer replay={replay()} />
         </>
       )}
     </Show>

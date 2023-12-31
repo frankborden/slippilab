@@ -1,8 +1,7 @@
 [[d1_databases]]
 binding = "DB"
-database_name = "<YOUR_D1_NAME_HERE>"
+database_name = "slippilab-dev"
 database_id = "<YOUR_ID_HERE>"
-migrations_dir = "apps/server/migrations"
 preview_database_id = "DB"
 
 [[r2_buckets]]

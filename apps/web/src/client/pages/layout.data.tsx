@@ -1,8 +1,5 @@
-import { createResource } from "solid-js";
+import { cache } from "@solidjs/router";
 
 import { fetchSelf } from "~/client/state/api";
 
-export function LayoutData() {
-  const [data] = createResource(() => fetchSelf());
-  return data;
-}
+export const LayoutData = cache(() => fetchSelf(), "self");

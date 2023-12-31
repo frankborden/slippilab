@@ -9,16 +9,28 @@ export function fetchSelf() {
   return client.api.self.$get().then((res) => res.json());
 }
 
-export function createReplaysQuery(query: Accessor<URLSearchParams>) {
-  return createQuery(() => ({
-    queryKey: ["replays", query().toString()],
-    queryFn: () =>
-      client.api.replays
-        .$get({
-          query: Object.fromEntries(query().entries()),
-        })
-        .then((res) => res.json()),
-  }));
+export function fetchReplays(search: string) {
+  const uiParams = new URLSearchParams(search);
+  const reqParams = new URLSearchParams();
+  reqParams.set("limit", "10");
+  reqParams.set("page", String(Number(uiParams.get("page") ?? "1") - 1));
+  if (uiParams.has("types")) {
+    reqParams.set("types", uiParams.get("types")!);
+  }
+  if (uiParams.has("stages")) {
+    reqParams.set("stages", uiParams.get("stages")!);
+  }
+  if (uiParams.has("characters")) {
+    reqParams.set("characters", uiParams.get("characters")!);
+  }
+  if (uiParams.has("connectCodes")) {
+    reqParams.set("connectCodes", uiParams.get("connectCodes")!);
+  }
+  return client.api.replays
+    .$get({
+      query: Object.fromEntries(reqParams.entries()),
+    })
+    .then((res) => res.json());
 }
 
 export function createConnectCodesQuery() {
@@ -28,13 +40,8 @@ export function createConnectCodesQuery() {
   }));
 }
 
-export function createReplayQuery(slug: Accessor<string>) {
-  return createQuery(() => ({
-    queryKey: ["replay", slug()],
-    staleTime: Infinity,
-    queryFn: () =>
-      client.api.replay[":slug"]
-        .$get({ param: { slug: slug() } })
-        .then((res) => res.json()),
-  }));
+export function fetchReplay(slug: string) {
+  return client.api.replay[":slug"]
+    .$get({ param: { slug } })
+    .then((res) => res.json());
 }

@@ -88,7 +88,7 @@ const app = new Hono<Env>()
   })
   .get("/self", async (c) => {
     const user = c.var.user;
-    return c.jsonT({ user: user });
+    return c.json({ user: user });
   })
   .get("/connectCodes", async (c) => {
     const db = c.var.db;
@@ -96,7 +96,7 @@ const app = new Hono<Env>()
       .selectDistinct({ code: schema.replayPlayers.connectCode })
       .from(schema.replayPlayers)
       .where(isNotNull(schema.replayPlayers.connectCode));
-    return c.jsonT({ connectCodes: results.map((result) => result.code!) });
+    return c.json({ connectCodes: results.map((result) => result.code!) });
   })
   .get("/replays", async (c) => {
     const db = c.var.db;
@@ -211,7 +211,7 @@ const app = new Hono<Env>()
       }),
     );
 
-    return c.jsonT({
+    return c.json({
       pageIndex: page,
       pageTotalCount: Math.ceil((await replayCountResults)[0].count / limit),
       stubs,
@@ -230,7 +230,7 @@ const app = new Hono<Env>()
     const { raw, metadata } = new UbjsonDecoder().read(
       new Uint8Array(buffer),
     ) as any;
-    return c.jsonT({ replay: parseReplay(metadata, raw) });
+    return c.json({ replay: parseReplay(metadata, raw) });
   })
   .post("/upload", async (c) => {
     const { BUCKET } = c.env;
@@ -274,7 +274,7 @@ const app = new Hono<Env>()
       ),
     ]);
 
-    return c.jsonT({ slug });
+    return c.json({ slug });
   });
 
 export type Server = typeof app;

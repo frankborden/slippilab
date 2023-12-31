@@ -1,5 +1,5 @@
 import { As } from "@kobalte/core";
-import { NavLink } from "@solidjs/router";
+import { A } from "@solidjs/router";
 
 import { Button } from "~/client/components/ui/button";
 
@@ -27,12 +27,12 @@ export default function Home() {
         </div>
         <div class="mt-6 flex gap-4">
           <Button asChild>
-            <As component={NavLink} href="/personal">
+            <As component={A} href="/personal">
               Open local files
             </As>
           </Button>
           <Button asChild variant={"ghost"} class="flex items-center gap-1">
-            <As component={NavLink} href="/browse">
+            <As component={A} href="/browse">
               <div>Browse uploads</div>
               <div class="i-tabler-arrow-right" />
             </As>
