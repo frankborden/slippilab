@@ -65,11 +65,10 @@ export default function Page() {
       </div>
 
       <Canvas
+        className="bg-neutral-600 rounded"
         style={{
-          backgroundColor: "peachpuff",
-          borderRadius: "4px",
-          width: "70vmin",
           height: "70vmin",
+          width: "70vmin",
         }}
       >
         <OrthographicCamera
