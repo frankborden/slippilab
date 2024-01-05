@@ -10,15 +10,21 @@
   },
   "dependencies": {
     "@fontsource-variable/inter": "^5.0.16",
+    "@react-three/drei": "^9.93.0",
+    "@react-three/fiber": "^8.15.13",
     "@shelacek/ubjson": "^1.1.1",
     "@slippilab/common": "workspace:*",
     "@slippilab/parser": "workspace:*",
     "@slippilab/search": "workspace:*",
     "@slippilab/server": "workspace:*",
+    "@types/three": "^0.160.0",
+    "clsx": "^2.1.0",
     "fflate": "^0.8.1",
     "react": "^18.2.0",
+    "react-aria-components": "^1.0.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.21.1"
+    "react-router-dom": "^6.21.1",
+    "three": "^0.160.0"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20231218.0",
