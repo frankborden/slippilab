@@ -54,8 +54,8 @@ export default function Page() {
             <Model
               replay={renderData}
               playerIndex={0}
-              modelUrl="/models/sheik.glb"
-              modelActionPrefix="Seak"
+              modelUrl="models/falco.glb"
+              modelActionPrefix="Falco"
             />
             <Model
               replay={renderData}
@@ -100,7 +100,7 @@ function Model({
   modelActionPrefix: string;
 }) {
   const { scene, animations } = useGLTF(modelUrl);
-  const { mixer, actions } = useAnimations(animations, scene);
+  const { actions } = useAnimations(animations, scene);
 
   // temporary: Position already captures movement caused by animations JOBJ_1
   // and JOBJ_0 keyframes should be cleared in blender.
@@ -112,9 +112,7 @@ function Model({
   });
 
   if (modelActionPrefix === "Falco") {
-    scene.scale.set(1.1, 1.1, 1.1);
-  } else if (modelActionPrefix === "Seak") {
-    scene.scale.set(1.4, 1.4, 1.4);
+    scene.scale.setScalar(1.1);
   }
 
   useFrame(({ clock }) => {
@@ -127,11 +125,6 @@ function Model({
     );
     if (!data) return;
 
-    scene.rotation.set(
-      0,
-      Math.PI / 2 - (data.facingDirection * Math.PI) / 2,
-      0,
-    );
     scene.position.set(
       0,
       data.playerState.yPosition,
@@ -156,16 +149,16 @@ function Model({
     if (lastActions[playerIndex] === action) return;
 
     if (action) {
+      lastAction?.fadeOut(1 / 60);
       lastActions[playerIndex] = action;
-      mixer.stopAllAction();
 
-      // temporary: Sheik export was not at the right speed
-      if (modelActionPrefix === "Seak") {
-        action.timeScale = 60 / 25;
-      }
-
-      action.time = data.playerState.actionStateFrameCounter / 60;
-      action.play();
+      action.reset().play();
+      // action.time = data.playerState.actionStateFrameCounter / 60;
+      scene.rotation.set(
+        0,
+        Math.PI / 2 - (data.facingDirection * Math.PI) / 2,
+        0,
+      );
     }
   });
 
