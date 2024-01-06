@@ -1,112 +1,173 @@
 import {
+  Box,
   Environment,
   OrbitControls,
   OrthographicCamera,
   useAnimations,
   useGLTF,
 } from "@react-three/drei";
-import { Canvas } from "@react-three/fiber";
-import { useEffect, useState } from "react";
+import { Canvas, useFrame } from "@react-three/fiber";
+import { decode } from "@shelacek/ubjson";
+import { RenderData } from "@slippilab/common";
+import { parseReplay } from "@slippilab/parser";
+import { useState } from "react";
+import { type AnimationAction } from "three";
 
-const actions = [
-  "AttackAirB",
-  "AttackAirF",
-  "AttackAirHi",
-  "AttackAirLw",
-  "AttackAirN",
-];
+import { renderReplay } from "~/common/render";
 
 export default function Page() {
-  const [action, setAction] = useState("AttackAirB");
-  const [modelUrl, setModelUrl] = useState("/models/falco.glb");
-  const [actionPrefix, setActionPrefix] = useState("Falco");
+  const [renderData, setRenderData] = useState<RenderData[][] | null>(null);
   return (
     <>
-      <div className="mb-2 flex items-center gap-1 *:px-2 *:py-0.5 *:bg-indigo-500 *:text-white *:rounded">
-        <button
-          onClick={() => {
-            setModelUrl("/models/falco.glb");
-            setActionPrefix("Falco");
-          }}
-        >
-          Falco
-        </button>
-        <button
-          onClick={() => {
-            setModelUrl("/models/mario.glb");
-            setActionPrefix("Mario");
-          }}
-        >
-          Mario
-        </button>
-        <button
-          onClick={() => {
-            setModelUrl("/models/sheik.glb");
-            setActionPrefix("Seak");
-          }}
-        >
-          Sheik
-        </button>
-        <button
-          onClick={() => {
-            setModelUrl("/models/fox.glb");
-            setActionPrefix("Fox");
-          }}
-        >
-          Fox
-        </button>
-      </div>
-      <div className="mb-2 flex items-center gap-1 *:px-2 *:py-0.5 *:bg-indigo-500 *:text-white *:rounded">
-        {actions.map((action) => (
-          <button key={action} onClick={() => setAction(action)}>
-            {action}
-          </button>
-        ))}
-      </div>
-
+      <input
+        type="file"
+        onInput={async (e) => {
+          const file = (e.target as HTMLInputElement).files?.[0];
+          if (!file) return;
+          const { metadata, raw } = decode(await file.arrayBuffer(), {
+            useTypedArrays: true,
+          });
+          setRenderData(renderReplay(parseReplay(metadata, raw)));
+        }}
+        className="mb-2"
+      />
       <Canvas
         className="bg-neutral-600 rounded"
         style={{
-          height: "70vmin",
-          width: "70vmin",
+          height: `${150 / (448 / 208.8)}vmin`,
+          width: "150vmin",
         }}
       >
         <OrthographicCamera
           makeDefault
           position={[-100, 0, 0]}
-          left={-15}
-          right={15}
-          top={25}
-          bottom={-5}
+          left={-224}
+          right={224}
+          top={200}
+          bottom={-108.8}
+          zoom={1.5}
         />
         <OrbitControls />
         <Environment preset="warehouse" />
-        <Model
-          modelUrl={modelUrl}
-          actionPrefix={actionPrefix}
-          action={action}
-        />
+        {renderData !== null && (
+          <>
+            <Model
+              replay={renderData}
+              playerIndex={0}
+              modelUrl="/models/sheik.glb"
+              modelActionPrefix="Seak"
+            />
+            <Model
+              replay={renderData}
+              playerIndex={1}
+              modelUrl="/models/falco.glb"
+              modelActionPrefix="Falco"
+            />
+            <Box material-color="black" args={[1, 1, 68.4 * 2]} />
+            <Box
+              material-color="black"
+              args={[1, 1, 18.8 * 2]}
+              position={[0, 54.4, 0]}
+            />
+            <Box
+              material-color="black"
+              args={[1, 1, -57.6 - -20]}
+              position={[0, 27.2, (-57.6 + -20) / 2]}
+            />
+            <Box
+              material-color="black"
+              args={[1, 1, 57.6 - 20]}
+              position={[0, 27.2, (57.6 + 20) / 2]}
+            />
+          </>
+        )}
       </Canvas>
     </>
   );
 }
 
+let lastActions: (AnimationAction | undefined)[] = [undefined, undefined];
+
 function Model({
+  replay,
+  playerIndex,
   modelUrl,
-  action,
-  actionPrefix,
+  modelActionPrefix,
 }: {
+  replay: RenderData[][];
+  playerIndex: number;
   modelUrl: string;
-  actionPrefix: string;
-  action: string;
+  modelActionPrefix: string;
 }) {
   const { scene, animations } = useGLTF(modelUrl);
   const { mixer, actions } = useAnimations(animations, scene);
 
-  useEffect(() => {
-    mixer.stopAllAction();
-    actions[`Ply${actionPrefix}5K_Share_ACTION_${action}_figatree`]!.play();
-  }, [mixer, actions, action, actionPrefix]);
+  // temporary: Position already captures movement caused by animations JOBJ_1
+  // and JOBJ_0 keyframes should be cleared in blender.
+  animations.forEach((animation) => {
+    animation.tracks = animation.tracks.filter(
+      (track) =>
+        track.name !== "JOBJ_0.position" && track.name !== "JOBJ_1.position",
+    );
+  });
+
+  if (modelActionPrefix === "Falco") {
+    scene.scale.set(1.1, 1.1, 1.1);
+  } else if (modelActionPrefix === "Seak") {
+    scene.scale.set(1.4, 1.4, 1.4);
+  }
+
+  useFrame(({ clock }) => {
+    const frame = Math.floor(clock.getElapsedTime() * 60);
+    const data = replay[frame % replay.length]?.find(
+      (d) => d.playerSettings.playerIndex === playerIndex,
+    );
+    const previousData = replay[(frame - 1) % replay.length]?.find(
+      (d) => d.playerSettings.playerIndex === playerIndex,
+    );
+    if (!data) return;
+
+    scene.rotation.set(
+      0,
+      Math.PI / 2 - (data.facingDirection * Math.PI) / 2,
+      0,
+    );
+    scene.position.set(
+      0,
+      data.playerState.yPosition,
+      data.playerState.xPosition,
+    );
+
+    const lastAction = lastActions[playerIndex];
+    if (lastAction) {
+      lastAction.time = data.playerState.actionStateFrameCounter / 60;
+
+      if (data.playerState.hitlagRemaining > 0) {
+        lastAction.paused = true;
+      } else if (previousData && previousData.playerState.hitlagRemaining > 0) {
+        lastAction.paused = false;
+      }
+    }
+
+    const action =
+      actions[
+        `Ply${modelActionPrefix}5K_Share_ACTION_${data.animationName}_figatree`
+      ];
+    if (lastActions[playerIndex] === action) return;
+
+    if (action) {
+      lastActions[playerIndex] = action;
+      mixer.stopAllAction();
+
+      // temporary: Sheik export was not at the right speed
+      if (modelActionPrefix === "Seak") {
+        action.timeScale = 60 / 25;
+      }
+
+      action.time = data.playerState.actionStateFrameCounter / 60;
+      action.play();
+    }
+  });
 
   return <primitive object={scene} />;
 }
