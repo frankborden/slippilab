@@ -75,7 +75,19 @@ let lastActions: (AnimationAction | undefined)[] = [undefined, undefined];
 
 function Stage({ modelUrl }: { modelUrl: string }) {
   const { scene } = useGLTF(modelUrl);
-  scene.scale.setScalar(0.85);
+  if (modelUrl.includes("battlefield")) {
+    scene.scale.setScalar(0.8);
+  } else if (modelUrl.includes("finaldestination")) {
+    scene.scale.setScalar(1);
+  } else if (modelUrl.includes("dreamland")) {
+    scene.scale.setScalar(1);
+  } else if (modelUrl.includes("pokemonstadium")) {
+    scene.scale.setScalar(1);
+  } else if (modelUrl.includes("yoshisstory")) {
+    scene.scale.setScalar(0.7);
+  } else if (modelUrl.includes("fountainofdreams")) {
+    scene.scale.setScalar(0.75);
+  }
 
   scene.traverse((obj) => {
     if ("material" in obj) {
