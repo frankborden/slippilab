@@ -33,18 +33,18 @@ export default function Page() {
       <Canvas
         className="bg-neutral-800 rounded mx-auto"
         style={{
-          height: `${150 / (448 / 208.8)}vmin`,
-          width: "150vmin",
+          height: `${100 * (1280 / 1920)}vmin`,
+          width: "100vmin",
         }}
       >
         <OrthographicCamera
           makeDefault
           position={[-100, 0, 0]}
-          left={-224}
-          right={224}
-          top={200}
-          bottom={-108.8}
-          zoom={1.5}
+          left={-1920 / 8}
+          right={1920 / 8}
+          top={1280 / 8}
+          bottom={-1280 / 8}
+          zoom={4}
         />
         <OrbitControls />
         <ambientLight intensity={5} />
@@ -109,17 +109,17 @@ function Character({
   modelUrl: string;
   modelActionPrefix: string;
 }) {
-  const { scene, animations } = useGLTF(modelUrl);
-  const { actions } = useAnimations(animations, scene);
+  const { scene: model, animations } = useGLTF(modelUrl);
+  const { actions } = useAnimations(animations, model);
 
-  scene.traverse((obj) => {
+  model.traverse((obj) => {
     if ("material" in obj) {
       (obj.material as MeshStandardMaterial).metalness = 0;
     }
   });
 
   // TODO: Position already captures movement caused by animations JOBJ_1
-  // and JOBJ_0 keyframes should be cleared in blender.
+  // and JOBJ_0 keyframes should be cleared in Blender.
   animations.forEach((animation) => {
     animation.tracks = animation.tracks.filter(
       (track) =>
@@ -128,9 +128,9 @@ function Character({
   });
 
   if (modelActionPrefix === "Falco") {
-    scene.scale.setScalar(1.1);
+    model.scale.setScalar(1.1);
   } else if (modelActionPrefix === "Seak") {
-    scene.scale.setScalar(1.4);
+    model.scale.setScalar(1.4);
   }
 
   useFrame(({ clock }) => {
@@ -144,7 +144,7 @@ function Character({
     if (!data) return;
     if (!nextData) return;
 
-    scene.position.set(
+    model.position.set(
       0,
       data.playerState.yPosition,
       data.playerState.xPosition,
@@ -172,7 +172,7 @@ function Character({
       lastActions[playerIndex] = action;
 
       action.reset().play();
-      scene.rotation.set(
+      model.rotation.set(
         0,
         Math.PI / 2 - (nextData.facingDirection * Math.PI) / 2,
         0,
@@ -180,5 +180,5 @@ function Character({
     }
   });
 
-  return <primitive object={scene} />;
+  return <primitive object={model} />;
 }
