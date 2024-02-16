@@ -144,6 +144,17 @@ function Character({
     if (!data) return;
     if (!nextData) return;
 
+    let animStartFacingDir = nextData?.facingDirection;
+    let prevData = data;
+    while (nextData.animationName === prevData.animationName) {
+      animStartFacingDir = prevData.facingDirection;
+      const nextPrevData = replay[
+        (prevData.playerState.frameNumber - 1) % replay.length
+      ]?.find((d) => d.playerSettings.playerIndex === playerIndex);
+      if (!nextPrevData) break;
+      prevData = nextPrevData;
+    }
+
     model.position.set(
       0,
       data.playerState.yPosition,
@@ -161,10 +172,7 @@ function Character({
       }
     }
 
-    const action =
-      actions[
-        `Ply${modelActionPrefix}5K_Share_ACTION_${nextData.animationName}_figatree`
-      ];
+    const action = actions[nextData.animationName];
     if (lastActions[playerIndex] === action) return;
 
     if (action) {
@@ -174,7 +182,7 @@ function Character({
       action.reset().play();
       model.rotation.set(
         0,
-        Math.PI / 2 - (nextData.facingDirection * Math.PI) / 2,
+        Math.PI / 2 - (animStartFacingDir * Math.PI) / 2,
         0,
       );
     }
