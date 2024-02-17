@@ -12,6 +12,7 @@ import { parseReplay } from "@slippilab/parser";
 import { useState } from "react";
 import { type AnimationAction, type MeshStandardMaterial } from "three";
 
+import { Falco } from "~/client/models/Falco";
 import { renderReplay } from "~/common/render";
 
 export default function Page() {
@@ -56,12 +57,13 @@ export default function Page() {
               modelUrl="/models/sheik.glb"
               modelActionPrefix="Seak"
             />
-            <Character
+            <Falco />
+            {/* <Character
               replay={renderData}
               playerIndex={1}
               modelUrl="/models/falco.glb"
               modelActionPrefix="Falco"
-            />
+            /> */}
             <Stage modelUrl="/models/battlefield.glb" />
             <Box material-color="black" args={[1, 1, 68.4 * 2]} />
           </>
