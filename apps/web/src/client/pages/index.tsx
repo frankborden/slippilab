@@ -19,7 +19,6 @@ import { Finaldestination } from "~/client/models/Finaldestination";
 import { Fountainofdreams } from "~/client/models/Fountainofdreams";
 import { Fox } from "~/client/models/Fox";
 import { Jigglypuff } from "~/client/models/Jigglypuff";
-import { Mario } from "~/client/models/Mario";
 import { Marth } from "~/client/models/Marth";
 import { Peach } from "~/client/models/Peach";
 import { Pokemonstadium } from "~/client/models/Pokemonstadium";
@@ -63,19 +62,19 @@ export default function Page() {
         <ambientLight intensity={5} />
         {renderData !== null && (
           <>
-            <Character
+            {/* <Character
               replay={renderData}
               playerIndex={0}
               modelUrl="/models/sheik.glb"
-            />
-            <Fox position={[0, 0, -52.5]} />
-            <Falco position={[0, 0, -37.5]} />
-            <Sheik position={[0, 0, -22.5]} />
-            <Falcon position={[0, 0, -7.5]} />
-            <Peach position={[0, 0, 7.5]} />
-            <Marth position={[0, 0, 22.5]} />
-            <Mario position={[0, 0, 37.5]} />
-            <Jigglypuff position={[0, 0, 52.5]} />
+            /> */}
+            <Jigglypuff position={[0, 0, -45]} />
+            <Falcon position={[0, 0, -30]} />
+            <Sheik position={[0, 0, -15]} />
+            <Peach position={[0, 0, 0]} />
+            {/* <Falcon position={[0, 10, -7.5]} /> */}
+            <Marth position={[0, 0, 15]} />
+            <Fox position={[0, 0, 30]} />
+            <Falco position={[0, 0, 45]} />
             <Battlefield />
             {/* <Dreamland /> */}
             {/* <Fountainofdreams /> */}

@@ -66,7 +66,7 @@ type ContextType = Record<
 export function Battlefield(props: JSX.IntrinsicElements["group"]) {
   const { nodes, materials } = useGLTF("/models/battlefield.glb") as GLTFResult;
   return (
-    <group {...props} scale={0.8} dispose={null}>
+    <group {...props} scale={0.8} rotation={[0, Math.PI, 0]} dispose={null}>
       <primitive object={nodes.JOBJ_0} />
       <primitive object={nodes.neutral_bone} />
       <skinnedMesh

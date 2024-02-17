@@ -40,16 +40,6 @@ type GLTFResult = GLTF & {
     mesh_28: THREE.SkinnedMesh;
     mesh_29: THREE.SkinnedMesh;
     mesh_30: THREE.SkinnedMesh;
-    mesh_31: THREE.SkinnedMesh;
-    mesh_32: THREE.SkinnedMesh;
-    mesh_33: THREE.SkinnedMesh;
-    mesh_34: THREE.SkinnedMesh;
-    mesh_35: THREE.SkinnedMesh;
-    mesh_36: THREE.SkinnedMesh;
-    mesh_37: THREE.SkinnedMesh;
-    mesh_38: THREE.SkinnedMesh;
-    mesh_39: THREE.SkinnedMesh;
-    mesh_40: THREE.SkinnedMesh;
     JOBJ_0: THREE.Bone;
   };
   materials: {
@@ -84,16 +74,6 @@ type GLTFResult = GLTF & {
     ["Joint_67_Object_0_Material_0.001"]: THREE.MeshStandardMaterial;
     ["Joint_67_Object_1_Material_1.001"]: THREE.MeshStandardMaterial;
     ["Joint_77_Object_0_Material_0.001"]: THREE.MeshStandardMaterial;
-    ["Joint_83_Object_0_Material_0.001"]: THREE.MeshStandardMaterial;
-    ["Joint_83_Object_19_Material_19.001"]: THREE.MeshStandardMaterial;
-    ["Joint_83_Object_1_Material_1.001"]: THREE.MeshStandardMaterial;
-    ["Joint_83_Object_21_Material_21.001"]: THREE.MeshStandardMaterial;
-    ["Joint_83_Object_22_Material_22.001"]: THREE.MeshStandardMaterial;
-    ["Joint_83_Object_23_Material_23.001"]: THREE.MeshStandardMaterial;
-    ["Joint_83_Object_24_Material_24.001"]: THREE.MeshStandardMaterial;
-    ["Joint_83_Object_25_Material_25.001"]: THREE.MeshStandardMaterial;
-    ["Joint_83_Object_2_Material_2.001"]: THREE.MeshStandardMaterial;
-    ["Joint_83_Object_3_Material_3.001"]: THREE.MeshStandardMaterial;
   };
   animations: GLTFAction[];
 };
@@ -312,7 +292,7 @@ export function Peach(props: JSX.IntrinsicElements["group"]) {
   ) as GLTFResult;
   const { actions } = useAnimations(animations, group);
   useEffect(() => {
-    actions.WaitItem?.play();
+    actions.SquatWait?.play();
   }, [actions]);
 
   return (
@@ -625,106 +605,6 @@ export function Peach(props: JSX.IntrinsicElements["group"]) {
               geometry={nodes.mesh_30.geometry}
               material={materials["Joint_77_Object_0_Material_0.001"]}
               skeleton={nodes.mesh_30.skeleton}
-              position={[-8.089, 0, -3.453]}
-              scale={0.001}
-            />
-          </group>
-          <group name="Joint_83_Object_0_SINGLE">
-            <skinnedMesh
-              name="mesh_31"
-              geometry={nodes.mesh_31.geometry}
-              material={materials["Joint_83_Object_0_Material_0.001"]}
-              skeleton={nodes.mesh_31.skeleton}
-              position={[-8.089, 0, -3.453]}
-              scale={0.001}
-            />
-          </group>
-          <group name="Joint_83_Object_19_SINGLE">
-            <skinnedMesh
-              name="mesh_32"
-              geometry={nodes.mesh_32.geometry}
-              material={materials["Joint_83_Object_19_Material_19.001"]}
-              skeleton={nodes.mesh_32.skeleton}
-              position={[-8.089, 0, -3.453]}
-              scale={0.001}
-            />
-          </group>
-          <group name="Joint_83_Object_1_SINGLE">
-            <skinnedMesh
-              name="mesh_33"
-              geometry={nodes.mesh_33.geometry}
-              material={materials["Joint_83_Object_1_Material_1.001"]}
-              skeleton={nodes.mesh_33.skeleton}
-              position={[-8.089, 0, -3.453]}
-              scale={0.001}
-            />
-          </group>
-          <group name="Joint_83_Object_21_SINGLE">
-            <skinnedMesh
-              name="mesh_34"
-              geometry={nodes.mesh_34.geometry}
-              material={materials["Joint_83_Object_21_Material_21.001"]}
-              skeleton={nodes.mesh_34.skeleton}
-              position={[-8.089, 0, -3.453]}
-              scale={0.001}
-            />
-          </group>
-          <group name="Joint_83_Object_22_SINGLE">
-            <skinnedMesh
-              name="mesh_35"
-              geometry={nodes.mesh_35.geometry}
-              material={materials["Joint_83_Object_22_Material_22.001"]}
-              skeleton={nodes.mesh_35.skeleton}
-              position={[-8.089, 0, -3.453]}
-              scale={0.001}
-            />
-          </group>
-          <group name="Joint_83_Object_23_SINGLE">
-            <skinnedMesh
-              name="mesh_36"
-              geometry={nodes.mesh_36.geometry}
-              material={materials["Joint_83_Object_23_Material_23.001"]}
-              skeleton={nodes.mesh_36.skeleton}
-              position={[-8.089, 0, -3.453]}
-              scale={0.001}
-            />
-          </group>
-          <group name="Joint_83_Object_24_SINGLE">
-            <skinnedMesh
-              name="mesh_37"
-              geometry={nodes.mesh_37.geometry}
-              material={materials["Joint_83_Object_24_Material_24.001"]}
-              skeleton={nodes.mesh_37.skeleton}
-              position={[-8.089, 0, -3.453]}
-              scale={0.001}
-            />
-          </group>
-          <group name="Joint_83_Object_25_SINGLE">
-            <skinnedMesh
-              name="mesh_38"
-              geometry={nodes.mesh_38.geometry}
-              material={materials["Joint_83_Object_25_Material_25.001"]}
-              skeleton={nodes.mesh_38.skeleton}
-              position={[-8.089, 0, -3.453]}
-              scale={0.001}
-            />
-          </group>
-          <group name="Joint_83_Object_2_SINGLE">
-            <skinnedMesh
-              name="mesh_39"
-              geometry={nodes.mesh_39.geometry}
-              material={materials["Joint_83_Object_2_Material_2.001"]}
-              skeleton={nodes.mesh_39.skeleton}
-              position={[-8.089, 0, -3.453]}
-              scale={0.001}
-            />
-          </group>
-          <group name="Joint_83_Object_3_SINGLE">
-            <skinnedMesh
-              name="mesh_40"
-              geometry={nodes.mesh_40.geometry}
-              material={materials["Joint_83_Object_3_Material_3.001"]}
-              skeleton={nodes.mesh_40.skeleton}
               position={[-8.089, 0, -3.453]}
               scale={0.001}
             />

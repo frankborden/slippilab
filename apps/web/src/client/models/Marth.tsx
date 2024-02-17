@@ -342,7 +342,13 @@ export function Marth(props: JSX.IntrinsicElements["group"]) {
   }, [actions]);
 
   return (
-    <group ref={group} {...props} scale={1.15} dispose={null}>
+    <group
+      ref={group}
+      {...props}
+      scale={1.15}
+      rotation={[0, Math.PI, 0]}
+      dispose={null}
+    >
       <group name="marth">
         <group name="Armature">
           <group name="Joint_0_Object_0">

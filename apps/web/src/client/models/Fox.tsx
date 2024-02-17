@@ -319,11 +319,17 @@ export function Fox(props: JSX.IntrinsicElements["group"]) {
   const { actions } = useAnimations(animations, group);
 
   useEffect(() => {
-    actions.AttackHi3?.play();
+    actions.SquatWait?.play();
   }, [actions]);
 
   return (
-    <group ref={group} {...props} scale={0.96} dispose={null}>
+    <group
+      ref={group}
+      {...props}
+      scale={0.96}
+      rotation={[0, Math.PI, 0]}
+      dispose={null}
+    >
       <group name="fox">
         <group name="Armature">
           <group name="Joint_0_Object_0">

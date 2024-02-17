@@ -306,7 +306,13 @@ export function Falco(props: JSX.IntrinsicElements["group"]) {
   }, [actions]);
 
   return (
-    <group ref={group} {...props} scale={1.1} dispose={null}>
+    <group
+      ref={group}
+      {...props}
+      scale={1.1}
+      rotation={[0, Math.PI, 0]}
+      dispose={null}
+    >
       <group name="falco">
         <group name="Armature">
           <group name="Joint_0_Object_0">
