@@ -1,5 +1,4 @@
 import {
-  Box,
   OrbitControls,
   OrthographicCamera,
   useAnimations,
@@ -13,6 +12,7 @@ import { useState } from "react";
 import { type AnimationAction, type MeshStandardMaterial } from "three";
 
 import { Falco } from "~/client/models/Falco";
+import { Sheik } from "~/client/models/Sheik";
 import { renderReplay } from "~/common/render";
 
 export default function Page() {
@@ -55,17 +55,10 @@ export default function Page() {
               replay={renderData}
               playerIndex={0}
               modelUrl="/models/sheik.glb"
-              modelActionPrefix="Seak"
             />
             <Falco />
-            {/* <Character
-              replay={renderData}
-              playerIndex={1}
-              modelUrl="/models/falco.glb"
-              modelActionPrefix="Falco"
-            /> */}
+            <Sheik position={[0, 0, 10]} />
             <Stage modelUrl="/models/battlefield.glb" />
-            <Box material-color="black" args={[1, 1, 68.4 * 2]} />
           </>
         )}
       </Canvas>
@@ -104,12 +97,10 @@ function Character({
   replay,
   playerIndex,
   modelUrl,
-  modelActionPrefix,
 }: {
   replay: RenderData[][];
   playerIndex: number;
   modelUrl: string;
-  modelActionPrefix: string;
 }) {
   const { scene: model, animations } = useGLTF(modelUrl);
   const { actions } = useAnimations(animations, model);
@@ -128,12 +119,6 @@ function Character({
         track.name !== "JOBJ_0.position" && track.name !== "JOBJ_1.position",
     );
   });
-
-  if (modelActionPrefix === "Falco") {
-    model.scale.setScalar(1.1);
-  } else if (modelActionPrefix === "Seak") {
-    model.scale.setScalar(1.4);
-  }
 
   useFrame(({ clock }) => {
     const frame = Math.floor(clock.getElapsedTime() * 60);

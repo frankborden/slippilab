@@ -299,13 +299,14 @@ export function Falco(props: JSX.IntrinsicElements["group"]) {
   const { nodes, materials, animations } = useGLTF(
     "/models/falco.glb",
   ) as GLTFResult;
-  console.log(materials);
   const { actions } = useAnimations(animations, group);
+
   useEffect(() => {
     actions.Wait1?.play();
   }, [actions]);
+
   return (
-    <group ref={group} {...props} dispose={null}>
+    <group ref={group} {...props} scale={1.1} dispose={null}>
       <group name="falco">
         <group name="Armature">
           <group name="Joint_0_Object_0">
