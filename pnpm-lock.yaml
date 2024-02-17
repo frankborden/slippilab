@@ -122,6 +122,9 @@ importers:
       three-stdlib:
         specifier: ^2.29.4
         version: 2.29.4(three@0.160.0)
+      zustand:
+        specifier: ^4.5.1
+        version: 4.5.1(@types/react@18.2.46)(react@18.2.0)
     devDependencies:
       '@cloudflare/workers-types':
         specifier: ^4.20231218.0
@@ -9437,4 +9440,24 @@ packages:
         optional: true
     dependencies:
       react: 18.2.0
+    dev: false
+
+  /zustand@4.5.1(@types/react@18.2.46)(react@18.2.0):
+    resolution: {integrity: sha512-XlauQmH64xXSC1qGYNv00ODaQ3B+tNPoy22jv2diYiP4eoDKr9LA+Bh5Bc3gplTrFdb6JVI+N4kc1DZ/tbtfPg==}
+    engines: {node: '>=12.7.0'}
+    peerDependencies:
+      '@types/react': '>=16.8'
+      immer: '>=9.0.6'
+      react: '>=16.8'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      immer:
+        optional: true
+      react:
+        optional: true
+    dependencies:
+      '@types/react': 18.2.46
+      react: 18.2.0
+      use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false

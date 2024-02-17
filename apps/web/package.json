@@ -25,7 +25,8 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.21.1",
     "three": "^0.160.0",
-    "three-stdlib": "^2.29.4"
+    "three-stdlib": "^2.29.4",
+    "zustand": "^4.5.1"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20231218.0",
