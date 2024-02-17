@@ -11,8 +11,20 @@ import { parseReplay } from "@slippilab/parser";
 import { useState } from "react";
 import { type AnimationAction, type MeshStandardMaterial } from "three";
 
+import { Battlefield } from "~/client/models/Battlefield";
+import { Dreamland } from "~/client/models/Dreamland";
 import { Falco } from "~/client/models/Falco";
+import { Falcon } from "~/client/models/Falcon";
+import { Finaldestination } from "~/client/models/Finaldestination";
+import { Fountainofdreams } from "~/client/models/Fountainofdreams";
+import { Fox } from "~/client/models/Fox";
+import { Jigglypuff } from "~/client/models/Jigglypuff";
+import { Mario } from "~/client/models/Mario";
+import { Marth } from "~/client/models/Marth";
+import { Peach } from "~/client/models/Peach";
+import { Pokemonstadium } from "~/client/models/Pokemonstadium";
 import { Sheik } from "~/client/models/Sheik";
+import { Yoshisstory } from "~/client/models/Yoshisstory";
 import { renderReplay } from "~/common/render";
 
 export default function Page() {
@@ -56,9 +68,20 @@ export default function Page() {
               playerIndex={0}
               modelUrl="/models/sheik.glb"
             />
-            <Falco />
-            <Sheik position={[0, 0, 10]} />
-            <Stage modelUrl="/models/battlefield.glb" />
+            <Fox position={[0, 0, -52.5]} />
+            <Falco position={[0, 0, -37.5]} />
+            <Sheik position={[0, 0, -22.5]} />
+            <Falcon position={[0, 0, -7.5]} />
+            <Peach position={[0, 0, 7.5]} />
+            <Marth position={[0, 0, 22.5]} />
+            <Mario position={[0, 0, 37.5]} />
+            <Jigglypuff position={[0, 0, 52.5]} />
+            <Battlefield />
+            {/* <Dreamland /> */}
+            {/* <Fountainofdreams /> */}
+            {/* <Yoshisstory /> */}
+            {/* <Pokemonstadium /> */}
+            {/* <Finaldestination /> */}
           </>
         )}
       </Canvas>
@@ -67,31 +90,6 @@ export default function Page() {
 }
 
 let lastActions: (AnimationAction | undefined)[] = [undefined, undefined];
-
-function Stage({ modelUrl }: { modelUrl: string }) {
-  const { scene } = useGLTF(modelUrl);
-  if (modelUrl.includes("battlefield")) {
-    scene.scale.setScalar(0.8);
-  } else if (modelUrl.includes("finaldestination")) {
-    scene.scale.setScalar(1);
-  } else if (modelUrl.includes("dreamland")) {
-    scene.scale.setScalar(1);
-  } else if (modelUrl.includes("pokemonstadium")) {
-    scene.scale.setScalar(1);
-  } else if (modelUrl.includes("yoshisstory")) {
-    scene.scale.setScalar(0.7);
-  } else if (modelUrl.includes("fountainofdreams")) {
-    scene.scale.setScalar(0.75);
-  }
-
-  scene.traverse((obj) => {
-    if ("material" in obj) {
-      (obj.material as MeshStandardMaterial).metalness = 0;
-    }
-  });
-
-  return <primitive object={scene} />;
-}
 
 function Character({
   replay,
