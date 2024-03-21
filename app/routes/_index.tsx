@@ -1,4 +1,17 @@
-import { ChevronDownIcon } from "@radix-ui/react-icons";
+import {
+  ArrowLeftIcon,
+  ArrowRightIcon,
+  ChevronDownIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  CounterClockwiseClockIcon,
+  PauseIcon,
+  PinLeftIcon,
+  PinRightIcon,
+  PlayIcon,
+  TrackNextIcon,
+  TrackPreviousIcon,
+} from "@radix-ui/react-icons";
 import { SelectValue } from "@radix-ui/react-select";
 import { useLoaderData, useSearchParams } from "@remix-run/react";
 import { useEffect, useRef, useState } from "react";
@@ -13,13 +26,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationNext,
-  PaginationPrevious,
-} from "~/components/ui/pagination";
 import { Progress } from "~/components/ui/progress";
 import {
   Select,
@@ -37,25 +43,11 @@ import { useFileStore } from "~/stores/fileStore";
 import { useReplayStore } from "~/stores/replayStore";
 import { Replay } from "~/viewer/Replay";
 
-interface Filter {
-  type: "character" | "stage";
-  value: string;
-}
-
 export function loader() {
   return { stubs: [] as ReplayStub[] };
 }
 
 export default function Page() {
-  const replay = useReplayStore((state) => state.replay);
-
-  let length = "0:00";
-  if (replay) {
-    const minutes = Math.floor(replay.frames.length / 60 / 60);
-    const seconds = Math.floor((replay.frames.length % 3600) / 60);
-    length = `${minutes}:${String(seconds).padStart(2, "0")}`;
-  }
-
   return (
     <div className="flex h-screen gap-8 overflow-y-auto p-4">
       <div className="flex shrink grow flex-col">
@@ -64,9 +56,6 @@ export default function Page() {
         </div>
         <Replay />
         <Controls />
-        <div className="mt-2 text-sm font-medium leading-none">
-          0:00 / {length}
-        </div>
       </div>
       <div className="w-[200px]">
         <HighlightList />
@@ -78,6 +67,17 @@ export default function Page() {
 function Controls() {
   const { replay, frame, setFrame, paused, setPaused, speed, setSpeed } =
     useReplayStore();
+
+  let current = "0:00";
+  let total = "0:00";
+  if (replay) {
+    const currentMinutes = Math.floor(frame / 60 / 60);
+    const currentSeconds = Math.floor((frame % 3600) / 60);
+    current = `${currentMinutes}:${String(currentSeconds).padStart(2, "0")}`;
+    const totalMinutes = Math.floor(replay.frames.length / 60 / 60);
+    const totalSeconds = Math.floor((replay.frames.length % 3600) / 60);
+    total = `${totalMinutes}:${String(totalSeconds).padStart(2, "0")}`;
+  }
 
   function handleKeyPress(event: KeyboardEvent) {
     switch (event.key) {
@@ -125,12 +125,73 @@ function Controls() {
   }, [handleKeyPress]);
 
   return (
-    <Slider
-      value={[frame]}
-      min={0}
-      max={replay?.frames.length ?? 10}
-      onValueChange={(value) => setFrame(value[0])}
-    />
+    <>
+      <Slider
+        value={[frame]}
+        min={0}
+        max={replay?.frames.length ?? 10}
+        onValueChange={(value) => setFrame(value[0])}
+      />
+      <div className="mt-2 flex items-center justify-between">
+        <div className="text-sm font-medium leading-none">
+          {current} / {total}
+        </div>
+        <div className="flex items-center gap-2">
+          <Button
+            size="icon"
+            variant="ghost"
+            className="size-6"
+            onClick={() => {
+              setFrame(Math.max(frame - 120, 0));
+              setPaused(true);
+            }}
+          >
+            <CounterClockwiseClockIcon />
+          </Button>
+          <Button
+            size="icon"
+            variant="ghost"
+            className="size-6"
+            onClick={() => {
+              setFrame(Math.max(frame - 1, 0));
+              setPaused(true);
+            }}
+          >
+            <ChevronLeftIcon />
+          </Button>
+          <Button
+            size="icon"
+            variant="ghost"
+            className="size-6"
+            onClick={() => setPaused(!paused)}
+          >
+            {paused ? <PlayIcon /> : <PauseIcon />}
+          </Button>
+          <Button
+            size="icon"
+            variant="ghost"
+            className="size-6"
+            onClick={() => {
+              setFrame(Math.min(frame + 1, (replay?.frames.length ?? 1) - 1));
+              setPaused(true);
+            }}
+          >
+            <ChevronRightIcon />
+          </Button>
+          <Button
+            size="icon"
+            variant="ghost"
+            className="size-6"
+            onClick={() => {
+              setFrame(Math.min(frame + 120, (replay?.frames.length ?? 1) - 1));
+              setPaused(true);
+            }}
+          >
+            <CounterClockwiseClockIcon className=" -scale-x-100" />
+          </Button>
+        </div>
+      </div>
+    </>
   );
 }
 
@@ -284,22 +345,21 @@ function ReplaySelectContent() {
 
 function ReplayList({ stubs }: { stubs: ReplayStub[] }) {
   const [searchParams, setSearchParams] = useSearchParams();
-  const filters: Filter[] = [
-    ...searchParams
-      .getAll("stage")
-      .map((value) => ({ type: "stage" as const, value })),
-    ...searchParams
-      .getAll("character")
-      .map((value) => ({ type: "character" as const, value })),
-  ];
+
+  const { page, setPage, filters, setFilters } = useFileStore();
+  const pageSize = 10;
 
   const filteredStubs = stubs.filter((stub) => {
-    const allowedStages = searchParams.getAll("stage").map(Number);
+    const allowedStages = filters
+      .filter((filter) => filter.type === "stage")
+      .map(Number);
     if (allowedStages.length > 0 && !allowedStages.includes(stub.stageId)) {
       return false;
     }
     const neededCharacterCounts: Record<number, number> = {};
-    for (const filter of searchParams.getAll("character").map(Number)) {
+    for (const filter of filters
+      .filter((filter) => filter.type === "character")
+      .map(Number)) {
       neededCharacterCounts[filter] = (neededCharacterCounts[filter] ?? 0) + 1;
     }
     for (const player of stub.players) {
@@ -312,14 +372,6 @@ function ReplayList({ stubs }: { stubs: ReplayStub[] }) {
     }
     return true;
   });
-  const page = Number(searchParams.get("page") ?? 1) - 1;
-  const pageSize = 10;
-  const nextPageSerachParams = new URLSearchParams(searchParams);
-  nextPageSerachParams.set("page", String(page + 2));
-  const nextPageSearch = nextPageSerachParams.toString();
-  const prevPageSerachParams = new URLSearchParams(searchParams);
-  prevPageSerachParams.set("page", String(page));
-  const prevPageSearch = prevPageSerachParams.toString();
 
   return (
     <>
@@ -383,20 +435,29 @@ function ReplayList({ stubs }: { stubs: ReplayStub[] }) {
             </button>
           ))}
       </div>
-
-      <Pagination className="mt-auto">
-        <PaginationContent className="w-full justify-between">
-          <PaginationItem>
-            <PaginationPrevious to="/" />
-          </PaginationItem>
-          <div className="text-sm">
-            Page {page + 1} of {Math.ceil(filteredStubs.length / pageSize)}
-          </div>
-          <PaginationItem>
-            <PaginationNext to={{ search: nextPageSearch }} />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
+      <div className="mt-auto flex items-center gap-4">
+        <Button size="icon" variant="outline" onClick={() => setPage(0)}>
+          <PinLeftIcon />
+        </Button>
+        <Button size="icon" variant="outline" onClick={() => setPage(page - 1)}>
+          <ArrowLeftIcon />
+        </Button>
+        <div className="mx-auto text-sm">
+          Page {page + 1} of {Math.ceil(filteredStubs.length / pageSize)}
+        </div>
+        <Button size="icon" variant="outline" onClick={() => setPage(page + 1)}>
+          <ArrowRightIcon />
+        </Button>
+        <Button
+          size="icon"
+          variant="outline"
+          onClick={() =>
+            setPage(Math.ceil(filteredStubs.length / pageSize) - 1)
+          }
+        >
+          <PinRightIcon />
+        </Button>
+      </div>
     </>
   );
 }
