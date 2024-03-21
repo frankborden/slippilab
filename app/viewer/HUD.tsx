@@ -1,7 +1,7 @@
-import { store } from "~/store";
+import { useReplayStore } from "~/stores/replayStore";
 
 export function HUD() {
-  const { replay, frame } = store();
+  const { replay, frame } = useReplayStore();
   return (
     <>
       <div className="absolute left-0 top-1 flex w-full justify-center text-2xl text-white">

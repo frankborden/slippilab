@@ -1,6 +1,6 @@
 import { Canvas, useFrame } from "@react-three/fiber";
 
-import { store } from "~/store";
+import { useReplayStore } from "~/stores/replayStore";
 import { Camera } from "~/viewer/Camera";
 import { Character } from "~/viewer/Character";
 import { HUD } from "~/viewer/HUD";
@@ -8,7 +8,7 @@ import { Stage } from "~/viewer/Stage";
 
 export function Replay() {
   return (
-    <>
+    <div className="relative flex shrink flex-col overflow-y-auto rounded-lg border">
       <Canvas
         orthographic
         camera={{ position: [0, 0, 100] }}
@@ -17,16 +17,16 @@ export function Replay() {
         <Scene />
       </Canvas>
       <HUD />
-    </>
+    </div>
   );
 }
 
 let halfTicked = false;
 
 function Scene() {
-  const { replay } = store();
+  const { replay } = useReplayStore();
   useFrame(() => {
-    const { frame, setFrame, paused, speed } = store.getState();
+    const { frame, setFrame, paused, speed } = useReplayStore.getState();
     if (replay && !paused) {
       let tickAmount = speed;
       if (tickAmount === 0.5) {

@@ -1,10 +1,10 @@
 import { useAnimations, useGLTF } from "@react-three/drei";
 import { useEffect } from "react";
 
-import { store } from "~/store";
+import { useReplayStore } from "~/stores/replayStore";
 
 export function Stage() {
-  const { replay } = store();
+  const { replay } = useReplayStore();
 
   let stageSrc = "/models/battlefield.glb";
   let stageScale = 0.8;

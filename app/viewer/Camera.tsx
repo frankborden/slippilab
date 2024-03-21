@@ -1,10 +1,10 @@
 import { useFrame } from "@react-three/fiber";
 import { type OrthographicCamera } from "three";
 
-import { store } from "~/store";
+import { useReplayStore } from "~/stores/replayStore";
 
 export function Camera() {
-  const { frame, cameraPositions } = store();
+  const { frame, cameraPositions } = useReplayStore();
   useFrame(({ camera }) => {
     if (cameraPositions) {
       const cam = camera as OrthographicCamera;

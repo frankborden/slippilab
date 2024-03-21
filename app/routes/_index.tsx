@@ -1,12 +1,11 @@
 import { ChevronDownIcon } from "@radix-ui/react-icons";
 import { SelectValue } from "@radix-ui/react-select";
 import { useLoaderData, useSearchParams } from "@remix-run/react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { shortCharactersExt } from "~/common/names";
 import { ReplayStub } from "~/common/types";
-import { AspectRatio } from "~/components/ui/aspect-ratio";
-import { Badge, BadgeProps } from "~/components/ui/badge";
+import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import {
   DropdownMenu,
@@ -36,6 +35,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { cn } from "~/lib/utils";
 import { useFileStore } from "~/stores/fileStore";
 import { useReplayStore } from "~/stores/replayStore";
+import { Replay } from "~/viewer/Replay";
 
 interface Filter {
   type: "character" | "stage";
@@ -47,20 +47,90 @@ export function loader() {
 }
 
 export default function Page() {
+  const replay = useReplayStore((state) => state.replay);
+
+  let length = "0:00";
+  if (replay) {
+    const minutes = Math.floor(replay.frames.length / 60 / 60);
+    const seconds = Math.floor((replay.frames.length % 3600) / 60);
+    length = `${minutes}:${String(seconds).padStart(2, "0")}`;
+  }
+
   return (
-    <div className="flex h-screen gap-8 p-4">
-      <div className="grow">
+    <div className="flex h-screen gap-8 overflow-y-auto p-4">
+      <div className="flex shrink grow flex-col">
         <div className="mb-2">
           <ReplaySelect />
         </div>
-        <AspectRatio ratio={16 / 9} className="rounded bg-muted" />
-        <Slider />
-        <div className="mt-2 text-sm font-medium leading-none">0:00 / 4:29</div>
+        <Replay />
+        <Controls />
+        <div className="mt-2 text-sm font-medium leading-none">
+          0:00 / {length}
+        </div>
       </div>
-      <div>
+      <div className="w-[200px]">
         <HighlightList />
       </div>
     </div>
+  );
+}
+
+function Controls() {
+  const { replay, frame, setFrame, paused, setPaused, speed, setSpeed } =
+    useReplayStore();
+
+  function handleKeyPress(event: KeyboardEvent) {
+    switch (event.key) {
+      case "ArrowLeft":
+      case "j":
+        setFrame(Math.max(frame - 120, 0));
+        break;
+      case "ArrowRight":
+      case "l":
+        setFrame(Math.min(frame + 120, (replay?.frames.length ?? 1) - 1));
+        break;
+      case " ":
+      case "k":
+        setPaused(!paused);
+        break;
+      case ",":
+        setPaused(true);
+        setFrame(Math.max(0, frame - 1));
+        break;
+      case ".":
+        setPaused(true);
+        setFrame(Math.min((replay?.frames.length ?? 1) - 1, frame + 1));
+        break;
+      case "0":
+      case "1":
+      case "2":
+      case "3":
+      case "4":
+      case "5":
+      case "6":
+      case "7":
+      case "8":
+      case "9":
+        const num = parseInt(event.key);
+        setFrame(Math.round((replay?.frames.length ?? 0) * (num / 10)));
+        break;
+    }
+  }
+
+  useEffect(() => {
+    document.addEventListener("keydown", handleKeyPress);
+    return () => {
+      document.removeEventListener("keydown", handleKeyPress);
+    };
+  }, [handleKeyPress]);
+
+  return (
+    <Slider
+      value={[frame]}
+      min={0}
+      max={replay?.frames.length ?? 10}
+      onValueChange={(value) => setFrame(value[0])}
+    />
   );
 }
 
@@ -87,7 +157,7 @@ function HighlightList() {
           </SelectGroup>
         </SelectContent>
       </Select>
-      <div className="mt-2 grid grid-cols-[repeat(2,auto)] gap-x-4">
+      <div className="mt-2 grid grid-cols-[repeat(2,auto)] justify-center gap-x-4">
         {highlights[selectedQuery].map((highlight, i) => (
           <button
             key={i}
@@ -222,6 +292,7 @@ function ReplayList({ stubs }: { stubs: ReplayStub[] }) {
       .getAll("character")
       .map((value) => ({ type: "character" as const, value })),
   ];
+
   const filteredStubs = stubs.filter((stub) => {
     const allowedStages = searchParams.getAll("stage").map(Number);
     if (allowedStages.length > 0 && !allowedStages.includes(stub.stageId)) {
@@ -241,9 +312,14 @@ function ReplayList({ stubs }: { stubs: ReplayStub[] }) {
     }
     return true;
   });
-
   const page = Number(searchParams.get("page") ?? 1) - 1;
   const pageSize = 10;
+  const nextPageSerachParams = new URLSearchParams(searchParams);
+  nextPageSerachParams.set("page", String(page + 2));
+  const nextPageSearch = nextPageSerachParams.toString();
+  const prevPageSerachParams = new URLSearchParams(searchParams);
+  prevPageSerachParams.set("page", String(page));
+  const prevPageSearch = prevPageSerachParams.toString();
 
   return (
     <>
@@ -317,7 +393,7 @@ function ReplayList({ stubs }: { stubs: ReplayStub[] }) {
             Page {page + 1} of {Math.ceil(filteredStubs.length / pageSize)}
           </div>
           <PaginationItem>
-            <PaginationNext to={{ search: "" }} />
+            <PaginationNext to={{ search: nextPageSearch }} />
           </PaginationItem>
         </PaginationContent>
       </Pagination>

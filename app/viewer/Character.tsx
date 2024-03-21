@@ -16,7 +16,7 @@ import {
 } from "three";
 
 import { type PlayerSettings } from "~/common/types";
-import { store } from "~/store";
+import { useReplayStore } from "~/stores/replayStore";
 import { actionMapByInternalId } from "~/viewer/characters";
 
 export function Character({
@@ -26,7 +26,7 @@ export function Character({
   settings: PlayerSettings;
   tint: boolean;
 }) {
-  const { openedTimestamp } = store();
+  const { openedTimestamp } = useReplayStore();
   // Junk is appended to the URL to prevent three.js from remounting the same
   // model in dittos and breaking everything. The loader manager must later
   // remove the junk to get back caching.
@@ -79,10 +79,10 @@ export function Character({
 
   useFrame(({ clock }) => {
     clock.running = false;
-    const renderData = store
+    const renderData = useReplayStore
       .getState()
       .renderData?.[
-        store.getState().frame
+        useReplayStore.getState().frame
       ].find((r) => r.playerSettings.playerIndex === settings.playerIndex);
     if (!renderData || !character.current) return;
     const action = actions[renderData.animationName];
@@ -204,30 +204,30 @@ export function Character({
 }
 
 const modelFileByExternalId = [
-  "falcon",
-  "Donkey Kong",
+  "captainfalcon",
+  "donkeykong",
   "fox",
-  "Mr. Game & Watch",
-  "Kirby",
-  "Bowser",
-  "Link",
-  "Luigi",
-  "Mario",
+  "gameandwatch",
+  "kirby",
+  "bowser",
+  "link",
+  "luigi",
+  "mario",
   "marth",
-  "Mewtwo",
-  "Ness",
+  "mewtwo",
+  "ness",
   "peach",
-  "Pikachu",
-  "Ice Climbers",
+  "pikachu",
+  "iceclimbers",
   "jigglypuff",
-  "Samus",
-  "Yoshi",
-  "Zelda",
+  "samus",
+  "yoshi",
+  "zelda",
   "sheik",
   "falco",
-  "Young Link",
-  "Dr. Mario",
-  "Roy",
-  "Pichu",
-  "Ganondorf",
+  "younglink",
+  "doctormario",
+  "roy",
+  "pichu",
+  "ganondorf",
 ];
