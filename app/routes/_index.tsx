@@ -9,8 +9,6 @@ import {
   PinLeftIcon,
   PinRightIcon,
   PlayIcon,
-  TrackNextIcon,
-  TrackPreviousIcon,
 } from "@radix-ui/react-icons";
 import { SelectValue } from "@radix-ui/react-select";
 import { useLoaderData, useSearchParams } from "@remix-run/react";
@@ -295,13 +293,13 @@ function ReplaySelectContent() {
       <Tabs
         value={tab}
         onValueChange={setTab}
-        className="flex flex-col items-center"
+        className="mt-4 flex items-center justify-between"
       >
-        <TabsList className="mx-auto">
-          <TabsTrigger value="local">Local files</TabsTrigger>
-          <TabsTrigger value="cloud">Cloud replays</TabsTrigger>
+        <TabsList>
+          <TabsTrigger value="local">Local</TabsTrigger>
+          <TabsTrigger value="cloud">Cloud</TabsTrigger>
         </TabsList>
-        <TabsContent value="local">
+        <TabsContent value="local" className="mt-0">
           <input
             type="file"
             ref={fileInput}
@@ -322,7 +320,7 @@ function ReplaySelectContent() {
           />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline">Load replays</Button>
+              <Button variant="outline">Open files</Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
               <DropdownMenuItem onSelect={() => folderInput.current?.click()}>
@@ -335,7 +333,9 @@ function ReplaySelectContent() {
           </DropdownMenu>
         </TabsContent>
       </Tabs>
-      {loadProgress !== undefined && <Progress value={loadProgress} />}
+      {loadProgress !== undefined && (
+        <Progress className="mt-2" value={loadProgress} />
+      )}
       <ReplayList
         stubs={tab === "local" ? localStubs.map(([stub]) => stub) : cloudStubs}
       />
