@@ -1,5 +1,5 @@
 import "@fontsource-variable/inter";
-import { LoaderFunctionArgs, redirect } from "@remix-run/cloudflare";
+import { LoaderFunctionArgs, json, redirect } from "@remix-run/cloudflare";
 import {
   ClientLoaderFunctionArgs,
   Links,
@@ -10,6 +10,7 @@ import {
 } from "@remix-run/react";
 import { decode } from "@shelacek/ubjson";
 
+import { ReplayData } from "~/common/types";
 import { parseReplay } from "~/parser";
 import { useFileStore } from "~/stores/fileStore";
 import { useReplayStore } from "~/stores/replayStore";
@@ -34,11 +35,14 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
   const { BUCKET } = context.cloudflare.env;
   const object = await BUCKET.get(slug);
   if (!object) {
-    return redirect("/");
+    return null;
   }
   const buffer = await object.arrayBuffer();
-  const file = new File([buffer], `${slug}.slp`);
-  return { file };
+  const { metadata, raw } = decode(buffer, {
+    useTypedArrays: true,
+  });
+  const replay = parseReplay(metadata, raw);
+  return json({ replay });
 }
 
 export async function clientLoader({
@@ -47,27 +51,32 @@ export async function clientLoader({
 }: ClientLoaderFunctionArgs) {
   const url = new URL(request.url);
   const slug = url.searchParams.get("slug");
-  let file: File | undefined;
-  if (slug?.startsWith("local-")) {
-    file = useFileStore
+  if (!slug) {
+    return null;
+  }
+  if (slug.startsWith("local-")) {
+    const file = useFileStore
       .getState()
       .stubs.find(([stub]) => stub.slug === slug)?.[1];
-    if (!file) {
-      return redirect("/");
+    if (file) {
+      const { metadata, raw } = decode(await file.arrayBuffer(), {
+        useTypedArrays: true,
+      });
+      const replay = parseReplay(metadata, raw);
+      useReplayStore.getState().loadReplay(replay);
+      return null;
     }
-  } else if (slug) {
-    file = ((await serverLoader()) as { file?: File }).file;
+  } else {
+    const replay = ((await serverLoader()) as { replay?: ReplayData }).replay;
+    if (replay) {
+      useReplayStore.getState().loadReplay(replay);
+      return null;
+    }
   }
 
-  if (file) {
-    const { metadata, raw } = decode(await file.arrayBuffer(), {
-      useTypedArrays: true,
-    });
-    const replay = parseReplay(metadata, raw);
-    useReplayStore.getState().loadReplay(replay);
-  }
-  return null;
+  return redirect("/");
 }
+clientLoader.hydrate = true;
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (

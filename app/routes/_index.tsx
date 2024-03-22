@@ -18,7 +18,12 @@ import {
   unstable_createMemoryUploadHandler,
   unstable_parseMultipartFormData,
 } from "@remix-run/cloudflare";
-import { useLoaderData, useSearchParams } from "@remix-run/react";
+import {
+  Form,
+  useLoaderData,
+  useSearchParams,
+  useSubmit,
+} from "@remix-run/react";
 import { decode } from "@shelacek/ubjson";
 import { InferInsertModel } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/d1";
@@ -94,7 +99,7 @@ export async function action({ context, request }: ActionFunctionArgs) {
       costumeIndex: player.costumeIndex,
     }));
 
-  await BUCKET.put(id, buffer);
+  await BUCKET.put(slug, buffer);
   await db.batch([
     db.insert(schema.replays).values(dbReplay),
     ...dbPlayers.map((dbPlayer) =>
@@ -338,26 +343,51 @@ function HighlightList() {
 
 function ReplaySelect() {
   const [searchParams] = useSearchParams();
-  const slug = searchParams.get("slug")?.replace("local-", "");
+  const slug = searchParams.get("slug");
+  const { stubs } = useFileStore();
+  const submit = useSubmit();
 
   return (
-    <Sheet>
-      <SheetTrigger asChild>
-        <Button variant="secondary" className="gap-2">
-          <div>Now playing:</div>
-          <div>{slug ?? "None"}</div>
-          <ChevronDownIcon className="size-4" />
-        </Button>
-      </SheetTrigger>
-      <SheetContent
-        side="left"
-        className="flex w-[500px] flex-col sm:max-w-none"
-      >
-        <div className="flex grow flex-col">
-          <ReplaySelectContent />
-        </div>
-      </SheetContent>
-    </Sheet>
+    <div className="flex justify-between">
+      <Sheet>
+        <SheetTrigger asChild>
+          <Button variant="secondary" className="gap-2">
+            <div>Now playing:</div>
+            <div>{slug?.replace("local-", "") ?? "None"}</div>
+            <ChevronDownIcon className="size-4" />
+          </Button>
+        </SheetTrigger>
+        <SheetContent
+          side="left"
+          className="flex w-[500px] flex-col sm:max-w-none"
+        >
+          <div className="flex grow flex-col">
+            <ReplaySelectContent />
+          </div>
+        </SheetContent>
+      </Sheet>
+      {slug?.startsWith("local-") && (
+        <Form
+          onSubmit={(e) => {
+            e.preventDefault();
+            const formData = new FormData();
+            const file = stubs.find(([stub]) => stub.slug === slug)?.[1];
+            if (!file) {
+              return;
+            }
+            formData.append("replay", file);
+            submit(formData, {
+              method: "POST",
+              encType: "multipart/form-data",
+            });
+          }}
+        >
+          <Button variant="secondary" type="submit">
+            Upload
+          </Button>
+        </Form>
+      )}
+    </div>
   );
 }
 
