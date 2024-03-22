@@ -194,7 +194,7 @@ function Controls() {
 }
 
 function HighlightList() {
-  const { highlights } = useReplayStore();
+  const { highlights, setFrame } = useReplayStore();
   const [selectedQuery, setSelectedQuery] = useState<string>(
     Object.keys(highlights)[0],
   );
@@ -221,6 +221,7 @@ function HighlightList() {
           <button
             key={i}
             className="col-span-full grid grid-cols-subgrid items-center rounded px-4 py-1 hover:bg-foreground/10"
+            onClick={() => setFrame(Math.max(highlight.startFrame - 30, 0))}
           >
             <Badge
               variant="outline"
