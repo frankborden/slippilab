@@ -15,6 +15,7 @@ import {
   ActionFunctionArgs,
   LoaderFunctionArgs,
   json,
+  redirect,
   unstable_createMemoryUploadHandler,
   unstable_parseMultipartFormData,
 } from "@remix-run/cloudflare";
@@ -107,7 +108,7 @@ export async function action({ context, request }: ActionFunctionArgs) {
     ),
   ]);
 
-  return json({ slug });
+  return redirect(`/?slug=${slug}`);
 }
 
 export async function loader({ context }: LoaderFunctionArgs) {
