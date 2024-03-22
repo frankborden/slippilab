@@ -1,5 +1,5 @@
 import "@fontsource-variable/inter";
-import { redirect } from "@remix-run/cloudflare";
+import { LoaderFunctionArgs, redirect } from "@remix-run/cloudflare";
 import {
   ClientLoaderFunctionArgs,
   Links,
@@ -25,6 +25,22 @@ export function meta() {
   ];
 }
 
+export async function loader({ request, context }: LoaderFunctionArgs) {
+  const url = new URL(request.url);
+  const slug = url.searchParams.get("slug");
+  if (!slug || slug.startsWith("local-")) {
+    return null;
+  }
+  const { BUCKET } = context.cloudflare.env;
+  const object = await BUCKET.get(slug);
+  if (!object) {
+    return redirect("/");
+  }
+  const buffer = await object.arrayBuffer();
+  const file = new File([buffer], `${slug}.slp`);
+  return { file };
+}
+
 export async function clientLoader({
   request,
   serverLoader,
@@ -37,9 +53,7 @@ export async function clientLoader({
       .getState()
       .stubs.find(([stub]) => stub.slug === slug)?.[1];
     if (!file) {
-      url.searchParams.delete("slug");
-      url.searchParams.delete("page");
-      return redirect(url.toString());
+      return redirect("/");
     }
   } else if (slug) {
     file = ((await serverLoader()) as { file?: File }).file;

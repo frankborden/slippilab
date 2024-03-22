@@ -5,8 +5,10 @@
     "build": "remix vite:build",
     "dev": "remix vite:dev",
     "format": "prettier --write .",
-    "start": "wrangler pages dev ./build/client",
-    "typecheck": "tsc",
+    "sql:gen": "drizzle-kit generate:sqlite",
+    "sql:local": "wrangler d1 migrations apply slippilab --local",
+    "sql:prod": "wrangler d1 migrations apply slippilab",
+    "sql:staging": "wrangler d1 migrations apply slippilab-dev",
     "typegen": "wrangler types"
   },
   "dependencies": {

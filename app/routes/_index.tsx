@@ -11,11 +11,22 @@ import {
   PlayIcon,
 } from "@radix-ui/react-icons";
 import { SelectValue } from "@radix-ui/react-select";
+import {
+  ActionFunctionArgs,
+  LoaderFunctionArgs,
+  json,
+  unstable_createMemoryUploadHandler,
+  unstable_parseMultipartFormData,
+} from "@remix-run/cloudflare";
 import { useLoaderData, useSearchParams } from "@remix-run/react";
+import { decode } from "@shelacek/ubjson";
+import { InferInsertModel } from "drizzle-orm";
+import { drizzle } from "drizzle-orm/d1";
+import { generateSlug } from "random-word-slugs";
 import { useEffect, useRef, useState } from "react";
 
 import { shortCharactersExt } from "~/common/names";
-import { ReplayStub } from "~/common/types";
+import { ReplayStub, ReplayType } from "~/common/types";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import {
@@ -37,12 +48,85 @@ import { Sheet, SheetContent, SheetTrigger } from "~/components/ui/sheet";
 import { Slider } from "~/components/ui/slider";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { cn } from "~/lib/utils";
+import { parseReplay } from "~/parser";
+import * as schema from "~/schema";
 import { useFileStore } from "~/stores/fileStore";
 import { useReplayStore } from "~/stores/replayStore";
 import { Replay } from "~/viewer/Replay";
 
-export function loader() {
-  return { stubs: [] as ReplayStub[] };
+export async function action({ context, request }: ActionFunctionArgs) {
+  const { DB, BUCKET } = context.cloudflare.env;
+  const db = drizzle(DB, { schema });
+  const uploadHandler = unstable_createMemoryUploadHandler({
+    maxPartSize: 20_000_000,
+  });
+  const form = await unstable_parseMultipartFormData(request, uploadHandler);
+
+  const file = form.get("replay");
+  if (!(file instanceof File)) {
+    return new Response("No file found", { status: 400 });
+  }
+  const buffer = new Uint8Array(await file.arrayBuffer());
+  const { raw, metadata } = decode(buffer, { useTypedArrays: true });
+  const replay = parseReplay(metadata, raw);
+
+  const id = crypto.randomUUID();
+  const slug = generateSlug(3, { format: "camel" });
+  const dbReplay: InferInsertModel<typeof schema.replays> = {
+    id,
+    slug,
+    type: replay.type,
+    stageId: replay.settings.stageId,
+    startTimestamp: replay.settings.startTimestamp,
+    matchId: replay.settings.matchId,
+    gameNumber: replay.settings.gameNumber,
+    tiebreakerNumber: replay.settings.tiebreakerNumber,
+  };
+  const dbPlayers: InferInsertModel<typeof schema.replayPlayers>[] =
+    replay.settings.playerSettings.filter(Boolean).map((player) => ({
+      replayId: id,
+      playerIndex: player.playerIndex,
+      connectCode: player.connectCode,
+      displayName: player.displayName,
+      nametag: player.nametag,
+      teamId: player.teamId,
+      externalCharacterId: player.externalCharacterId,
+      costumeIndex: player.costumeIndex,
+    }));
+
+  await BUCKET.put(id, buffer);
+  await db.batch([
+    db.insert(schema.replays).values(dbReplay),
+    ...dbPlayers.map((dbPlayer) =>
+      db.insert(schema.replayPlayers).values(dbPlayer),
+    ),
+  ]);
+
+  return json({ slug });
+}
+
+export async function loader({ context }: LoaderFunctionArgs) {
+  const { DB } = context.cloudflare.env;
+  const db = drizzle(DB, { schema });
+  const rows = await db.query.replays.findMany({
+    with: {
+      replayPlayers: true,
+    },
+  });
+  const stubs: ReplayStub[] = rows.map((row) => ({
+    slug: row.slug,
+    type: row.type as ReplayType,
+    startTimestamp: row.startTimestamp,
+    stageId: row.stageId,
+    players: row.replayPlayers.map((player) => ({
+      playerIndex: player.playerIndex,
+      connectCode: player.connectCode ?? undefined,
+      displayName: player.displayName ?? undefined,
+      externalCharacterId: player.externalCharacterId,
+      costumeIndex: player.costumeIndex,
+    })),
+  }));
+  return { stubs };
 }
 
 export default function Page() {

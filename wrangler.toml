@@ -1,0 +1,15 @@
+[[d1_databases]]
+binding = "DB"
+database_name = "slippilab"
+database_id = "a1fae637-7d90-4c90-8930-2bb492c5f6ba"
+migrations_dir = "sql"
+
+[[d1_databases]]
+binding = "DBSTAGING"
+database_name = "slippilab-dev"
+database_id = "613f5e30-4ea9-4d7b-9256-1d09c37c0691"
+migrations_dir = "sql"
+
+[[r2_buckets]]
+binding = "BUCKET"
+bucket_name = "replays"
