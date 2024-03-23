@@ -5,12 +5,11 @@ TODO:
 
 - input display
 - filters
-- cloud download
 - randall
 - PS plats
 - Softer FoD
-- mobile ui
-- date/metadata display
+- mobile UI
+- date display
 - projectiles
 - doubles list
 - doubles colors
