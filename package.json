@@ -58,6 +58,8 @@
     "clsx": "^2.1.0",
     "cmdk": "^1.0.0",
     "date-fns": "^3.6.0",
+    "drizzle-kit": "^0.20.14",
+    "drizzle-orm": "^0.30.4",
     "embla-carousel-react": "^8.0.0",
     "input-otp": "^1.2.2",
     "isbot": "^4.1.0",
