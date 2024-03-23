@@ -26,15 +26,16 @@ export function Character({
   settings: PlayerSettings;
   tint: boolean;
 }) {
-  const { openedTimestamp } = useReplayStore();
+  // const { openedTimestamp } = useReplayStore();
   // Junk is appended to the URL to prevent three.js from remounting the same
   // model in dittos and breaking everything. The loader manager must later
   // remove the junk to get back caching.
   const { scene, animations } = useGLTF(
-    `/models/${modelFileByExternalId[settings.externalCharacterId]}.glb?openedTimestamp=${openedTimestamp}&playerIndex=${settings.playerIndex}`,
-    undefined,
-    undefined,
-    (loader) => loader.manager.setURLModifier((url) => url.split("?")[0]),
+    // `/models/${modelFileByExternalId[settings.externalCharacterId]}.glb?openedTimestamp=${openedTimestamp}&playerIndex=${settings.playerIndex}`,
+    `/models/${modelFileByExternalId[settings.externalCharacterId]}.glb`,
+    // undefined,
+    // undefined,
+    // (loader) => loader.manager.setURLModifier((url) => url.split("?")[0]),
   );
 
   useEffect(() => {

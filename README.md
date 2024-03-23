@@ -3,6 +3,7 @@
 
 TODO:
 
+- upload complete dialog
 - input display
 - filters
 - randall
