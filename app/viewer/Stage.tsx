@@ -40,7 +40,7 @@ export function Stage() {
     undefined,
     (loader) => {
       loader.manager.setURLModifier((url) => url.split("?")[0]);
-      loader.setRequestHeader({ "Cache-Control": "max-age=0" });
+      // loader.setRequestHeader({ "Cache-Control": "max-age=0" });
     },
   );
   const { actions } = useAnimations(animations, scene);

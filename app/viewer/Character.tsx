@@ -38,7 +38,7 @@ export function Character({
     // (loader) => loader.manager.setURLModifier((url) => url.split("?")[0]),
     (loader) => {
       loader.manager.setURLModifier((url) => url.split("?")[0]);
-      loader.setRequestHeader({ "Cache-Control": "max-age=0" });
+      // loader.setRequestHeader();
     },
   );
 
