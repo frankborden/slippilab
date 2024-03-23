@@ -9,6 +9,7 @@ import {
   PinLeftIcon,
   PinRightIcon,
   PlayIcon,
+  ReloadIcon,
 } from "@radix-ui/react-icons";
 import { SelectValue } from "@radix-ui/react-select";
 import {
@@ -22,6 +23,7 @@ import {
 import {
   Form,
   useLoaderData,
+  useNavigation,
   useSearchParams,
   useSubmit,
 } from "@remix-run/react";
@@ -348,6 +350,8 @@ function ReplaySelect() {
   const { stubs } = useFileStore();
   const submit = useSubmit();
 
+  const navigation = useNavigation();
+
   return (
     <div className="flex justify-between">
       <Sheet>
@@ -368,11 +372,11 @@ function ReplaySelect() {
         </SheetContent>
       </Sheet>
       {slug?.startsWith("local-") && (
-        <Form
-          onSubmit={(e) => {
-            e.preventDefault();
+        <Button
+          variant="secondary"
+          disabled={Boolean(navigation.formAction)}
+          onClick={(e) => {
             const formData = new FormData();
-            console.log(slug);
             const file = stubs.find(([stub]) => stub.slug === slug)?.[1];
             if (!file) {
               return;
@@ -384,10 +388,11 @@ function ReplaySelect() {
             });
           }}
         >
-          <Button variant="secondary" type="submit">
-            Upload
-          </Button>
-        </Form>
+          {navigation.formAction && (
+            <ReloadIcon className="mr-2 size-4 animate-spin" />
+          )}
+          Upload
+        </Button>
       )}
     </div>
   );
