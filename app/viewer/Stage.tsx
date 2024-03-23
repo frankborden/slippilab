@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useReplayStore } from "~/stores/replayStore";
 
 export function Stage() {
-  const { replay } = useReplayStore();
+  const { replay, openedTimestamp } = useReplayStore();
 
   let stageSrc = "/models/battlefield.glb";
   let stageScale = 0.8;
@@ -34,7 +34,15 @@ export function Stage() {
       stageScale = 1;
       break;
   }
-  const { scene, animations } = useGLTF(stageSrc);
+  const { scene, animations } = useGLTF(
+    `${stageSrc}?openedTimestamp=${openedTimestamp}`,
+    undefined,
+    undefined,
+    (loader) => {
+      loader.manager.setURLModifier((url) => url.split("?")[0]);
+      loader.setRequestHeader({ "Cache-Control": "max-age=0" });
+    },
+  );
   const { actions } = useAnimations(animations, scene);
 
   useEffect(() => {
