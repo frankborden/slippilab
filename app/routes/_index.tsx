@@ -364,7 +364,7 @@ function ReplaySelect() {
         </SheetTrigger>
         <SheetContent
           side="left"
-          className="flex w-[500px] flex-col sm:max-w-none"
+          className="flex w-[600px] flex-col sm:max-w-none"
         >
           <div className="flex grow flex-col">
             <ReplaySelectContent />
@@ -471,8 +471,6 @@ function ReplaySelectContent() {
 }
 
 function ReplayList({ stubs }: { stubs: ReplayStub[] }) {
-  const [searchParams, setSearchParams] = useSearchParams();
-
   const { page, setPage, filters, setFilters } = useFileStore();
   const pageSize = 10;
 
@@ -506,61 +504,7 @@ function ReplayList({ stubs }: { stubs: ReplayStub[] }) {
         {filteredStubs
           .slice(page * pageSize, page * pageSize + pageSize)
           .map((stub) => (
-            <button
-              key={stub.slug}
-              className={cn(
-                "col-span-full grid grid-cols-subgrid items-center rounded border-2 px-4 py-1",
-                stub.slug === searchParams.get("watch")
-                  ? "border-primary bg-primary/10"
-                  : "border-transparent hover:border-border hover:bg-foreground/10",
-              )}
-              onClick={() => {
-                searchParams.set("watch", stub.slug);
-                searchParams.delete("start");
-                setSearchParams(searchParams);
-              }}
-            >
-              <div className="capitalize">{stub.type}</div>
-              <div>
-                <div>
-                  {new Date(stub.startTimestamp).toLocaleDateString(undefined, {
-                    month: "short",
-                    day: "numeric",
-                  })}
-                </div>
-                <div>
-                  {new Date(stub.startTimestamp).toLocaleTimeString(undefined, {
-                    hour: "numeric",
-                    minute: "2-digit",
-                  })}
-                </div>
-              </div>
-
-              <img
-                src={`/stages/${stub.stageId}.png`}
-                className="h-12 rounded border"
-              />
-              {stub.players.map((player) => (
-                <div
-                  key={player.playerIndex}
-                  className="flex items-center gap-2"
-                >
-                  <img
-                    src={`/stockicons/${player.externalCharacterId}/${player.costumeIndex}.png`}
-                    className="h-6"
-                  />
-                  <div>
-                    <div className="max-w-[8ch] overflow-hidden text-ellipsis whitespace-nowrap text-start">
-                      {player.displayName ??
-                        shortCharactersExt[player.externalCharacterId]}
-                    </div>
-                    <div className="text-start text-xs text-foreground/70">
-                      {player.connectCode ?? `Port ${player.playerIndex + 1}`}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </button>
+            <ReplayRow key={stub.slug} stub={stub} />
           ))}
       </div>
       <div className="mt-auto flex items-center gap-4">
@@ -603,5 +547,63 @@ function ReplayList({ stubs }: { stubs: ReplayStub[] }) {
         </Button>
       </div>
     </>
+  );
+}
+
+function ReplayRow({ stub }: { stub: ReplayStub }) {
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  return (
+    <button
+      className={cn(
+        "col-span-full grid grid-cols-subgrid items-center rounded border-2 px-4 py-1",
+        stub.slug === searchParams.get("watch")
+          ? "border-primary bg-primary/10"
+          : "border-transparent hover:border-border hover:bg-foreground/10",
+      )}
+      onClick={() => {
+        searchParams.set("watch", stub.slug);
+        searchParams.delete("start");
+        setSearchParams(searchParams);
+      }}
+    >
+      <div className="capitalize">{stub.type}</div>
+      <div>
+        <div>
+          {new Date(stub.startTimestamp).toLocaleDateString(undefined, {
+            month: "short",
+            day: "numeric",
+          })}
+        </div>
+        <div>
+          {new Date(stub.startTimestamp).toLocaleTimeString(undefined, {
+            hour: "numeric",
+            minute: "2-digit",
+          })}
+        </div>
+      </div>
+
+      <img
+        src={`/stages/${stub.stageId}.png`}
+        className="h-12 rounded border"
+      />
+      {stub.players.map((player) => (
+        <div key={player.playerIndex} className="flex items-center gap-2">
+          <img
+            src={`/stockicons/${player.externalCharacterId}/${player.costumeIndex}.png`}
+            className="h-6"
+          />
+          <div>
+            <div className="max-w-[8ch] overflow-hidden text-ellipsis whitespace-nowrap text-start">
+              {player.displayName ??
+                shortCharactersExt[player.externalCharacterId]}
+            </div>
+            <div className="text-start text-xs text-foreground/70">
+              {player.connectCode ?? `Port ${player.playerIndex + 1}`}
+            </div>
+          </div>
+        </div>
+      ))}
+    </button>
   );
 }
