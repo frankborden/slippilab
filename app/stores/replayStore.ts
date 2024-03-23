@@ -20,7 +20,7 @@ interface ReplayStore {
   paused: boolean;
   speed: number;
 
-  loadReplay: (replay: ReplayData) => void;
+  loadReplay: (replay: ReplayData, startFrame?: number) => void;
   setFrame: (frame: number) => void;
   setPaused: (paused: boolean) => void;
   setSpeed: (speed: number) => void;
@@ -38,7 +38,7 @@ export const useReplayStore = create<ReplayStore>((set) => ({
   paused: false,
   speed: 1,
 
-  loadReplay: (replay) => {
+  loadReplay: (replay, startFrame) => {
     const renderData = renderReplay(replay);
     const cameraPositions = renderCamera(renderData);
     const highlights = Object.fromEntries(
@@ -52,7 +52,7 @@ export const useReplayStore = create<ReplayStore>((set) => ({
       renderData,
       cameraPositions,
       openedTimestamp: Date.now(),
-      frame: 0,
+      frame: startFrame || 0,
       paused: false,
       speed: 1,
       highlights,

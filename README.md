@@ -5,9 +5,10 @@ TODO:
 
 - input display
 - filters
-- cloud upload
-- cloud list
 - cloud download
+- randall
+- PS plats
+- Softer FoD
 - mobile ui
 - date/metadata display
 - projectiles

@@ -108,7 +108,7 @@ export async function action({ context, request }: ActionFunctionArgs) {
     ),
   ]);
 
-  return redirect(`/?slug=${slug}`);
+  return redirect(`/?watch=${slug}`);
 }
 
 export async function loader({ context }: LoaderFunctionArgs) {
@@ -344,7 +344,7 @@ function HighlightList() {
 
 function ReplaySelect() {
   const [searchParams] = useSearchParams();
-  const slug = searchParams.get("slug");
+  const slug = searchParams.get("watch");
   const { stubs } = useFileStore();
   const submit = useSubmit();
 
@@ -372,6 +372,7 @@ function ReplaySelect() {
           onSubmit={(e) => {
             e.preventDefault();
             const formData = new FormData();
+            console.log(slug);
             const file = stubs.find(([stub]) => stub.slug === slug)?.[1];
             if (!file) {
               return;
@@ -394,7 +395,7 @@ function ReplaySelect() {
 
 function ReplaySelectContent() {
   const [searchParams] = useSearchParams();
-  const slug = searchParams.get("slug");
+  const slug = searchParams.get("watch");
   const { stubs: localStubs, loadFiles, loadProgress } = useFileStore();
   const cloudStubs = useLoaderData<typeof loader>().stubs;
   const [tab, setTab] = useState(
@@ -499,12 +500,13 @@ function ReplayList({ stubs }: { stubs: ReplayStub[] }) {
               key={stub.slug}
               className={cn(
                 "col-span-full grid grid-cols-subgrid items-center rounded border-2 px-4 py-1",
-                stub.slug === searchParams.get("slug")
+                stub.slug === searchParams.get("watch")
                   ? "border-primary bg-primary/10"
                   : "border-transparent hover:border-border hover:bg-foreground/10",
               )}
               onClick={() => {
-                searchParams.set("slug", stub.slug);
+                searchParams.set("watch", stub.slug);
+                searchParams.delete("start");
                 setSearchParams(searchParams);
               }}
             >

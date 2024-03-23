@@ -28,7 +28,7 @@ export function meta() {
 
 export async function loader({ request, context }: LoaderFunctionArgs) {
   const url = new URL(request.url);
-  const slug = url.searchParams.get("slug");
+  const slug = url.searchParams.get("watch");
   if (!slug || slug.startsWith("local-")) {
     return null;
   }
@@ -50,10 +50,12 @@ export async function clientLoader({
   serverLoader,
 }: ClientLoaderFunctionArgs) {
   const url = new URL(request.url);
-  const slug = url.searchParams.get("slug");
+  const slug = url.searchParams.get("watch");
+  const startFrame = Number(url.searchParams.get("start") || 0);
   if (!slug) {
     return null;
   }
+  const store = useReplayStore.getState();
   if (slug.startsWith("local-")) {
     const file = useFileStore
       .getState()
@@ -63,13 +65,13 @@ export async function clientLoader({
         useTypedArrays: true,
       });
       const replay = parseReplay(metadata, raw);
-      useReplayStore.getState().loadReplay(replay);
+      store.loadReplay(replay, startFrame);
       return null;
     }
   } else {
     const replay = ((await serverLoader()) as { replay?: ReplayData }).replay;
     if (replay) {
-      useReplayStore.getState().loadReplay(replay);
+      store.loadReplay(replay, startFrame);
       return null;
     }
   }
