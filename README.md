@@ -14,7 +14,6 @@ TODO:
 - projectiles
 - doubles list
 - doubles colors
-- model jank when changing replays to new characters
 - model mesh visibility
 - jigglypuff limbs, marth dtilt
 - look for other model jank

@@ -24,7 +24,7 @@ export function Replay() {
 let halfTicked = false;
 
 function Scene() {
-  const { replay } = useReplayStore();
+  const { replay, openedTimestamp } = useReplayStore();
   useFrame(() => {
     const { frame, setFrame, paused, speed } = useReplayStore.getState();
     if (replay && !paused) {
@@ -58,7 +58,7 @@ function Scene() {
         .filter(Boolean)
         .map((settings) => (
           <Character
-            key={settings.playerIndex}
+            key={`${openedTimestamp}~${settings.playerIndex}`}
             settings={settings}
             tint={duplicateCharacter}
           />
