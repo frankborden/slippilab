@@ -1,10 +1,4 @@
-import {
-  Circle,
-  Outlines,
-  Ring,
-  useAnimations,
-  useGLTF,
-} from "@react-three/drei";
+import { Circle, Ring, useAnimations, useGLTF } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { useEffect, useRef } from "react";
 import {
@@ -24,7 +18,7 @@ export function Character({
   tint,
 }: {
   settings: PlayerSettings;
-  tint: boolean;
+  tint: "normal" | "port" | "team";
 }) {
   const { openedTimestamp } = useReplayStore();
   // Junk is appended to the URL to prevent three.js from remounting the same
@@ -50,10 +44,16 @@ export function Character({
 
   useEffect(() => {
     scene.traverse((obj) => {
-      if (!tint) return;
+      if (tint === "normal") return;
       if ("isMesh" in obj && obj.isMesh) {
         let color = 0xffffff;
-        switch (settings.playerIndex) {
+        switch (
+          tint === "team"
+            ? settings.teamId === 2
+              ? 3
+              : settings.teamId
+            : settings.playerIndex
+        ) {
           case 0:
             color = 0xffbbbb;
             break;
@@ -185,15 +185,13 @@ export function Character({
       <primitive object={scene} ref={character} />
       <Circle ref={shield} scale={10}>
         <meshBasicMaterial
-          color={[0xff4444, 0x4444ff, 0xffff44, 0xbbffbb][settings.playerIndex]}
+          color={
+            [0xff4444, 0x4444ff, 0xffff44, 0xbbffbb][
+              tint === "team" ? settings.teamId : settings.playerIndex
+            ]
+          }
           transparent
           opacity={0.8}
-        />
-        <Outlines
-          thickness={0.05}
-          color={[0xff4444, 0x4444ff, 0xffff44, 0xbbffbb][settings.playerIndex]}
-          transparent
-          opacity={1}
         />
       </Circle>
       <Ring ref={shine} args={[0.5, 1, 6]} rotation-z={Math.PI / 6}>

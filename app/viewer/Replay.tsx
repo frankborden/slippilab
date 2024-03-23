@@ -46,6 +46,7 @@ function Scene() {
     replay?.settings.playerSettings
       .filter(Boolean)
       .map((settings) => settings.externalCharacterId) ?? [];
+  const doubles = characterIds.length > 2;
   const duplicateCharacter = characterIds.some(
     (id, index) => characterIds.indexOf(id) !== index,
   );
@@ -60,7 +61,7 @@ function Scene() {
           <Character
             key={`${openedTimestamp}~${settings.playerIndex}`}
             settings={settings}
-            tint={duplicateCharacter}
+            tint={doubles ? "team" : duplicateCharacter ? "port" : "normal"}
           />
         ))}
     </>

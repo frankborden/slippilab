@@ -34,7 +34,7 @@ import { generateSlug } from "random-word-slugs";
 import { useEffect, useRef, useState } from "react";
 
 import { shortCharactersExt } from "~/common/names";
-import { ReplayStub, ReplayType } from "~/common/types";
+import { PlayerStub, ReplayStub, ReplayType } from "~/common/types";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import {
@@ -553,6 +553,13 @@ function ReplayList({ stubs }: { stubs: ReplayStub[] }) {
 function ReplayRow({ stub }: { stub: ReplayStub }) {
   const [searchParams, setSearchParams] = useSearchParams();
 
+  const isDoubles = stub.players.length > 2;
+  // @ts-expect-error groupBy is new-ish
+  const playerGroups: Record<number, PlayerStub[]> = Object.groupBy(
+    stub.players,
+    (player: PlayerStub) => (isDoubles ? player.teamId : player.playerIndex),
+  );
+
   return (
     <button
       className={cn(
@@ -587,21 +594,28 @@ function ReplayRow({ stub }: { stub: ReplayStub }) {
         src={`/stages/${stub.stageId}.png`}
         className="h-12 rounded border"
       />
-      {stub.players.map((player) => (
-        <div key={player.playerIndex} className="flex items-center gap-2">
-          <img
-            src={`/stockicons/${player.externalCharacterId}/${player.costumeIndex}.png`}
-            className="h-6"
-          />
-          <div>
-            <div className="max-w-[8ch] overflow-hidden text-ellipsis whitespace-nowrap text-start">
-              {player.displayName ??
-                shortCharactersExt[player.externalCharacterId]}
+      {Object.values(playerGroups).map((playerGroup) => (
+        <div>
+          {playerGroup.map((player) => (
+            <div key={player.playerIndex} className="flex items-center gap-2">
+              <img
+                // using team id as the costume index for doubles is wrong
+                src={`/stockicons/${player.externalCharacterId}/${isDoubles ? (player.teamId === 2 ? 3 : player.teamId) : player.costumeIndex}.png`}
+                className="h-6"
+              />
+              <div>
+                <div className="max-w-[8ch] overflow-hidden text-ellipsis whitespace-nowrap text-start">
+                  {player.displayName ??
+                    shortCharactersExt[player.externalCharacterId]}
+                </div>
+                {!isDoubles && (
+                  <div className="text-start text-xs text-foreground/70">
+                    {player.connectCode ?? `Port ${player.playerIndex + 1}`}
+                  </div>
+                )}
+              </div>
             </div>
-            <div className="text-start text-xs text-foreground/70">
-              {player.connectCode ?? `Port ${player.playerIndex + 1}`}
-            </div>
-          </div>
+          ))}
         </div>
       ))}
     </button>

@@ -35,7 +35,11 @@ export function HUD() {
               className="grid grid-cols-[1fr_auto_1fr] items-baseline font-bold"
               style={{
                 color: ["#ffbbbb", "#bbbbff", "#ffffbb", "#bbffbb"][
-                  settings.playerIndex
+                  replay.settings.playerSettings.filter(Boolean).length > 2
+                    ? settings.teamId === 2
+                      ? 3
+                      : settings.teamId
+                    : settings.playerIndex
                 ],
               }}
             >

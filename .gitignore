@@ -1,3 +1,4 @@
+.vscode
 .wrangler
 build
 node_modules

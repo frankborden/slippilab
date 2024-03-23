@@ -12,8 +12,7 @@ TODO:
 - mobile UI
 - date display
 - projectiles
-- doubles list
-- doubles colors
 - model mesh visibility
 - jigglypuff limbs, marth dtilt
 - look for other model jank
+- doubles list costume ids
