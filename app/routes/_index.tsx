@@ -394,6 +394,11 @@ function ReplaySelect() {
           Upload
         </Button>
       )}
+      {slug && !slug.startsWith("local-") && (
+        <Button variant="secondary" asChild>
+          <a href={`/${slug}.slp`}>Download</a>
+        </Button>
+      )}
     </div>
   );
 }
