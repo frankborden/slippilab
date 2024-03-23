@@ -564,21 +564,37 @@ function ReplayList({ stubs }: { stubs: ReplayStub[] }) {
           ))}
       </div>
       <div className="mt-auto flex items-center gap-4">
-        <Button size="icon" variant="outline" onClick={() => setPage(0)}>
+        <Button
+          size="icon"
+          variant="outline"
+          disabled={page === 0}
+          onClick={() => setPage(0)}
+        >
           <PinLeftIcon />
         </Button>
-        <Button size="icon" variant="outline" onClick={() => setPage(page - 1)}>
+        <Button
+          size="icon"
+          variant="outline"
+          disabled={page === 0}
+          onClick={() => setPage(page - 1)}
+        >
           <ArrowLeftIcon />
         </Button>
         <div className="mx-auto text-sm">
           Page {page + 1} of {Math.ceil(filteredStubs.length / pageSize)}
         </div>
-        <Button size="icon" variant="outline" onClick={() => setPage(page + 1)}>
+        <Button
+          size="icon"
+          variant="outline"
+          disabled={page === Math.ceil(filteredStubs.length / pageSize) - 1}
+          onClick={() => setPage(page + 1)}
+        >
           <ArrowRightIcon />
         </Button>
         <Button
           size="icon"
           variant="outline"
+          disabled={page === Math.ceil(filteredStubs.length / pageSize) - 1}
           onClick={() =>
             setPage(Math.ceil(filteredStubs.length / pageSize) - 1)
           }
