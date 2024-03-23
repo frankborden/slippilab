@@ -32,14 +32,9 @@ export function Character({
   // remove the junk to get back caching.
   const { scene, animations } = useGLTF(
     `/models/${modelFileByExternalId[settings.externalCharacterId]}.glb?openedTimestamp=${openedTimestamp}&playerIndex=${settings.playerIndex}`,
-    // `/models/${modelFileByExternalId[settings.externalCharacterId]}.glb`,
     undefined,
     undefined,
-    // (loader) => loader.manager.setURLModifier((url) => url.split("?")[0]),
-    (loader) => {
-      loader.manager.setURLModifier((url) => url.split("?")[0]);
-      // loader.setRequestHeader();
-    },
+    (loader) => loader.manager.setURLModifier((url) => url.split("?")[0]),
   );
 
   useEffect(() => {

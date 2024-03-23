@@ -16,6 +16,10 @@ import { useFileStore } from "~/stores/fileStore";
 import { useReplayStore } from "~/stores/replayStore";
 import "~/tailwind.css";
 
+if (globalThis.navigator && "serviceWorker" in globalThis.navigator) {
+  globalThis.navigator.serviceWorker.register("/serviceworker.js");
+}
+
 export function meta() {
   return [
     { title: "Slippilab" },

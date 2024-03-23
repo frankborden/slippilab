@@ -34,15 +34,7 @@ export function Stage() {
       stageScale = 1;
       break;
   }
-  const { scene, animations } = useGLTF(
-    `${stageSrc}?openedTimestamp=${openedTimestamp}`,
-    undefined,
-    undefined,
-    (loader) => {
-      loader.manager.setURLModifier((url) => url.split("?")[0]);
-      // loader.setRequestHeader({ "Cache-Control": "max-age=0" });
-    },
-  );
+  const { scene, animations } = useGLTF(stageSrc);
   const { actions } = useAnimations(animations, scene);
 
   useEffect(() => {
