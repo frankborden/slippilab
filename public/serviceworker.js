@@ -11,7 +11,6 @@ self.addEventListener("fetch", (event) => {
     event.request.url.includes("/models/") &&
     event.request.url.endsWith(".glb")
   ) {
-    console.log("swring for", event.request.url);
     event.respondWith(useCache(event.request));
   }
 });
