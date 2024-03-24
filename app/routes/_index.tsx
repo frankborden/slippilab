@@ -348,12 +348,13 @@ function ReplaySelect() {
   const [searchParams] = useSearchParams();
   const slug = searchParams.get("watch");
   const { stubs } = useFileStore();
+  const replay = useReplayStore((store) => store.replay);
   const submit = useSubmit();
 
   const navigation = useNavigation();
 
   return (
-    <div className="flex justify-between">
+    <div className="flex items-center justify-between">
       <Sheet>
         <SheetTrigger asChild>
           <Button variant="secondary" className="gap-2">
@@ -371,6 +372,7 @@ function ReplaySelect() {
           </div>
         </SheetContent>
       </Sheet>
+      {replay && <div>{replay.settings.startTimestamp}</div>}
       {slug?.startsWith("local-") && (
         <Button
           variant="secondary"

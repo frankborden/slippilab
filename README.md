@@ -11,6 +11,7 @@ TODO:
 - Softer FoD
 - mobile UI
 - date display
+- parser newer versions
 - projectiles
 - model mesh visibility
 - jigglypuff limbs, marth dtilt
