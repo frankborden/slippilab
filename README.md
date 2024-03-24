@@ -5,20 +5,18 @@
 TO RELEASE:
 
 - filters
+- mobile UI
+- port replays from supabase
 - randall
 - PS plats
 - Softer FoD
-- mobile UI
 - projectiles
-- test upload
-- port replays from supabase
 - model mesh visibility
 - jigglypuff limbs, marth dtilt
 - look for other model jank
-- doubles list costume ids
-- click to toggle pause
 
 EVENTUALLY:
 
+- doubles list costume ids
 - parser newer versions
 - kirby hats

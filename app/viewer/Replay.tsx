@@ -7,12 +7,17 @@ import { HUD } from "~/viewer/HUD";
 import { Stage } from "~/viewer/Stage";
 
 export function Replay() {
+  const { paused, setPaused } = useReplayStore((store) => ({
+    paused: store.paused,
+    setPaused: store.setPaused,
+  }));
   return (
     <div className="relative flex shrink flex-col overflow-y-auto rounded-lg border">
       <Canvas
         orthographic
         camera={{ position: [0, 0, 100] }}
         className="aspect-[73/60] shrink"
+        onClick={() => setPaused(!paused)}
       >
         <Scene />
       </Canvas>
