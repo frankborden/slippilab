@@ -8,11 +8,18 @@ import {
 import { useEffect } from "react";
 
 import { Button } from "~/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "~/components/ui/dropdown-menu";
 import { Slider } from "~/components/ui/slider";
 import { useReplayStore } from "~/stores/replayStore";
 
 export function Controls() {
-  const { replay, frame, setFrame, paused, setPaused } = useReplayStore();
+  const { replay, frame, setFrame, paused, setPaused, speed, setSpeed } =
+    useReplayStore();
 
   let current = "0:00";
   let total = "0:00";
@@ -83,6 +90,39 @@ export function Controls() {
           {current} / {total}
         </div>
         <div className="flex items-center gap-2">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button size="sm" variant="ghost" className="text-sm">
+                {speed}x
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              side="top"
+              className="grid grid-cols-[auto_auto]"
+            >
+              <DropdownMenuItem
+                onSelect={() => setSpeed(0.5)}
+                className="col-span-full grid grid-cols-subgrid"
+              >
+                <div>Slow</div>
+                <div>0.5x</div>
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onSelect={() => setSpeed(1)}
+                className="col-span-full grid grid-cols-subgrid"
+              >
+                <div>Normal</div>
+                <div>1x</div>
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onSelect={() => setSpeed(2)}
+                className="col-span-full grid grid-cols-subgrid"
+              >
+                <div>Fast</div>
+                <div>2x</div>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
           <Button
             size="icon"
             variant="ghost"
