@@ -35,12 +35,8 @@
           "name": "user_key_user_id_user_id_fk",
           "tableFrom": "user_key",
           "tableTo": "user",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -114,22 +110,15 @@
           "name": "replay_players_replay_id_replays_id_fk",
           "tableFrom": "replay_players",
           "tableTo": "replays",
-          "columnsFrom": [
-            "replay_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["replay_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {
         "replay_players_replay_id_player_index_pk": {
-          "columns": [
-            "player_index",
-            "replay_id"
-          ],
+          "columns": ["player_index", "replay_id"],
           "name": "replay_players_replay_id_player_index_pk"
         }
       },
@@ -205,9 +194,7 @@
       "indexes": {
         "replays_slug_unique": {
           "name": "replays_slug_unique",
-          "columns": [
-            "slug"
-          ],
+          "columns": ["slug"],
           "isUnique": true
         }
       },
@@ -216,12 +203,8 @@
           "name": "replays_owner_user_id_fk",
           "tableFrom": "replays",
           "tableTo": "user",
-          "columnsFrom": [
-            "owner"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["owner"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -267,12 +250,8 @@
           "name": "user_session_user_id_user_id_fk",
           "tableFrom": "user_session",
           "tableTo": "user",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }

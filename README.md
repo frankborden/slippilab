@@ -18,6 +18,7 @@ TO RELEASE:
 - jigglypuff limbs, marth dtilt
 - look for other model jank
 - doubles list costume ids
+- slow-mo & ff
 
 EVENTUALLY:
 

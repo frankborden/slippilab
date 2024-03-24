@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useReplayStore } from "~/stores/replayStore";
 
 export function Stage() {
-  const { replay, openedTimestamp } = useReplayStore();
+  const { replay } = useReplayStore();
 
   let stageSrc = "/models/battlefield.glb";
   let stageScale = 0.8;

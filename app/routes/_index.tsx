@@ -15,13 +15,11 @@ import { SelectValue } from "@radix-ui/react-select";
 import {
   ActionFunctionArgs,
   LoaderFunctionArgs,
-  json,
   redirect,
   unstable_createMemoryUploadHandler,
   unstable_parseMultipartFormData,
 } from "@remix-run/cloudflare";
 import {
-  Form,
   useLoaderData,
   useNavigation,
   useSearchParams,
@@ -35,7 +33,6 @@ import { useEffect, useRef, useState } from "react";
 
 import { shortCharactersExt } from "~/common/names";
 import { PlayerStub, ReplayStub, ReplayType } from "~/common/types";
-import { AspectRatio } from "~/components/ui/aspect-ratio";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import {
@@ -162,8 +159,7 @@ export default function Page() {
 }
 
 function Controls() {
-  const { replay, frame, setFrame, paused, setPaused, speed, setSpeed } =
-    useReplayStore();
+  const { replay, frame, setFrame, paused, setPaused } = useReplayStore();
 
   let current = "0:00";
   let total = "0:00";
@@ -386,7 +382,7 @@ function ReplaySelect() {
         <Button
           variant="secondary"
           disabled={Boolean(navigation.formAction)}
-          onClick={(e) => {
+          onClick={() => {
             const formData = new FormData();
             const file = stubs.find(([stub]) => stub.slug === slug)?.[1];
             if (!file) {
@@ -482,7 +478,7 @@ function ReplaySelectContent() {
 }
 
 function ReplayList({ stubs }: { stubs: ReplayStub[] }) {
-  const { page, setPage, filters, setFilters } = useFileStore();
+  const { page, setPage, filters } = useFileStore();
   const pageSize = 10;
 
   const filteredStubs = stubs.filter((stub) => {
