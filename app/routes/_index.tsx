@@ -605,8 +605,8 @@ function ReplayRow({ stub }: { stub: ReplayStub }) {
         src={`/stages/${stub.stageId}.png`}
         className="h-12 rounded border"
       />
-      {Object.values(playerGroups).map((playerGroup) => (
-        <div>
+      {Object.entries(playerGroups).map(([id, playerGroup]) => (
+        <div key={id}>
           {playerGroup.map((player) => (
             <div key={player.playerIndex} className="flex items-center gap-2">
               <img

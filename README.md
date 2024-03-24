@@ -1,4 +1,5 @@
 - `bun i`
+- `bun sql:local`
 - `bun dev`
 
 TO RELEASE:
