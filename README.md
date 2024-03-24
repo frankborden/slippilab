@@ -1,16 +1,18 @@
 - `bun i`
 - `bun dev`
 
-TODO:
+TO RELEASE:
 
 - upload complete dialog
-- input display
+- choosing replay closes overlay
 - filters
 - randall
 - PS plats
 - Softer FoD
 - mobile UI
 - projectiles
+- test upload
+- port replays from supabase
 - model mesh visibility
 - jigglypuff limbs, marth dtilt
 - look for other model jank
