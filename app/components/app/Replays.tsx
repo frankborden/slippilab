@@ -15,7 +15,7 @@ import {
 import { useRef, useState } from "react";
 
 import { shortCharactersExt } from "~/common/names";
-import { PlayerStub, ReplayStub } from "~/common/types";
+import { PlayerStub } from "~/common/types";
 import { Button } from "~/components/ui/button";
 import {
   DropdownMenu,
@@ -37,12 +37,12 @@ export function ReplaySelect() {
   const { stubs } = useFileStore();
   const replay = useReplayStore((store) => store.replay);
   const submit = useSubmit();
-
   const navigation = useNavigation();
+  const [open, setOpen] = useState(false);
 
   return (
     <div className="flex items-center justify-between">
-      <Sheet>
+      <Sheet open={open} onOpenChange={(o) => setOpen(o)}>
         <SheetTrigger asChild>
           <Button variant="secondary" className="gap-2">
             <div>Now playing:</div>
@@ -55,7 +55,7 @@ export function ReplaySelect() {
           className="flex w-[600px] flex-col sm:max-w-none"
         >
           <div className="flex grow flex-col">
-            <ReplaySelectContent />
+            <ReplaySelectContent close={() => setOpen(false)} />
           </div>
         </SheetContent>
       </Sheet>
@@ -94,8 +94,8 @@ export function ReplaySelect() {
   );
 }
 
-function ReplaySelectContent() {
-  const [searchParams] = useSearchParams();
+function ReplaySelectContent({ close }: { close: () => void }) {
+  const [searchParams, setSearchParams] = useSearchParams();
   const slug = searchParams.get("watch");
   const { stubs: localStubs, loadFiles, loadProgress } = useFileStore();
   const cloudStubs = useLoaderData<typeof loader>().stubs;
@@ -105,6 +105,35 @@ function ReplaySelectContent() {
 
   const fileInput = useRef<HTMLInputElement>(null);
   const folderInput = useRef<HTMLInputElement>(null);
+
+  const { page, setPage, filters } = useFileStore();
+  const pageSize = 10;
+
+  const filteredStubs = (
+    tab === "local" ? localStubs.map(([stub]) => stub) : cloudStubs
+  ).filter((stub) => {
+    const allowedStages = filters
+      .filter((filter) => filter.type === "stage")
+      .map(Number);
+    if (allowedStages.length > 0 && !allowedStages.includes(stub.stageId)) {
+      return false;
+    }
+    const neededCharacterCounts: Record<number, number> = {};
+    for (const filter of filters
+      .filter((filter) => filter.type === "character")
+      .map(Number)) {
+      neededCharacterCounts[filter] = (neededCharacterCounts[filter] ?? 0) + 1;
+    }
+    for (const player of stub.players) {
+      if (neededCharacterCounts[player.externalCharacterId] > 0) {
+        neededCharacterCounts[player.externalCharacterId]--;
+      }
+    }
+    if (Object.values(neededCharacterCounts).some((count) => count > 0)) {
+      return false;
+    }
+    return true;
+  });
 
   return (
     <>
@@ -154,48 +183,79 @@ function ReplaySelectContent() {
       {loadProgress !== undefined && (
         <Progress className="mt-2" value={loadProgress} />
       )}
-      <ReplayList
-        stubs={tab === "local" ? localStubs.map(([stub]) => stub) : cloudStubs}
-      />
-    </>
-  );
-}
-
-function ReplayList({ stubs }: { stubs: ReplayStub[] }) {
-  const { page, setPage, filters } = useFileStore();
-  const pageSize = 10;
-
-  const filteredStubs = stubs.filter((stub) => {
-    const allowedStages = filters
-      .filter((filter) => filter.type === "stage")
-      .map(Number);
-    if (allowedStages.length > 0 && !allowedStages.includes(stub.stageId)) {
-      return false;
-    }
-    const neededCharacterCounts: Record<number, number> = {};
-    for (const filter of filters
-      .filter((filter) => filter.type === "character")
-      .map(Number)) {
-      neededCharacterCounts[filter] = (neededCharacterCounts[filter] ?? 0) + 1;
-    }
-    for (const player of stub.players) {
-      if (neededCharacterCounts[player.externalCharacterId] > 0) {
-        neededCharacterCounts[player.externalCharacterId]--;
-      }
-    }
-    if (Object.values(neededCharacterCounts).some((count) => count > 0)) {
-      return false;
-    }
-    return true;
-  });
-
-  return (
-    <>
       <div className="mt-2 grid grow auto-rows-max grid-cols-[repeat(5,auto)] gap-x-4 text-sm">
         {filteredStubs
           .slice(page * pageSize, page * pageSize + pageSize)
           .map((stub) => (
-            <ReplayRow key={stub.slug} stub={stub} />
+            <button
+              key={stub.slug}
+              className={cn(
+                "col-span-full grid grid-cols-subgrid items-center rounded border-2 px-4 py-1",
+                stub.slug === searchParams.get("watch")
+                  ? "border-primary bg-primary/10"
+                  : "border-transparent hover:border-border hover:bg-foreground/10",
+              )}
+              onClick={() => {
+                searchParams.set("watch", stub.slug);
+                searchParams.delete("start");
+                setSearchParams(searchParams);
+                close();
+              }}
+            >
+              <div className="capitalize">{stub.type}</div>
+              <div>
+                <div>
+                  {new Date(stub.startTimestamp).toLocaleDateString(undefined, {
+                    month: "short",
+                    day: "numeric",
+                  })}
+                </div>
+                <div>
+                  {new Date(stub.startTimestamp).toLocaleTimeString(undefined, {
+                    hour: "numeric",
+                    minute: "2-digit",
+                  })}
+                </div>
+              </div>
+
+              <img
+                src={`/stages/${stub.stageId}.png`}
+                className="h-12 rounded border"
+              />
+              {Object.entries(
+                // @ts-ignore groupBy
+                Object.groupBy(stub.players, (player: PlayerStub) =>
+                  stub.players.length > 2 ? player.teamId : player.playerIndex,
+                ) as Record<string, PlayerStub[]>,
+              ).map(([id, playerGroup]) => (
+                <div key={id}>
+                  {playerGroup.map((player) => (
+                    <div
+                      key={player.playerIndex}
+                      className="flex items-center gap-2"
+                    >
+                      <img
+                        // using team id as the costume index for doubles is wrong
+                        src={`/stockicons/${player.externalCharacterId}/${stub.players.length > 2 ? (player.teamId === 2 ? 3 : player.teamId) : player.costumeIndex}.png`}
+                        className="h-6"
+                      />
+                      <div>
+                        <div className="max-w-[8ch] overflow-hidden text-ellipsis whitespace-nowrap text-start">
+                          {player.displayName ??
+                            shortCharactersExt[player.externalCharacterId]}
+                        </div>
+                        {stub.players.length <= 2 && (
+                          <div className="text-start text-xs text-foreground/70">
+                            {player.connectCode ??
+                              `Port ${player.playerIndex + 1}`}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </button>
           ))}
       </div>
       <div className="mt-auto flex items-center gap-4">
@@ -238,77 +298,5 @@ function ReplayList({ stubs }: { stubs: ReplayStub[] }) {
         </Button>
       </div>
     </>
-  );
-}
-
-function ReplayRow({ stub }: { stub: ReplayStub }) {
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  const isDoubles = stub.players.length > 2;
-  // @ts-expect-error groupBy is new-ish
-  const playerGroups: Record<number, PlayerStub[]> = Object.groupBy(
-    stub.players,
-    (player: PlayerStub) => (isDoubles ? player.teamId : player.playerIndex),
-  );
-
-  return (
-    <button
-      className={cn(
-        "col-span-full grid grid-cols-subgrid items-center rounded border-2 px-4 py-1",
-        stub.slug === searchParams.get("watch")
-          ? "border-primary bg-primary/10"
-          : "border-transparent hover:border-border hover:bg-foreground/10",
-      )}
-      onClick={() => {
-        searchParams.set("watch", stub.slug);
-        searchParams.delete("start");
-        setSearchParams(searchParams);
-      }}
-    >
-      <div className="capitalize">{stub.type}</div>
-      <div>
-        <div>
-          {new Date(stub.startTimestamp).toLocaleDateString(undefined, {
-            month: "short",
-            day: "numeric",
-          })}
-        </div>
-        <div>
-          {new Date(stub.startTimestamp).toLocaleTimeString(undefined, {
-            hour: "numeric",
-            minute: "2-digit",
-          })}
-        </div>
-      </div>
-
-      <img
-        src={`/stages/${stub.stageId}.png`}
-        className="h-12 rounded border"
-      />
-      {Object.entries(playerGroups).map(([id, playerGroup]) => (
-        <div key={id}>
-          {playerGroup.map((player) => (
-            <div key={player.playerIndex} className="flex items-center gap-2">
-              <img
-                // using team id as the costume index for doubles is wrong
-                src={`/stockicons/${player.externalCharacterId}/${isDoubles ? (player.teamId === 2 ? 3 : player.teamId) : player.costumeIndex}.png`}
-                className="h-6"
-              />
-              <div>
-                <div className="max-w-[8ch] overflow-hidden text-ellipsis whitespace-nowrap text-start">
-                  {player.displayName ??
-                    shortCharactersExt[player.externalCharacterId]}
-                </div>
-                {!isDoubles && (
-                  <div className="text-start text-xs text-foreground/70">
-                    {player.connectCode ?? `Port ${player.playerIndex + 1}`}
-                  </div>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
-      ))}
-    </button>
   );
 }

@@ -4,7 +4,6 @@
 
 TO RELEASE:
 
-- choosing replay closes overlay
 - filters
 - randall
 - PS plats
