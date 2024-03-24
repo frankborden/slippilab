@@ -372,7 +372,9 @@ function ReplaySelect() {
           </div>
         </SheetContent>
       </Sheet>
-      {replay && <div>{replay.settings.startTimestamp}</div>}
+      {replay && (
+        <div>{new Date(replay.settings.startTimestamp).toLocaleString()}</div>
+      )}
       {slug?.startsWith("local-") && (
         <Button
           variant="secondary"

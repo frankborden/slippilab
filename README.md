@@ -10,10 +10,13 @@ TODO:
 - PS plats
 - Softer FoD
 - mobile UI
-- date display
-- parser newer versions
 - projectiles
 - model mesh visibility
 - jigglypuff limbs, marth dtilt
 - look for other model jank
 - doubles list costume ids
+
+EVENTUALLY:
+
+- parser newer versions
+- kirby hats
