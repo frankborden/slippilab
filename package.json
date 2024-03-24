@@ -39,7 +39,6 @@
     "drizzle-orm": "^0.30.4",
     "isbot": "^5.1.2",
     "miniflare": "^3.20240320.0",
-    "node-fetch": "^3.3.2",
     "prettier": "^3.2.5",
     "prettier-plugin-tailwindcss": "^0.5.12",
     "random-word-slugs": "^0.1.7",
