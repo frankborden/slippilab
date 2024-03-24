@@ -1,22 +1,36 @@
+import { CheckIcon, CopyIcon } from "@radix-ui/react-icons";
 import {
   ActionFunctionArgs,
   LoaderFunctionArgs,
+  json,
   redirect,
   unstable_createMemoryUploadHandler,
   unstable_parseMultipartFormData,
 } from "@remix-run/cloudflare";
+import { useLoaderData } from "@remix-run/react";
 import { decode } from "@shelacek/ubjson";
 import { InferInsertModel } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/d1";
 import { generateSlug } from "random-word-slugs";
+import { useState } from "react";
 
 import { ReplayStub, ReplayType } from "~/common/types";
 import { Controller } from "~/components/app/Controller";
 import { Controls } from "~/components/app/Controls";
 import { Highlights } from "~/components/app/Highlights";
 import { ReplaySelect } from "~/components/app/Replays";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "~/components/ui/alert-dialog";
+import { Button } from "~/components/ui/button";
 import { parseReplay } from "~/parser";
 import * as schema from "~/schema";
+import { commitSession, getSession } from "~/sessions";
 import { Replay } from "~/viewer/Replay";
 
 export async function action({ context, request }: ActionFunctionArgs) {
@@ -67,10 +81,17 @@ export async function action({ context, request }: ActionFunctionArgs) {
     ),
   ]);
 
-  return redirect(`/?watch=${slug}`);
+  const session = await getSession(request.headers.get("Cookie"));
+  session.flash("uploadedSlug", slug);
+
+  return redirect(`/?watch=${slug}`, {
+    headers: {
+      "Set-Cookie": await commitSession(session),
+    },
+  });
 }
 
-export async function loader({ context }: LoaderFunctionArgs) {
+export async function loader({ context, request }: LoaderFunctionArgs) {
   const { DB } = context.cloudflare.env;
   const db = drizzle(DB, { schema });
   const rows = await db.query.replays.findMany({
@@ -91,12 +112,58 @@ export async function loader({ context }: LoaderFunctionArgs) {
       costumeIndex: player.costumeIndex,
     })),
   }));
-  return { stubs };
+  const session = await getSession(request.headers.get("Cookie"));
+  const uploadedSlug = session.get("uploadedSlug");
+  return json(
+    { stubs, uploadedSlug },
+    { headers: { "Set-Cookie": await commitSession(session) } },
+  );
 }
 
 export default function Page() {
+  const { uploadedSlug } = useLoaderData<typeof loader>();
+  const [copied, setCopied] = useState(false);
+
   return (
     <div className="flex h-screen gap-8 overflow-y-auto p-4">
+      {uploadedSlug && (
+        <AlertDialog defaultOpen>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Upload complete</AlertDialogTitle>
+              <div className="flex flex-col py-4 text-foreground/90">
+                <div>
+                  Your replay is publicly available at the following URL:
+                </div>
+                <div className="flex items-center gap-2 self-center py-2">
+                  <div>
+                    {globalThis.location?.origin}?watch={uploadedSlug}
+                  </div>
+                  <Button
+                    size="icon"
+                    variant="outline"
+                    onClick={() => {
+                      navigator.clipboard.writeText(
+                        `${globalThis.location?.origin}?watch=${uploadedSlug}`,
+                      );
+                      setCopied(true);
+                    }}
+                  >
+                    {copied ? (
+                      <CheckIcon className="size-5" />
+                    ) : (
+                      <CopyIcon className="size-4" />
+                    )}
+                  </Button>
+                </div>
+              </div>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogAction>Continue</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      )}
       <div className="flex shrink grow flex-col">
         <div className="mb-2">
           <ReplaySelect />

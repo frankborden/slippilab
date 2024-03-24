@@ -4,7 +4,6 @@
 
 TO RELEASE:
 
-- upload complete dialog
 - choosing replay closes overlay
 - filters
 - randall
