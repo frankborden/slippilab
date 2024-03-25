@@ -12,16 +12,17 @@ export function Replay() {
     setPaused: store.setPaused,
   }));
   return (
-    <div className="relative flex shrink flex-col overflow-y-auto rounded-lg border">
-      <Canvas
-        orthographic
-        camera={{ position: [0, 0, 100] }}
-        className="aspect-[73/60] shrink"
-        onClick={() => setPaused(!paused)}
-      >
-        <Scene />
-      </Canvas>
-      <HUD />
+    <div className="flex shrink grow">
+      <div className="relative aspect-[73/60] rounded-lg border">
+        <Canvas
+          orthographic
+          camera={{ position: [0, 0, 100] }}
+          onClick={() => setPaused(!paused)}
+        >
+          <Scene />
+        </Canvas>
+        <HUD />
+      </div>
     </div>
   );
 }

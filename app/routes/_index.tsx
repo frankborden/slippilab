@@ -114,6 +114,7 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
   }));
   const session = await getSession(request.headers.get("Cookie"));
   const uploadedSlug = session.get("uploadedSlug");
+
   return json(
     { stubs, uploadedSlug },
     { headers: { "Set-Cookie": await commitSession(session) } },
@@ -122,55 +123,17 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
 
 export default function Page() {
   const { uploadedSlug } = useLoaderData<typeof loader>();
-  const [copied, setCopied] = useState(false);
 
   return (
     <div className="flex h-screen gap-8 overflow-y-auto p-4">
-      {uploadedSlug && (
-        <AlertDialog defaultOpen>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Upload complete</AlertDialogTitle>
-              <div className="flex flex-col py-4 text-foreground/90">
-                <div>
-                  Your replay is publicly available at the following URL:
-                </div>
-                <div className="flex items-center gap-2 self-center py-2">
-                  <div>
-                    {globalThis.location?.origin}?watch={uploadedSlug}
-                  </div>
-                  <Button
-                    size="icon"
-                    variant="outline"
-                    onClick={() => {
-                      navigator.clipboard.writeText(
-                        `${globalThis.location?.origin}?watch=${uploadedSlug}`,
-                      );
-                      setCopied(true);
-                    }}
-                  >
-                    {copied ? (
-                      <CheckIcon className="size-5" />
-                    ) : (
-                      <CopyIcon className="size-4" />
-                    )}
-                  </Button>
-                </div>
-              </div>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogAction>Continue</AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-      )}
+      {uploadedSlug && <UploadDialog />}
       <div className="flex shrink grow flex-col">
         <div className="mb-2">
           <ReplaySelect />
         </div>
         <Replay />
         <Controls />
-        <div className="mx-auto grid w-full grid-cols-4 gap-4">
+        <div className="grid grid-cols-4 gap-4">
           <Controller playerIndex={0} />
           <Controller playerIndex={1} />
           <Controller playerIndex={2} />
@@ -181,5 +144,47 @@ export default function Page() {
         <Highlights />
       </div>
     </div>
+  );
+}
+
+function UploadDialog() {
+  const { uploadedSlug } = useLoaderData<typeof loader>();
+  const [copied, setCopied] = useState(false);
+
+  return (
+    <AlertDialog defaultOpen>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Upload complete</AlertDialogTitle>
+          <div className="flex flex-col py-4 text-foreground/90">
+            <div>Your replay is publicly available at the following URL:</div>
+            <div className="flex items-center gap-2 self-center py-2">
+              <div>
+                {globalThis.location?.origin}?watch={uploadedSlug}
+              </div>
+              <Button
+                size="icon"
+                variant="outline"
+                onClick={() => {
+                  navigator.clipboard.writeText(
+                    `${globalThis.location?.origin}?watch=${uploadedSlug}`,
+                  );
+                  setCopied(true);
+                }}
+              >
+                {copied ? (
+                  <CheckIcon className="size-5" />
+                ) : (
+                  <CopyIcon className="size-4" />
+                )}
+              </Button>
+            </div>
+          </div>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogAction>Continue</AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 }

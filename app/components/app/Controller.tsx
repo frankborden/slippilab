@@ -13,11 +13,7 @@ export function Controller({ playerIndex }: { playerIndex: number }) {
 
   return (
     <div>
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 585.781 585.782"
-        className="p-2"
-      >
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 585.781 585.782">
         <path
           id="shell"
           fill={["red", "blue", "yellow", "green"][playerIndex]}
