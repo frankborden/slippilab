@@ -15,7 +15,7 @@ import {
 import { useRef, useState } from "react";
 
 import { shortCharactersExt } from "~/common/names";
-import { PlayerInputs, PlayerStub } from "~/common/types";
+import { PlayerStub } from "~/common/types";
 import { Button } from "~/components/ui/button";
 import {
   DropdownMenu,
