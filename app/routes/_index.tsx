@@ -125,23 +125,27 @@ export default function Page() {
   const { uploadedSlug } = useLoaderData<typeof loader>();
 
   return (
-    <div className="flex h-screen gap-8 overflow-y-auto p-4">
+    <div className="flex h-screen flex-col gap-4 overflow-hidden p-4">
       {uploadedSlug && <UploadDialog />}
-      <div className="flex shrink grow flex-col">
-        <div className="mb-2">
-          <ReplaySelect />
+      <div>
+        <ReplaySelect />
+      </div>
+      <div className="flex flex-1 justify-center gap-4">
+        <div className="flex flex-1 flex-col gap-4">
+          <div className="flex w-max flex-1 flex-col">
+            <Replay />
+            <Controls />
+          </div>
         </div>
-        <Replay />
-        <Controls />
-        <div className="grid grid-cols-4 gap-4">
+        <div className="w-[200px]">
           <Controller playerIndex={0} />
           <Controller playerIndex={1} />
           <Controller playerIndex={2} />
           <Controller playerIndex={3} />
         </div>
-      </div>
-      <div className="w-[200px]">
-        <Highlights />
+        <div className="w-[200px]">
+          <Highlights />
+        </div>
       </div>
     </div>
   );

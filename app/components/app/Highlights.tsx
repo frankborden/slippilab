@@ -20,7 +20,7 @@ export function Highlights() {
   );
 
   return (
-    <>
+    <div>
       <Select value={selectedQuery} onValueChange={setSelectedQuery}>
         <SelectTrigger className="gap-2">
           <SelectValue />
@@ -68,6 +68,6 @@ export function Highlights() {
           No highlights
         </div>
       </div>
-    </>
+    </div>
   );
 }

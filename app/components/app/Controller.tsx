@@ -12,7 +12,7 @@ export function Controller({ playerIndex }: { playerIndex: number }) {
   const inputs = player.playerInputs;
 
   return (
-    <div>
+    <>
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 585.781 585.782">
         <path
           id="shell"
@@ -163,6 +163,6 @@ export function Controller({ playerIndex }: { playerIndex: number }) {
         <div>{player.playerState.hitlagRemaining}</div>
         <div>Hitlag</div>
       </div>
-    </div>
+    </>
   );
 }

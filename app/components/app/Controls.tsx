@@ -78,7 +78,7 @@ export function Controls() {
   }, [handleKeyPress]);
 
   return (
-    <>
+    <div>
       <Slider
         value={[frame]}
         min={0}
@@ -177,6 +177,6 @@ export function Controls() {
           </Button>
         </div>
       </div>
-    </>
+    </div>
   );
 }

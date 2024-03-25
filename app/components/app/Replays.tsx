@@ -15,7 +15,7 @@ import {
 import { useRef, useState } from "react";
 
 import { shortCharactersExt } from "~/common/names";
-import { PlayerStub } from "~/common/types";
+import { PlayerInputs, PlayerStub } from "~/common/types";
 import { Button } from "~/components/ui/button";
 import {
   DropdownMenu,
@@ -223,10 +223,18 @@ function ReplaySelectContent({ close }: { close: () => void }) {
                 className="h-12 rounded border"
               />
               {Object.entries(
-                // @ts-ignore groupBy
-                Object.groupBy(stub.players, (player: PlayerStub) =>
-                  stub.players.length > 2 ? player.teamId : player.playerIndex,
-                ) as Record<string, PlayerStub[]>,
+                stub.players.reduce(
+                  (acc: Record<number, PlayerStub[]>, player: PlayerStub) => {
+                    const key =
+                      stub.players.length > 2
+                        ? player.teamId ?? player.playerIndex
+                        : player.playerIndex;
+                    acc[key] ??= [];
+                    acc[key].push(player);
+                    return acc;
+                  },
+                  {} as Record<number, PlayerStub[]>,
+                ),
               ).map(([id, playerGroup]) => (
                 <div key={id}>
                   {playerGroup.map((player) => (
