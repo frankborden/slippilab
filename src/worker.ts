@@ -2,6 +2,7 @@ import { stageNameByExternalId } from "./common/ids";
 import { ReplayStub } from "./state/selectionStore";
 import { parseGameSettings } from "./parser/parser";
 import { GameSettings } from "~/common/types";
+import { decode } from "@shelacek/ubjson";
 
 onmessage = async (event) => {
   // Parse in groups of 500 replays at a time to prevent memory issues.
@@ -18,7 +19,9 @@ onmessage = async (event) => {
             file: File
           ): Promise<[File, ReplayStub | "skipped" | "failed"]> => {
             try {
-              const settings = parseGameSettings(await file.arrayBuffer());
+              const settings = parseGameSettings(
+                decode(await file.arrayBuffer(), { useTypedArrays: true })
+              );
               if (isLegalGameWithoutCPUs(settings)) {
                 const stub = settingsToStub(file, settings);
                 return [file, stub];

@@ -27,6 +27,7 @@ import { getPlayerOnFrame, getStartOfAction } from "~/viewer/viewerUtil";
 import colors from "tailwindcss/colors";
 import { fileStore } from "~/state/fileStore";
 import { action, landsAttack } from "~/search/framePredicates";
+import { decode } from "@shelacek/ubjson";
 
 export interface RenderData {
   playerState: PlayerState;
@@ -225,7 +226,10 @@ createEffect(async () => {
     setReplayState(defaultReplayStoreState);
     return;
   }
-  const replayData = parseReplay(await selected[0].arrayBuffer());
+
+  const replayData = parseReplay(
+    decode(await selected[0].arrayBuffer(), { useTypedArrays: true })
+  );
   const highlights = Object.fromEntries(
     Object.entries(queries).map(([name, query]) => [
       name,

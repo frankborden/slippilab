@@ -1,4 +1,3 @@
-import { decode } from "@shelacek/ubjson";
 import type {
   Frame,
   GameEnding,
@@ -23,22 +22,10 @@ interface CommandPayloadSizes {
 }
 const firstVersion = "0.1.0.0";
 
-export function parseGameSettings(fileBuffer: ArrayBuffer): GameSettings {
-  let rawBuffer = fileBuffer;
-  let rawOffset = 15;
-  let metadata: undefined | any;
-  try {
-    const baseJson = decode(fileBuffer, { useTypedArrays: true });
-    metadata = baseJson.metadata;
-    rawBuffer = baseJson.raw.buffer;
-    rawOffset = baseJson.raw.byteOffset;
-  } catch (e) {
-    console.debug("file likely did not contain metadata", e);
-  }
-
+export function parseGameSettings({ metadata, raw }: any): GameSettings {
   const rawData = new DataView(
-    rawBuffer,
-    rawOffset
+    raw.buffer,
+    raw.byteOffset
     // baseJson.raw.byteLength
   );
   const commandPayloadSizes = parseEventPayloadsEvent(rawData, 0x00);
@@ -50,20 +37,10 @@ export function parseGameSettings(fileBuffer: ArrayBuffer): GameSettings {
   return gameSettings;
 }
 
-export function parseReplay(fileBuffer: ArrayBuffer): ReplayData {
-  let buffer = fileBuffer;
-  let rawOffset = 15;
-  let metadata: any;
-  try {
-    const baseJson = decode(fileBuffer, { useTypedArrays: true });
-    metadata = baseJson.metadata;
-    buffer = baseJson.raw.buffer;
-    rawOffset = baseJson.raw.byteOffset;
-  } catch (e) {}
-
+export function parseReplay({ metadata, raw }: any): ReplayData {
   const rawData = new DataView(
-    buffer,
-    rawOffset
+    raw.buffer,
+    raw.byteOffset
     // baseJson.raw.byteLength
   );
   // The first two events are always Event Payloads and Game Start.
