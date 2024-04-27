@@ -7,7 +7,7 @@ import {
 } from "~/common/ids";
 import { createComputed, createEffect, createSignal, on } from "solid-js";
 import { fileStore } from "~/state/fileStore";
-import { listCloudReplays, loadFromSupabase } from "~/supabaseClient";
+import { listCloudReplays, loadFromCloud } from "~/cloudClient";
 
 export type Filter =
   | { type: "character"; label: ExternalCharacterName }
@@ -204,7 +204,7 @@ const [cloudStubs, setCloudStubs] = createSignal<ReplayStub[]>([]);
 export const cloudLibrary = createSelectionStore({
   stubs: cloudStubs,
   getFile(stub) {
-    return loadFromSupabase(stub.fileName.toString());
+    return loadFromCloud(stub.fileName.toString());
   },
 });
 

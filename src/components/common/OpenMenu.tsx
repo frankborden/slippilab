@@ -1,7 +1,7 @@
 import * as menu from "@zag-js/menu";
 import { normalizeProps, useMachine } from "@zag-js/solid";
 import { createMemo, createUniqueId, Show } from "solid-js";
-import { loadFromSupabase } from "~/supabaseClient";
+import { loadFromCloud } from "~/cloudClient";
 import { PrimaryButton } from "~/components/common/Button";
 import { filterFiles } from "~/common/util";
 import { load } from "~/state/fileStore";
@@ -23,7 +23,7 @@ export function OpenMenu(props: { name?: string }) {
             folderInput.click();
             break;
           case "demo":
-            loadFromSupabase("sample", load);
+            loadFromCloud("sample", load);
             break;
         }
       },
