@@ -40,7 +40,7 @@ const app = new Hono<Env>()
         new Uint8Array(await (file as File).arrayBuffer())
       )
     );
-    const id: string = generateId();
+    const id: string = generateId(`${Date.now()}`);
 
     await BUCKET.put(`${id}.slp`, await (file as File).arrayBuffer());
     await DB.prepare(
