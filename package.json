@@ -15,7 +15,6 @@
     "@shelacek/ubjson": "^1.1.1",
     "@solid-primitives/raf": "^2.1.4",
     "@solid-primitives/upload": "^0.0.105",
-    "@supabase/supabase-js": "^2.1.2",
     "@tanstack/solid-virtual": "^3.0.0-beta.6",
     "@thisbeyond/solid-select": "^0.13.0",
     "@zag-js/accordion": "^0.2.3",

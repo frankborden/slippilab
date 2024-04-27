@@ -1,7 +1,6 @@
 import { Hono } from "hono";
 import { handle } from "hono/cloudflare-pages";
 import { D1Database, R2Bucket } from "@cloudflare/workers-types";
-import { createClient } from "@supabase/supabase-js";
 import { parseReplay } from "~/parser/parser";
 import { UbjsonDecoder } from "@jsonjoy.com/json-pack/lib/ubjson";
 // @ts-ignore: zoo-ids doesn't ship it's types apparently
@@ -11,8 +10,6 @@ interface Env {
   Bindings: {
     BUCKET: R2Bucket;
     DB: D1Database;
-    VITE_SUPABASE_ANON_KEY: string;
-    VITE_SUPABASE_URL: string;
   };
 }
 
@@ -28,19 +25,12 @@ const app = new Hono<Env>()
     return c.json({ data: merged });
   })
   .get("/replay/:id", async (c) => {
-    const { BUCKET, VITE_SUPABASE_ANON_KEY, VITE_SUPABASE_URL } = c.env;
+    const { BUCKET } = c.env;
     const cfRes = await BUCKET.get(c.req.param("id"));
     if (cfRes) {
       return c.body(await cfRes.arrayBuffer());
     }
-
-    const sbRes = await createClient(VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY)
-      .storage.from("replays")
-      .download(c.req.param("id"));
-    if (!sbRes.data) {
-      return c.notFound();
-    }
-    return c.body(await sbRes.data.arrayBuffer());
+    return c.notFound();
   })
   .post("/replay", async (c) => {
     const { BUCKET, DB } = c.env;

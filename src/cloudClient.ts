@@ -50,7 +50,7 @@ export async function uploadReplay(
   return await res.json();
 }
 
-export async function loadFromSupabase(
+export async function loadFromCloud(
   name: string,
   load?: (files: File[]) => Promise<void>
 ): Promise<File> {

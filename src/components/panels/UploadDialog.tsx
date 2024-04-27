@@ -1,7 +1,7 @@
 import { createSignal, Match, Show, Switch } from "solid-js";
 import { PrimaryButton, WhiteButton } from "~/components/common/Button";
 import { SpinnerCircle } from "~/components/common/SpinnerCircle";
-import { uploadReplay } from "~/supabaseClient";
+import { uploadReplay } from "~/cloudClient";
 import { cloudLibrary, currentSelectionStore } from "~/state/selectionStore";
 import { Dialog } from "~/components/common/Dialog";
 import { ShareIcon } from "~/components/common/icons";
