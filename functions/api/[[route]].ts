@@ -19,20 +19,12 @@ interface Env {
 const app = new Hono<Env>()
   .basePath("/api")
   .get("/replays", async (c) => {
-    const { DB, VITE_SUPABASE_ANON_KEY, VITE_SUPABASE_URL } = c.env;
-    const cfRes = DB.prepare("SELECT * FROM replays").all();
-    const sbRes = createClient(VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY)
-      .from("replays")
-      .select("*");
-
-    const [cf, sb] = await Promise.all([cfRes, sbRes]);
-    const merged = cf.results
-      .map((r) => ({
-        ...r,
-        players: JSON.parse(r.players as string),
-      }))
-      .concat(sb.data!);
-
+    const { DB } = c.env;
+    const cf = await DB.prepare("SELECT * FROM replays").all();
+    const merged = cf.results.map((r) => ({
+      ...r,
+      players: JSON.parse(r.players as string),
+    }));
     return c.json({ data: merged });
   })
   .get("/replay/:id", async (c) => {
