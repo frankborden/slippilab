@@ -1,11 +1,10 @@
+import {
+  cloudflareDevProxyVitePlugin as cloudflare,
+  vitePlugin as remix,
+} from "@remix-run/dev";
 import { defineConfig } from "vite";
-import solidPlugin from "vite-plugin-solid";
-import viteTsconfigPaths from "vite-tsconfig-paths";
+import paths from "vite-tsconfig-paths";
 
 export default defineConfig({
-  assetsInclude: [/.*zip$/, /.*ttf$/],
-  plugins: [solidPlugin(), viteTsconfigPaths()],
-  resolve: {
-    conditions: ["browser"],
-  },
+  plugins: [cloudflare(), remix(), paths()],
 });

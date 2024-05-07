@@ -1,18 +1,32 @@
 {
-  "exclude": ["old/**"],
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+  ],
   "compilerOptions": {
-    "allowSyntheticDefaultImports": true,
-    "baseUrl": "./",
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ESNext"
+    ],
+    "types": [
+      "@remix-run/cloudflare",
+      "vite/client"
+    ],
+    "isolatedModules": true,
     "esModuleInterop": true,
-    "jsx": "preserve",
-    "jsxImportSource": "solid-js",
-    "module": "esnext",
-    "moduleResolution": "node",
-    "paths": { "~/*": ["./src/*"] },
+    "jsx": "react-jsx",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "target": "ESNext",
     "strict": true,
     "skipLibCheck": true,
-    "target": "esnext",
-    "types": ["vite/client"],
+    "baseUrl": ".",
+    "paths": {
+      "~/*": [
+        "./app/*"
+      ]
+    },
     "noEmit": true
   }
 }
