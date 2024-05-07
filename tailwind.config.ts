@@ -1,5 +1,8 @@
+import {
+  getIconCollections,
+  iconsPlugin as icons,
+} from "@egoist/tailwindcss-icons";
 import type { Config } from "tailwindcss";
-import {iconsPlugin as icons, getIconCollections} from "@egoist/tailwindcss-icons";
 
 export default {
   content: ["./app/**/*.{ts,tsx}"],
@@ -7,8 +10,11 @@ export default {
     extend: {
       fontFamily: {
         sans: ["Inter Variable", "ui-sans-serif"],
-      }
+      },
     },
   },
-  plugins: [icons({collections: getIconCollections(["tabler"])}), require("tailwindcss-animate")],
+  plugins: [
+    icons({ collections: getIconCollections(["tabler"]) }),
+    require("tailwindcss-animate"),
+  ],
 } satisfies Config;

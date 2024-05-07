@@ -1,3 +1,4 @@
+import "@fontsource-variable/inter";
 import {
   Links,
   Meta,
@@ -5,8 +6,8 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
+
 import "~/styles.css";
-import "@fontsource-variable/inter"
 
 export function meta() {
   return [
