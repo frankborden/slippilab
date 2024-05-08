@@ -3,6 +3,7 @@ import {
   iconsPlugin as icons,
 } from "@egoist/tailwindcss-icons";
 import type { Config } from "tailwindcss";
+import aria from "tailwindcss-react-aria-components";
 
 export default {
   content: ["./app/**/*.{ts,tsx}"],
@@ -15,6 +16,7 @@ export default {
   },
   plugins: [
     icons({ collections: getIconCollections(["tabler"]) }),
+    aria(),
     require("tailwindcss-animate"),
   ],
 } satisfies Config;

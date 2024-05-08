@@ -1,7 +1,3 @@
 export default function Page() {
-  return (
-    <div className="duration-1000 animate-in slide-in-from-right">
-      hello world
-    </div>
-  );
+  return <div className="h-[200vh] bg-zinc-200">content</div>;
 }

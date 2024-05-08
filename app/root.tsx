@@ -5,7 +5,9 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useNavigate,
 } from "@remix-run/react";
+import { Button, Link, RouterProvider } from "react-aria-components";
 
 import "~/styles.css";
 
@@ -20,6 +22,8 @@ export function meta() {
 }
 
 export function Layout({ children }: { children: React.ReactNode }) {
+  const navigate = useNavigate();
+
   return (
     <html lang="en">
       <head>
@@ -28,8 +32,22 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Meta />
         <Links />
       </head>
-      <body>
-        {children}
+      <body className="overscroll-none">
+        <RouterProvider navigate={navigate}>
+          <header className="sticky top-0 z-10 flex items-center justify-between border-b border-zinc-300 bg-white px-4 py-2.5 shadow-sm">
+            <div className="select-none text-xl font-medium tracking-tight sm:text-xl">
+              Slippi
+              <span className="ml-1 rounded bg-blue-600 px-2 py-0.5 text-zinc-100 group-hover:bg-zinc-600">
+                Lab
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="i-tabler-settings size-7 text-zinc-600 sm:size-7" />
+              <div className="i-tabler-user-circle size-7 text-zinc-600 sm:size-7" />
+            </div>
+          </header>
+          <main className="p-4">{children}</main>
+        </RouterProvider>
         <ScrollRestoration />
         <Scripts />
       </body>
