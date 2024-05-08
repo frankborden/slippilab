@@ -1,3 +1,12 @@
+import { Link } from "react-aria-components";
+
 export default function Page() {
-  return <div className="h-[200vh] bg-zinc-200">content</div>;
+  return (
+    <div>
+      hello, please go to{" "}
+      <Link href="/replays" className="underline">
+        Replays
+      </Link>
+    </div>
+  );
 }

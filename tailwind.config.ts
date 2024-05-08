@@ -12,6 +12,13 @@ export default {
       fontFamily: {
         sans: ["Inter Variable", "ui-sans-serif"],
       },
+      container: {
+        center: true,
+        padding: "1rem",
+      },
+      screens: {
+        "2xl": "1440px",
+      },
     },
   },
   plugins: [
