@@ -34,7 +34,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </head>
       <body className="overscroll-none">
         <RouterProvider navigate={navigate}>
-          <header className="sticky top-0 z-10 border-b border-b-gray-300 bg-white py-3">
+          <header className="sticky top-0 z-10 border-b border-gray-300 bg-white py-3">
             <div className="container flex items-center justify-between">
               <div className="select-none text-xl font-medium tracking-tight">
                 Slippi
@@ -43,12 +43,16 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 </span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="i-tabler-settings size-7 text-gray-600" />
-                <div className="i-tabler-user-circle size-7 text-gray-600" />
+                <Button className="flex cursor-default rounded p-1 hover:bg-gray-100">
+                  <div className="i-tabler-settings size-7 text-gray-600" />
+                </Button>
+                <Button className="flex cursor-default rounded p-1 hover:bg-gray-100">
+                  <div className="i-tabler-user-circle size-7 text-gray-600" />
+                </Button>
               </div>
             </div>
           </header>
-          <main className="container mt-8">{children}</main>
+          <main className="mx-auto mt-8 max-w-4xl">{children}</main>
         </RouterProvider>
         <ScrollRestoration />
         <Scripts />
