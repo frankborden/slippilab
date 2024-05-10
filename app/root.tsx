@@ -7,7 +7,7 @@ import {
   ScrollRestoration,
   useNavigate,
 } from "@remix-run/react";
-import { Button, Link, RouterProvider } from "react-aria-components";
+import { Button, Link, RouterProvider, Toolbar } from "react-aria-components";
 
 import "~/styles.css";
 
@@ -38,21 +38,21 @@ export function Layout({ children }: { children: React.ReactNode }) {
             <div className="container flex items-center justify-between">
               <div className="select-none text-xl font-medium tracking-tight">
                 Slippi
-                <span className="ml-1 rounded bg-blue-600 px-2 py-0.5 text-gray-100">
+                <span className="ml-1 rounded bg-emerald-600 px-2 py-0.5 text-gray-100">
                   Lab
                 </span>
               </div>
-              <div className="flex items-center gap-2">
+              <Toolbar className="flex items-center gap-2">
                 <Button className="flex cursor-default rounded p-1 hover:bg-gray-100">
                   <div className="i-tabler-settings size-7 text-gray-600" />
                 </Button>
                 <Button className="flex cursor-default rounded p-1 hover:bg-gray-100">
                   <div className="i-tabler-user-circle size-7 text-gray-600" />
                 </Button>
-              </div>
+              </Toolbar>
             </div>
           </header>
-          <main className="mx-auto mt-8 max-w-4xl">{children}</main>
+          <main className="mx-auto mt-16 w-max">{children}</main>
         </RouterProvider>
         <ScrollRestoration />
         <Scripts />

@@ -22,7 +22,7 @@ export default {
     },
   },
   plugins: [
-    icons({ collections: getIconCollections(["tabler"]) }),
+    icons({ collections: getIconCollections(["ph", "tabler"]) }),
     aria(),
     require("tailwindcss-animate"),
   ],
