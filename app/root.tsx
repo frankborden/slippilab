@@ -9,6 +9,7 @@ import {
 } from "@remix-run/react";
 import { Button, Link, RouterProvider, Toolbar } from "react-aria-components";
 
+import { useFileStore } from "~/stores/fileStore";
 import "~/styles.css";
 
 export function meta() {
@@ -23,6 +24,7 @@ export function meta() {
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
+  const { loadProgress } = useFileStore();
 
   return (
     <html lang="en">
@@ -52,6 +54,14 @@ export function Layout({ children }: { children: React.ReactNode }) {
               </Toolbar>
             </div>
           </header>
+          {loadProgress !== undefined && (
+            <div
+              className="absolute h-1 w-screen bg-emerald-600"
+              style={{
+                transform: `translateX(${-100 + loadProgress}%)`,
+              }}
+            />
+          )}
           <main className="mx-auto mt-16 w-max">{children}</main>
         </RouterProvider>
         <ScrollRestoration />

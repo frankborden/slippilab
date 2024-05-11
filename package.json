@@ -11,10 +11,13 @@
     "@egoist/tailwindcss-icons": "latest",
     "@fontsource-variable/inter": "latest",
     "@iconify/json": "latest",
+    "@react-three/drei": "latest",
+    "@react-three/fiber": "latest",
     "@remix-run/cloudflare": "latest",
     "@remix-run/cloudflare-pages": "latest",
     "@remix-run/dev": "latest",
     "@remix-run/react": "latest",
+    "@shelacek/ubjson": "latest",
     "@trivago/prettier-plugin-sort-imports": "latest",
     "@types/react": "latest",
     "@types/react-dom": "latest",
@@ -30,10 +33,12 @@
     "tailwindcss": "latest",
     "tailwindcss-animate": "latest",
     "tailwindcss-react-aria-components": "latest",
+    "three": "latest",
     "typescript": "latest",
     "vite": "latest",
     "vite-tsconfig-paths": "latest",
-    "wrangler": "latest"
+    "wrangler": "latest",
+    "zustand": "latest"
   },
   "prettier": {
     "plugins": [
