@@ -23,7 +23,7 @@ export default function Page() {
   return (
     <>
       <h1 className="mb-4 text-2xl font-medium tracking-tight">Replays</h1>
-      <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
+      <div className="mb-8 flex items-center justify-between gap-2">
         <Tabs>
           <TabList className="inline-flex cursor-default items-center rounded border border-gray-300 bg-gray-100 outline-2 -outline-offset-2 has-[:focus]:outline">
             {tabs.map((tab) => (
@@ -60,7 +60,7 @@ export default function Page() {
         </TagList>
       </TagGroup>
       <ListBox selectionMode="single">
-        <ListBoxItem className="flex items-center gap-4 rounded px-4 py-2 text-sm hover:bg-gray-100">
+        <ListBoxItem className="flex cursor-default items-center gap-4 rounded px-2 py-1 text-sm hover:bg-gray-100">
           <div>
             <div>
               {new Date().toLocaleDateString("en-us", {
@@ -86,8 +86,8 @@ export default function Page() {
           <div className="flex items-center gap-2">
             <img src="/stockicons/2/3.png" className="size-6" />
             <div className="*:text-start">
-              <div className="w-[20ch] overflow-x-hidden text-ellipsis whitespace-nowrap text-base">
-                Cody on a Wednesday
+              <div className="w-[12ch] overflow-x-hidden text-ellipsis whitespace-nowrap text-base">
+                Cody
               </div>
               <div className="font-mono text-gray-500">IBDW#0</div>
             </div>
@@ -95,7 +95,7 @@ export default function Page() {
           <div className="flex items-center gap-2">
             <img src="/stockicons/9/1.png" className="size-6" />
             <div className="*:text-start">
-              <div className="w-[20ch] overflow-x-hidden text-ellipsis whitespace-nowrap text-base">
+              <div className="w-[12ch] overflow-x-hidden text-ellipsis whitespace-nowrap text-base">
                 Zain
               </div>
               <div className="font-mono text-gray-500">ZAIN#0</div>
