@@ -29,6 +29,10 @@ importers:
       '@slippilab/common':
         specifier: workspace:*
         version: link:../common
+    devDependencies:
+      tsup:
+        specifier: latest
+        version: 8.0.2(postcss@8.4.38)(typescript@5.4.5)
 
   packages/www:
     dependencies:
