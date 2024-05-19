@@ -1,6 +1,19 @@
 {
   "name": "@slippilab/common",
+  "version": "0.0.6",
   "exports": {
     "default": "./src/index.ts"
+  },
+  "publishConfig": {
+    "exports": {
+      "default": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsup src/index.ts --format esm --dts src/index.ts --clean"
+  },
+  "devDependencies": {
+    "tsup": "latest"
   }
 }
