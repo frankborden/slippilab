@@ -1,4 +1,4 @@
-import type {
+import {
   GameEnding,
   GameSettings,
   ItemUpdate,
@@ -23,14 +23,14 @@ interface CommandPayloadSizes {
 
 export function parseEventPayloadsEvent(
   rawData: DataView,
-  offset: number,
+  offset: number
 ): CommandPayloadSizes {
   const commandByte = readUint(
     rawData,
     8,
     firstVersion,
     firstVersion,
-    offset + 0x00,
+    offset + 0x00
   );
   const commandPayloadSizes: { [commandByte: number]: number } = {};
   const eventPayloadsPayloadSize = readUint(
@@ -38,7 +38,7 @@ export function parseEventPayloadsEvent(
     8,
     firstVersion,
     firstVersion,
-    offset + 0x01,
+    offset + 0x01
   );
   commandPayloadSizes[commandByte] = eventPayloadsPayloadSize;
   const listOffset = offset + 0x02;
@@ -52,14 +52,14 @@ export function parseEventPayloadsEvent(
       8,
       firstVersion,
       firstVersion,
-      i + 0x00,
+      i + 0x00
     );
     const payloadSize = readUint(
       rawData,
       16,
       firstVersion,
       firstVersion,
-      i + 0x01,
+      i + 0x01
     );
     commandPayloadSizes[commandByte] = payloadSize;
   }
@@ -69,7 +69,7 @@ export function parseEventPayloadsEvent(
 export function parseGameStartEvent(
   rawData: DataView,
   offset: number,
-  metadata?: any,
+  metadata?: any
 ): GameSettings {
   const replayFormatVersion = [
     readUint(rawData, 8, firstVersion, firstVersion, offset + 0x01),
@@ -82,28 +82,28 @@ export function parseGameStartEvent(
     8,
     replayFormatVersion,
     firstVersion,
-    offset + 0x05,
+    offset + 0x05
   );
   const settingsBitfield2 = readUint(
     rawData,
     8,
     replayFormatVersion,
     firstVersion,
-    offset + 0x06,
+    offset + 0x06
   );
   const settingsBitfield3 = readUint(
     rawData,
     8,
     replayFormatVersion,
     firstVersion,
-    offset + 0x08,
+    offset + 0x08
   );
   const settingsBitfield4 = readUint(
     rawData,
     8,
     replayFormatVersion,
     firstVersion,
-    offset + 0x09,
+    offset + 0x09
   );
   const timerTypeCode = settingsBitfield1 & 0b11;
   const gameModeCode = (settingsBitfield1 & 0b11100000) >> 5;
@@ -112,11 +112,11 @@ export function parseGameStartEvent(
     8,
     replayFormatVersion,
     firstVersion,
-    offset + 0x10,
+    offset + 0x10
   );
   const settings: GameSettings = {
     isTeams: Boolean(
-      readUint(rawData, 8, replayFormatVersion, firstVersion, offset + 0x0d),
+      readUint(rawData, 8, replayFormatVersion, firstVersion, offset + 0x0d)
     ),
     playerSettings: [],
     replayFormatVersion: replayFormatVersion,
@@ -125,7 +125,7 @@ export function parseGameStartEvent(
       16,
       replayFormatVersion,
       firstVersion,
-      offset + 0x13,
+      offset + 0x13
     ),
     startTimestamp: metadata?.startAt,
     platform: metadata?.playedOn,
@@ -134,27 +134,27 @@ export function parseGameStartEvent(
       replayFormatVersion,
       "3.14.0.0",
       offset + 0x2be,
-      51,
+      51
     ),
     gameNumber: readUint(
       rawData,
       32,
       replayFormatVersion,
       "3.14.0.0",
-      offset + 0x2f1,
+      offset + 0x2f1
     ),
     tiebreakerNumber: readUint(
       rawData,
       32,
       replayFormatVersion,
       "3.14.0.0",
-      offset + 0x2f5,
+      offset + 0x2f5
     ),
     isPal: Boolean(
-      readUint(rawData, 8, replayFormatVersion, "1.5.0.0", offset + 0x1a1),
+      readUint(rawData, 8, replayFormatVersion, "1.5.0.0", offset + 0x1a1)
     ),
     isFrozenStadium: Boolean(
-      readUint(rawData, 8, replayFormatVersion, "2.0.0.0", offset + 0x1a2),
+      readUint(rawData, 8, replayFormatVersion, "2.0.0.0", offset + 0x1a2)
     ),
     timerType:
       timerTypeCode === 0
@@ -178,7 +178,7 @@ export function parseGameStartEvent(
     isSingleButtonMode: Boolean(settingsBitfield3 & 0x10),
     timerCountsDuringPause: Boolean(settingsBitfield4 & 0x01),
     bombRain: Boolean(
-      readUint(rawData, 8, replayFormatVersion, firstVersion, offset + 0xb),
+      readUint(rawData, 8, replayFormatVersion, firstVersion, offset + 0xb)
     ),
     itemSpawnRate:
       itemSpawnRateCode === -1
@@ -197,21 +197,21 @@ export function parseGameStartEvent(
       8,
       replayFormatVersion,
       firstVersion,
-      offset + 0x11,
+      offset + 0x11
     ),
     timerStart: readUint(
       rawData,
       32,
       replayFormatVersion,
       firstVersion,
-      offset + 0x15,
+      offset + 0x15
     ),
     damageRatio: readFloat(
       rawData,
       32,
       replayFormatVersion,
       firstVersion,
-      offset + 0x35,
+      offset + 0x35
     ),
   };
   // @ts-ignore will only be readonly once parser is done
@@ -222,7 +222,7 @@ export function parseGameStartEvent(
       8,
       settings.replayFormatVersion,
       firstVersion,
-      offset + 0x66 + 0x24 * playerIndex,
+      offset + 0x66 + 0x24 * playerIndex
     );
     if (playerType === 3) continue;
 
@@ -231,35 +231,35 @@ export function parseGameStartEvent(
       32,
       settings.replayFormatVersion,
       "1.0.0.0",
-      offset + 0x141 + 0x8 * playerIndex,
+      offset + 0x141 + 0x8 * playerIndex
     );
     const shieldDropFix = readUint(
       rawData,
       32,
       settings.replayFormatVersion,
       "1.0.0.0",
-      offset + 0x145 + 0x8 * playerIndex,
+      offset + 0x145 + 0x8 * playerIndex
     );
     const playerBitfield = readUint(
       rawData,
       8,
       settings.replayFormatVersion,
       firstVersion,
-      offset + 0x71 + 0x24 * playerIndex,
+      offset + 0x71 + 0x24 * playerIndex
     );
 
     settings.playerSettings[playerIndex] = {
       playerIndex: playerIndex,
       port: playerIndex + 1,
       internalCharacterIds: Object.keys(
-        metadata?.players[playerIndex]?.characters ?? {},
+        metadata?.players[playerIndex]?.characters ?? {}
       ).map((key) => Number(key)),
       externalCharacterId: readUint(
         rawData,
         8,
         settings.replayFormatVersion,
         firstVersion,
-        offset + 0x65 + 0x24 * playerIndex,
+        offset + 0x65 + 0x24 * playerIndex
       ),
       playerType: playerType,
       startStocks: readUint(
@@ -267,35 +267,35 @@ export function parseGameStartEvent(
         8,
         settings.replayFormatVersion,
         firstVersion,
-        offset + 0x67 + 0x24 * playerIndex,
+        offset + 0x67 + 0x24 * playerIndex
       ),
       costumeIndex: readUint(
         rawData,
         8,
         settings.replayFormatVersion,
         firstVersion,
-        offset + 0x68 + 0x24 * playerIndex,
+        offset + 0x68 + 0x24 * playerIndex
       ),
       teamShade: readUint(
         rawData,
         8,
         settings.replayFormatVersion,
         firstVersion,
-        offset + 0x6c + 0x24 * playerIndex,
+        offset + 0x6c + 0x24 * playerIndex
       ),
       handicap: readUint(
         rawData,
         8,
         settings.replayFormatVersion,
         firstVersion,
-        offset + 0x6d + 0x24 * playerIndex,
+        offset + 0x6d + 0x24 * playerIndex
       ),
       teamId: readUint(
         rawData,
         8,
         settings.replayFormatVersion,
         firstVersion,
-        offset + 0x6e + 0x24 * playerIndex,
+        offset + 0x6e + 0x24 * playerIndex
       ),
       staminaMode: Boolean(playerBitfield & 0x01),
       silentCharacter: Boolean(playerBitfield & 0x02),
@@ -310,28 +310,28 @@ export function parseGameStartEvent(
         8,
         settings.replayFormatVersion,
         firstVersion,
-        offset + 0x74 + 0x24 * playerIndex,
+        offset + 0x74 + 0x24 * playerIndex
       ),
       offenseRatio: readFloat(
         rawData,
         32,
         settings.replayFormatVersion,
         firstVersion,
-        offset + 0x7d + 0x24 * playerIndex,
+        offset + 0x7d + 0x24 * playerIndex
       ),
       defenseRatio: readFloat(
         rawData,
         32,
         settings.replayFormatVersion,
         firstVersion,
-        offset + 0x81 + 0x24 * playerIndex,
+        offset + 0x81 + 0x24 * playerIndex
       ),
       modelScale: readFloat(
         rawData,
         32,
         settings.replayFormatVersion,
         firstVersion,
-        offset + 0x85 + 0x24 * playerIndex,
+        offset + 0x85 + 0x24 * playerIndex
       ),
       controllerFix:
         dashbackFix === shieldDropFix
@@ -346,28 +346,28 @@ export function parseGameStartEvent(
         settings.replayFormatVersion,
         "1.3.0.0",
         offset + 0x161 + 0x10 * playerIndex,
-        9,
+        9
       ),
       displayName: readShiftJisString(
         rawData,
         settings.replayFormatVersion,
         "3.9.0.0",
         offset + 0x1a5 + 0x1f * playerIndex,
-        16,
+        16
       ),
       connectCode: readShiftJisString(
         rawData,
         settings.replayFormatVersion,
         "3.9.0.0",
         offset + 0x221 + 0x0a * playerIndex,
-        10,
+        10
       ),
       slippiUid: readShiftJisString(
         rawData,
         settings.replayFormatVersion,
         "3.11.0.0",
         offset + 0x249 + 0x1d * playerIndex,
-        29,
+        29
       ),
     };
   }
@@ -377,7 +377,7 @@ export function parseGameStartEvent(
 export function parseFrameStartEvent(
   rawData: DataView,
   offset: number,
-  replayVersion: string,
+  replayVersion: string
 ): { frameNumber: number; randomSeed: number } {
   return {
     frameNumber:
@@ -389,28 +389,28 @@ export function parseFrameStartEvent(
 export function parsePreFrameUpdateEvent(
   rawData: DataView,
   offset: number,
-  replayVersion: string,
+  replayVersion: string
 ): PlayerInputs {
   const processedButtonsBitfield = readUint(
     rawData,
     32,
     replayVersion,
     "0.1.0.0",
-    offset + 0x2d,
+    offset + 0x2d
   );
   const physicalButtonsBitfield = readUint(
     rawData,
     16,
     replayVersion,
     "0.1.0.0",
-    offset + 0x31,
+    offset + 0x31
   );
   return {
     frameNumber:
       readInt(rawData, 32, replayVersion, "0.1.0.0", offset + 0x01) + 123,
     playerIndex: readUint(rawData, 8, replayVersion, "0.1.0.0", offset + 0x05),
     isNana: Boolean(
-      readUint(rawData, 8, replayVersion, "0.1.0.0", offset + 0x06),
+      readUint(rawData, 8, replayVersion, "0.1.0.0", offset + 0x06)
     ),
     physical: {
       dPadLeft: Boolean(physicalButtonsBitfield & 0x0001),
@@ -423,7 +423,7 @@ export function parsePreFrameUpdateEvent(
         32,
         replayVersion,
         "0.1.0.0",
-        offset + 0x37,
+        offset + 0x37
       ),
       rTriggerDigital: Boolean(physicalButtonsBitfield & 0x0020),
       lTriggerAnalog: readFloat(
@@ -431,7 +431,7 @@ export function parsePreFrameUpdateEvent(
         32,
         replayVersion,
         "0.1.0.0",
-        offset + 0x33,
+        offset + 0x33
       ),
       lTriggerDigital: Boolean(physicalButtonsBitfield & 0x0040),
       a: Boolean(physicalButtonsBitfield & 0x0100),
@@ -458,14 +458,14 @@ export function parsePreFrameUpdateEvent(
         32,
         replayVersion,
         "0.1.0.0",
-        offset + 0x19,
+        offset + 0x19
       ),
       joystickY: readFloat(
         rawData,
         32,
         replayVersion,
         "0.1.0.0",
-        offset + 0x1d,
+        offset + 0x1d
       ),
       cStickX: readFloat(rawData, 32, replayVersion, "0.1.0.0", offset + 0x21),
       cStickY: readFloat(rawData, 32, replayVersion, "0.1.0.0", offset + 0x25),
@@ -474,7 +474,7 @@ export function parsePreFrameUpdateEvent(
         32,
         replayVersion,
         "0.1.0.0",
-        offset + 0x29,
+        offset + 0x29
       ),
     },
   };
@@ -483,77 +483,77 @@ export function parsePreFrameUpdateEvent(
 export function parsePostFrameUpdateEvent(
   rawData: DataView,
   offset: number,
-  replayVersion: string,
+  replayVersion: string
 ): PlayerState {
   const hurtboxCollisionStateCode = readUint(
     rawData,
     8,
     replayVersion,
     "2.1.0.0",
-    offset + 0x34,
+    offset + 0x34
   );
   const lCancelStatusCode = readUint(
     rawData,
     8,
     replayVersion,
     "2.0.0.0",
-    offset + 0x33,
+    offset + 0x33
   );
   const stateBitfield1 = readUint(
     rawData,
     8,
     replayVersion,
     "2.1.0.0",
-    offset + 0x26,
+    offset + 0x26
   );
   const stateBitfield2 = readUint(
     rawData,
     8,
     replayVersion,
     "2.1.0.0",
-    offset + 0x27,
+    offset + 0x27
   );
   const stateBitfield3 = readUint(
     rawData,
     8,
     replayVersion,
     "2.1.0.0",
-    offset + 0x28,
+    offset + 0x28
   );
   const stateBitfield4 = readUint(
     rawData,
     8,
     replayVersion,
     "2.1.0.0",
-    offset + 0x29,
+    offset + 0x29
   );
   const stateBitfield5 = readUint(
     rawData,
     8,
     replayVersion,
     "2.1.0.0",
-    offset + 0x2a,
+    offset + 0x2a
   );
   return {
     frameNumber:
       readInt(rawData, 32, replayVersion, "0.1.0.0", offset + 0x01) + 123,
     playerIndex: readUint(rawData, 8, replayVersion, "0.1.0.0", offset + 0x05),
     isNana: Boolean(
-      readUint(rawData, 8, replayVersion, "0.1.0.0", offset + 0x06),
+      readUint(rawData, 8, replayVersion, "0.1.0.0", offset + 0x06)
     ),
     internalCharacterId: readUint(
       rawData,
       8,
       replayVersion,
       "0.1.0.0",
-      offset + 0x07,
+      offset + 0x07
     ),
     actionStateId: readUint(
       rawData,
       16,
       replayVersion,
       "0.1.0.0",
-      offset + 0x08,
+      offset + 0x08
     ),
     xPosition: readFloat(rawData, 32, replayVersion, "0.1.0.0", offset + 0x0a),
     yPosition: readFloat(rawData, 32, replayVersion, "0.1.0.0", offset + 0x0e),
@@ -562,7 +562,7 @@ export function parsePostFrameUpdateEvent(
       32,
       replayVersion,
       "0.1.0.0",
-      offset + 0x12,
+      offset + 0x12
     ),
     percent: readFloat(rawData, 32, replayVersion, "0.1.0.0", offset + 0x16),
     shieldSize: readFloat(rawData, 32, replayVersion, "0.1.0.0", offset + 0x1a),
@@ -571,14 +571,14 @@ export function parsePostFrameUpdateEvent(
       8,
       replayVersion,
       "0.1.0.0",
-      offset + 0x1e,
+      offset + 0x1e
     ),
     currentComboCount: readUint(
       rawData,
       8,
       replayVersion,
       "0.1.0.0",
-      offset + 0x1f,
+      offset + 0x1f
     ),
     lastHitBy: readUint(rawData, 8, replayVersion, "0.1.0.0", offset + 0x20),
     stocksRemaining: readUint(
@@ -586,21 +586,21 @@ export function parsePostFrameUpdateEvent(
       8,
       replayVersion,
       "0.1.0.0",
-      offset + 0x21,
+      offset + 0x21
     ),
     actionStateFrameCounter: readFloat(
       rawData,
       32,
       replayVersion,
       "0.2.0.0",
-      offset + 0x22,
+      offset + 0x22
     ),
     hitstunRemaining: readFloat(
       rawData,
       32,
       replayVersion,
       "2.0.0.0",
-      offset + 0x2b,
+      offset + 0x2b
     ),
     isGrounded:
       readUint(rawData, 8, replayVersion, "2.0.0.0", offset + 0x2f) !== 0,
@@ -610,7 +610,7 @@ export function parsePostFrameUpdateEvent(
       8,
       replayVersion,
       "2.0.0.0",
-      offset + 0x32,
+      offset + 0x32
     ),
     lCancelStatus:
       lCancelStatusCode === 1
@@ -629,49 +629,49 @@ export function parsePostFrameUpdateEvent(
       32,
       replayVersion,
       "3.5.0.0",
-      offset + 0x35,
+      offset + 0x35
     ),
     selfInducedAirYSpeed: readFloat(
       rawData,
       32,
       replayVersion,
       "3.5.0.0",
-      offset + 0x39,
+      offset + 0x39
     ),
     attackBasedXSpeed: readFloat(
       rawData,
       32,
       replayVersion,
       "3.5.0.0",
-      offset + 0x3d,
+      offset + 0x3d
     ),
     attackBasedYSpeed: readFloat(
       rawData,
       32,
       replayVersion,
       "3.5.0.0",
-      offset + 0x41,
+      offset + 0x41
     ),
     selfInducedGroundXSpeed: readFloat(
       rawData,
       32,
       replayVersion,
       "3.5.0.0",
-      offset + 0x45,
+      offset + 0x45
     ),
     hitlagRemaining: readFloat(
       rawData,
       32,
       replayVersion,
       "3.8.0.0",
-      offset + 0x49,
+      offset + 0x49
     ),
     animationIndex: readUint(
       rawData,
       32,
       replayVersion,
       "3.11.0.0",
-      offset + 0x4d,
+      offset + 0x4d
     ),
     isReflectActive: Boolean(stateBitfield1 & 0x10),
     isFastfalling: Boolean(stateBitfield2 & 0x08),
@@ -687,7 +687,7 @@ export function parsePostFrameUpdateEvent(
 export function parseItemUpdateEvent(
   rawData: DataView,
   offset: number,
-  replayVersion: string,
+  replayVersion: string
 ): ItemUpdate {
   return {
     frameNumber:
@@ -699,7 +699,7 @@ export function parseItemUpdateEvent(
       32,
       replayVersion,
       "3.0.0.0",
-      offset + 0x08,
+      offset + 0x08
     ),
     xVelocity: readFloat(rawData, 32, replayVersion, "3.0.0.0", offset + 0x0c),
     yVelocity: readFloat(rawData, 32, replayVersion, "3.0.0.0", offset + 0x10),
@@ -711,7 +711,7 @@ export function parseItemUpdateEvent(
       32,
       replayVersion,
       "3.0.0.0",
-      offset + 0x1e,
+      offset + 0x1e
     ),
     spawnId: readUint(rawData, 32, replayVersion, "3.0.0.0", offset + 0x22),
     samusMissileType: readUint(
@@ -719,24 +719,24 @@ export function parseItemUpdateEvent(
       8,
       replayVersion,
       "3.2.0.0",
-      offset + 0x26,
+      offset + 0x26
     ),
     peachTurnipFace: readUint(
       rawData,
       8,
       replayVersion,
       "3.2.0.0",
-      offset + 0x27,
+      offset + 0x27
     ),
     isChargeShotLaunched: Boolean(
-      readUint(rawData, 8, replayVersion, "3.2.0.0", offset + 0x28),
+      readUint(rawData, 8, replayVersion, "3.2.0.0", offset + 0x28)
     ),
     chargeShotChargeLevel: readUint(
       rawData,
       8,
       replayVersion,
       "3.2.0.0",
-      offset + 0x29,
+      offset + 0x29
     ),
     owner: readInt(rawData, 8, replayVersion, "3.6.0.0", offset + 0x2a),
   };
@@ -745,21 +745,21 @@ export function parseItemUpdateEvent(
 export function parseGameEndEvent(
   rawData: DataView,
   offset: number,
-  replayVersion: string,
+  replayVersion: string
 ): GameEnding {
   const gameEndCode = readUint(
     rawData,
     8,
     replayVersion,
     "0.1.0.0",
-    offset + 0x01,
+    offset + 0x01
   );
   const quitInitiator = readInt(
     rawData,
     8,
     replayVersion,
     "2.0.0.0",
-    offset + 0x02,
+    offset + 0x02
   );
 
   if (gameEndCode === 0 || gameEndCode === 3) {

@@ -1,5 +1,5 @@
 import { getIconCollections, iconsPlugin } from "@egoist/tailwindcss-icons";
-import type { Config } from "tailwindcss";
+import { Config } from "tailwindcss";
 
 export default {
   content: ["./app/**/*.{ts,tsx}"],

@@ -12,16 +12,20 @@
     "@egoist/tailwindcss-icons": "latest",
     "@fontsource-variable/inter": "latest",
     "@iconify/json": "latest",
+    "@react-three/drei": "latest",
+    "@react-three/fiber": "latest",
     "@remix-run/cloudflare": "latest",
     "@remix-run/cloudflare-pages": "latest",
     "@remix-run/dev": "latest",
     "@remix-run/react": "latest",
+    "@shelacek/ubjson": "latest",
     "@slippilab/common": "workspace:*",
     "@slippilab/parser": "workspace:*",
     "@slippilab/search": "workspace:*",
     "@trivago/prettier-plugin-sort-imports": "latest",
     "@types/react": "latest",
     "@types/react-dom": "latest",
+    "@types/three": "^0.164.0",
     "autoprefixer": "latest",
     "isbot": "latest",
     "miniflare": "latest",
@@ -31,9 +35,11 @@
     "react": "latest",
     "react-dom": "latest",
     "tailwindcss": "latest",
+    "three": "latest",
     "vite": "latest",
     "vite-tsconfig-paths": "latest",
-    "wrangler": "latest"
+    "wrangler": "latest",
+    "zustand": "latest"
   },
   "prettier": {
     "plugins": [

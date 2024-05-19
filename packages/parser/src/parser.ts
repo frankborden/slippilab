@@ -1,4 +1,4 @@
-import type {
+import {
   Frame,
   GameEnding,
   ReplayData,
@@ -25,13 +25,13 @@ import { firstVersion, readUint } from "./utils";
  * startTimestamp is not read because it's at the end of the file.
  */
 export function parseStub(
-  raw: ArrayBufferLike,
+  raw: ArrayBufferLike
 ): Omit<ReplayStub, "startTimestamp" | "slug"> {
   const rawData = new DataView(raw, 15);
   const commandPayloadSizes = parseEventPayloadsEvent(rawData, 0x00);
   const gameSettings = parseGameStartEvent(
     rawData,
-    0x01 + commandPayloadSizes[0x35],
+    0x01 + commandPayloadSizes[0x35]
   );
   let type: ReplayType;
   if (gameSettings.matchId === undefined) {
@@ -87,7 +87,7 @@ export function parseReplay(metadata: any, raw: Uint8Array): ReplayData {
   const gameSettings = parseGameStartEvent(
     rawData,
     0x01 + commandPayloadSizes[0x35],
-    metadata,
+    metadata
   );
   let gameEnding: GameEnding | undefined;
   const replayVersion = gameSettings.replayFormatVersion;
@@ -159,7 +159,7 @@ function handlePreFrameUpdateEvent(
   rawData: DataView,
   offset: number,
   replayVersion: string,
-  frames: Frame[],
+  frames: Frame[]
 ): void {
   const playerInputs = parsePreFrameUpdateEvent(rawData, offset, replayVersion);
   // Some older versions don't have the Frame Start Event so we have to
@@ -168,7 +168,7 @@ function handlePreFrameUpdateEvent(
   initPlayerIfNeeded(
     frames,
     playerInputs.frameNumber,
-    playerInputs.playerIndex,
+    playerInputs.playerIndex
   );
   if (playerInputs.isNana) {
     frames[playerInputs.frameNumber].players[
@@ -186,7 +186,7 @@ function handlePostFrameUpdateEvent(
   rawData: DataView,
   offset: number,
   replayVersion: string,
-  frames: Frame[],
+  frames: Frame[]
 ): void {
   const playerState = parsePostFrameUpdateEvent(rawData, offset, replayVersion);
   if (playerState.isNana) {
@@ -204,12 +204,12 @@ function handleFrameStartEvent(
   rawData: DataView,
   offset: number,
   replayVersion: string,
-  frames: Frame[],
+  frames: Frame[]
 ): void {
   const { frameNumber, randomSeed } = parseFrameStartEvent(
     rawData,
     offset,
-    replayVersion,
+    replayVersion
   );
   initFrameIfNeeded(frames, frameNumber);
   // @ts-ignore will only be readonly once parser is done
@@ -220,7 +220,7 @@ function handleItemUpdateEvent(
   rawData: DataView,
   offset: number,
   replayVersion: string,
-  frames: Frame[],
+  frames: Frame[]
 ): void {
   const itemUpdate = parseItemUpdateEvent(rawData, offset, replayVersion);
   frames[itemUpdate.frameNumber].items.push(itemUpdate);
@@ -240,7 +240,7 @@ function initFrameIfNeeded(frames: Frame[], frameNumber: number): void {
 function initPlayerIfNeeded(
   frames: Frame[],
   frameNumber: number,
-  playerIndex: number,
+  playerIndex: number
 ): void {
   if (frames[frameNumber].players[playerIndex] === undefined) {
     // @ts-expect-error: state and inputs will be populated later.

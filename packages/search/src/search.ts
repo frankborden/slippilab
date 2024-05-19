@@ -1,4 +1,4 @@
-import type { ReplayData } from "@slippilab/common";
+import { ReplayData } from "@slippilab/common";
 import { Predicate } from "./framePredicates";
 
 export interface Highlight {
@@ -26,13 +26,13 @@ type Streak = [number, number, number];
 export function search(
   replay: ReplayData,
   query: Query,
-  always?: Predicate,
+  always?: Predicate
 ): Highlight[] {
   return replay.settings.playerSettings.flatMap((playerSettings) => {
     const alwaysSequence =
       always != null
         ? replay.frames.map((frame) =>
-            always(playerSettings.playerIndex, frame.frameNumber, replay),
+            always(playerSettings.playerIndex, frame.frameNumber, replay)
           )
         : undefined;
     const alwaysStreaks =
@@ -45,17 +45,17 @@ export function search(
             queryPart.predicate(
               playerSettings.playerIndex,
               frame.frameNumber,
-              replay,
-            ),
-          ),
+              replay
+            )
+          )
         )
         // collect the streaks from each query part
         .map((resultSequence, i) =>
           getStreaks(
             resultSequence,
             query[i].minimumLength ?? 1,
-            alwaysSequence,
-          ),
+            alwaysSequence
+          )
         )
         // combine matching streaks across every query part
         .reduce((aStreaks, bStreaks, bIndex) =>
@@ -63,8 +63,8 @@ export function search(
             aStreaks,
             bStreaks,
             query[bIndex].delayed ?? false,
-            alwaysStreaks,
-          ),
+            alwaysStreaks
+          )
         )
         // toss the extra metadata
         .map(
@@ -72,13 +72,13 @@ export function search(
             playerIndex: playerSettings.playerIndex,
             startFrame: start,
             endFrame: end,
-          }),
+          })
         )
         // deduplicate by endFrame. Keep the first one because it's the longest.
         .filter(
           (highlight, index, highlights) =>
             index ===
-            highlights.findIndex((h) => h.endFrame === highlight.endFrame),
+            highlights.findIndex((h) => h.endFrame === highlight.endFrame)
         )
         // deduplicate by firstFrame. Keep the last one because it's the
         // longest.
@@ -89,7 +89,7 @@ export function search(
               1 -
               [...highlights]
                 .reverse()
-                .findIndex((h) => h.startFrame === highlight.startFrame),
+                .findIndex((h) => h.startFrame === highlight.startFrame)
         )
     );
   });
@@ -99,7 +99,7 @@ export function search(
 function getStreaks(
   predicateSequence: boolean[],
   minimumLength: number,
-  alwaysSequence?: boolean[],
+  alwaysSequence?: boolean[]
 ): Streak[] {
   const streaks: Streak[] = [];
   let startAt: number | undefined;
@@ -132,7 +132,7 @@ function combineStreaks(
   aStreaks: Streak[],
   bStreaks: Streak[],
   delayed: boolean,
-  alwaysStreaks?: Streak[],
+  alwaysStreaks?: Streak[]
 ): Streak[] {
   return (
     aStreaks
@@ -149,8 +149,8 @@ function combineStreaks(
               (alwaysStreaks === undefined ||
                 alwaysStreaks.some(
                   ([alwaysStart, _, alwaysFail]) =>
-                    alwaysStart <= aFail && alwaysFail > bStart,
-                )))),
+                    alwaysStart <= aFail && alwaysFail > bStart
+                ))))
       )
       // combined streak lasts from first streak to end of second streak
       .map(([[aStart, _1, _2], [_3, bMinimum, bFail]]) => [
