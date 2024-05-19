@@ -1,18 +1,12 @@
 {
-  "exclude": ["old/**"],
   "compilerOptions": {
-    "allowSyntheticDefaultImports": true,
-    "baseUrl": "./",
-    "esModuleInterop": true,
-    "jsx": "preserve",
-    "jsxImportSource": "solid-js",
-    "module": "esnext",
-    "moduleResolution": "node",
-    "paths": { "~/*": ["./src/*"] },
     "strict": true,
+    "noEmit": true,
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "esModuleInterop": true,
+    "isolatedModules": true,
     "skipLibCheck": true,
-    "target": "esnext",
-    "types": ["vite/client"],
-    "noEmit": true
   }
 }

@@ -1,0 +1,50 @@
+{
+  "name": "@slippilab/www",
+  "type": "module",
+  "scripts": {
+    "build": "remix vite:build",
+    "dev": "remix vite:dev",
+    "format": "prettier -w .",
+    "typegen": "wrangler types"
+  },
+  "dependencies": {
+    "@cloudflare/workers-types": "latest",
+    "@egoist/tailwindcss-icons": "latest",
+    "@fontsource-variable/inter": "latest",
+    "@iconify/json": "latest",
+    "@remix-run/cloudflare": "latest",
+    "@remix-run/cloudflare-pages": "latest",
+    "@remix-run/dev": "latest",
+    "@remix-run/react": "latest",
+    "@slippilab/common": "workspace:*",
+    "@slippilab/parser": "workspace:*",
+    "@slippilab/search": "workspace:*",
+    "@trivago/prettier-plugin-sort-imports": "latest",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "autoprefixer": "latest",
+    "isbot": "latest",
+    "miniflare": "latest",
+    "node-fetch": "latest",
+    "prettier": "latest",
+    "prettier-plugin-tailwindcss": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "tailwindcss": "latest",
+    "vite": "latest",
+    "vite-tsconfig-paths": "latest",
+    "wrangler": "latest"
+  },
+  "prettier": {
+    "plugins": [
+      "@trivago/prettier-plugin-sort-imports",
+      "prettier-plugin-tailwindcss"
+    ],
+    "importOrder": [
+      "^~/(.*)$",
+      "^[./]"
+    ],
+    "importOrderSeparation": true,
+    "importOrderSortSpecifiers": true
+  }
+}

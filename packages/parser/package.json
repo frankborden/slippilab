@@ -1,0 +1,9 @@
+{
+  "name": "@slippilab/parser",
+  "exports": {
+    "default": "./src/index.ts"
+  },
+  "dependencies": {
+    "@slippilab/common": "workspace:*"
+  }
+}

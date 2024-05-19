@@ -1,0 +1,6 @@
+{
+  "name": "@slippilab/common",
+  "exports": {
+    "default": "./src/index.ts"
+  }
+}

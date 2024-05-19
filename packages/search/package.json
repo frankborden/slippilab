@@ -1,0 +1,9 @@
+{
+  "name": "@slippilab/search",
+  "exports": {
+    "default": "./src/index.ts"
+  },
+  "dependencies": {
+    "@slippilab/common": "workspace:*"
+  }
+}
