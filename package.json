@@ -1,3 +1,6 @@
 {
-  "name": "@slippilab/root"
+  "name": "@slippilab/root",
+  "scripts": {
+    "dev": "pnpm -F www dev"
+  }
 }
