@@ -59,7 +59,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
             }}
           />
         )}
-        <main className="container py-8">{children}</main>
+        <main className="container pt-4">{children}</main>
         <ScrollRestoration />
         <Scripts />
       </body>
