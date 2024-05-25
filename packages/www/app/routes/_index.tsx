@@ -1,4 +1,4 @@
-import { ReplayType } from "@slippilab/common";
+import { ReplayType, charactersExt, stages } from "@slippilab/common";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import {
@@ -9,12 +9,8 @@ import {
   Key,
   ListBox,
   ListBoxItem,
-  Menu,
-  MenuItem,
-  MenuTrigger,
   Modal,
   ModalOverlay,
-  Popover,
   Tab,
   TabList,
   Tabs,
@@ -40,8 +36,6 @@ const tabs = [
   },
 ];
 
-const tags = ["Falco", "Battlefield"];
-
 const typeIcons: Record<ReplayType, string> = {
   ranked: "i-tabler-trophy",
   unranked: "i-tabler-globe",
@@ -51,8 +45,38 @@ const typeIcons: Record<ReplayType, string> = {
 };
 
 export default function Page() {
-  const { loadFiles, stubs, filters, page, setPage } = useFileStore();
+  const { loadFiles, stubs, filters, setFilters, page, setPage } =
+    useFileStore();
   const [tab, setTab] = useState<Key>("cloud");
+  const [filterCharacters, setFilterCharacters] = useState<Key[]>(
+    filters.filter((f) => f.type === "character").map((f) => f.value),
+  );
+  const [filterStages, setFilterStages] = useState<Key[]>(
+    filters.filter((f) => f.type === "stage").map((f) => f.value),
+  );
+
+  const filteredStubs = stubs.filter(([stub]) => {
+    const allowedStages = filters
+      .filter((f) => f.type === "stage")
+      .map((f) => Number(f.value));
+    if (allowedStages.length > 0 && !allowedStages.includes(stub.stageId)) {
+      return false;
+    }
+
+    const neededCharacters = filters
+      .filter((f) => f.type === "character")
+      .map((f) => Number(f.value));
+    if (
+      neededCharacters.length > 0 &&
+      neededCharacters.some(
+        (c) => !stub.players.some((p) => p.externalCharacterId === c),
+      )
+    ) {
+      return false;
+    }
+
+    return true;
+  });
 
   return (
     <main>
@@ -102,13 +126,17 @@ export default function Page() {
         <div className="mb-2 flex items-end justify-between">
           <TagGroup aria-label="filters">
             <TagList className="flex flex-wrap items-center gap-1 text-sm">
-              {tags.map((tag, i) => (
+              {filters.map((filter) => (
                 <Tag
-                  key={`${tag}-${i}`}
-                  textValue={tag}
+                  key={filter.value}
+                  textValue={filter.value}
                   className="flex select-none items-center rounded border border-gray-300 bg-gray-100 pl-1 has-[button:hover]:bg-gray-200"
                 >
-                  <div>{tag}</div>
+                  <div>
+                    {filter.type === "character"
+                      ? charactersExt[filter.value]
+                      : stages[filter.value]}
+                  </div>
                   <Button
                     slot="remove"
                     className="flex cursor-default rounded-r-[3px] p-1"
@@ -132,14 +160,24 @@ export default function Page() {
                   <Dialog className="outline-none">
                     {({ close }) => (
                       <>
-                        <div className="mb-2 text-lg font-medium">Filters</div>
+                        <div className="mb-4 text-xl font-medium tracking-tight">
+                          Replay filters
+                        </div>
+                        <div className="mb-1 font-medium tracking-tight">
+                          Stage
+                        </div>
                         <ListBox
-                          className="mb-2 grid grid-cols-[auto,auto,auto] justify-center gap-2"
+                          selectedKeys={filterStages}
+                          onSelectionChange={(keys) => {
+                            if (keys === "all") return;
+                            setFilterStages([...keys.values()]);
+                          }}
+                          className="mb-4 grid grid-cols-[auto,auto,auto] justify-center gap-2"
                           layout="grid"
                           selectionMode="multiple"
                         >
                           {[8, 2, 3, 31, 32, 28].map((stageId) => (
-                            <ListBoxItem className="relative">
+                            <ListBoxItem id={stageId} className="relative">
                               {({ isSelected }) => (
                                 <>
                                   <img
@@ -156,9 +194,17 @@ export default function Page() {
                             </ListBoxItem>
                           ))}
                         </ListBox>
+                        <div className="mb-1 font-medium tracking-tight">
+                          Character
+                        </div>
                         <ListBox
+                          selectedKeys={filterCharacters}
+                          onSelectionChange={(keys) => {
+                            if (keys === "all") return;
+                            setFilterCharacters([...keys.values()]);
+                          }}
                           layout="grid"
-                          className="mb-2 grid grid-cols-9 gap-1"
+                          className="mb-4 grid grid-cols-9 gap-1"
                           selectionMode="multiple"
                         >
                           {[
@@ -166,6 +212,7 @@ export default function Page() {
                             19, 6, 21, 24, 13, 15, 10, 3, 9, 23, 18,
                           ].map((characterId) => (
                             <ListBoxItem
+                              id={characterId}
                               className={`relative p-1 ${characterId === 24 ? "col-start-2" : ""}`}
                             >
                               {({ isSelected }) => (
@@ -192,7 +239,20 @@ export default function Page() {
                             Cancel
                           </Button>
                           <Button
-                            onPress={close}
+                            onPress={() => {
+                              setFilters([
+                                ...filterCharacters.map((value) => ({
+                                  type: "character" as const,
+                                  value: value.toString(),
+                                })),
+                                ...filterStages.map((value) => ({
+                                  type: "stage" as const,
+                                  value: value.toString(),
+                                })),
+                              ]);
+                              setPage(0);
+                              close();
+                            }}
                             className="rounded bg-emerald-600 px-2 py-0.5 text-white hover:bg-emerald-600/90"
                           >
                             Apply
@@ -216,7 +276,7 @@ export default function Page() {
             )}
           </div>
         </div>
-        {stubs.length === 0 ? (
+        {filteredStubs.length === 0 ? (
           <div className="flex w-[calc(13rem+38ch)] flex-col items-center gap-2 p-12">
             <div className="i-tabler-folder-x text-5xl text-gray-500" />
             <div className="text-lg font-medium tracking-tight text-gray-600">
@@ -227,7 +287,7 @@ export default function Page() {
           <>
             <ListBox
               aria-label="Replays"
-              items={stubs.slice(page * 10, page * 10 + 10)}
+              items={filteredStubs.slice(page * 10, page * 10 + 10)}
               selectionMode="single"
               className="mb-1 divide-y divide-gray-300 rounded border border-gray-300"
             >
@@ -297,17 +357,19 @@ export default function Page() {
                 <div className="i-tabler-chevron-left" />
               </Button>
               <div className="text-center">
-                Page {page + 1} of {Math.ceil(stubs.length / 10)}
+                Page {page + 1} of {Math.ceil(filteredStubs.length / 10)}
               </div>
               <Button
-                isDisabled={page === Math.ceil(stubs.length / 10) - 1}
+                isDisabled={page === Math.ceil(filteredStubs.length / 10) - 1}
                 onPress={() => setPage(page + 1)}
               >
                 <div className="i-tabler-chevron-right" />
               </Button>
               <Button
-                isDisabled={page === Math.ceil(stubs.length / 10) - 1}
-                onPress={() => setPage(Math.ceil(stubs.length / 10) - 1)}
+                isDisabled={page === Math.ceil(filteredStubs.length / 10) - 1}
+                onPress={() =>
+                  setPage(Math.ceil(filteredStubs.length / 10) - 1)
+                }
               >
                 <div className="i-tabler-chevron-right-pipe" />
               </Button>
