@@ -52,7 +52,7 @@ export default function Page() {
         defaultSelectedKey="cloud"
         selectedKey={tab}
         onSelectionChange={setTab}
-        className="mb-2 grid grid-cols-[1fr,auto,1fr] items-center"
+        className="mb-6 grid grid-cols-[1fr,auto,1fr] items-center"
       >
         <h1 className="text-2xl font-medium tracking-tight">Replays</h1>
         <TabList
@@ -92,10 +92,14 @@ export default function Page() {
       </Tabs>
       <div className="mx-auto w-max">
         <div className="mb-2 flex items-end justify-between">
-          <TagGroup className="mt-1">
+          <TagGroup aria-label="filters">
             <TagList className="flex flex-wrap items-center gap-1 text-sm">
               {tags.map((tag, i) => (
-                <Tag className="flex select-none items-center rounded border border-gray-300 bg-gray-100 pl-1 has-[button:hover]:bg-gray-200">
+                <Tag
+                  key={`${tag}-${i}`}
+                  textValue={tag}
+                  className="flex select-none items-center rounded border border-gray-300 bg-gray-100 pl-1 has-[button:hover]:bg-gray-200"
+                >
                   <div>{tag}</div>
                   <Button
                     slot="remove"
@@ -139,6 +143,7 @@ export default function Page() {
               {([stub]) => (
                 <ListBoxItem
                   id={stub.slug}
+                  textValue={stub.slug}
                   className="flex items-center gap-4 px-4 py-2 text-sm first:rounded-t last:rounded-b hover:bg-gray-100"
                 >
                   <div className="w-[8ch]">
@@ -170,7 +175,10 @@ export default function Page() {
                     className="h-12 rounded border border-gray-400"
                   />
                   {stub.players.map((player) => (
-                    <div className="flex items-center gap-2">
+                    <div
+                      key={player.playerIndex}
+                      className="flex items-center gap-2"
+                    >
                       <img
                         src={`/stockicons/${player.externalCharacterId}/${player.costumeIndex}.png`}
                         className="size-6"
@@ -190,30 +198,28 @@ export default function Page() {
                 </ListBoxItem>
               )}
             </ListBox>
-            <div className="grid grid-cols-[auto,auto,1fr,auto,auto] items-center gap-x-4 [&>button]:size-6 disabled:[&>button]:bg-gray-400">
-              <Button
-                className="i-tabler-chevron-left-pipe"
-                isDisabled={page === 0}
-                onPress={() => setPage(0)}
-              />
-              <Button
-                className="i-tabler-chevron-left"
-                isDisabled={page === 0}
-                onPress={() => setPage(page - 1)}
-              />
+            <div className="grid grid-cols-[auto,auto,1fr,auto,auto] items-center gap-x-4 [&>button]:size-6 [&>button]:rounded hover:[&>button]:bg-gray-100 disabled:[&>button]:text-gray-400">
+              <Button isDisabled={page === 0} onPress={() => setPage(0)}>
+                <div className="i-tabler-chevron-left-pipe size-6" />
+              </Button>
+              <Button isDisabled={page === 0} onPress={() => setPage(page - 1)}>
+                <div className="i-tabler-chevron-left size-6" />
+              </Button>
               <div className="text-center">
                 Page {page + 1} of {Math.ceil(stubs.length / 10)}
               </div>
               <Button
-                className="i-tabler-chevron-right"
                 isDisabled={page === Math.ceil(stubs.length / 10) - 1}
                 onPress={() => setPage(page + 1)}
-              />
+              >
+                <div className="i-tabler-chevron-right size-6" />
+              </Button>
               <Button
-                className="i-tabler-chevron-right-pipe"
                 isDisabled={page === Math.ceil(stubs.length / 10) - 1}
                 onPress={() => setPage(Math.ceil(stubs.length / 10) - 1)}
-              />
+              >
+                <div className="i-tabler-chevron-right-pipe size-6" />
+              </Button>
             </div>
           </>
         )}
