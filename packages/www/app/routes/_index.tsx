@@ -3,10 +3,18 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import {
   Button,
+  Dialog,
+  DialogTrigger,
   FileTrigger,
   Key,
   ListBox,
   ListBoxItem,
+  Menu,
+  MenuItem,
+  MenuTrigger,
+  Modal,
+  ModalOverlay,
+  Popover,
   Tab,
   TabList,
   Tabs,
@@ -56,7 +64,7 @@ export default function Page() {
       >
         <h1 className="text-2xl font-medium tracking-tight">Replays</h1>
         <TabList
-          className="inline-flex items-center gap-1 bg-white"
+          className="inline-flex items-center rounded border border-gray-300 bg-white"
           items={tabs}
         >
           {(tab) => (
@@ -112,9 +120,90 @@ export default function Page() {
             </TagList>
           </TagGroup>
           <div className="flex gap-2">
-            <Button className="rounded border border-gray-300 bg-gray-100 px-2 hover:bg-gray-200">
-              Filter
-            </Button>
+            <DialogTrigger>
+              <Button className="rounded border border-gray-300 bg-gray-100 px-2 hover:bg-gray-200">
+                Filter
+              </Button>
+              <ModalOverlay
+                isDismissable
+                className="fixed inset-0 z-10 grid place-items-center bg-black/10"
+              >
+                <Modal className="rounded border border-gray-300 bg-white px-8 py-4 shadow">
+                  <Dialog className="outline-none">
+                    {({ close }) => (
+                      <>
+                        <div className="mb-2 text-lg font-medium">Filters</div>
+                        <ListBox
+                          className="mb-2 grid grid-cols-[auto,auto,auto] justify-center gap-2"
+                          layout="grid"
+                          selectionMode="multiple"
+                        >
+                          {[8, 2, 3, 31, 32, 28].map((stageId) => (
+                            <ListBoxItem className="relative">
+                              {({ isSelected }) => (
+                                <>
+                                  <img
+                                    src={`/stages/${stageId}.png`}
+                                    className="h-20 rounded border border-gray-300"
+                                  />
+                                  {isSelected && (
+                                    <div className="absolute inset-0 z-10 grid place-items-center rounded bg-emerald-600/50">
+                                      <div className="i-tabler-check size-10 text-white" />
+                                    </div>
+                                  )}
+                                </>
+                              )}
+                            </ListBoxItem>
+                          ))}
+                        </ListBox>
+                        <ListBox
+                          layout="grid"
+                          className="mb-2 grid grid-cols-9 gap-1"
+                          selectionMode="multiple"
+                        >
+                          {[
+                            22, 8, 7, 5, 12, 17, 1, 0, 25, 20, 2, 11, 14, 4, 16,
+                            19, 6, 21, 24, 13, 15, 10, 3, 9, 23, 18,
+                          ].map((characterId) => (
+                            <ListBoxItem
+                              className={`relative p-1 ${characterId === 24 ? "col-start-2" : ""}`}
+                            >
+                              {({ isSelected }) => (
+                                <>
+                                  <img
+                                    src={`/stockicons/${characterId}/0.png`}
+                                    className="h-8"
+                                  />
+                                  {isSelected && (
+                                    <div className="absolute inset-0 z-10 grid place-items-center rounded bg-emerald-600/75">
+                                      <div className="i-tabler-check size-6 text-white" />
+                                    </div>
+                                  )}
+                                </>
+                              )}
+                            </ListBoxItem>
+                          ))}
+                        </ListBox>
+                        <div className="flex justify-end gap-2">
+                          <Button
+                            onPress={close}
+                            className="rounded px-2 hover:bg-gray-100"
+                          >
+                            Cancel
+                          </Button>
+                          <Button
+                            onPress={close}
+                            className="rounded bg-emerald-600 px-2 py-0.5 text-white hover:bg-emerald-600/90"
+                          >
+                            Apply
+                          </Button>
+                        </div>
+                      </>
+                    )}
+                  </Dialog>
+                </Modal>
+              </ModalOverlay>
+            </DialogTrigger>
             {tab === "local" && (
               <FileTrigger
                 acceptDirectory
@@ -128,9 +217,11 @@ export default function Page() {
           </div>
         </div>
         {stubs.length === 0 ? (
-          <div className="flex w-[calc(13rem+38ch)] flex-col items-center p-8">
-            <div className="i-ph-folder-open-thin text-5xl" />
-            <div className="text-lg">No replays</div>
+          <div className="flex w-[calc(13rem+38ch)] flex-col items-center gap-2 p-12">
+            <div className="i-tabler-folder-x text-5xl text-gray-500" />
+            <div className="text-lg font-medium tracking-tight text-gray-600">
+              No replays
+            </div>
           </div>
         ) : (
           <>
@@ -138,7 +229,7 @@ export default function Page() {
               aria-label="Replays"
               items={stubs.slice(page * 10, page * 10 + 10)}
               selectionMode="single"
-              className="mb-2 divide-y divide-gray-300 rounded border border-gray-300"
+              className="mb-1 divide-y divide-gray-300 rounded border border-gray-300"
             >
               {([stub]) => (
                 <ListBoxItem
@@ -198,12 +289,12 @@ export default function Page() {
                 </ListBoxItem>
               )}
             </ListBox>
-            <div className="grid grid-cols-[auto,auto,1fr,auto,auto] items-center gap-x-4 [&>button]:size-6 [&>button]:rounded hover:[&>button]:bg-gray-100 disabled:[&>button]:text-gray-400">
+            <div className="grid grid-cols-[auto,auto,1fr,auto,auto] items-center gap-x-4 [&>button>div]:size-6 [&>button]:size-6 [&>button]:rounded hover:[&>button]:bg-gray-100 disabled:[&>button]:text-gray-400">
               <Button isDisabled={page === 0} onPress={() => setPage(0)}>
-                <div className="i-tabler-chevron-left-pipe size-6" />
+                <div className="i-tabler-chevron-left-pipe" />
               </Button>
               <Button isDisabled={page === 0} onPress={() => setPage(page - 1)}>
-                <div className="i-tabler-chevron-left size-6" />
+                <div className="i-tabler-chevron-left" />
               </Button>
               <div className="text-center">
                 Page {page + 1} of {Math.ceil(stubs.length / 10)}
@@ -212,13 +303,13 @@ export default function Page() {
                 isDisabled={page === Math.ceil(stubs.length / 10) - 1}
                 onPress={() => setPage(page + 1)}
               >
-                <div className="i-tabler-chevron-right size-6" />
+                <div className="i-tabler-chevron-right" />
               </Button>
               <Button
                 isDisabled={page === Math.ceil(stubs.length / 10) - 1}
                 onPress={() => setPage(Math.ceil(stubs.length / 10) - 1)}
               >
-                <div className="i-tabler-chevron-right-pipe size-6" />
+                <div className="i-tabler-chevron-right-pipe" />
               </Button>
             </div>
           </>
