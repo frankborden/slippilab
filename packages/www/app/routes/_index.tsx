@@ -122,27 +122,21 @@ export default function Page() {
           )}
         </TabList>
       </Tabs>
-      <div className="mx-auto w-max">
+      <div className="mx-auto w-[calc(13rem+38ch)]">
         <div className="mb-2 flex items-end justify-between">
           <TagGroup aria-label="filters">
             <TagList className="flex flex-wrap items-center gap-1 text-sm">
               {filters.map((filter) => (
                 <Tag
-                  key={filter.value}
+                  key={`${filter.type}-${filter.value}`}
                   textValue={filter.value}
-                  className="flex select-none items-center rounded border border-gray-300 bg-gray-100 pl-1 has-[button:hover]:bg-gray-200"
+                  className="flex select-none items-center rounded border border-gray-300 bg-gray-100 px-2 has-[button:hover]:bg-gray-200"
                 >
                   <div>
                     {filter.type === "character"
                       ? charactersExt[filter.value]
                       : stages[filter.value]}
                   </div>
-                  <Button
-                    slot="remove"
-                    className="flex cursor-default rounded-r-[3px] p-1"
-                  >
-                    <div className="i-tabler-x size-3" />
-                  </Button>
                 </Tag>
               ))}
             </TagList>
@@ -277,7 +271,7 @@ export default function Page() {
           </div>
         </div>
         {filteredStubs.length === 0 ? (
-          <div className="flex w-[calc(13rem+38ch)] flex-col items-center gap-2 p-12">
+          <div className="flex flex-col items-center gap-2 rounded border border-gray-300 p-12">
             <div className="i-tabler-folder-x text-5xl text-gray-500" />
             <div className="text-lg font-medium tracking-tight text-gray-600">
               No replays
