@@ -272,8 +272,8 @@ export default function Page() {
         </div>
         {filteredStubs.length === 0 ? (
           <div className="flex flex-col items-center gap-2 rounded border border-gray-300 p-12">
-            <div className="i-tabler-folder-x text-5xl text-gray-500" />
-            <div className="text-lg font-medium tracking-tight text-gray-600">
+            <div className="i-tabler-folder-x text-4xl text-gray-500" />
+            <div className="text-lg font-medium tracking-tight text-gray-500">
               No replays
             </div>
           </div>

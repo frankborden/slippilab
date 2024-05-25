@@ -7,6 +7,7 @@ compatibility_date = "2024-04-03"
 database_id = "034f632f-7256-47bb-b553-5c14944bf3d8"
 binding = "DB"
 database_name = "DB"
+migrations_dir = "drizzle"
 
 [[r2_buckets]]
 bucket_name = "slippilab-migration"

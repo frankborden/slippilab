@@ -3,6 +3,8 @@
   "type": "module",
   "scripts": {
     "build": "remix vite:build",
+    "db:generate": "drizzle-kit generate",
+    "db:local": "wrangler d1 migrations apply DB --local",
     "dev": "remix vite:dev",
     "format": "prettier -w .",
     "typegen": "wrangler types"
@@ -27,6 +29,8 @@
     "@types/react-dom": "latest",
     "@types/three": "latest",
     "autoprefixer": "latest",
+    "drizzle-kit": "latest",
+    "drizzle-orm": "latest",
     "framer-motion": "latest",
     "isbot": "latest",
     "miniflare": "latest",
