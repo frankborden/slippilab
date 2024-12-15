@@ -41,11 +41,9 @@ export async function uploadReplay(
   data: { path: string } | null;
   error: Error | null;
 }> {
-  const form = new FormData();
-  form.append("file", file);
   const res = await fetch("/api/replay", {
     method: "POST",
-    body: form,
+    body: file,
   });
   return await res.json();
 }
