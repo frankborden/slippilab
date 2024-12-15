@@ -34,15 +34,16 @@ const app = new Hono<Env>()
   })
   .post("/replay", async (c) => {
     const { BUCKET, DB } = c.env;
-    const { file } = await c.req.parseBody();
+    const body = await c.req.parseBody();
+    console.log(body);
+    const file = body.file as File;
+    console.log(file);
     const replay = parseReplay(
-      new UbjsonDecoder().decode(
-        new Uint8Array(await (file as File).arrayBuffer())
-      )
+      new UbjsonDecoder().decode(new Uint8Array(await file.arrayBuffer()))
     );
     const id: string = generateId(`${Date.now()}`);
 
-    await BUCKET.put(`${id}.slp`, await (file as File).arrayBuffer());
+    await BUCKET.put(`${id}.slp`, await file.arrayBuffer());
     await DB.prepare(
       "INSERT INTO replays (file_name, created_at, played_on, num_frames, external_stage_id, is_teams, players) VALUES (?, ?, ?, ?, ?, ?, ?)"
     )
