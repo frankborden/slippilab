@@ -1,3 +1,7 @@
+import {
+  fodInitialLeftPlatformHeight,
+  fodInitialRightPlatformHeight,
+} from "~/common/constants";
 import type {
   Frame,
   GameEnding,
@@ -6,6 +10,7 @@ import type {
   PlayerInputs,
   PlayerState,
   ReplayData,
+  StageUpdate,
 } from "~/common/types";
 
 // This is a basic parser for use in the browser. It is based off of the replay
@@ -77,6 +82,9 @@ export function parseReplay({ metadata, raw }: any): ReplayData {
         break;
       case 0x3b:
         handleItemUpdateEvent(rawData, offset, replayVersion, frames);
+        break;
+      case 0x3f:
+        handleFODPlatformEvent(rawData, offset, replayVersion, frames);
         break;
     }
     offset = offset + commandPayloadSizes[command] + 0x01;
@@ -163,13 +171,52 @@ function handleItemUpdateEvent(
   frames[itemUpdate.frameNumber].items.push(itemUpdate);
 }
 
+function handleFODPlatformEvent(
+  rawData: DataView,
+  offset: number,
+  replayVersion: string,
+  frames: Frame[]
+): void {
+  const stageUpdate = parseFODPlatformUpdateEvent(
+    rawData,
+    offset,
+    replayVersion
+  );
+
+  if (stageUpdate.fodPlatform === 1) {
+    // @ts-ignore will only be readonly once parser is done
+    frames[stageUpdate.frameNumber].stage.fodLeftPlatformHeight =
+      stageUpdate.fodPlatformHeight;
+  } else {
+    // @ts-ignore will only be readonly once parser is done
+    frames[stageUpdate.frameNumber].stage.fodRightPlatformHeight =
+      stageUpdate.fodPlatformHeight;
+  }
+}
+
 function initFrameIfNeeded(frames: Frame[], frameNumber: number): void {
   if (frames[frameNumber] === undefined) {
+    const prevFrame = frames[frameNumber - 1];
+
+    let prevFodLeftPlatformHeight: number, prevFodRightPlatformHeight: number;
+    if (prevFrame) {
+      prevFodLeftPlatformHeight = prevFrame.stage.fodLeftPlatformHeight;
+      prevFodRightPlatformHeight = prevFrame.stage.fodRightPlatformHeight;
+    } else {
+      prevFodLeftPlatformHeight = fodInitialLeftPlatformHeight;
+      prevFodRightPlatformHeight = fodInitialRightPlatformHeight;
+    }
+
     // @ts-expect-error: randomSeed will be populated later if found.
     frames[frameNumber] = {
       frameNumber: frameNumber,
       players: [],
       items: [],
+      stage: {
+        frameNumber: frameNumber,
+        fodLeftPlatformHeight: prevFodLeftPlatformHeight,
+        fodRightPlatformHeight: prevFodRightPlatformHeight,
+      },
     };
   }
 }
@@ -871,6 +918,25 @@ function parseItemUpdateEvent(
       offset + 0x29
     ),
     owner: readInt(rawData, 8, replayVersion, "3.6.0.0", offset + 0x2a),
+  };
+}
+
+function parseFODPlatformUpdateEvent(
+  rawData: DataView,
+  offset: number,
+  replayVersion: string
+): StageUpdate {
+  return {
+    frameNumber:
+      readInt(rawData, 32, replayVersion, "3.18.0.0", offset + 0x01) + 123,
+    fodPlatform: readUint(rawData, 8, replayVersion, "3.18.0.0", offset + 0x05),
+    fodPlatformHeight: readFloat(
+      rawData,
+      32,
+      replayVersion,
+      "3.18.0.0",
+      offset + 0x06
+    ),
   };
 }
 

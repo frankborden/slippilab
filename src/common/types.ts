@@ -86,6 +86,7 @@ export interface Frame {
   /** Indexed by playerIndex (port - 1). Do not check length */
   readonly players: PlayerUpdate[];
   readonly items: ItemUpdate[];
+  readonly stage: StageState;
 }
 
 /** The inputs applied during this frame and the resulting state(s) */
@@ -209,6 +210,18 @@ export interface ItemUpdate {
   /** Mewtwo/Samus */
   readonly chargeShotChargeLevel: number;
   readonly owner: number;
+}
+
+export interface StageUpdate {
+  readonly frameNumber: number;
+  readonly fodPlatform: number; // 0 = right, 1 = left
+  readonly fodPlatformHeight: number;
+}
+
+export interface StageState {
+  readonly frameNumber: number;
+  readonly fodLeftPlatformHeight: number;
+  readonly fodRightPlatformHeight: number;
 }
 
 /**
