@@ -4,6 +4,7 @@ import {
   fodInitialRightPlatformHeight,
 } from "~/common/constants";
 import { stageNameByExternalId } from "~/common/ids";
+import { isInVersion } from "~/parser/parser";
 import { replayStore } from "~/state/replayStore";
 
 export function Stage() {
@@ -353,6 +354,14 @@ function FountainOfDreams() {
   // Multiplication factor from game platform height to viewer platform height.
   const platformHeightCoefficient = 0.80625;
 
+  const heightsKnown = createMemo(
+    () =>
+      replayStore.replayData?.settings.replayFormatVersion &&
+      isInVersion(
+        replayStore.replayData?.settings.replayFormatVersion,
+        "3.18.0.0"
+      )
+  );
   const platforms = createMemo(() => {
     const gameHeightL =
       replayStore.replayData?.frames[replayStore.frame].stage
@@ -381,7 +390,7 @@ function FountainOfDreams() {
         {(points) => (
           <polyline
             points={points.join(" ")}
-            stroke-dasharray="2,4"
+            stroke-dasharray={heightsKnown() ? undefined : "2,4"}
             class="stroke-slate-800"
           />
         )}

@@ -1067,7 +1067,7 @@ function readShiftJisString(
   return "";
 }
 
-function isInVersion(
+export function isInVersion(
   replayVersion: string,
   firstVersionPresent: string
 ): boolean {
