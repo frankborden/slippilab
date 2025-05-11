@@ -1,7 +1,7 @@
 import {
   fodInitialLeftPlatformHeight,
   fodInitialRightPlatformHeight,
-} from "~/common/constants";
+} from "../common/constants";
 import type {
   Frame,
   GameEnding,
