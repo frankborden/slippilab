@@ -546,7 +546,7 @@ function parseGameStartEvent(
         settings.replayFormatVersion,
         "3.9.0.0",
         offset + 0x1a5 + 0x1f * playerIndex,
-        16
+        31
       ),
       connectCode: readShiftJisString(
         rawData,
