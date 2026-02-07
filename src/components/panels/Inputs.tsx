@@ -160,6 +160,23 @@ function Controller(
           cy={274.5 - (inputs()?.processed.joystickY ?? 0) * 34}
           r={35.1}
         />
+        {/* Left stick numeric values */}
+        <text
+          x={20}
+          y={370}
+          text-anchor="start"
+          class="text-xl fill-black font-mono font-bold"
+        >
+          X: {(inputs()?.processed.joystickX ?? 0).toFixed(3).padStart(6, '+')}
+        </text>
+        <text
+          x={20}
+          y={395}
+          text-anchor="start"
+          class="text-xl fill-black font-mono font-bold"
+        >
+          Y: {(inputs()?.processed.joystickY ?? 0).toFixed(3).padStart(6, '+')}
+        </text>
         <path
           id="cStickCutout"
           fill="transparent"
